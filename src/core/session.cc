@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 14:15:31 2005 texane
-// Last update Mon Oct 17 13:51:12 2005 texane
+// Last update Mon Oct 17 18:04:25 2005 
 //
 
 
@@ -18,7 +18,7 @@
 
 
 // Session execution entry point
-sysapi::thread::retcode_t __stdcall server::session::entrypoint_(sysapi::thread::param_t param)
+sysapi::thread::retcode_t server::session::entrypoint_(sysapi::thread::param_t param)
 {
   sysapi::socket_in::handle_t hdl_accept;
   sysapi::socket_in::handle_t hdl_con;

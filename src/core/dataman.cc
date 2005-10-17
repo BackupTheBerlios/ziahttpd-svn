@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Oct 13 16:09:17 2005 texane
-// Last update Fri Oct 14 01:15:13 2005 texane
+// Last update Mon Oct 17 18:06:39 2005 
 //
 
 
@@ -161,7 +161,7 @@ bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con, char** ptr
 {
   static bool	_init_me = false;
   _block_t	*ptr;
-  int		n;
+  sysapi::socket_in::size_t n;
   bool		done;
   bool		ret;
 

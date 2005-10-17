@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Wed Oct 12 10:02:27 2005 texane
+// Last update Mon Oct 17 18:18:16 2005 
 //
 
 
@@ -49,9 +49,15 @@ bool	win32::file::create(const char* filename,
     {
       return false;
     }
+  // We want to keep the handle opened
   else if (handle)
     {
       *handle = res;
+    }
+  // We don't bother with the handle
+  else
+    {
+      CloseHandle(res);
     }
 
   return true;

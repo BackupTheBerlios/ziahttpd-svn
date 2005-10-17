@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Tue Oct 11 15:05:44 2005 texane
+// Last update Mon Oct 17 18:47:17 2005 
 //
 
 
@@ -13,22 +13,229 @@
 # define SYSAPI_POSIX_HH
 
 // @see sysapi.hh
-// In order to handle non portable fashions
-// among posix compliant systems, you should
-// Use #ifdef compile time statements instead of
-// creating specific namespaces (such as posix_sunos for instance)
+// This file declares the namespace
+// used for the win32 system api.
 
-// @ not yet done
-// #include <posix_file.hh>
-// #include <posix_process.hh>
-// #include <posix_thread.hh>
+
+#include <errno.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
 
 namespace posix
 {
-  namespace file {}
-  namespace process {}
-  namespace thread {}
-  namespace error {}
+  // @see sysapi/posix/file.cc
+  namespace file
+  {
+    // Openning modes
+    typedef enum
+      {
+	RDONLY = O_RDONLY,
+	WRONLY = O_WRONLY,
+	RDWR   = O_RDWR
+      } mode_t;
+
+    // Seek position
+    typedef enum
+    {
+      BEGIN   = SEEK_SET,
+      CURRENT = SEEK_CUR,
+      END     = SEEK_END
+    } pos_t;
+
+    typedef int handle_t;
+    typedef off_t offset_t;
+    typedef ::size_t size_t;
+
+    // Function prototypes
+    bool	open(handle_t*, const char*, mode_t, int* = static_cast<int*>(0));
+    bool	create(const char*, mode_t = RDWR, handle_t* = static_cast<handle_t*>(0), int* = static_cast<int*>(0));
+    bool	close(handle_t, int* = static_cast<int*>(0));
+    bool	read(handle_t, unsigned char*, size_t, size_t* = static_cast<size_t*>(0), int* = static_cast<int*>(0));
+    bool	write(handle_t, const unsigned char*, size_t, size_t* = static_cast<size_t*>(0), int* = static_cast<int*>(0));
+    bool	seek(handle_t, offset_t, pos_t = CURRENT, int* = static_cast<int*>(0));
+  }
+
+
+  // @see sysapi/posix/process.cc
+  namespace process
+  {
+    // options for the wait function
+    typedef enum
+      {
+	DONTWAIT = 0,	// returns if no pending process
+	WAITFOREVER	// wait until process comes
+      } waitopt_t;
+
+    // State of the process
+    typedef enum
+      {
+	RUNNING = 0,
+	BLOCKED,
+	TERMINATED
+      } state_t;
+
+    // Signal that can be sent to the process
+    typedef enum
+      {
+	TERMINATE = 0
+      } sigid_t;
+
+    // Handle on the process
+    typedef int handle_t;
+
+
+    // Public interface
+    bool	create_and_loadexec(handle_t*, int, const char**, const char** = NULL);
+    bool	myhandle(handle_t*);
+    bool	signal(handle_t, sigid_t);
+    bool	release(handle_t);
+    bool	wait_single(handle_t, state_t* = NULL, waitopt_t = WAITFOREVER);
+    bool	wait_any(handle_t* = NULL, state_t* = NULL, waitopt_t = WAITFOREVER);
+  }
+
+
+  // @see sysapi/posix/thread.cc
+  namespace thread
+  {
+    // Handle on threads
+    typedef pthread_t* handle_t;
+
+    // Thread entry point
+    typedef void* param_t;
+    typedef void* retcode_t;
+    typedef retcode_t (*entry_t)(param_t);
+
+    // thread states
+    typedef enum
+      {
+	RUNNING = 0,
+	SUSPENDED,
+	BLOCKED,
+	TERMINATED
+      } state_t;
+
+    // wait options
+    typedef enum
+      {
+	DONTWAIT = 0,
+	WAITFOREVER
+      } waitopt_t;
+
+    // Signal id
+    typedef enum
+      {
+	TERMINATE = 0,
+	RESUME,
+	SUSPEND
+      } sigid_t;
+
+
+    // Public interface
+    bool	create_and_exec(handle_t*, state_t, entry_t, param_t = NULL);
+    bool	attach_to_process(handle_t, posix::process::handle_t);
+    bool	detach_from_process(handle_t, posix::process::handle_t);
+    bool	wait_single(handle_t, state_t* = NULL, waitopt_t = WAITFOREVER);
+    bool	signal(handle_t, sigid_t);
+    bool	myhandle(handle_t*);
+    bool	release(handle_t);
+    bool	say(const char* = NULL);
+  }
+
+
+  // @see sysapi/posix/socket.cc
+  namespace socket_in
+  {
+    // System dependant errors
+    typedef enum
+      {
+	// Subsystem related
+	SUBSYSTEM_FAILED = 0,
+	
+	// Socket related
+	SOCKET_NOT_CONNECTED,
+	SOCKET_INVALID_HANDLE,
+	SOCKET_TOO_MANY_HANDLE,
+	SOCKET_PERM_DENIED,
+
+	// Internet address related
+	INADDR_IS_INVALID,
+
+	// System calls / functions related
+	CALL_WOULDBLOCK,
+	CALL_INPROGRESS,
+	CALL_INTERRUPTED,
+
+	// Connection related
+	CONN_ABORTED,  // closed by the host software
+	CONN_RESET,    // connection aborted by the foreign soft
+	CONN_REFUSED,
+	CONN_DISCONNECTED, // gracefully disconnected
+
+	// Success
+	SUCCESS
+      } error_t;
+
+    // System dependant type
+    typedef int handle_t;
+    typedef ::size_t size_t;
+
+    // Interface
+    bool init_subsystem(error_t* = NULL);
+    bool release_subsystem(error_t* = NULL);
+    bool create_listening(handle_t*,
+			  unsigned short,
+			  unsigned long = INADDR_ANY,
+			  int = 0,
+			  error_t* = NULL);
+    bool create_listening(handle_t*,
+			  unsigned short,
+			  const char*,
+			  int = 0,
+			  error_t* = NULL);
+    bool accept(handle_t*,
+		handle_t,
+		struct sockaddr* = NULL,
+		error_t* = NULL);
+    bool terminate_connection(handle_t);
+    bool recv(handle_t,
+	      unsigned char*,
+	      size_t,
+	      size_t* = NULL,
+	      error_t* = NULL);
+    bool send(handle_t,
+	      const unsigned char*,
+	      size_t,
+	      size_t* = NULL,
+	      error_t* = NULL);
+  }
+
+
+  // @see sysapi/posix/mutex.cc
+  namespace mutex
+  {
+    // Handle on the mutex
+    typedef pthread_mutex_t* handle_t;
+
+    // Interface
+    bool lock(handle_t);
+    bool unlock(handle_t);
+  }
+
+
+  // @see sysapi/posix/error.cc
+  namespace error
+  {
+    typedef int handle_t;
+
+    handle_t	get();
+    void	set(handle_t);
+    void	stringify(const char* = NULL);
+  }
 }
 
 
@@ -36,10 +243,12 @@ namespace posix
 // - Doxygen comments start from here
 
 //! \file
-//! \brief Implements the win32 part of sysapi
+//! \brief Implements the posix part of sysapi
 //!
 //! Interfaces available for file, process, thread.
-//! See the files win32.hh for more informations.
+//! See the files posix.hh for more information.
+
+
 
 
 #endif // ! SYSAPI_POSIX_HH

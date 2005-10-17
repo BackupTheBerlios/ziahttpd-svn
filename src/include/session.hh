@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Mon Oct 17 13:56:59 2005 texane
+// Last update Mon Oct 17 18:03:44 2005 
 //
 
 
@@ -40,7 +40,7 @@ namespace server
     ~session();
 
     // Entry point of the session's thread
-    static sysapi::thread::retcode_t __stdcall entrypoint_(sysapi::thread::param_t);
+    static sysapi::thread::retcode_t entrypoint_(sysapi::thread::param_t);
 
   private:
     typedef struct http_info
