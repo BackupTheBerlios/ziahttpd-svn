@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Mon Oct 10 13:50:34 2005 texane
+## Last update Mon Oct 17 18:53:48 2005 
 ##
 
 
@@ -22,16 +22,16 @@ __GNU_MK	=	1
 # .compiler
 CC	:=	g++
 CCPATHS	:=	-I$(PROJ_ROOT)/src/include/
-CCDEFS	:=	-D_SYSAPI=2
+CCDEFS	:=	-D_SYSAPI=1
 CCGEN	:=	-O2
 CCWARNS	:=	-Wall
 CCOUT	:=	-c
 CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS)
 
 # .linker
-LD	:=	ld
+LD	:=	g++
 LDPATHS	:=
-LDLIBS	:=
+LDLIBS	:=	-lpthread
 LDGEN	:=
 LIBOUT	:=
 DLLOUT	:=	-shared
@@ -52,7 +52,7 @@ SLASH	:=	/
 
 
 %.o	:	%.cc
-		$(CC) $(CCFLAGS) $(CCOUT) $<
+		$(CC) $(CCFLAGS) $(CCOUT) -o $@ $<
 %.lib	:	%.o
 %lo	:	%.o
 %.x	:	%.o
