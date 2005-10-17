@@ -1,0 +1,164 @@
+\section{C:/home/texane/wip/ept3/zia/src/include/win32.hh File Reference}
+\label{win32_8hh}\index{C:/home/texane/wip/ept3/zia/src/include/win32.hh@{C:/home/texane/wip/ept3/zia/src/include/win32.hh}}
+Implements the win32 part of sysapi. 
+
+{\tt \#include $<$windows.h$>$}\par
+{\tt \#include $<$process.h$>$}\par
+\subsection*{Namespaces}
+\begin{CompactItemize}
+\item 
+namespace {\bf win32}
+\item 
+namespace {\bf win32::file}
+\item 
+namespace {\bf win32::process}
+\item 
+namespace {\bf win32::thread}
+\item 
+namespace {\bf win32::error}
+\end{CompactItemize}
+\subsection*{Typedefs}
+\begin{CompactItemize}
+\item 
+typedef HANDLE {\bf win32::file::handle\_\-t}\label{namespacewin32_1_1file_e91a5cd70974fc1184d0b922540829fb}
+
+\item 
+typedef DWORD {\bf win32::file::offset\_\-t}\label{namespacewin32_1_1file_da7afdb243c93a8f58e5f6cae87f8cba}
+
+\item 
+typedef DWORD {\bf win32::file::size\_\-t}\label{namespacewin32_1_1file_4bf26395801dcda2362105efd320c5db}
+
+\item 
+typedef HANDLE {\bf win32::process::handle\_\-t}\label{namespacewin32_1_1process_e91a5cd70974fc1184d0b922540829fb}
+
+\item 
+typedef HANDLE {\bf win32::thread::handle\_\-t}\label{namespacewin32_1_1thread_e91a5cd70974fc1184d0b922540829fb}
+
+\item 
+typedef void $\ast$ {\bf win32::thread::param\_\-t}\label{namespacewin32_1_1thread_46e87de097271aa79cfc8c0ab2954bfc}
+
+\item 
+typedef unsigned {\bf win32::thread::retcode\_\-t}\label{namespacewin32_1_1thread_45cf3e4ac1a525717c8ed1a631f35118}
+
+\item 
+typedef retcode\_\-t(\_\-\_\-stdcall $\ast$ {\bf win32::thread::entry\_\-t} )(param\_\-t)\label{namespacewin32_1_1thread_48bb8987a096a2899ee6f8f369bac582}
+
+\item 
+typedef DWORD {\bf win32::error::handle\_\-t}\label{namespacewin32_1_1error_e91a5cd70974fc1184d0b922540829fb}
+
+\end{CompactItemize}
+\subsection*{Enumerations}
+\begin{CompactItemize}
+\item 
+enum {\bf mode\_\-t} \{ {\bf RDONLY} =  GENERIC\_\-READ, 
+{\bf WRONLY} =  GENERIC\_\-WRITE, 
+{\bf RDWR} =  GENERIC\_\-READ $|$ GENERIC\_\-WRITE
+ \}
+\item 
+enum {\bf pos\_\-t} \{ {\bf BEGIN} =  FILE\_\-BEGIN, 
+{\bf CURRENT} =  FILE\_\-CURRENT, 
+{\bf END} =  FILE\_\-END
+ \}
+\item 
+enum {\bf waitopt\_\-t} \{ {\bf DONTWAIT} =  0, 
+{\bf WAITFOREVER}
+ \}
+\item 
+enum {\bf state\_\-t} \{ {\bf RUNNING} =  0, 
+{\bf BLOCKED}, 
+{\bf TERMINATED}
+ \}
+\item 
+enum {\bf sigid\_\-t} \{ {\bf TERMINATE} =  0
+ \}
+\item 
+enum {\bf state\_\-t} \{ {\bf RUNNING} =  0, 
+{\bf SUSPENDED}, 
+{\bf BLOCKED}, 
+{\bf TERMINATED}
+ \}
+\item 
+enum {\bf waitopt\_\-t} \{ {\bf DONTWAIT} =  0, 
+{\bf WAITFOREVER}
+ \}
+\item 
+enum {\bf sigid\_\-t} \{ {\bf TERMINATE} =  0, 
+{\bf RESUME}, 
+{\bf SUSPEND}
+ \}
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+bool {\bf win32::file::open} (handle\_\-t $\ast$, const char $\ast$, mode\_\-t, int $\ast$=static\_\-cast$<$ int $\ast$ $>$(0))\label{namespacewin32_1_1file_01c41f89a65430585a1ca5e434651964}
+
+\item 
+bool {\bf win32::file::create} (const char $\ast$, mode\_\-t=RDWR, handle\_\-t $\ast$=static\_\-cast$<$ handle\_\-t $\ast$ $>$(0), int $\ast$=static\_\-cast$<$ int $\ast$ $>$(0))\label{namespacewin32_1_1file_5ce7a9fe6a82d8f2ca19cd3d355b14cd}
+
+\item 
+bool {\bf win32::file::close} (handle\_\-t, int $\ast$=static\_\-cast$<$ int $\ast$ $>$(0))\label{namespacewin32_1_1file_4f2158ffd120bc4807dbcc107f84e8fc}
+
+\item 
+bool {\bf win32::file::read} (handle\_\-t, unsigned char $\ast$, size\_\-t, size\_\-t $\ast$=static\_\-cast$<$ size\_\-t $\ast$ $>$(0), int $\ast$=static\_\-cast$<$ int $\ast$ $>$(0))\label{namespacewin32_1_1file_b65a8fb90f015826cb6c65a40a200cb0}
+
+\item 
+bool {\bf win32::file::write} (handle\_\-t, const unsigned char $\ast$, size\_\-t, size\_\-t $\ast$=static\_\-cast$<$ size\_\-t $\ast$ $>$(0), int $\ast$=static\_\-cast$<$ int $\ast$ $>$(0))\label{namespacewin32_1_1file_4113821876a7144b7881ce90c794817c}
+
+\item 
+bool {\bf win32::file::seek} (handle\_\-t, offset\_\-t, pos\_\-t=CURRENT, int $\ast$=static\_\-cast$<$ int $\ast$ $>$(0))\label{namespacewin32_1_1file_70c66619ffd143ce4dfb4b1f53cb9554}
+
+\item 
+bool {\bf win32::process::create\_\-and\_\-loadexec} (handle\_\-t $\ast$, int, const char $\ast$$\ast$, const char $\ast$$\ast$=NULL)\label{namespacewin32_1_1process_74075ca5310b2d722062de9e4ab40dd2}
+
+\item 
+bool {\bf win32::process::myhandle} (handle\_\-t $\ast$)\label{namespacewin32_1_1process_7fcb06bda957687be5f81acc6b32ea65}
+
+\item 
+bool {\bf win32::process::signal} (handle\_\-t, sigid\_\-t)\label{namespacewin32_1_1process_65bed66a4a1fb5aaa466cdf76c2c361c}
+
+\item 
+bool {\bf win32::process::release} (handle\_\-t)\label{namespacewin32_1_1process_99f84f68ac313c62dff02d80a1420ce3}
+
+\item 
+bool {\bf win32::process::wait\_\-single} (handle\_\-t, state\_\-t $\ast$=NULL, waitopt\_\-t=WAITFOREVER)\label{namespacewin32_1_1process_55e9b7961f6b3ab3385182cc60a0c6a8}
+
+\item 
+bool {\bf win32::process::wait\_\-any} (handle\_\-t $\ast$=NULL, state\_\-t $\ast$=NULL, waitopt\_\-t=WAITFOREVER)\label{namespacewin32_1_1process_2eab9d48905f56c080d19dc924f93838}
+
+\item 
+bool {\bf win32::thread::create\_\-and\_\-exec} (handle\_\-t $\ast$, state\_\-t, entry\_\-t, param\_\-t=NULL)\label{namespacewin32_1_1thread_2b344cfe84d03cbbe97979cbb21d0a28}
+
+\item 
+bool {\bf win32::thread::attach\_\-to\_\-process} (handle\_\-t, win32::process::handle\_\-t)\label{namespacewin32_1_1thread_31adac8080174903ecdf0ed1a1e3c3fc}
+
+\item 
+bool {\bf win32::thread::detach\_\-from\_\-process} (handle\_\-t, win32::process::handle\_\-t)\label{namespacewin32_1_1thread_ac6401beea5ae870ebe3224e254a54e0}
+
+\item 
+bool {\bf win32::thread::wait\_\-single} (handle\_\-t, state\_\-t $\ast$=NULL, waitopt\_\-t=WAITFOREVER)\label{namespacewin32_1_1thread_55e9b7961f6b3ab3385182cc60a0c6a8}
+
+\item 
+bool {\bf win32::thread::signal} (handle\_\-t, sigid\_\-t)\label{namespacewin32_1_1thread_65bed66a4a1fb5aaa466cdf76c2c361c}
+
+\item 
+bool {\bf win32::thread::myhandle} (handle\_\-t $\ast$)\label{namespacewin32_1_1thread_7fcb06bda957687be5f81acc6b32ea65}
+
+\item 
+bool {\bf win32::thread::release} (handle\_\-t)\label{namespacewin32_1_1thread_99f84f68ac313c62dff02d80a1420ce3}
+
+\item 
+handle\_\-t {\bf win32::error::get} ()\label{namespacewin32_1_1error_712109514c51d8578a1a5952b71603f1}
+
+\item 
+void {\bf win32::error::set} (handle\_\-t)\label{namespacewin32_1_1error_c94a297e7e8ff03099c32383871939a4}
+
+\item 
+void {\bf win32::error::stringify} (const char $\ast$=NULL)\label{namespacewin32_1_1error_5dcac4f5db06efad933e2ebb8bd314e2}
+
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+Implements the win32 part of sysapi. 
+
+Interfaces available for file, process, thread. See the files {\bf win32.hh}{\rm (p.\,\pageref{win32_8hh})} for more informations. 

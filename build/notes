@@ -1,0 +1,85 @@
+[*] Goals
+In order to not spent time editing make files again and again, we want to factorize what
+we have already written in modules, as we do with functions in the c programming language for instance.
+So we want to gather build functionnalities that won't change into files, so that they can be included
+in the other files and even other projects. Really, this save a lot of time.
+Furthermore, we want to be portable among operating environnements, so that typing a command
+such as make will build the project, no matter wether we are working on a windows or a gnu environement.
+We won't use gnu's configure like methods. They add an important overhead to the build process, and we
+have to keep in mind that files involved in our system must be read and edited by developpers; Thus
+we have to code only the common part of the build process, that's the part that can spread among operating
+environements without tremendous efforts.
+So keep it simple, stupid.
+
+
+[*] Files used by the build process
+In order to be easy to use and to maintain, the build process is scattered into several files.
++ proj.mk:
+Contains general settings for the projects.
++ rules.mk:
+Containes inferred rules used by make tools.
++ tools.mk:
+Contains necessary tools and their options.
+
+Make files are not spread into several directories.  For instance, let say you are on the windows
+environnement, the tools.mk is NOT in a windows/ directory, but rather the file tools.mk containes
+the windows part along with the gnu's one. So don't bother with guessing where the tools.mk for windows
+is, just includes tools.mk. Our system internally uses the PROJ_ENV environement variable to drive the
+build process.
+
+
+[*] Variables and rules used in the build process
+
+Internally, our build system uses the following variables:
++ PATH should points to the directory where your compilation suite is;
++ PROJ_ROOT should be set to the root directory of your project;
++ PROJ_ENV is internally used by make to guess your programming environnement;	Possible values are {windows, gnu}.
+
+Internally, our build system defines the following variables:
++ @see tools.mk
++ @see rules.mk
+
+
+
+[*] File extensions
+On most moderne operating environement, its a common mistake to think that file extensions
+doesn't indicate the file's meaning.
+In programmer's standpoint, extensions are of importance, since this is how utility such as gnu make
+allow one to define so-called RULES (especially inferred rules such as %.o : %.cc).
+Nmake, the Microsoft gnu make version rely on the same mechanism; Furhtermore, the microsoft c++ compiler
+relies on the fact object files always have the .obj suffixes(-c switch).
+Knowing that, we will use common extensions among operating environement to defined a file semantic.
+As less is better, here are our portable file extensions along with their meanings:
+%.lo: a loadable object file(Dll or Shared object for instance);
+%.cc: c++ source files;
+%.hh: c++ header files;
+%.lib: an archive containing a collection of object files;
+%.o: an object file;
+%.x: an executable binary file containing machine code;
+%.mk: file used by make-like tools
+
+
+[*] Requirements
++ On gnu environnements, nothing special is required.
++ On Windows environnements, the Visual Studio C++ compiler toolsuite must be installed.
+Furthermore, you should have a shell compatible to the XPsp2's one(builtins are used in the make files).
++ Whatever the system you are developping is, set the following variable to correct values:
+	+ PATH should points to the directory where your compilation suite is;
+	+ PROJ_DIR should be set to the root directory of your project;
+	+ PROJ_ENV is internally used by make to guess your programming environnement;	Possible values are {windows, gnu}.
+
+
+[*] Some words
++ The $(*OUT) variable and the name of the file to be generated must be stucked together; For instance: $(LDOUT)$(OUTFILE)
++ Before commiting changes you've made to the project, always clean your developpement tree... Thus, don't add files that are
+binary-dependant of the operating environnement(object files, executables ones...)
++ To add to the content to a variable, do the following: var=$(var)some_content
+
+
+[*] Feedbacks, improvements...
+texane@gmail.com
+
+
+[*] Resources
+nmkake useful links:
+@see http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vccore/html/_asug_filename_macros.asp

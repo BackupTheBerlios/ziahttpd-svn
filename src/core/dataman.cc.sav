@@ -1,0 +1,192 @@
+//
+// dataman.cc for  in 
+// 
+// Made by texane
+// Login   <texane@gmail.com>
+// 
+// Started on  Thu Oct 13 16:09:17 2005 texane
+// Last update Thu Oct 13 21:49:37 2005 texane
+//
+
+
+#include <cstring>
+#include <cstring_helper.hh>
+#include <sysapi.hh>
+#include <dataman.hh>
+
+
+// - Notes on http requests processing
+// In order to be http1.1 compliant, we will process
+// client requests as follow:
+// . get *crlf
+// . get status line
+// . get *headers
+// . get crlf
+// . get body, if any
+
+
+#include <iostream>
+
+
+// Concat two block, c-string version
+#define ISDEL(str) ((*(str - 1) == '\r') && (*(str) == '\n'))
+// #define ISDEL(str) (*(str) == '\n')
+static char	*_block_cat(char *dst, char *src, bool *done)
+{
+  char		*buf;
+  char		*ptr;
+  int		len;
+  int		n;
+
+  *done = false;
+
+  n = 0;
+  if (*src)
+    for (n = 1; src[n] && !ISDEL(src + n); ++n)
+      // for (n = 0; src[n] && !ISDEL(src + n); ++n)
+      ;
+
+  if (ISDEL(src + n))
+    *done = true;
+
+  len = n;
+  if (dst)
+    len += (int)strlen(dst);
+  buf = new char[len + 1];
+
+  strncat(cstring_helper::strcpy(buf, dst ? dst : ""), src, n);
+  buf[len] = 0;
+  if (dst)
+    delete[] dst;
+
+  if (!src[n])
+    *src = 0;
+  else
+    {
+      ptr = src + n + 1;
+      while (*ptr)
+	*src++ = *ptr++;
+      *src = 0;
+    }
+  
+  return buf;
+}
+
+typedef struct	_s_block
+{
+  bool		used;
+  char		*blk;
+  char		*res;
+  sysapi::socket_in::handle_t hdl;
+}		_block_t;
+
+
+#define _NBLK		3
+#define	NR_FDMAX	1024
+static _block_t	_block_array[NR_FDMAX];
+
+static inline void unbook_block_entry(int i)
+{
+  _block_array[i].used = false;
+}
+
+
+static inline void book_block_entry(int i, sysapi::socket_in::handle_t hdl)
+{
+  _block_array[i].used = true;
+  _block_array[i].hdl = hdl;
+  _block_array[i].blk = new char[_NBLK + 1];
+  _block_array[i].blk[0] = 0;
+  _block_array[i].res = NULL;
+}
+
+static inline _block_t* get_block_entry(sysapi::socket_in::handle_t hdl)
+{
+  int i;
+  int last_not_used = -1;
+  _block_t* res;
+
+  for (i = 0; i < NR_FDMAX && _block_array[i].hdl != hdl; ++i)
+    {
+      if (_block_array[i].used == false && last_not_used == -1)
+	last_not_used = i;
+    }
+
+  res = &_block_array[i];
+
+  if (i == NR_FDMAX && last_not_used != -1)
+    book_block_entry(i, hdl);
+  else if (i == NR_FDMAX && last_not_used == -1)
+    res = NULL;
+
+  return res;
+}
+
+
+bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con, char** ptr_line)
+{
+  static bool	_init_me = false;
+  _block_t	*ptr;
+  int		n;
+  bool		done;
+
+  if (_init_me == false)
+    {
+      memset(_block_array, 0, NR_FDMAX * sizeof(_block_t));
+      _init_me = true;
+    }
+
+  ptr = get_block_entry(hdl_con);
+  if (ptr == NULL)
+    return false;
+
+  ptr->res = _block_cat(ptr->res, ptr->blk, &done);
+  if (done == true)
+    {
+      *ptr_line = ptr->res;
+      ptr->res = NULL;
+      return true;
+    }
+
+//  try_again:
+  if (sysapi::socket_in::recv(hdl_con, reinterpret_cast<unsigned char*>(ptr->blk), _NBLK, &n) == true)
+    {
+      ptr->blk[n] = 0;
+      ptr->res = _block_cat(ptr->res, ptr->blk, &done);
+      if (done == true)
+	{
+	  *ptr_line = ptr->res;
+	  ptr->res = NULL;
+	  return true;
+	}
+      else
+	return false;
+    }
+  else
+    {
+      // if ((n == -1) && (errno == EINTR))
+      // goto try_again;
+    }
+
+
+  // If the client peer has just deconnected, set errno to EPIPE.
+  // if (n == 0)
+  // errno = EPIPE;
+
+  // sav_errno = errno;
+  // delete[] ptr->blk;
+  // ptr->blk = NULL;
+  // delete[] ptr->res;
+  // ptr->res = NULL;
+  // ptr->used = false;
+  // errno = sav_errno;
+
+  return false;
+}
+
+bool http::dataman::get_nextblock(sysapi::socket_in::handle_t hdl_con,
+				  unsigned char** buf_body,
+				  sysapi::socket_in::size_t* sz_buf)
+{
+  return false;
+}
