@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Wed Oct 19 23:47:14 2005 
+// Last update Thu Oct 20 01:15:40 2005 
 //
 
 
@@ -42,6 +42,9 @@ namespace server
     sysapi::socket_in::handle_t get_connection_handle() const { return hdl_con_; }
     server::channel* get_channel() const { return this_chan_; }
 
+    // Create a worker thread
+    bool create_worker_thread();
+
   private:
     typedef struct http_info
     {
@@ -57,13 +60,16 @@ namespace server
     // server::config* config_;
 
     // execution thread
-    sysapi::thread::handle_t hdl_thread_;
+    sysapi::thread::handle_t hdl_worker_;
 
     // Pointer to channel's session
     server::channel* this_chan_;
 
     // Connection socket related
     sysapi::socket_in::handle_t hdl_con_;
+
+    // Thread worker entry point
+    static sysapi::thread::retcode_t worker_entry_(sysapi::thread::param_t);
   };
 }
 

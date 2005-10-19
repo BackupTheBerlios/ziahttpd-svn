@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:11:05 2005 texane
-// Last update Wed Oct 19 15:51:57 2005 texane
+// Last update Thu Oct 20 01:21:27 2005 
 //
 
 
@@ -16,5 +16,6 @@
 #include <channel.hh>
 #include <session.hh>
 #include <cstring_helper.hh>
+#include <dataman.hh>
 
 #endif // ! SERVER_HH
