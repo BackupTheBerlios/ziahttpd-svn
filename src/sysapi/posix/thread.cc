@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:35:18 2005 
-// Last update Wed Oct 19 23:14:25 2005 
+// Last update Wed Oct 19 23:20:11 2005 
 //
 
 
@@ -55,13 +55,6 @@ bool	posix::thread::wait_single(handle_t hdl, state_t* state, waitopt_t wopt)
 
   return true;
 }
-
-
-bool	posix::thread::signal(handle_t, sigid_t)
-{
-  return false;
-}
-
 
 bool	posix::thread::myhandle(handle_t* hdl)
 {

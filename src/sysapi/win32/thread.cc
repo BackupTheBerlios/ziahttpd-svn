@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 11:26:36 2005 texane
-// Last update Wed Oct 19 23:12:37 2005 
+// Last update Wed Oct 19 23:20:39 2005 
 //
 
 
@@ -44,36 +44,6 @@ bool	win32::thread::attach_to_process(handle_t, win32::process::handle_t)
 bool	win32::thread::detach_from_process(handle_t, win32::process::handle_t)
 {
   return false;
-}
-
-
-bool	win32::thread::signal(handle_t hdl, sigid_t sigid)
-{
-  bool res;
-
-  res = true;
-  switch (sigid)
-    {
-    case TERMINATE:
-      _endthreadex(-1);
-      break;
-
-    case RESUME:
-      if (ResumeThread(hdl) == (DWORD)-1)
-	res = false;
-      break;
-
-    case SUSPEND:
-      if (SuspendThread(hdl) == (DWORD)-1)
-	res = false;
-      break;
-
-    default:
-      res = false;
-      break;
-    }
-
-  return res;
 }
 
 

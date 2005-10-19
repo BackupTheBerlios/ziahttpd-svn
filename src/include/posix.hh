@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Wed Oct 19 23:11:02 2005 
+// Last update Wed Oct 19 23:21:13 2005 
 //
 
 
@@ -141,7 +141,6 @@ namespace posix
     bool	attach_to_process(handle_t, posix::process::handle_t);
     bool	detach_from_process(handle_t, posix::process::handle_t);
     bool	wait_single(handle_t, state_t* = NULL, waitopt_t = WAITFOREVER);
-    bool	signal(handle_t, sigid_t);
     bool	myhandle(handle_t*);
     bool	release(handle_t);
     bool	say(const char* = NULL);
