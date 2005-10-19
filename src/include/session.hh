@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Thu Oct 20 01:15:40 2005 
+// Last update Thu Oct 20 02:40:52 2005 
 //
 
 
@@ -39,8 +39,9 @@ namespace server
     ~session();
 
     // Accessors
-    sysapi::socket_in::handle_t get_connection_handle() const { return hdl_con_; }
     server::channel* get_channel() const { return this_chan_; }
+    sysapi::socket_in::handle_t get_connection_handle() const { return hdl_con_; }
+    sysapi::thread::handle_t get_worker_handle() const { return hdl_worker_; }
 
     // Create a worker thread
     bool create_worker_thread();

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Thu Oct 20 02:29:00 2005 
+// Last update Thu Oct 20 02:36:32 2005 
 //
 
 
@@ -76,12 +76,6 @@ bool server::session::create_worker_thread()
       sysapi::error::stringify("Cannot create worker thread");
       sysapi::socket_in::terminate_connection(hdl_con_);
       return false;
-    }
-  else
-    {
-      sysapi::thread::wait_single(hdl_worker_);
-      sysapi::thread::release(hdl_worker_);
-      sysapi::socket_in::terminate_connection(hdl_con_);
     }
 
   return true;

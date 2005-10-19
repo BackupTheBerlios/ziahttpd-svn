@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 15:07:37 2005 texane
-// Last update Thu Oct 20 01:42:27 2005 
+// Last update Thu Oct 20 02:44:09 2005 
 //
 
 
@@ -44,10 +44,13 @@ sysapi::thread::retcode_t server::channel::dispatcher_entry(sysapi::thread::para
       sysapi::thread::say("Dispatcher has accepted new connection");
       
       sess = new server::session(hdl_con, chan);
-      if (sess->create_worker_thread() == false)
-	sysapi::error::stringify("Cannot create a worker thread");
+      if (sess->create_worker_thread() == true)
+	{
+	  sysapi::thread::wait_single(sess->get_worker_handle());
+	  sysapi::thread::release(sess->get_worker_handle());
+	  sysapi::socket_in::terminate_connection(sess->get_connection_handle());
+	}
       delete sess;
-
     }
 
   // Terminate
