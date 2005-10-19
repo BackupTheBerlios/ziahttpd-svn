@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 05 12:02:12 2005 texane
-## Last update Wed Oct 19 18:26:19 2005 
+## Last update Wed Oct 19 19:29:33 2005 
 ##
 
 # ! Always include this file
@@ -25,7 +25,6 @@ srcs	= core$(SLASH)main.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)mutex.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)socket_in.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc \
-													\
 	  message$(SLASH)header.cc \
 	  message$(SLASH)message.cc \
 	  message$(SLASH)statusline.cc \

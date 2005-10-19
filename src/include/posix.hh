@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Wed Oct 19 19:04:44 2005 
+// Last update Wed Oct 19 19:25:22 2005 
 //
 
 
@@ -104,7 +104,7 @@ namespace posix
   namespace thread
   {
     // Handle on threads
-    typedef pthread_t* handle_t;
+    typedef pthread_t handle_t;
 
     // Thread entry point
     typedef void* param_t;

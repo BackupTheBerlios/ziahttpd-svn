@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Mon Oct 17 18:53:48 2005 
+## Last update Wed Oct 19 19:31:12 2005 
 ##
 
 
@@ -22,7 +22,7 @@ __GNU_MK	=	1
 # .compiler
 CC	:=	g++
 CCPATHS	:=	-I$(PROJ_ROOT)/src/include/
-CCDEFS	:=	-D_SYSAPI=1
+CCDEFS	:=	-D_SYSAPI=1 -D_REENTRANT
 CCGEN	:=	-O2
 CCWARNS	:=	-Wall
 CCOUT	:=	-c
