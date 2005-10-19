@@ -13,33 +13,18 @@ So keep it simple, stupid.
 
 
 [*] Files used by the build process
-In order to be easy to use and to maintain, the build process is scattered into several files.
-+ proj.mk:
-Contains general settings for the projects.
-+ rules.mk:
-Containes inferred rules used by make tools.
-+ tools.mk:
-Contains necessary tools and their options.
-
-Make files are not spread into several directories.  For instance, let say you are on the windows
-environnement, the tools.mk is NOT in a windows/ directory, but rather the file tools.mk containes
-the windows part along with the gnu's one. So don't bother with guessing where the tools.mk for windows
-is, just includes tools.mk. Our system internally uses the PROJ_ENV environement variable to drive the
-build process.
++ A main makefile
++ a windows.mk
++ a gnu.mk
+The two latter ones containe rules and tools for the main one.
 
 
 [*] Variables and rules used in the build process
-
 Internally, our build system uses the following variables:
 + PATH should points to the directory where your compilation suite is;
 + PROJ_ROOT should be set to the root directory of your project;
 + PROJ_ENV is internally used by make to guess your programming environnement;	Possible values are {windows, gnu}.
-
-Internally, our build system defines the following variables:
-+ @see tools.mk
-+ @see rules.mk
-
-
++ PROJ_SYSAPI should be set to either win32 or posix
 
 [*] File extensions
 On most moderne operating environement, its a common mistake to think that file extensions
@@ -59,21 +44,12 @@ As less is better, here are our portable file extensions along with their meanin
 %.mk: file used by make-like tools
 
 
-[*] Requirements
-+ On gnu environnements, nothing special is required.
-+ On Windows environnements, the Visual Studio C++ compiler toolsuite must be installed.
-Furthermore, you should have a shell compatible to the XPsp2's one(builtins are used in the make files).
-+ Whatever the system you are developping is, set the following variable to correct values:
-	+ PATH should points to the directory where your compilation suite is;
-	+ PROJ_DIR should be set to the root directory of your project;
-	+ PROJ_ENV is internally used by make to guess your programming environnement;	Possible values are {windows, gnu}.
-
-
 [*] Some words
 + The $(*OUT) variable and the name of the file to be generated must be stucked together; For instance: $(LDOUT)$(OUTFILE)
 + Before commiting changes you've made to the project, always clean your developpement tree... Thus, don't add files that are
 binary-dependant of the operating environnement(object files, executables ones...)
 + To add to the content to a variable, do the following: var=$(var)some_content
++ Use the $(SLASH) variable to separate components of in the path of a file
 
 
 [*] Feedbacks, improvements...
