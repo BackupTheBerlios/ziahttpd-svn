@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:35:18 2005 
-// Last update Wed Oct 19 19:30:48 2005 
+// Last update Wed Oct 19 23:14:25 2005 
 //
 
 
@@ -16,9 +16,9 @@ using std::cout;
 using std::endl;
 
 
-bool	posix::thread::create_and_exec(handle_t* hdl, state_t, entry_t entry, param_t param)
+bool	posix::thread::create_and_exec(handle_t* hdl, entry_t entry, param_t param)
 {
-  if (pthread_create(hdl, 0, entry, param))
+  if (::pthread_create(hdl, 0, entry, param))
     return false;
 
   return true;

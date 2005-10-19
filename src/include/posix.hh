@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Wed Oct 19 19:25:22 2005 
+// Last update Wed Oct 19 23:11:02 2005 
 //
 
 
@@ -137,7 +137,7 @@ namespace posix
 
 
     // Public interface
-    bool	create_and_exec(handle_t*, state_t, entry_t, param_t = NULL);
+    bool	create_and_exec(handle_t*, entry_t, param_t = NULL);
     bool	attach_to_process(handle_t, posix::process::handle_t);
     bool	detach_from_process(handle_t, posix::process::handle_t);
     bool	wait_single(handle_t, state_t* = NULL, waitopt_t = WAITFOREVER);

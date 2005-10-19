@@ -5,25 +5,19 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 11:26:36 2005 texane
-// Last update Wed Oct 19 11:27:14 2005 texane
+// Last update Wed Oct 19 23:12:37 2005 
 //
 
 
 #include <win32.hh>
 #include <iostream>
 
-bool	win32::thread::create_and_exec(handle_t* hdl, state_t state, entry_t entry, param_t param)
+bool	win32::thread::create_and_exec(handle_t* hdl, entry_t entry, param_t param)
 {
-  unsigned initflag;
   unsigned thid;
   handle_t res;
 
-  if (state == SUSPENDED)
-    initflag = CREATE_SUSPENDED;
-  else
-    initflag = 0;
-
-  if (_beginthreadex(0, 0, (unsigned int (__stdcall*)(void*))entry, param, initflag, &thid) == 0)
+  if (_beginthreadex(0, 0, (unsigned int (__stdcall*)(void*))entry, param, 0, &thid) == 0)
     {
       return false;
     }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Wed Oct 19 12:27:13 2005 texane
+// Last update Wed Oct 19 23:11:19 2005 
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -129,7 +129,7 @@ namespace win32
 
 
     // Public interface
-    bool	create_and_exec(handle_t*, state_t, entry_t, param_t = NULL);
+    bool	create_and_exec(handle_t*, entry_t, param_t = NULL);
     bool	attach_to_process(handle_t, win32::process::handle_t);
     bool	detach_from_process(handle_t, win32::process::handle_t);
     bool	wait_single(handle_t, state_t* = NULL, waitopt_t = WAITFOREVER);

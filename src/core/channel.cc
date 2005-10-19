@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 15:07:37 2005 texane
-// Last update Wed Oct 19 18:29:56 2005 
+// Last update Wed Oct 19 23:13:37 2005 
 //
 
 
@@ -96,7 +96,7 @@ sysapi::thread::retcode_t server::channel::dispatcher_entry(sysapi::thread::para
       
       sess.chan_ = chan;
       sess.hdl_con_ = hdl_con;
-      if (sysapi::thread::create_and_exec(&hdl_worker, sysapi::thread::RUNNING, worker_entry, reinterpret_cast<sysapi::thread::param_t>(&sess)) == false)
+      if (sysapi::thread::create_and_exec(&hdl_worker, worker_entry, reinterpret_cast<sysapi::thread::param_t>(&sess)) == false)
 	{
 	  sysapi::error::stringify("Cannot create worker thread");
 	  sysapi::socket_in::terminate_connection(hdl_con);
@@ -133,7 +133,7 @@ server::channel::channel(const char* local_port, const char* local_addr)
   sysapi::thread::say("Listening socket created");
 
   // Create the dispatcher thread
-  if (sysapi::thread::create_and_exec(&hdl_dispatcher_, sysapi::thread::RUNNING, dispatcher_entry, reinterpret_cast<sysapi::thread::param_t>(this)) == false)
+  if (sysapi::thread::create_and_exec(&hdl_dispatcher_, dispatcher_entry, reinterpret_cast<sysapi::thread::param_t>(this)) == false)
     {
       sysapi::error::stringify("Cannot create channel dispatcher thread");
       throw (int)0;

@@ -5,18 +5,15 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:26 2005 texane
-// Last update Tue Oct 11 14:52:39 2005 texane
+// Last update Wed Oct 19 23:05:00 2005 
 //
 
 #ifndef SYSAPI_HH
 # define SYSAPI_HH
 
-// Address the subsystem portability issue
-// at the compile time, by aliasing the sysapi
-// namespace to the correct one.
-// _SYSAPI has to be defined one the command line,
-// and must be affected with the following values:
-// {win32, posix}.
+
+// Address the portability issue by
+// namespace aliasing means
 
 #if _SYSAPI == 1
 # include <posix.hh>
