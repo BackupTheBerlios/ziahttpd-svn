@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 05 12:02:12 2005 texane
-## Last update Wed Oct 19 11:16:49 2005 texane
+## Last update Wed Oct 19 18:26:19 2005 
 ##
 
 # ! Always include this file
@@ -17,7 +17,6 @@ name	= ziad.x
 srcs	= core$(SLASH)main.cc \
 	  core$(SLASH)core.cc \
 	  core$(SLASH)channel.cc \
-	  core$(SLASH)session.cc \
 	  core$(SLASH)dataman.cc \
 	  core$(SLASH)cstring_helper.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
