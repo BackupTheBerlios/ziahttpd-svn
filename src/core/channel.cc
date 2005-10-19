@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 15:07:37 2005 texane
-// Last update Wed Oct 19 15:44:22 2005 texane
+// Last update Wed Oct 19 18:29:56 2005 
 //
 
 
@@ -90,7 +90,7 @@ sysapi::thread::retcode_t server::channel::dispatcher_entry(sysapi::thread::para
 	{
 	  sysapi::error::stringify("Dispatcher cannot accept:");
 	  sysapi::socket_in::terminate_connection(hdl_con);
-	  return static_cast<sysapi::thread::retcode_t>(-1);
+	  return 0;
 	}
       sysapi::thread::say("Dispatcher has accepted new connection");
       

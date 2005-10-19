@@ -5,42 +5,104 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:40:35 2005 
-// Last update Mon Oct 17 18:44:36 2005 
+// Last update Wed Oct 19 18:51:02 2005 
 //
 
 
 #include <posix.hh>
 
 
+// Helper routines
+bool		getinaddr_tobuf(unsigned int *buf, const char *addr)
+{
+  struct hostent *he;
+  int		err;
+
+  err = inet_pton(AF_INET, addr, (void *)buf);
+  if (!err)
+    {
+      he = gethostbyname(addr);
+      if (!he)
+	return false;
+      *buf = *((unsigned int *)he->h_addr_list[0]);
+    }
+  if (err >= 0)
+    return true;
+  return false;
+}
+
+static void inline fill_inaddr(unsigned short local_port,
+			       unsigned long local_addr,
+			       struct sockaddr_in* inaddr)
+{
+  inaddr->sin_family = AF_INET;
+  inaddr->sin_port = local_port;
+  inaddr->sin_addr.s_addr = local_addr;
+}
+
+static void inline set_nonblocking_mode(win32::socket_in::handle_t hdl)
+{
+  char optval = (char)TRUE;
+  setsockopt(hdl, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+}
+
+
+
+// Nothing to initialize
 bool posix::socket_in::init_subsystem(error_t*)
 {
-  return false;
+  return true;
 }
 
 
+// Nothing to destroy
 bool posix::socket_in::release_subsystem(error_t*)
 {
-  return false;
+  return true;
 }
 
 
-bool posix::socket_in::create_listening(handle_t*,
-					unsigned short,
-					unsigned long,
-					int,
+bool posix::socket_in::create_listening(handle_t* hdl,
+					unsigned short local_port,
+					unsigned long local_port,
+					int nr_listen,
 					error_t*)
 {
-  return false;
+  struct sockaddr_in sa;
+  posix::socket_in::handle_t sock;
+
+  if ((sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
+    return false;
+
+  set_nonblocking_mode(sock);
+  fill_inaddr(htons(local_port), htonl(local_addr), &sa);
+  if (bind(sock, reinterpret_cast<struct sockaddr*>(&sa), sizeof(struct sockaddr_in)) == -1)
+    {
+      posix::socket_in::terminate_connection(sock);
+      return false;
+    }
+
+  if (!nr_listen)
+    nr_listen = 10;
+  ::listen(sock, nr_listen);
+
+  *hdl = sock;
+  return true;
 }
 
 
-bool posix::socket_in::create_listening(handle_t*,
-					unsigned short,
-					const char*,
-					int,
-					error_t*)
+bool posix::socket_in::create_listening(handle_t* hdl,
+					unsigned short lcoalport,
+					const char* localaddr,
+					int nr_listen,
+					error_t* err)
 {
-  return false;
+  unsigned long addr;
+
+  if (resolve_readable_inaddr(localaddr, &addr) == false)
+    return false;
+
+  return posix::socket_in::create_listening(hdl, localport, htonl(addr), nr_listen, err);
 }
 
 
@@ -49,31 +111,60 @@ bool posix::socket_in::accept(handle_t*,
 			      struct sockaddr*,
 			      error_t*)
 {
-  return false;
+  int addrlen;
+  posix::socket_in::handle_t res;
+
+  addrlen = sizeof(struct sockaddr_in);
+  res = ::accept(hdl_accept, saddr, saddr ? &addrlen : NULL);
+  if (res == -1)
+    return false;
+
+  *hdl_con = res;
+
+  return true;
 }
 
 
-bool posix::socket_in::terminate_connection(handle_t)
+bool posix::socket_in::terminate_connection(handle_t hdl)
 {
-  return false;
+  if (shutdown(hdl, 0) == -1)
+    return false;
+  close(hdl);
+  return true;
 }
 
 
-bool posix::socket_in::recv(handle_t,
-			    unsigned char*,
-			    size_t,
-			    size_t*,
+bool posix::socket_in::recv(handle_t hdl,
+			    unsigned char* buf,
+			    size_t sz,
+			    size_t* nr_read,
 			    error_t*)
 {
-  return false;
+  int res;
+
+  res = ::recv(hdl, reinterpret_cast<char*>(buf), sz, 0);
+  if (res == -1)
+    return false;
+  
+  if (nr_read)
+    *nr_read = res;
+  return true;  
 }
 
 
-bool posix::socket_in::send(handle_t,
-			    const unsigned char*,
-			    size_t,
-			    size_t*,
+bool posix::socket_in::send(handle_t hdl,
+			    const unsigned char* buf,
+			    size_t sz,
+			    size_t* nr_read,
 			    error_t*)
 {
-  return false;
+  int res;
+
+  res = ::send(hdl, reinterpret_cast<const char*>(buf), sz, 0);
+  if (res == -1)
+    return false;
+
+  if (nr_written)
+    *nr_written = res;
+  return true;
 }

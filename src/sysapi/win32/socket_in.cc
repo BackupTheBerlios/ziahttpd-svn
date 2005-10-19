@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 17:46:27 2005 texane
-// Last update Wed Oct 19 15:09:40 2005 texane
+// Last update Wed Oct 19 18:48:10 2005 
 //
 
 
@@ -40,8 +40,6 @@ bool win32::socket_in::release_subsystem(win32::socket_in::error_t* err)
   return true;
 }
 
-
-#include <iostream>
 
 static bool resolve_readable_inaddr(const char* addr, unsigned long* res)
 {
