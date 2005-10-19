@@ -10,7 +10,7 @@
 	purpose:	
 *********************************************************************/
 
-#include "stringmanager.hh"
+#include <stringmanager.hh>
 #include <iostream>
 
 bool	stringmanager::string::split(const std::string &source, const std::string& delimitor, std::vector<std::string>& dest, const std::string& putdel)

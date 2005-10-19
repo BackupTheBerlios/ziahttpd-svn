@@ -214,9 +214,6 @@
 				RelativePath=".\src\include\dataman.hh">
 			</File>
 			<File
-				RelativePath=".\src\include\header.hh">
-			</File>
-			<File
 				RelativePath=".\src\include\message.hh">
 			</File>
 			<File

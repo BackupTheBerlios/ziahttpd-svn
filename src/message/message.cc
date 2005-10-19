@@ -10,10 +10,10 @@
 	purpose:	
 *********************************************************************/
 
-#include "message.hh"
 #include <iostream>
 #include <vector>
-#include "stringmanager.hh"
+#include <stringmanager.hh>
+#include <message.hh>
 
 http::message::message(server::session& s)
 {
