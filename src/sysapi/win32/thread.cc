@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 11:26:36 2005 texane
-// Last update Mon Oct 17 13:54:41 2005 texane
+// Last update Wed Oct 19 11:27:14 2005 texane
 //
 
 
@@ -23,7 +23,7 @@ bool	win32::thread::create_and_exec(handle_t* hdl, state_t state, entry_t entry,
   else
     initflag = 0;
 
-  if (_beginthreadex(0, 0, entry, param, initflag, &thid) == 0)
+  if (_beginthreadex(0, 0, (unsigned int (__stdcall*)(void*))entry, param, initflag, &thid) == 0)
     {
       return false;
     }

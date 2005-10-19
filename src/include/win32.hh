@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Mon Oct 17 13:51:20 2005 texane
+// Last update Wed Oct 19 11:18:48 2005 texane
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -101,7 +101,7 @@ namespace win32
     // Thread entry point
     typedef void* param_t;
     typedef unsigned retcode_t;
-    typedef retcode_t (__stdcall *entry_t)(param_t);
+    typedef retcode_t (*entry_t)(param_t);
 
     // thread states
     typedef enum

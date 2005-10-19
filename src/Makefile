@@ -5,11 +5,11 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 05 12:02:12 2005 texane
-## Last update Mon Oct 17 16:46:20 2005 
+## Last update Wed Oct 19 11:16:49 2005 texane
 ##
 
 # ! Always include this file
-include $(PROJ_ROOT)/build/$(PROJ_ENV).mk
+!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk"
 
 # Give your own variables here
 name	= ziad.x
