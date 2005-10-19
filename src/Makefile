@@ -9,7 +9,8 @@
 ##
 
 # ! Always include this file
-!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk"
+#!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= ziad.x
