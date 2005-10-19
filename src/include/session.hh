@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Mon Oct 17 18:03:44 2005 
+// Last update Wed Oct 19 15:51:35 2005 texane
 //
 
 
@@ -14,7 +14,6 @@
 
 
 #include <channel.hh>
-#include <sockin.hh>
 #include <sysapi.hh>
 
 
@@ -36,7 +35,7 @@ namespace server
   {
   public:
     // Construction, destruction
-    session();
+    session(server::channel&);
     ~session();
 
     // Entry point of the session's thread
@@ -50,7 +49,6 @@ namespace server
       int max_rqst_;
 
       // client information
-      server::sockin_t sin_client_;
     } http_info_t;
 
 
@@ -61,7 +59,7 @@ namespace server
     sysapi::thread::handle_t hdl_thread_;
 
     // Pointer to channel's session
-    server::channel* this_chan_;
+    server::channel& this_chan_;
 
     // Connection socket related
     sysapi::socket_in::handle_t hdl_con_;

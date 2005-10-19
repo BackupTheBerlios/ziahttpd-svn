@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Wed Oct 19 11:18:48 2005 texane
+// Last update Wed Oct 19 12:27:13 2005 texane
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -215,8 +215,10 @@ namespace win32
     typedef HANDLE handle_t;
 
     // Interface
-    bool lock(win32::mutex::handle_t);
-    bool unlock(win32::mutex::handle_t);
+    bool create(win32::mutex::handle_t*);
+    bool destroy(win32::mutex::handle_t);
+    bool acquire(win32::mutex::handle_t);
+    bool release(win32::mutex::handle_t);
   }
 
 

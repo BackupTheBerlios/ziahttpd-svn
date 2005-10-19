@@ -5,33 +5,32 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 05 11:32:11 2005 texane
-// Last update Mon Oct 17 13:25:44 2005 texane
+// Last update Wed Oct 19 15:40:39 2005 texane
 //
 
 
 #include <iostream>
-#include <core.hh>
-#include <sysapi.hh>
+#include <server.hh>
 
-
-// Create a session spool
-
+// Currently the server supports only
+// one channel (INADDR_ANY, 40000).
 
 int main(int ac, char** av)
 {
-  server::core srv;
-  sysapi::thread::handle_t hdl_thr;
-
-  while (srv.done() == false)
+  // Init the socket subsystem
+  if (sysapi::socket_in::init_subsystem() == false)
     {
-      if (sysapi::thread::create_and_exec(&hdl_thr, sysapi::thread::SUSPENDED, server::session::entrypoint_) == false)
-	{
-	  sysapi::error::stringify("Cannot create thread: ");
-	  return -1;
-	}
-      sysapi::thread::signal(hdl_thr, sysapi::thread::RESUME);
-      sysapi::thread::wait_single(hdl_thr);
+      sysapi::error::stringify("Cannot initialize subsystem: ");
+      return -1;
     }
 
-  std::cout << std::endl;
+  // Create a new channel
+  {
+    server::channel chan("40000", "localhost");
+    sysapi::thread::wait_single(chan.dispatcher_handle());
+    sysapi::thread::release(chan.dispatcher_handle());
+  }
+
+  // Release the subsystem
+  sysapi::socket_in::release_subsystem();
 }
