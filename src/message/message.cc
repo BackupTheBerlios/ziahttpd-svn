@@ -105,6 +105,7 @@ bool	http::message::header(const std::string& data)
 			return(true);
 		}
 	}
+	header_data.variables_[var] = val;
 	free(var);
 	return (true);
 }
