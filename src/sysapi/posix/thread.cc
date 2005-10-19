@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:35:18 2005 
-// Last update Wed Oct 19 23:20:11 2005 
+// Last update Thu Oct 20 02:21:04 2005 
 //
 
 
@@ -65,8 +65,15 @@ bool	posix::thread::myhandle(handle_t* hdl)
 
 bool	posix::thread::release(handle_t hdl)
 {
-  if (pthread_detach(hdl))
-    return false;
+  int ret;
+
+  if ((ret = pthread_detach(hdl)))
+    {
+      // The thread is already done, don't consider as an error
+      if (ret == ESRCH)
+	return true;
+      return false;
+    }
 
   return true;
 }

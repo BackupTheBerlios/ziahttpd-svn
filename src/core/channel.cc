@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 15:07:37 2005 texane
-// Last update Thu Oct 20 01:21:59 2005 
+// Last update Thu Oct 20 01:42:27 2005 
 //
 
 
@@ -45,10 +45,7 @@ sysapi::thread::retcode_t server::channel::dispatcher_entry(sysapi::thread::para
       
       sess = new server::session(hdl_con, chan);
       if (sess->create_worker_thread() == false)
-	{
-	  sysapi::error::stringify("Cannot create a worker thread");
-	  // terminate the connection
-	}
+	sysapi::error::stringify("Cannot create a worker thread");
       delete sess;
 
     }
