@@ -16,7 +16,21 @@
 
 #include <string>
 #include <map>
+#ifndef _TEST
 #include <session.hh>
+#endif
+#ifdef _TEST
+
+namespace server
+{
+	class session
+	{
+	public:
+	protected:
+	private:
+	};
+};
+#endif
 
 namespace	http
 {

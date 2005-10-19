@@ -229,9 +229,6 @@
 				RelativePath=".\src\include\sockin.hh">
 			</File>
 			<File
-				RelativePath=".\src\include\statusline.hh">
-			</File>
-			<File
 				RelativePath=".\src\include\stringmanager.hh">
 			</File>
 			<File
