@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Mon Oct 17 18:47:17 2005 
+// Last update Wed Oct 19 19:04:44 2005 
 //
 
 
@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 
 
 namespace posix

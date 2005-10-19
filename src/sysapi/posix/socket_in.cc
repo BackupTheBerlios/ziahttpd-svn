@@ -5,11 +5,14 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:40:35 2005 
-// Last update Wed Oct 19 18:51:02 2005 
+// Last update Wed Oct 19 19:09:40 2005 
 //
 
 
 #include <posix.hh>
+
+
+// fixme : use gethostbyname_r()
 
 
 // Helper routines
@@ -40,9 +43,9 @@ static void inline fill_inaddr(unsigned short local_port,
   inaddr->sin_addr.s_addr = local_addr;
 }
 
-static void inline set_nonblocking_mode(win32::socket_in::handle_t hdl)
+static void inline set_nonblocking_mode(posix::socket_in::handle_t hdl)
 {
-  char optval = (char)TRUE;
+  char optval = 1;
   setsockopt(hdl, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
 }
 
@@ -64,7 +67,7 @@ bool posix::socket_in::release_subsystem(error_t*)
 
 bool posix::socket_in::create_listening(handle_t* hdl,
 					unsigned short local_port,
-					unsigned long local_port,
+					unsigned long local_addr,
 					int nr_listen,
 					error_t*)
 {
@@ -92,30 +95,30 @@ bool posix::socket_in::create_listening(handle_t* hdl,
 
 
 bool posix::socket_in::create_listening(handle_t* hdl,
-					unsigned short lcoalport,
+					unsigned short localport,
 					const char* localaddr,
 					int nr_listen,
 					error_t* err)
 {
-  unsigned long addr;
+  unsigned int addr;
 
-  if (resolve_readable_inaddr(localaddr, &addr) == false)
+  if (getinaddr_tobuf(&addr, localaddr) == false)
     return false;
 
   return posix::socket_in::create_listening(hdl, localport, htonl(addr), nr_listen, err);
 }
 
 
-bool posix::socket_in::accept(handle_t*,
-			      handle_t,
-			      struct sockaddr*,
+bool posix::socket_in::accept(handle_t* hdl_con,
+			      handle_t hdl_accept,
+			      struct sockaddr* saddr,
 			      error_t*)
 {
-  int addrlen;
+  socklen_t addrlen;
   posix::socket_in::handle_t res;
 
   addrlen = sizeof(struct sockaddr_in);
-  res = ::accept(hdl_accept, saddr, saddr ? &addrlen : NULL);
+  res = ::accept(hdl_accept, saddr, saddr ? &addrlen : 0);
   if (res == -1)
     return false;
 
@@ -155,7 +158,7 @@ bool posix::socket_in::recv(handle_t hdl,
 bool posix::socket_in::send(handle_t hdl,
 			    const unsigned char* buf,
 			    size_t sz,
-			    size_t* nr_read,
+			    size_t* nr_written,
 			    error_t*)
 {
   int res;
