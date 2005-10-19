@@ -26,6 +26,8 @@ Internally, our build system uses the following variables:
 + PROJ_ENV is internally used by make to guess your programming environnement;	Possible values are {windows, gnu}.
 + PROJ_SYSAPI should be set to either win32 or posix
 
++ type nmake ziad.x to build the ziad executable
+
 [*] File extensions
 On most moderne operating environement, its a common mistake to think that file extensions
 doesn't indicate the file's meaning.
