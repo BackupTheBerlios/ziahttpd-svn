@@ -24,7 +24,13 @@ srcs	= core$(SLASH)main.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)thread.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)mutex.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)socket_in.cc \
-	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc
+	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc \
+													\
+	  message$(SLASH)header.cc \
+	  message$(SLASH)message.cc \
+	  message$(SLASH)statusline.cc \
+	  stringmanager$(SLASH)stringmanager.cc
+
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \

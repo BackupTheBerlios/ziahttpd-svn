@@ -173,6 +173,26 @@
 					RelativePath=".\src\sysapi\win32\thread.cc">
 				</File>
 			</Filter>
+			<Filter
+				Name="message"
+				Filter="">
+				<File
+					RelativePath=".\src\message\header.cc">
+				</File>
+				<File
+					RelativePath=".\src\message\message.cc">
+				</File>
+				<File
+					RelativePath=".\src\message\statusline.cc">
+				</File>
+			</Filter>
+			<Filter
+				Name="stringmanager"
+				Filter="">
+				<File
+					RelativePath=".\src\stringmanager\stringmanager.cc">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -194,6 +214,12 @@
 				RelativePath=".\src\include\dataman.hh">
 			</File>
 			<File
+				RelativePath=".\src\include\header.hh">
+			</File>
+			<File
+				RelativePath=".\src\include\message.hh">
+			</File>
+			<File
 				RelativePath=".\src\include\posix.hh">
 			</File>
 			<File
@@ -204,6 +230,12 @@
 			</File>
 			<File
 				RelativePath=".\src\include\sockin.hh">
+			</File>
+			<File
+				RelativePath=".\src\include\statusline.hh">
+			</File>
+			<File
+				RelativePath=".\src\include\stringmanager.hh">
 			</File>
 			<File
 				RelativePath=".\src\include\sysapi.hh">
