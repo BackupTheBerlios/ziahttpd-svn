@@ -35,7 +35,7 @@ namespace server
 namespace	http
 {
 	static std::string statusline_key[] = {"GET", "POST", "OPTION", "HEAD", "PUT", "DELETE", "TRACE", "CONNECT", ""};
-	static std::string header_key[] = {"Host", "Connection", ""};
+	static std::string header_key[] = {"Host", "Connection", "", ""};
 
 	class	message 
 	{
