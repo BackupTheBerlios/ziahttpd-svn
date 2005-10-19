@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 15:07:37 2005 texane
-// Last update Wed Oct 19 23:13:37 2005 
+// Last update Wed Oct 19 23:48:56 2005 
 //
 
 
@@ -26,24 +26,17 @@ using server::channel;
 // close and so on.
 
 
-typedef struct
-{
-  sysapi::socket_in::handle_t hdl_con_;
-  server::channel* chan_;
-} session_t;
-
-
 // Worker, that's a session
 sysapi::thread::retcode_t worker_entry(sysapi::thread::param_t param)
 {
   bool ret;
   char* ptr_line;
-  session_t* sess = reinterpret_cast<session_t*>(param);
+  server::session* sess = reinterpret_cast<server::session*>(param);
 
   sysapi::thread::say("Servicing the new client");
   
   // request line
-  while ((ret = http::dataman::get_nextline(sess->hdl_con_, &ptr_line)) == true &&
+  while ((ret = http::dataman::get_nextline(sess->get_connection_handle(), &ptr_line)) == true &&
 	 !::strlen((const char*)ptr_line))
     {
       sysapi::thread::say("<CRLF>");
@@ -56,7 +49,7 @@ sysapi::thread::retcode_t worker_entry(sysapi::thread::param_t param)
     }
 
   // header
-  while ((ret = http::dataman::get_nextline(sess->hdl_con_, &ptr_line)) && strlen((const char*)ptr_line))
+  while ((ret = http::dataman::get_nextline(sess->get_connection_handle(), &ptr_line)) && strlen((const char*)ptr_line))
     {
       sysapi::thread::say("<HEADER_LINE>");
       delete[] ptr_line;
@@ -80,8 +73,7 @@ sysapi::thread::retcode_t server::channel::dispatcher_entry(sysapi::thread::para
   channel* chan = reinterpret_cast<channel*>(param);
   sysapi::socket_in::handle_t hdl_con;
   sysapi::thread::handle_t hdl_worker;
-  // local variable, incorrect, but works for a one at a time server model
-  session_t sess;
+  session* sess;
 
   // Accept on the socket
   while (1)
@@ -94,9 +86,9 @@ sysapi::thread::retcode_t server::channel::dispatcher_entry(sysapi::thread::para
 	}
       sysapi::thread::say("Dispatcher has accepted new connection");
       
-      sess.chan_ = chan;
-      sess.hdl_con_ = hdl_con;
-      if (sysapi::thread::create_and_exec(&hdl_worker, worker_entry, reinterpret_cast<sysapi::thread::param_t>(&sess)) == false)
+      sess = new server::session(hdl_con, chan);
+
+      if (sysapi::thread::create_and_exec(&hdl_worker, worker_entry, reinterpret_cast<sysapi::thread::param_t>(sess)) == false)
 	{
 	  sysapi::error::stringify("Cannot create worker thread");
 	  sysapi::socket_in::terminate_connection(hdl_con);
@@ -107,6 +99,8 @@ sysapi::thread::retcode_t server::channel::dispatcher_entry(sysapi::thread::para
 	  sysapi::thread::release(hdl_worker);
 	  sysapi::socket_in::terminate_connection(hdl_con);
 	}
+
+      delete sess;
     }
 
   // Terminate
