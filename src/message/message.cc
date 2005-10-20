@@ -16,9 +16,9 @@
 #include <httpstringmanager.hh>
 #include <message.hh>
 
-http::message::message(server::session& s)
+http::message::message(server::session* s)
 {
-	session_ = &s;
+	session_ = s;
 	error_code_ = 200;
 }
 
@@ -54,6 +54,11 @@ bool	http::message::statusline(const std::string& data)
 bool	http::message::statusline()
 {
 	// tt le tralala
+	// open file ... check ... nani kore ?
+	// recupe de l extention
+	// check minetype
+	// kill 2 Gnus
+
 	std::string err_str;
 
 	if (!error_code_string(err_str))

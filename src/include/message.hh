@@ -35,14 +35,12 @@ namespace server
 namespace	http
 {
 	static std::string statusline_key[] = {"GET", "POST", "OPTION", "HEAD", "PUT", "DELETE", "TRACE", "CONNECT", ""};
-	//enum { GET, POST, OPTION, HEAD, PUT, DELETE, TRACE, CONNECT };
-	//enum MyEnumType { GET, POST, OPTION, HEAD, PUT, DELETE, TRACE, CONNECT };
-//enum MyEnumType { GET, POST, PUT, HEAD };
+
 	class	message 
 	{
 	public:
 		//constructor 
-		message(server::session&);
+		message(server::session *);
 		// check if the status line is correct
 		bool			statusline(const std::string&);
 		// build the status line for the client
@@ -64,7 +62,7 @@ namespace	http
 		// last header index
 		int					last_header_;
 		// method index
-		std::string					method_;
+		std::string			method_;
 		// complete uri
 		std::string			uri_;
 		// version of the http header
