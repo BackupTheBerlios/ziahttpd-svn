@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 05 11:32:11 2005 texane
-// Last update Thu Oct 20 11:46:11 2005 
+// Last update Thu Oct 20 21:21:58 2005 
 //
 
 
@@ -24,7 +24,7 @@ int main(int ac, char** av)
 
   // Create a new channel
   {
-    server::channel chan("40000", "localhost");
+    server::channel chan("40000");
     sysapi::thread::wait_single(chan.dispatcher_handle());
     sysapi::thread::release(chan.dispatcher_handle());
   }

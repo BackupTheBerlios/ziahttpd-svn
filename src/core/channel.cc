@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 15:07:37 2005 texane
-// Last update Thu Oct 20 12:19:23 2005 
+// Last update Thu Oct 20 21:21:50 2005 
 //
 
 
@@ -67,9 +67,15 @@ server::channel::channel(unsigned short local_port, const char* local_addr)
 server::channel::channel(const char* local_port, const char* local_addr)
 {
   unsigned short port = (unsigned short)::atoi(local_port);
+  bool res;
 
   // Create a listening socket for this channel
-  if (sysapi::socket_in::create_listening(&hdl_accept_, port, local_addr) == false)
+  if (local_addr)
+    res = sysapi::socket_in::create_listening(&hdl_accept_, port, local_addr);
+  else
+    res = sysapi::socket_in::create_listening(&hdl_accept_, port);
+  
+  if (res == false)
     {
       sysapi::error::stringify("Dispatcher cannot listen");
       throw (int)0;

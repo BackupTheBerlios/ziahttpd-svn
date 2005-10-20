@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 10:46:47 2005 texane
-// Last update Wed Oct 19 23:59:10 2005 
+// Last update Thu Oct 20 21:17:46 2005 
 //
 
 
@@ -30,8 +30,8 @@ namespace server
   class channel
   {
   public:
-    channel(unsigned short, const char*);
-    channel(const char*, const char*);
+    channel(unsigned short, const char* = NULL);
+    channel(const char*, const char* = NULL);
     ~channel();
 
     sysapi::thread::handle_t dispatcher_handle() const { return hdl_dispatcher_; }
