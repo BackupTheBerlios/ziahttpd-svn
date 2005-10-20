@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Thu Oct 20 20:16:59 2005 
+// Last update Thu Oct 20 23:20:39 2005 
 //
 
 
@@ -47,6 +47,7 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
   do
     {
       http::message	msg(sess);
+      sess->http_info_.is_body_ = false;
 
       thread::say("Servicing the new request");
 
@@ -62,9 +63,12 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       // get all headers
       while (sess->get_headerlines(&ptr_line, &err) && ::strlen((const char*)ptr_line))
 	{
+	  std::cout << ptr_line << std::endl;
 	  msg.header((const char*)ptr_line);
 	  delete[] ptr_line;
 	}
+
+      std::cout << "after" << std::endl;
 
       // we are one the last crlf
       if (ret == true)
@@ -73,7 +77,11 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
 	return 0;
 
       // get the body, if any
-      // sess->get_body(0, 0, 0, 0);
+      if (sess->http_info_.is_body_ == true)
+	{
+	  // sess->get_body(0, 0, 0, 0);
+	  sysapi::thread::say("there is a body");
+	}
     }
   while (sess->is_persistent() == true);
 
