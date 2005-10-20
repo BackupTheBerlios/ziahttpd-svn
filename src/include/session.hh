@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Thu Oct 20 20:28:48 2005 
+// Last update Thu Oct 20 20:45:31 2005 
 //
 
 
@@ -16,7 +16,7 @@
 #include <channel.hh>
 #include <sysapi.hh>
 #include <dataman.hh>
-
+#include <message.hh>
 
 // The session is the basic runnable execution
 // unit of our server.
@@ -34,6 +34,9 @@ namespace server
 
   class session
   {
+    class http::message;
+    friend class http::message;
+
   public:
     // Construction, destruction
     session(sysapi::socket_in::handle_t, server::channel*);
@@ -72,7 +75,6 @@ namespace server
 
     } http_info_t;
     http_info_t http_info_;
-
 
     // store body relative information
     typedef struct
