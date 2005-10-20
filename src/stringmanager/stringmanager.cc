@@ -78,7 +78,7 @@ bool	stringmanager::string::convert_hexa(std::string &str)
 }
 bool	stringmanager::string::unconvert_hexa(std::string &str)
 {
-	for (size_t i = 0; str[i]; i++)
+	for (int i = 0; i < str[i]; i++)
 	{
 		if (str[i] == '%')
 		{

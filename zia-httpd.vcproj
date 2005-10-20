@@ -130,9 +130,6 @@
 					RelativePath=".\src\core\channel.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\client.cc">
-				</File>
-				<File
 					RelativePath=".\src\core\core.cc">
 				</File>
 				<File
@@ -142,13 +139,7 @@
 					RelativePath=".\src\core\dataman.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\inaddr.c">
-				</File>
-				<File
 					RelativePath=".\src\core\main.cc">
-				</File>
-				<File
-					RelativePath=".\src\core\session.cc">
 				</File>
 			</Filter>
 			<Filter
@@ -178,6 +169,9 @@
 				Filter="">
 				<File
 					RelativePath=".\src\message\header.cc">
+				</File>
+				<File
+					RelativePath=".\src\message\httpstringmanager.cc">
 				</File>
 				<File
 					RelativePath=".\src\message\message.cc">
@@ -212,6 +206,9 @@
 			</File>
 			<File
 				RelativePath=".\src\include\dataman.hh">
+			</File>
+			<File
+				RelativePath=".\src\include\httpstringmanager.hh">
 			</File>
 			<File
 				RelativePath=".\src\include\message.hh">

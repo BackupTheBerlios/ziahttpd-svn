@@ -35,8 +35,9 @@ namespace server
 namespace	http
 {
 	static std::string statusline_key[] = {"GET", "POST", "OPTION", "HEAD", "PUT", "DELETE", "TRACE", "CONNECT", ""};
-	static std::string header_key[] = {"Host", "Connection", "", ""};
-
+	//enum { GET, POST, OPTION, HEAD, PUT, DELETE, TRACE, CONNECT };
+	//enum MyEnumType { GET, POST, OPTION, HEAD, PUT, DELETE, TRACE, CONNECT };
+//enum MyEnumType { GET, POST, PUT, HEAD };
 	class	message 
 	{
 	public:
@@ -54,35 +55,33 @@ namespace	http
 		bool			body(const unsigned char*, size_t);
 		// add the body at the end of the response for the client 
 		bool			body();
+
 	private:
 		//current session
 		server::session*	session_;
+		//response error code if error .. if no error error_code = -1
 		int					error_code_;
+		// last header index
 		int					last_header_;
+		// method index
+		std::string					method_;
+		// complete uri
+		std::string			uri_;
+		// version of the http header
+		std::string			version_;
+		// status line query 
+		std::string			query_;
+		// what url the client want ?
+		std::string			page_;
+		// variable by GET method
+		std::map<std::string, std::string>  getquery_;
+		// variable by POST method
+		std::map<std::string, std::string>  postquery_;
+		// list of header fields
+		std::map<std::string, std::string>  header_;
 
-		class			statusline_c
-		{
-		public:
-			int				method_;
-			std::string		uri_;
-			std::string		version_;
-			std::string		query_;
-			std::string		page_;
-			std::map<std::string, std::string>  variables_;
-
-			bool			method(const std::string &, int &err);
-			bool			uri(const std::string &, int &err);
-			bool			version(const std::string &, int &err);
-		};
-
-		class			header_c
-		{
-		public:
-			std::map<std::string, std::string>  variables_;
-		};
-
-		statusline_c	statusline_data;
-		header_c		header_data;
+		bool			uri(const std::string &, int &err);
+		bool			error_code_string(std::string &);
 	};
 };
 
