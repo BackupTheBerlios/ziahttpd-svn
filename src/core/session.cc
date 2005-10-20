@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Thu Oct 20 17:25:22 2005 
+// Last update Thu Oct 20 19:07:35 2005 
 //
 
 
@@ -62,22 +62,25 @@ bool server::session::get_body()
 // Session worker thread
 sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t param)
 {
-  bool ret;
-  char* ptr_line;
-  server::session* sess = reinterpret_cast<server::session*>(param);
-  socket_in::error_t err;
+  bool			ret;
+  char*			ptr_line;
+  socket_in::error_t	err;
+  server::session*	sess = reinterpret_cast<server::session*>(param);
+  http::message		msg(*sess);
 
   thread::say("Servicing the new client");
-  
-  // request line
+
   do
     {
+      // request line
       thread::say("Servicing the new request");
-      while ((ret = dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) == true &&
-	     !::strlen((const char*)ptr_line))
+      while ((ret = dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) == true && !::strlen((const char*)ptr_line))
 	delete[] ptr_line;
       if (ret == true)
-	delete[] ptr_line;
+	{
+	  msg.statusline((const char*)ptr_line);
+	  delete[] ptr_line;
+	}
       else
 	{
 	  if (err == sysapi::socket_in::CONN_DISCONNECTED)
@@ -85,9 +88,11 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
 	}
 
       // header
-      while ((ret = dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) &&
-	     strlen((const char*)ptr_line))
-	delete[] ptr_line;
+      while ((ret = dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) && strlen((const char*)ptr_line))
+	{
+	  msg.header((const char*)ptr_line);
+	  delete[] ptr_line;
+	}
       if (ret == true)
 	delete[] ptr_line;
       else
