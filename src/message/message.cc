@@ -78,6 +78,7 @@ bool	http::message::header(const std::string& data)
 	char	*var;
 	char	*val;
 	char	*tmp;
+	stringmanager::string	p;
 	struct	header_list_s
 	{
 		std::string	var;
@@ -86,8 +87,8 @@ bool	http::message::header(const std::string& data)
 
 	header_list_s	header_list[] =
 	{
-		{"Host", NULL},
-		{"Content-length", response_header_content_length},
+		{"host", NULL},
+		{"content-length", response_header_content_length},
 		{"", NULL}
 	};
 
@@ -113,6 +114,7 @@ bool	http::message::header(const std::string& data)
 	val = tmp + 1;
 	while (*val == ' ')
 		val++;
+	p.normalize(var);
 	for (int i = 0; !header_list[i].var.empty(); i++)
 	{
 		if (header_list[i].var == var)

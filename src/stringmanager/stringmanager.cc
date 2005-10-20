@@ -127,3 +127,19 @@ bool	stringmanager::string::hex_to_char(const std::string &source, char &dest)
 	dest = res;
 	return (true);
 }
+
+bool	stringmanager::string::normalize(std::string &str)
+{
+	for (size_t i = 0 ; i < str.size(); i++)
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] = str[i] - 'A' + 'a';
+	return (true);
+}
+
+bool	stringmanager::string::normalize(char *str)
+{
+	for (size_t i = 0 ; i < strlen(str); i++)
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] = str[i] - 'A' + 'a';
+	return (true);
+}

@@ -27,7 +27,8 @@ namespace	stringmanager
 		bool	convert_hexa(std::string &);
 		bool	unconvert_hexa(std::string &);
 		bool	hex_to_char(const std::string &, char &);
-
+		bool	normalize(std::string &);
+		bool	normalize(char *);
 	private:
 		bool	is_delimitor(char, const std::string &);
 	};
