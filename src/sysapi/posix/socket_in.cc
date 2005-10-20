@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:40:35 2005 
-// Last update Wed Oct 19 19:09:40 2005 
+// Last update Thu Oct 20 14:47:47 2005 
 //
 
 
@@ -141,17 +141,34 @@ bool posix::socket_in::recv(handle_t hdl,
 			    unsigned char* buf,
 			    size_t sz,
 			    size_t* nr_read,
-			    error_t*)
+			    error_t* err)
 {
   int res;
+  bool ret = true;
 
   res = ::recv(hdl, reinterpret_cast<char*>(buf), sz, 0);
-  if (res == -1)
-    return false;
-  
+
+  if (res <= 0)
+    ret = false;
+
   if (nr_read)
     *nr_read = res;
-  return true;  
+
+  // set the error
+  if (err)
+    {
+      // end of connection
+      if (res == 0)
+	{
+	  *err = posix::socket_in::CONN_DISCONNECTED;
+	}
+      else
+	{
+	  *err = posix::socket_in::ERR_UNKNOWN;
+	}
+    }
+
+  return ret;
 }
 
 

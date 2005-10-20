@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Thu Oct 20 02:40:52 2005 
+// Last update Thu Oct 20 12:10:54 2005 
 //
 
 
@@ -42,6 +42,7 @@ namespace server
     server::channel* get_channel() const { return this_chan_; }
     sysapi::socket_in::handle_t get_connection_handle() const { return hdl_con_; }
     sysapi::thread::handle_t get_worker_handle() const { return hdl_worker_; }
+    bool is_persistent() const { return is_persistent_; }
 
     // Create a worker thread
     bool create_worker_thread();
@@ -49,9 +50,12 @@ namespace server
   private:
     typedef struct http_info
     {
-      // timing information, keep alive...
+      // timing information
       int nr_rqst_;
       int max_rqst_;
+
+      // Persistent connection information
+      bool is_persistent_;
 
       // client information
     } http_info_t;
@@ -71,6 +75,14 @@ namespace server
 
     // Thread worker entry point
     static sysapi::thread::retcode_t worker_entry_(sysapi::thread::param_t);
+
+    // timeout for the session, if in the idle state, in millisecond
+    enum
+      {
+	MAX_IDLE_TIME = 3000,
+      };
+    long nr_timeout_;
+    bool is_persistent_;
   };
 }
 

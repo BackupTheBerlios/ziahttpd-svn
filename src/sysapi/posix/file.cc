@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:10:19 2005 
-// Last update Mon Oct 17 18:32:02 2005 
+// Last update Thu Oct 20 15:44:08 2005 
 //
 
 
@@ -101,4 +101,90 @@ bool	posix::file::seek(handle_t hdl, offset_t off, pos_t pos, int* err)
     }
 
   return true;
+}
+
+
+enum file_query
+  {
+    EXISTS = 0,
+    DIRECTORY,
+    SIZE,
+    READABLE,
+    WRITTABLE,
+    EXECUTABLE
+  };
+
+static bool file_query_about(const char* filename, enum file_query q, unsigned long* aux)
+{
+  struct stat st;
+  int ret;
+  bool res;
+
+  res = false;
+  ret = stat(filename, &st);
+
+  switch (q)
+    {
+    case EXISTS:
+      if (ret != -1)
+	res = true;
+      break;
+
+    case DIRECTORY:
+      if ((st.st_mode & S_IFMT) == S_IFDIR)
+	res = true;
+      break;
+
+    case SIZE:
+      *aux = (unsigned long)st.st_size;
+      res = true;
+      break;
+
+    case READABLE:
+      res = true;
+      break;
+
+    case WRITTABLE:
+      res = true;
+      break;
+
+    case EXECUTABLE:
+      res = true;
+      break;
+
+    default:
+      break;
+    }
+
+  return res;
+}
+
+bool	posix::file::exists(const char* filename)
+{
+  return file_query_about(filename, EXISTS, 0);
+}
+
+bool	posix::file::is_directory(const char* filename)
+{
+  return file_query_about(filename, DIRECTORY, 0);
+}
+
+bool	posix::file::is_readable(const char* filename)
+{
+  return file_query_about(filename, READABLE, 0);
+}
+
+bool	posix::file::is_writtable(const char* filename)
+{
+  return file_query_about(filename, WRITTABLE, 0);
+}
+
+bool	posix::file::is_executable(const char* filename)
+{
+  return file_query_about(filename, EXECUTABLE, 0);
+}
+
+bool	posix::file::size(const char* filename, unsigned long* sz)
+{
+  return file_query_about(filename, SIZE, sz);
 }

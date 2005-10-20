@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Oct 13 16:09:17 2005 texane
-// Last update Mon Oct 17 18:06:39 2005 
+// Last update Thu Oct 20 14:47:30 2005 
 //
 
 
@@ -157,7 +157,7 @@ static inline _block_t* get_block_entry(sysapi::socket_in::handle_t hdl)
 }
 
 
-bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con, char** ptr_line)
+bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con, char** ptr_line, sysapi::socket_in::error_t* err)
 {
   static bool	_init_me = false;
   _block_t	*ptr;
@@ -184,10 +184,9 @@ bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con, char** ptr
     }
 
 //  try_again:
-  while ((ret = sysapi::socket_in::recv(hdl_con, reinterpret_cast<unsigned char*>(ptr->blk), _NBLK, &n)) == true)
+  while ((ret = sysapi::socket_in::recv(hdl_con, reinterpret_cast<unsigned char*>(ptr->blk), _NBLK, &n, err)) == true)
     {
       ptr->blk[n] = 0;
-      // std::cout << "blk: " << ptr->blk << ", len: " << n << std::endl;
       ptr->res = _block_cat(ptr->res, ptr->blk, &done);
       if (done == true)
 	{

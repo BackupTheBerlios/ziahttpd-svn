@@ -5,15 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 05 11:32:11 2005 texane
-// Last update Wed Oct 19 15:40:39 2005 texane
+// Last update Thu Oct 20 11:46:11 2005 
 //
 
 
 #include <iostream>
 #include <server.hh>
 
-// Currently the server supports only
-// one channel (INADDR_ANY, 40000).
 
 int main(int ac, char** av)
 {

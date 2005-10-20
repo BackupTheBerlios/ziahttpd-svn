@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Wed Oct 19 23:21:13 2005 
+// Last update Thu Oct 20 15:44:24 2005 
 //
 
 
@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 
@@ -59,6 +60,14 @@ namespace posix
     bool	read(handle_t, unsigned char*, size_t, size_t* = static_cast<size_t*>(0), int* = static_cast<int*>(0));
     bool	write(handle_t, const unsigned char*, size_t, size_t* = static_cast<size_t*>(0), int* = static_cast<int*>(0));
     bool	seek(handle_t, offset_t, pos_t = CURRENT, int* = static_cast<int*>(0));
+
+    // Access rights functions
+    bool	exists(const char*);
+    bool	size(const char*, unsigned long*);
+    bool	is_directory(const char*);
+    bool	is_readable(const char*);
+    bool	is_writtable(const char*);
+    bool	is_executable(const char*);
   }
 
 
@@ -175,6 +184,9 @@ namespace posix
 	CONN_RESET,    // connection aborted by the foreign soft
 	CONN_REFUSED,
 	CONN_DISCONNECTED, // gracefully disconnected
+
+	// Unknown error
+	ERR_UNKNOWN,
 
 	// Success
 	SUCCESS
