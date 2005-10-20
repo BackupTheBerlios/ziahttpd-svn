@@ -5,12 +5,16 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Thu Oct 20 14:51:43 2005 
+// Last update Thu Oct 20 17:25:22 2005 
 //
 
 
 #include <server.hh>
 #include <iostream>
+
+
+using namespace sysapi;
+using namespace http;
 
 
 // Construction
@@ -29,30 +33,51 @@ server::session::~session()
 }
 
 
+// Get chunked body
+bool server::session::get_body(socket_in::size_t sz_body)
+{
+  bool ret;
+  unsigned char* buf;
+  socket_in::size_t nr_recv;
+
+  buf = new unsigned char[sz_body];
+  ret = socket_in::recv(hdl_con_, buf, sz_body, &nr_recv);
+  if (ret == false)
+    {
+      buf = NULL;
+      delete buf;
+    }
+
+  return ret;
+}
+
+
+// Get non chunked body
+bool server::session::get_body()
+{
+  return false;
+}
+
+
 // Session worker thread
 sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t param)
 {
   bool ret;
   char* ptr_line;
   server::session* sess = reinterpret_cast<server::session*>(param);
-  sysapi::socket_in::error_t err;
+  socket_in::error_t err;
 
-  sysapi::thread::say("Servicing the new client");
+  thread::say("Servicing the new client");
   
   // request line
   do
     {
-      while ((ret = http::dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) == true &&
+      thread::say("Servicing the new request");
+      while ((ret = dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) == true &&
 	     !::strlen((const char*)ptr_line))
-	{
-	  sysapi::thread::say("<CRLF>");
-	  delete[] ptr_line;
-	}
+	delete[] ptr_line;
       if (ret == true)
-	{
-	  sysapi::thread::say("<REQUEST_LINE>");
-	  delete[] ptr_line;
-	}
+	delete[] ptr_line;
       else
 	{
 	  if (err == sysapi::socket_in::CONN_DISCONNECTED)
@@ -60,24 +85,19 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
 	}
 
       // header
-      while ((ret = http::dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) && strlen((const char*)ptr_line))
-	{
-	  sysapi::thread::say("<HEADER_LINE>");
-	  delete[] ptr_line;
-	}
+      while ((ret = dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) &&
+	     strlen((const char*)ptr_line))
+	delete[] ptr_line;
       if (ret == true)
-	{
-	  sysapi::thread::say("<CRLF>");
-	  delete[] ptr_line;
-	}
+	delete[] ptr_line;
       else
 	{
-	  if (err == sysapi::socket_in::CONN_DISCONNECTED)
+	  if (err == socket_in::CONN_DISCONNECTED)
 	    return 0;
 	}
 
       // body
-      sysapi::thread::say("<BODY>");  
+      sess->get_body();
     }
   while (sess->is_persistent() == true);
 

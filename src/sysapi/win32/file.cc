@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Thu Oct 20 15:43:32 2005 
+// Last update Thu Oct 20 18:52:31 2005 
 //
 
 
@@ -148,32 +148,32 @@ bool	win32::file::seek(win32::file::handle_t handle,
 
 // file access rights and types
 
-bool	posix::file::exists(const char* filename)
+bool	win32::file::exists(const char* filename)
 {
   return false;
 }
 
-bool	posix::file::is_directory(const char* filename)
+bool	win32::file::is_directory(const char* filename)
 {
   return false;
 }
 
-bool	posix::file::is_readable(const char* filename)
+bool	win32::file::is_readable(const char* filename)
 {
   return false;
 }
 
-bool	posix::file::is_writtable(const char* filename)
+bool	win32::file::is_writtable(const char* filename)
 {
   return false;
 }
 
-bool	posix::file::is_executable(const char* filename)
+bool	win32::file::is_executable(const char* filename)
 {
   return false;
 }
 
-bool	posix::file::size(const char* filename, unsigned long* sz)
+bool	win32::file::size(const char* filename, unsigned long* sz)
 {
   return false;
 }

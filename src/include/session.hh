@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Thu Oct 20 12:10:54 2005 
+// Last update Thu Oct 20 17:24:44 2005 
 //
 
 
@@ -46,6 +46,12 @@ namespace server
 
     // Create a worker thread
     bool create_worker_thread();
+
+    // Get non chunked body
+    bool get_body(sysapi::socket_in::size_t);
+
+    // get chunked body
+    bool get_body();
 
   private:
     typedef struct http_info
