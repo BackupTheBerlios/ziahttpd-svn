@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Thu Oct 20 20:13:14 2005 
+// Last update Thu Oct 20 20:28:48 2005 
 //
 
 
@@ -56,12 +56,20 @@ namespace server
 
   private:
 
-    // store http relative information
+    // store http relative information, used
+    // to pass information from parser to core.
     typedef struct
     {
+      // Connection persistency related
       int nr_rqst_;
       int max_rqst_;
       bool is_persistent_;
+
+      // Body related
+      bool is_body_;
+      bool is_chunked_;
+      sysapi::socket_in::size_t sz_body_;
+
     } http_info_t;
     http_info_t http_info_;
 
