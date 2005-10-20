@@ -43,7 +43,6 @@ bool	http::message::statusline(const std::string& data)
 	}
 	if (!http_par.method(glist[0], method_, error_code_))
 		return (false);
-
 	if (!uri(glist[1], error_code_))
 		return (false);
 	if (!http_par.version(glist[2], version_, error_code_))
@@ -57,8 +56,11 @@ bool	http::message::statusline()
 	// open file ... check ... nani kore ?
 	// recupe de l extention
 	// check minetype
-	// kill 2 Gnus
 
+	if (sysapi::file::exists(path_.c_str()))
+		error_code_ = 404;
+	if ((error_code_ != 404) && sysapi::file::is_readable(path_.c_str()))
+		error_code_ = 401;
 	std::string err_str;
 
 	if (!error_code_string(err_str))
@@ -85,6 +87,7 @@ bool	http::message::header(const std::string& data)
 	header_list_s	header_list[] =
 	{
 		{"Host", NULL},
+		{"Content-length", response_header_content_length},
 		{"", NULL}
 	};
 
@@ -114,6 +117,8 @@ bool	http::message::header(const std::string& data)
 	{
 		if (header_list[i].var == var)
 		{
+			if (header_list[i].fct_eq)
+				header_list[i].fct_eq(val);
 			header_[var] = val;
 #ifdef _debug
 			std::cout << "[" << var <<"][" << val << "]" << std::endl;
@@ -156,6 +161,11 @@ bool	http::message::body(const unsigned char* data, size_t size)
 
 bool	http::message::body()
 {
+	sysapi::file::handle_t	*fd = NULL;
+
+	if (!sysapi::file::open(fd, path_.c_str(), sysapi::file::RDONLY))
+		error_code_ = 404;
+	sysapi::file::close(*fd);
 	return (true);
 }
 

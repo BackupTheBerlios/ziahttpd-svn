@@ -141,6 +141,9 @@
 				<File
 					RelativePath=".\src\core\main.cc">
 				</File>
+				<File
+					RelativePath=".\src\core\session.cc">
+				</File>
 			</Filter>
 			<Filter
 				Name="sysapi"

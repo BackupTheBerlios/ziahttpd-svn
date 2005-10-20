@@ -22,8 +22,6 @@ namespace	stringmanager
 		bool	url(const std::string&, std::string&, int&);
 		bool	query(const std::string&, std::map<std::string, std::string> &, int&);
 		bool	version(const std::string&, std::string&, int&);
-	//	bool	get_var(const std::string&, std::map<std::string, std::string> &, int&);
-	protected:
 	private:
 	};
 };

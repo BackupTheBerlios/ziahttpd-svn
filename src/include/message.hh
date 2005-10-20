@@ -16,20 +16,11 @@
 
 #include <string>
 #include <map>
+namespace server {
+class session;
+}
 #ifndef _TEST
-#include <session.hh>
-#endif
-#ifdef _TEST
-
-namespace server
-{
-	class session
-	{
-	public:
-	protected:
-	private:
-	};
-};
+#include <sysapi.hh>
 #endif
 
 namespace	http
@@ -72,15 +63,19 @@ namespace	http
 		// what url the client want ?
 		std::string			page_;
 		// variable by GET method
+		bool				page_is_dir;
+		// variable by GET method
+		std::string			path_;
 		std::map<std::string, std::string>  getquery_;
 		// variable by POST method
 		std::map<std::string, std::string>  postquery_;
 		// list of header fields
 		std::map<std::string, std::string>  header_;
 
+		bool			response_header_content_length(const std::string&);
 		bool			uri(const std::string &, int &err);
 		bool			error_code_string(std::string &);
 	};
-};
+}
 
 #endif

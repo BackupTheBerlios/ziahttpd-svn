@@ -29,5 +29,9 @@ bool		http::message::uri(const std::string &str, int& err)
 	}
 	if (!hp.url(tmpp, page_, error_code_))
 		return (false);
+	page_is_dir = false;
+	if (page_[page_.size() - 1] == '/')
+		page_is_dir = true;
+	path_ = "c:/www" + page_;
 	return (true);
 }
