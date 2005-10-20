@@ -81,13 +81,13 @@ bool	http::message::header(const std::string& data)
 	struct	header_list_s
 	{
 		std::string	var;
-		bool (*fct_eq)(const std::string&);
+		bool (*fct_eq)(server::session*, const std::string&);
 	};
 
 	header_list_s	header_list[] =
 	{
 		{"Host", NULL},
-		{"Content-length", response_header_content_length},
+		{"Content-length", header::response_header_content_length},
 		{"", NULL}
 	};
 
@@ -118,7 +118,7 @@ bool	http::message::header(const std::string& data)
 		if (header_list[i].var == var)
 		{
 			if (header_list[i].fct_eq)
-				header_list[i].fct_eq(val);
+				header_list[i].fct_eq(session_, val);
 			header_[var] = val;
 #ifdef _debug
 			std::cout << "[" << var <<"][" << val << "]" << std::endl;
