@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Thu Oct 20 20:15:55 2005 
+// Last update Thu Oct 20 23:47:47 2005 
 //
 
 
@@ -40,11 +40,11 @@ bool	server::session::get_body(unsigned char** buf, sysapi::socket_in::size_t sz
 {
   bool ret;
 
-  *buf = new unsigned char[sz];
+  *buf = new unsigned char[sz + 1];
   ret = sysapi::socket_in::recv(hdl_con_, *buf, sz, nr_recv);
   if (ret == false)
     {
-      delete buf;
+      delete *buf;
     }
 
   return ret;

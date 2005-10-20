@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Oct 13 16:09:17 2005 texane
-// Last update Thu Oct 20 14:47:30 2005 
+// Last update Thu Oct 20 23:51:52 2005 
 //
 
 
@@ -109,7 +109,7 @@ typedef struct	_s_block
 }		_block_t;
 
 
-#define _NBLK		256
+#define _NBLK		1
 #define	NR_FDMAX	1024
 static _block_t	_block_array[NR_FDMAX];
 
