@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Thu Oct 20 19:07:35 2005 
+// Last update Thu Oct 20 19:15:58 2005 
 //
 
 
@@ -66,7 +66,7 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
   char*			ptr_line;
   socket_in::error_t	err;
   server::session*	sess = reinterpret_cast<server::session*>(param);
-  http::message		msg(*sess);
+  http::message		msg(sess);
 
   thread::say("Servicing the new client");
 
