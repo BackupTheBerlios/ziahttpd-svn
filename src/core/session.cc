@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Thu Oct 20 19:15:58 2005 
+// Last update Thu Oct 20 20:16:59 2005 
 //
 
 
@@ -23,7 +23,8 @@ server::session::session(sysapi::socket_in::handle_t hdl, server::channel* chan)
   hdl_con_ = hdl;
   this_chan_ = chan;
   nr_timeout_ = server::session::MAX_IDLE_TIME;
-  is_persistent_ = true;
+  http_info_.is_persistent_ = true;
+  http_info_.nr_rqst_ = 0;
 }
 
 
@@ -33,76 +34,46 @@ server::session::~session()
 }
 
 
-// Get chunked body
-bool server::session::get_body(socket_in::size_t sz_body)
-{
-  bool ret;
-  unsigned char* buf;
-  socket_in::size_t nr_recv;
-
-  buf = new unsigned char[sz_body];
-  ret = socket_in::recv(hdl_con_, buf, sz_body, &nr_recv);
-  if (ret == false)
-    {
-      buf = NULL;
-      delete buf;
-    }
-
-  return ret;
-}
-
-
-// Get non chunked body
-bool server::session::get_body()
-{
-  return false;
-}
-
-
-// Session worker thread
+// Session worker thread.
+// It loops until the connection is no more persistent.
 sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t param)
 {
+  socket_in::error_t	err;
   bool			ret;
   char*			ptr_line;
-  socket_in::error_t	err;
   server::session*	sess = reinterpret_cast<server::session*>(param);
-  http::message		msg(sess);
 
-  thread::say("Servicing the new client");
-
+  // Main serverloop
   do
     {
-      // request line
-      thread::say("Servicing the new request");
-      while ((ret = dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) == true && !::strlen((const char*)ptr_line))
-	delete[] ptr_line;
-      if (ret == true)
-	{
-	  msg.statusline((const char*)ptr_line);
-	  delete[] ptr_line;
-	}
-      else
-	{
-	  if (err == sysapi::socket_in::CONN_DISCONNECTED)
-	    return 0;
-	}
+      http::message	msg(sess);
 
-      // header
-      while ((ret = dataman::get_nextline(sess->hdl_con_, &ptr_line, &err)) && strlen((const char*)ptr_line))
+      thread::say("Servicing the new request");
+
+      // skip the crlf
+      ret = sess->skip_crlf(&ptr_line, &err);
+      if (ret == false && err == sysapi::socket_in::CONN_DISCONNECTED)
+	return 0;
+      
+      // we are on the status line
+      msg.statusline((const char*)ptr_line);
+      delete[] ptr_line;
+
+      // get all headers
+      while (sess->get_headerlines(&ptr_line, &err) && ::strlen((const char*)ptr_line))
 	{
 	  msg.header((const char*)ptr_line);
 	  delete[] ptr_line;
 	}
+
+      // we are one the last crlf
       if (ret == true)
 	delete[] ptr_line;
-      else
-	{
-	  if (err == socket_in::CONN_DISCONNECTED)
-	    return 0;
-	}
+      else if (err == socket_in::CONN_DISCONNECTED)
+	return 0;
 
-      // body
-      sess->get_body();
+      // get the body, if any
+      // sess->get_body(0, 0, 0, 0);
     }
   while (sess->is_persistent() == true);
 

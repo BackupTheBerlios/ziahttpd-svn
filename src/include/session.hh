@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Thu Oct 20 17:24:44 2005 
+// Last update Thu Oct 20 20:13:14 2005 
 //
 
 
@@ -15,6 +15,7 @@
 
 #include <channel.hh>
 #include <sysapi.hh>
+#include <dataman.hh>
 
 
 // The session is the basic runnable execution
@@ -47,40 +48,42 @@ namespace server
     // Create a worker thread
     bool create_worker_thread();
 
-    // Get non chunked body
-    bool get_body(sysapi::socket_in::size_t);
-
-    // get chunked body
-    bool get_body();
+    // Getting the request from the network
+    bool skip_crlf(char**, sysapi::socket_in::error_t*);
+    bool get_headerlines(char**, sysapi::socket_in::error_t*);
+    bool get_body(unsigned char**, sysapi::socket_in::size_t, sysapi::socket_in::size_t*, sysapi::socket_in::error_t*);
+    bool get_body(unsigned char**, sysapi::socket_in::size_t*, sysapi::socket_in::size_t*, sysapi::socket_in::error_t*);
 
   private:
-    typedef struct http_info
+
+    // store http relative information
+    typedef struct
     {
-      // timing information
       int nr_rqst_;
       int max_rqst_;
-
-      // Persistent connection information
       bool is_persistent_;
-
-      // client information
     } http_info_t;
+    http_info_t http_info_;
+
+
+    // store body relative information
+    typedef struct
+    {
+      int nr_chunk_;
+      unsigned char* buf_;
+      sysapi::socket_in::size_t sz_;
+    } body_chunk_t;
+    body_chunk_t body_chunk_;
 
 
     // configuration
     // server::config* config_;
 
-    // execution thread
-    sysapi::thread::handle_t hdl_worker_;
-
-    // Pointer to channel's session
     server::channel* this_chan_;
-
-    // Connection socket related
     sysapi::socket_in::handle_t hdl_con_;
 
-    // Thread worker entry point
     static sysapi::thread::retcode_t worker_entry_(sysapi::thread::param_t);
+    sysapi::thread::handle_t hdl_worker_;
 
     // timeout for the session, if in the idle state, in millisecond
     enum
