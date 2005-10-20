@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Thu Oct 20 20:45:31 2005 
+// Last update Thu Oct 20 21:11:03 2005 
 //
 
 
@@ -36,6 +36,7 @@ namespace server
   {
     class http::message;
     friend class http::message;
+
 
   public:
     // Construction, destruction
@@ -72,7 +73,6 @@ namespace server
       bool is_body_;
       bool is_chunked_;
       sysapi::socket_in::size_t sz_body_;
-
     } http_info_t;
     http_info_t http_info_;
 

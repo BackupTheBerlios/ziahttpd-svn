@@ -74,11 +74,8 @@ namespace	http
 
 		bool			uri(const std::string &, int &err);
 		bool			error_code_string(std::string &);
+	  static bool			response_header_content_length(server::session *, const std::string&);
 	};
-	namespace	header
-	{
-		bool			response_header_content_length(server::session *, const std::string&);
-	}
 }
 
 #endif
