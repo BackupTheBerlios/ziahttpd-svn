@@ -5,252 +5,283 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Oct 13 16:09:17 2005 texane
-// Last update Fri Oct 21 11:22:56 2005 
+// Last update Fri Oct 21 16:08:25 2005 
 //
 
 
+#include <iostream>
 #include <cstring>
 #include <cstring_helper.hh>
 #include <sysapi.hh>
 #include <dataman.hh>
 
 
-// - Notes on http requests processing
-// In order to be http1.1 compliant, we will process
-// client requests as follow:
-// . get *crlf
-// . get status line
-// . get *headers
-// . get crlf
-// . get body, if any
+// This file implements the two basic blocks
+// for the http data retrieving.
+// Two kind of data: blocks and lines.
+// Lines are ended by crlf
+// Blocks are sized
 
 
-#include <iostream>
+// Block size for the recv call
+#define SZ_BLOCK	256
 
+// Max connection handles
+#define NR_HDLCON	1024
 
-// Concat two block, c-string version
-// n: index of the last valid char belonging to the block buffer (src)
-#define ISDEL(str) ((*(str - 1) == '\r') && (*(str) == '\n'))
-
-
-// - ok, special case handling(delimiter is both on dst and src)
-static char* _block_cat_special_case(char* dst, char* src)
+// Block for a given connection handle
+typedef struct
 {
-  char* ptr;
+  sysapi::socket_in::handle_t hdl_con_;
+  unsigned char buf_[SZ_BLOCK];
+  char* line_;
+  sysapi::socket_in::size_t sz_;
+  bool used_;
+} http_block_t;
+static http_block_t gbl_blocks[NR_HDLCON];
 
-  ptr = src + 1;
-  while (*ptr)
-    *src++ = *ptr++;
-  *src = 0;
+// Tell if the gbl_block_array has already been initialized
+static bool gbl_blocks_ready = false;
 
-  dst[(int)strlen(dst) - 1] = 0;
-  return dst;
+static void inline init_block(http_block_t* blk, sysapi::socket_in::handle_t hdl_con)
+{
+  blk->line_ = 0;
+  blk->used_ = true;
+  blk->hdl_con_ = hdl_con;
+  blk->sz_ = 0;
 }
 
-static char* _block_cat(char* dst, char* src, bool* done)
+static void inline release_block(http_block_t* blk)
 {
-  char* buf;
-  char* ptr;
-  int len;
-  int n;
-
-  *done = false;
-
-  // Handle the special case, where '\r' is at the end of dst and '\n' starts src
-  if (dst && dst[(int)strlen(dst) - 1] == '\r' && *src == '\n')
-    {
-      *done = true;
-      return _block_cat_special_case(dst, src);
-    }
-  else
-    {
-      n = 0;
-      if (*src)
-	{
-	  for (n = 1; src[n] && !ISDEL(src + n); ++n)
-	    ;
-	  if (ISDEL(src + n))
-	    {
-	      *done = true;
-	      --n;
-	    }
-	}
-    }
-
-  // - ok, buf = dst + src[0..n]
-  len = n;
-  if (dst)
-    len += (int)strlen(dst);
-  buf = new char[len + 1];
-  strncat(cstring_helper::strcpy(buf, dst ? dst : ""), src, n);
-  buf[len] = 0;
-  if (dst)
-    delete[] dst;
-
-  if (!src[n])
-    *src = 0;
-  else
-    {
-      ptr = src + n + 2;
-      while (*ptr)
-	*src++ = *ptr++;
-      *src = 0;
-    }
-  
-  return buf;
+  blk->used_ = false;
+  if (blk->buf_)
+    delete[] blk->buf_;
+  blk->sz_ = 0;
 }
 
-typedef struct	_s_block
+// !Fixme: make this function mt safe
+static void inline init_all()
 {
-  bool		used;
-  char		*blk;
-  char		*res;
-  sysapi::socket_in::handle_t hdl;
-}		_block_t;
-
-
-#define _NBLK		256
-#define	NR_FDMAX	1024
-static _block_t	_block_array[NR_FDMAX];
-
-static inline void unbook_block_entry(int i)
-{
-  _block_array[i].used = false;
+  memset(gbl_blocks, 0, NR_HDLCON);
+  gbl_blocks_ready = true;
 }
 
-
-static inline void book_block_entry(int i, sysapi::socket_in::handle_t hdl)
+// !Fixme: make this function mt safe
+static void inline release_all()
 {
-  _block_array[i].used = true;
-  _block_array[i].hdl = hdl;
-  _block_array[i].blk = new char[_NBLK + 1];
-  _block_array[i].blk[0] = 0;
-  _block_array[i].res = NULL;
+  int i;
+
+  for (i = 0; i < NR_HDLCON; ++i)
+    if (gbl_blocks[i].used_ == true)
+      release_block(&gbl_blocks[i]);
+
+  gbl_blocks_ready = false;
 }
 
-// Find the block associated with handle, or create a new one
-static inline _block_t* get_block_entry(sysapi::socket_in::handle_t hdl)
+// Get a block or create a new one  if it doesn't yet exist
+// !fixme: make me mt safe
+// This is the only function calling init_all.. so mt safe made easier
+static http_block_t* lookfor_block_byhdl(sysapi::socket_in::handle_t hdl)
 {
   int i;
   int last_not_used = -1;
 
+  // init subsystem it not yet done
+  if (gbl_blocks_ready == false)
+    init_all();
+
   // Look for the hdl block, or a free one
-  for (i = 0; i < NR_FDMAX; ++i)
+  for (i = 0; i < NR_HDLCON; ++i)
     {
-      if (_block_array[i].used == false)
+      if (gbl_blocks[i].used_ == false)
 	last_not_used = i;
       else
 	{
-	  if (_block_array[i].hdl == hdl)
-	    return &_block_array[i];
+	  if (gbl_blocks[i].hdl_con_ == hdl)
+	    return &gbl_blocks[i];
 	}
     }
 
   // If I ve no block yet
   if (last_not_used != -1)
     {
-      book_block_entry(last_not_used, hdl);
-      return &_block_array[last_not_used];
+      init_block(&gbl_blocks[last_not_used], hdl);
+      return &gbl_blocks[last_not_used];
     }
 
+  // No more available
   return NULL;
 }
 
-
-// Get the next http line
-bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con, char** ptr_line, sysapi::socket_in::error_t* err)
+// http token related
+static bool inline endofline(const char* str)
 {
-  static bool	_init_me = false;
-  _block_t	*ptr;
-  sysapi::socket_in::size_t n;
-  bool		done;
-  bool		ret;
+  return (*(str - 1) == '\r') && (*str == '\n');
+}
 
-  if (_init_me == false)
+// Remove nr bytes from the begining of the buffer
+static void inline bufremove(unsigned char* buf, int bufsz, int nr)
+{
+  int i;
+  int j;
+
+  for (i = 0, j = nr; j < bufsz; ++i, ++j)
+    buf[i] = buf[j];
+}
+
+
+// Get a line from the blk->buf_ content, and append it to the blk->line_ content
+static bool getline_special_case(http_block_t* blk)
+{
+  unsigned char* ptr;
+  unsigned char* src;
+  unsigned int sz;
+
+  src = blk->buf_;
+  ptr = src + 1;
+
+  --blk->sz_;
+  for (sz = 0; sz < blk->sz_; ++sz)
+    *src++ = *ptr++;
+
+  // There is a <CR> at the end of the line
+  blk->line_[(int)strlen(blk->line_) - 1] = 0;
+  return true;
+}
+
+static bool getline(http_block_t* blk)
+{
+  unsigned int n = 0;
+  char* line;
+  bool ret = false;
+  unsigned int len;
+
+  if (blk->line_ == 0)
     {
-      memset(_block_array, 0, NR_FDMAX * sizeof(_block_t));
-      _init_me = true;
+      blk->line_ = new char[1];
+      *blk->line_ = 0;
     }
 
-  ptr = get_block_entry(hdl_con);
-  if (ptr == NULL)
-    return false;
-
-  ptr->res = _block_cat(ptr->res, ptr->blk, &done);
-  if (done == true)
+  // Handle the special case, delimiter is on the two lines
+  if (strlen(blk->line_) && blk->line_[strlen(blk->line_) - 1] == '\r' &&
+      blk->sz_ && *blk->buf_ == '\n')
     {
-      *ptr_line = ptr->res;
-      ptr->res = NULL;
-      return true;
+      return getline_special_case(blk);
     }
-
-//  try_again:
-  while ((ret = sysapi::socket_in::recv(hdl_con, reinterpret_cast<unsigned char*>(ptr->blk), _NBLK, &n, err)) == true)
+  else
     {
-      ptr->blk[n] = 0;
-      ptr->res = _block_cat(ptr->res, ptr->blk, &done);
-      if (done == true)
+      if (blk->sz_)
 	{
-	  *ptr_line = ptr->res;
-	  ptr->res = NULL;
-	  return true;
+	  n = 1;
+	  while ((n < blk->sz_) && (endofline((const char*)(blk->buf_ + n)) == false))
+	    ++n;
+	  if (endofline((const char*)(blk->buf_ + n)) == true)
+	    {
+	      ret = true;
+	      --n;
+	    }
 	}
     }
 
-  if (ret == false)
+  // put the whole line in line, and then in blk->line_
+  len = n + strlen(blk->line_);
+  line = new char[len + 1];
+  memcpy((void*)cstring_helper::strcpy(line, blk->line_), (const void*)blk->buf_, n);
+  line[len] = 0;
+
+  delete[] blk->line_;
+  blk->line_ = line;
+
+  // resize the block
+  if (n == blk->sz_)
+    blk->sz_ = 0;
+  else
     {
-      // if ((n == -1) && (errno == EINTR))
-      // goto try_again;
+      unsigned char* ptr = &blk->buf_[n + 2];
+      int i = 0;
+      while (n < blk->sz_)
+	{
+	  blk->buf_[i++] = *ptr++;
+	  ++n;
+	}
+      blk->sz_= i - 2;
     }
 
+  return ret;
+}
 
-  // If the client peer has just deconnected, set errno to EPIPE.
-  // if (n == 0)
-  // errno = EPIPE;
 
-  // sav_errno = errno;
-  // delete[] ptr->blk;
-  // ptr->blk = NULL;
-  // delete[] ptr->res;
-  // ptr->res = NULL;
-  // ptr->used = false;
-  // errno = sav_errno;
+// --
+// Unit entry points
+
+bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con,
+				 char** line,
+				 sysapi::socket_in::error_t* err)
+{
+  http_block_t* blk;
+  sysapi::socket_in::size_t sz;
+  bool ret;
+
+  blk = lookfor_block_byhdl(hdl_con);
+  if (blk == NULL)
+    return false;
+
+  if (getline(blk) == true)
+    {
+      *line = blk->line_;
+      blk->line_ = 0;
+      return true;
+    }
+
+  // feed the buffer until we got a new line
+  while ((ret = recv(hdl_con, blk->buf_, SZ_BLOCK, &sz, err)) == true)
+    {
+      blk->sz_ = sz;
+      if (getline(blk) == true)
+	{
+	  *line = blk->line_;
+	  blk->line_ = 0;
+	  return true;
+	}
+    }
 
   return false;
 }
 
 
-// Get a block from the getnextline buffer
 bool http::dataman::get_nextblock(sysapi::socket_in::handle_t hdl_con,
-				  unsigned char* buf_body,
-				  sysapi::socket_in::size_t sz_body,
-				  sysapi::socket_in::size_t* sz_read)
+				  unsigned char** buf,
+				  sysapi::socket_in::size_t blocksz,
+				  sysapi::socket_in::size_t* recvsz,
+				  sysapi::socket_in::error_t* err)
 {
-  _block_t* ptr;
-  sysapi::socket_in::size_t blocklen;
-  sysapi::socket_in::size_t i;
-  sysapi::socket_in::size_t j;
+  http_block_t* blk;
 
-  *sz_read = 0;
-
-  ptr = get_block_entry(hdl_con);
-  if (ptr == NULL)
+  blk = lookfor_block_byhdl(hdl_con);
+  if (blk == NULL)
     return false;
 
-  if (ptr->blk && *ptr->blk)
+  *buf = new unsigned char[blocksz];
+  
+  if (blk->sz_ < blocksz)
     {
-      blocklen = strlen(ptr->blk);
-      *sz_read = sz_body;
-      if (blocklen < sz_body)
-	*sz_read = blocklen;
-      
-      for (i = 0; i < *sz_read; ++i)
-	buf_body[i] = ptr->blk[i];
+      sysapi::socket_in::size_t nr_missing;
+      sysapi::socket_in::size_t nr_recv;
+      int i;
 
-      for (j = 0; i < blocklen; ++j, ++i)
-	ptr->blk[j] = ptr->blk[i];
-      ptr->blk[j] = 0;
+      nr_missing = blocksz - blk->sz_;
+      i = blk->sz_;
+      while (--i >= 0)
+	(*buf)[i] = blk->buf_[i];
+      sysapi::socket_in::recv(blk->hdl_con_, (*buf) + blk->sz_, nr_missing, &nr_recv, err);
+      blk->sz_ = 0;
+    }
+  else
+    {
+      bufremove(blk->buf_, blk->sz_, blocksz);
+      blk->sz_ -= blocksz;
     }
   
-  return true;
+
+  return false;
 }

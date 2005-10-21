@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Fri Oct 21 11:15:37 2005 
+// Last update Fri Oct 21 15:37:10 2005 
 //
 
 
@@ -47,50 +47,54 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
   do
     {
       http::message	msg(sess);
+
       sess->http_info_.is_body_ = false;
       sess->http_info_.is_chunked_ = false;
 
       thread::say("Servicing the new request");
 
-      // skip the crlf
-      ret = sess->skip_crlf(&ptr_line, &err);
-      if (ret == false && err == sysapi::socket_in::CONN_DISCONNECTED)
-	return 0;
-      
-      // we are on the status line
-      msg.statusline((const char*)ptr_line);
-      delete[] ptr_line;
+//       // skip the crlf
+//       ret = sess->skip_crlf(&ptr_line, &err);
+//       if (ret == false && err == sysapi::socket_in::CONN_DISCONNECTED)
+// 	return 0;
 
-      // get all headers
+//       std::cout << "CRLF" << std::endl;
+      
+//       // we are on the status line
+//       msg.statusline((const char*)ptr_line);
+//       delete[] ptr_line;
+
+//       // get all headers
       while (sess->get_headerlines(&ptr_line, &err) && ::strlen((const char*)ptr_line))
 	{
-	  msg.header((const char*)ptr_line);
+	  sysapi::thread::say(ptr_line);
+// 	  msg.header((const char*)ptr_line);
 	  delete[] ptr_line;
 	}
 
-      // we are one the last crlf
-      if (ret == true)
-	delete[] ptr_line;
-      else if (err == socket_in::CONN_DISCONNECTED)
-	return 0;
+//       // we are one the last crlf
+//       if (ret == true)
+// 	delete[] ptr_line;
+//       else if (err == socket_in::CONN_DISCONNECTED)
+// 	return 0;
 
-      // get the body, if any
-      if (sess->http_info_.is_body_ == true)
-	{
-	  unsigned char* buf;
-	  sysapi::socket_in::size_t sz;
-	  if (sess->get_body(&buf, sess->http_info_.sz_body_, &sz, 0) == false)
-	    {
-	      std::cout << "cannot get the body" << std::endl;
-	    }
-	  else
-	    {
-	      sysapi::thread::say("There is a body");
-	      buf[sz] = 0;
-	      std::cout << buf << std::endl;
-	      delete[] buf;
-	    }
-	}
+//       // get the body, if any
+//       if (sess->http_info_.is_body_ == true)
+// 	{
+// 	  unsigned char* buf;
+// 	  sysapi::socket_in::size_t sz;
+// 	  if (sess->get_body(&buf, sess->http_info_.sz_body_, &sz, 0) == false)
+// 	    {
+// 	      std::cout << "cannot get the body" << std::endl;
+// 	    }
+// 	  else
+// 	    {
+// 	      sysapi::thread::say("There is a body");
+// 	      buf[sz] = 0;
+// 	      std::cout << buf << std::endl;
+// 	      delete[] buf;
+// 	    }
+// 	}
     }
   while (sess->is_persistent() == true);
 

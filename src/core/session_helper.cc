@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Fri Oct 21 11:25:52 2005 
+// Last update Fri Oct 21 12:47:22 2005 
 //
 
 
@@ -42,9 +42,8 @@ bool	server::session::get_body(unsigned char** buf, sysapi::socket_in::size_t sz
   sysapi::socket_in::size_t nr_read;
 
   *nr_recv = 0;
-  *buf = new unsigned char[sz + 1];
 
-  ret = http::dataman::get_nextblock(hdl_con_, *buf, sz, &nr_read);
+  ret = http::dataman::get_nextblock(hdl_con_, buf, sz, &nr_read);
 
   if (nr_read < sz)
     {
