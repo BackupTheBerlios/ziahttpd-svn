@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Oct 13 16:09:17 2005 texane
-// Last update Thu Oct 20 23:51:52 2005 
+// Last update Fri Oct 21 11:22:56 2005 
 //
 
 
@@ -109,7 +109,7 @@ typedef struct	_s_block
 }		_block_t;
 
 
-#define _NBLK		1
+#define _NBLK		256
 #define	NR_FDMAX	1024
 static _block_t	_block_array[NR_FDMAX];
 
@@ -157,6 +157,7 @@ static inline _block_t* get_block_entry(sysapi::socket_in::handle_t hdl)
 }
 
 
+// Get the next http line
 bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con, char** ptr_line, sysapi::socket_in::error_t* err)
 {
   static bool	_init_me = false;
@@ -218,9 +219,38 @@ bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con, char** ptr
   return false;
 }
 
+
+// Get a block from the getnextline buffer
 bool http::dataman::get_nextblock(sysapi::socket_in::handle_t hdl_con,
-				  unsigned char** buf_body,
-				  sysapi::socket_in::size_t* sz_buf)
+				  unsigned char* buf_body,
+				  sysapi::socket_in::size_t sz_body,
+				  sysapi::socket_in::size_t* sz_read)
 {
-  return false;
+  _block_t* ptr;
+  sysapi::socket_in::size_t blocklen;
+  sysapi::socket_in::size_t i;
+  sysapi::socket_in::size_t j;
+
+  *sz_read = 0;
+
+  ptr = get_block_entry(hdl_con);
+  if (ptr == NULL)
+    return false;
+
+  if (ptr->blk && *ptr->blk)
+    {
+      blocklen = strlen(ptr->blk);
+      *sz_read = sz_body;
+      if (blocklen < sz_body)
+	*sz_read = blocklen;
+      
+      for (i = 0; i < *sz_read; ++i)
+	buf_body[i] = ptr->blk[i];
+
+      for (j = 0; i < blocklen; ++j, ++i)
+	ptr->blk[j] = ptr->blk[i];
+      ptr->blk[j] = 0;
+    }
+  
+  return true;
 }
