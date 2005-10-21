@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Oct 13 16:09:17 2005 texane
-// Last update Fri Oct 21 16:08:25 2005 
+// Last update Fri Oct 21 16:56:48 2005 
 //
 
 
@@ -24,7 +24,8 @@
 
 
 // Block size for the recv call
-#define SZ_BLOCK	256
+// #define SZ_BLOCK	256
+#define SZ_BLOCK	3
 
 // Max connection handles
 #define NR_HDLCON	1024
@@ -248,7 +249,7 @@ bool http::dataman::get_nextline(sysapi::socket_in::handle_t hdl_con,
   return false;
 }
 
-
+#include <iostream>
 bool http::dataman::get_nextblock(sysapi::socket_in::handle_t hdl_con,
 				  unsigned char** buf,
 				  sysapi::socket_in::size_t blocksz,
@@ -262,26 +263,29 @@ bool http::dataman::get_nextblock(sysapi::socket_in::handle_t hdl_con,
     return false;
 
   *buf = new unsigned char[blocksz];
+  *recvsz = 0;
   
   if (blk->sz_ < blocksz)
     {
       sysapi::socket_in::size_t nr_missing;
       sysapi::socket_in::size_t nr_recv;
       int i;
-
+      
       nr_missing = blocksz - blk->sz_;
       i = blk->sz_;
       while (--i >= 0)
 	(*buf)[i] = blk->buf_[i];
       sysapi::socket_in::recv(blk->hdl_con_, (*buf) + blk->sz_, nr_missing, &nr_recv, err);
+      *recvsz = blk->sz_ + nr_recv;
       blk->sz_ = 0;
     }
   else
     {
+      memcpy((void*)*buf, blk->buf_, blocksz);
       bufremove(blk->buf_, blk->sz_, blocksz);
+      *recvsz = blocksz;
       blk->sz_ -= blocksz;
     }
-  
 
-  return false;
+  return true;
 }

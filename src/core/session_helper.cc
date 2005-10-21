@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Fri Oct 21 12:47:22 2005 
+// Last update Fri Oct 21 16:49:51 2005 
 //
 
 
@@ -38,23 +38,7 @@ bool	server::session::get_headerlines(char** ptr_line, sysapi::socket_in::error_
 
 bool	server::session::get_body(unsigned char** buf, sysapi::socket_in::size_t sz, sysapi::socket_in::size_t* nr_recv, sysapi::socket_in::error_t* err)
 {
-  bool ret;
-  sysapi::socket_in::size_t nr_read;
-
-  *nr_recv = 0;
-
-  ret = http::dataman::get_nextblock(hdl_con_, buf, sz, &nr_read);
-
-  if (nr_read < sz)
-    {
-      ret = sysapi::socket_in::recv(hdl_con_, (*buf) + nr_read, sz - nr_read, nr_recv);
-      if (ret == false)
-	delete *buf;
-    }
-
-  *nr_recv += nr_read;
-
-  return ret;
+  return http::dataman::get_nextblock(hdl_con_, buf, sz, nr_recv, err);
 }
 
 
