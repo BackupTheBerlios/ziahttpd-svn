@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Oct 13 16:09:17 2005 texane
-// Last update Fri Oct 21 17:15:16 2005 
+// Last update Fri Oct 21 18:28:48 2005 
 //
 
 
@@ -24,8 +24,7 @@
 
 
 // Block size for the recv call
-// #define SZ_BLOCK	256
-#define SZ_BLOCK	3
+#define SZ_BLOCK	256
 
 // Max connection handles
 #define NR_HDLCON	1024

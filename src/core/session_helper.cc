@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Fri Oct 21 16:49:51 2005 
+// Last update Fri Oct 21 18:27:32 2005 
 //
 
 
@@ -17,32 +17,30 @@
 #include <server.hh>
 
 
-bool	server::session::skip_crlf(char** ptr_line, sysapi::socket_in::error_t* err)
+bool	server::session::get_statusline(char** ptrline, sysapi::socket_in::error_t* err)
 {
   bool	ret;
   char*	line;
 
   while ((ret = http::dataman::get_nextline(hdl_con_, &line, err)) == true && !::strlen((const char*)line))
-    delete[] ptr_line;
+    delete[] line;
 
-  *ptr_line = line;
+  *ptrline = line;
   return ret;
 }
 
 
-bool	server::session::get_headerlines(char** ptr_line, sysapi::socket_in::error_t* err)
+bool	server::session::get_headerline(char** ptr_line, sysapi::socket_in::error_t* err)
 {
   return http::dataman::get_nextline(hdl_con_, ptr_line, err);
 }
 
 
-bool	server::session::get_body(unsigned char** buf, sysapi::socket_in::size_t sz, sysapi::socket_in::size_t* nr_recv, sysapi::socket_in::error_t* err)
+bool	server::session::get_body(unsigned char** buf, sysapi::socket_in::error_t* err)
 {
-  return http::dataman::get_nextblock(hdl_con_, buf, sz, nr_recv, err);
-}
+  sysapi::socket_in::size_t nr_recv;
 
-
-bool	server::session::get_body(unsigned char** buf, sysapi::socket_in::size_t* sz, sysapi::socket_in::size_t* nr_recv, sysapi::socket_in::error_t* err)
-{
+  if (http_info_.is_body_ == true)
+    return http::dataman::get_nextblock(hdl_con_, buf, http_info_.sz_body_, &nr_recv, err);
   return false;
 }
