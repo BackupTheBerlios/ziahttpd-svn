@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:32:20 2005 
-// Last update Mon Oct 17 18:35:08 2005 
+// Last update Sat Oct 22 03:35:11 2005 
 //
 
 
@@ -13,6 +13,12 @@
 
 
 bool	posix::process::create_and_loadexec(handle_t*, int, const char**, const char**)
+{
+  return false;
+}
+
+
+bool	posix::process::create_outredir_and_loadexec(handle_t*, posix::file::handle_t*, int, const char**, const char**)
 {
   return false;
 }

@@ -5,10 +5,12 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 18:45:02 2005 texane
-// Last update Wed Oct 12 10:02:55 2005 texane
+// Last update Sat Oct 22 03:32:35 2005 
 //
 
+#include <iostream>
 #include <cstring>
+#include <cstdio>
 #include <win32.hh>
 #include <windows.h>
 
@@ -48,7 +50,7 @@ static char* av_to_cmdline(int ac, const char** av)
   return cmdline;
 }
 
-#include <iostream>
+
 bool	win32::process::create_and_loadexec(handle_t* hdl, int ac, const char** av, const char** env)
 {
   BOOL res;
@@ -59,9 +61,7 @@ bool	win32::process::create_and_loadexec(handle_t* hdl, int ac, const char** av,
   ZeroMemory(&startinfo, sizeof(STARTUPINFO));
   startinfo.cb = sizeof(STARTUPINFO);
 
-  std::cout << "Command line is : " << ac << std::endl;
   cmdline = av_to_cmdline(ac, av);
-  std::cout << "Command line is : " << cmdline << std::endl;
   res = CreateProcess(av[0], cmdline,
 		      NULL, NULL,
 		      true,
@@ -72,11 +72,73 @@ bool	win32::process::create_and_loadexec(handle_t* hdl, int ac, const char** av,
 		      &psinfo);
   delete[] cmdline;
   if (res == FALSE)
-    {
-      return false;
-    }
+    return false;
 
   *hdl = psinfo.hProcess;
+  
+  return true;
+}
+
+
+// Create a child process whose standart output
+// will be accessible by reading the hdl_read handle
+bool	win32::process::create_outredir_and_loadexec(handle_t* child_hdl,
+						     win32::file::handle_t* read_hdl,
+						     int ac,
+						     const char** av,
+						     const char** env)
+{
+  SECURITY_ATTRIBUTES sa;
+  PROCESS_INFORMATION psinfo;
+  STARTUPINFO startinfo;
+  HANDLE write_hdl;
+  HANDLE stdout_hdl;
+  char* cmdline;
+
+  // Create command line from av
+  cmdline = av_to_cmdline(ac, av);
+
+  // save the current stdout handle
+  stdout_hdl = GetStdHandle(STD_OUTPUT_HANDLE);
+  if (stdout_hdl == INVALID_HANDLE_VALUE)
+    return false;
+
+  // Create an anonymous pipe
+  sa.nLength = sizeof(sa);
+  sa.bInheritHandle = TRUE;
+  sa.lpSecurityDescriptor = NULL;
+  if (CreatePipe(read_hdl, &write_hdl, &sa, 0) == FALSE)
+    return false;
+  SetHandleInformation(*read_hdl, HANDLE_FLAG_INHERIT, 0);
+
+  // Set the write end of the pipe as the child stdout handle
+  SetStdHandle(STD_OUTPUT_HANDLE, write_hdl);
+
+  // Create a new process
+  ZeroMemory(&psinfo, sizeof(psinfo));
+  ZeroMemory(&startinfo, sizeof(startinfo));
+  startinfo.cb = sizeof(startinfo);
+  startinfo.hStdOutput = write_hdl;
+  startinfo.dwFlags |= STARTF_USESTDHANDLES;
+  if (CreateProcess(NULL, cmdline,
+		    NULL, NULL,
+		    TRUE,
+		    CREATE_NO_WINDOW,
+		    (LPVOID)env,
+		    NULL,
+		    &startinfo,
+		    &psinfo) == FALSE)
+    return false;
+
+  delete[] cmdline;
+
+  // Get the child handle
+  *child_hdl = psinfo.hProcess;
+
+  // Close the parent write part of the pipe
+  CloseHandle(write_hdl);
+  // Reset the parent stdout
+  SetStdHandle(STD_OUTPUT_HANDLE, stdout_hdl);
   
   return true;
 }
