@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Sat Oct 22 03:34:52 2005 
+// Last update Sat Oct 22 03:49:05 2005 
 //
 
 
@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <pthread.h>
