@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Oct 13 16:09:17 2005 texane
-// Last update Fri Oct 21 16:56:48 2005 
+// Last update Fri Oct 21 17:15:16 2005 
 //
 
 
@@ -55,8 +55,6 @@ static void inline init_block(http_block_t* blk, sysapi::socket_in::handle_t hdl
 static void inline release_block(http_block_t* blk)
 {
   blk->used_ = false;
-  if (blk->buf_)
-    delete[] blk->buf_;
   blk->sz_ = 0;
 }
 
