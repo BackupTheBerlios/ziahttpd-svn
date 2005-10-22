@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Fri Oct 21 18:26:40 2005 
+// Last update Sat Oct 22 14:03:10 2005 
 //
 
 
@@ -51,6 +51,9 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       thread::say("Servicing the new request");
       sess->http_info_.is_body_ = false;
       sess->http_info_.is_chunked_ = false;
+      sess->http_info_.buf_statusline_ = 0;
+      sess->http_info_.buf_headerlines_ = 0;
+      sess->http_info_.buf_body_ = 0;
 
       // get http message
       sess->get_statusline(&ptr_line, &err);
@@ -68,6 +71,11 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
 
       // get the body, if any
       sess->get_body(&body, &err);
+
+      // send statusline+headers
+      // send(, http_info_.header);
+      
+      // send body
     }
   while (sess->is_persistent() == true);
 
