@@ -20,6 +20,7 @@ http::message::message(server::session* s)
 {
 	session_ = s;
 	error_code_ = 200;
+	page_is_dir = false;
 }
 
 bool	http::message::statusline(const std::string& data)

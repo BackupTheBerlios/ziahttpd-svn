@@ -78,6 +78,7 @@ namespace	http
 		bool			make_header(char *);
 		bool			make_body(unsigned char *, sysapi::socket_in::size_t&);
 		static bool		response_header_content_length(server::session *, const std::string&);
+		bool			check_default_type(std::string &);
 	};
 }
 
