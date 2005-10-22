@@ -14,10 +14,12 @@ bool	stringmanager::httpsm::method(const std::string&source, std::string& dest, 
 	std::cout << "function method" << std::endl;
 #endif
 	f.normalize(g);
+
 	for (i = 0; !http::statusline_key[i].empty(); i++)
 	{
 		if (http::statusline_key[i] == g)
 		{
+
 			dest = g;
 			return (true);
 		}

@@ -45,6 +45,11 @@ bool	http::message::statusline(const std::string& data)
 	}
 	if (!http_par.method(glist[0], method_, error_code_))
 		return (false);
+
+	if (method_ == "get")
+		session_->http_info_.is_method_get_ = true;
+	if (method_ == "post")
+		session_->http_info_.is_method_post_ = true;
 	if (!uri(glist[1], error_code_))
 		return (false);
 	if (!http_par.version(glist[2], version_, error_code_))
@@ -126,7 +131,6 @@ bool	http::message::body(const unsigned char* data, sysapi::socket_in::size_t si
 
 		if (!http_par.query(s, postquery_, error_code_))
 			return (false);
-//		session_->http_info_.is_method_post_ = true;
 	}
 	if (method_ == "put")
 	{
