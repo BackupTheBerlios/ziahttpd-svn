@@ -62,7 +62,7 @@ bool		http::message::make_statusline()
 bool		http::message::make_header()
 {
 	response_header_content_length();
-//	response_header_content_type();
+	response_header_content_type();
 	response_header_server();
 	return (true);
 }
