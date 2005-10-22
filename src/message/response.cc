@@ -29,7 +29,8 @@ bool		http::message::bodysize(unsigned long size)
 	std::list<std::string>::iterator theIterator;
 	for(theIterator = response_header_.begin(); theIterator != response_header_.end(); theIterator++)
 	{
-		if (theIterator->find("Content-Length:", 0))
+		std::string::size_type	pos = theIterator->find("Content-Length:", 0);
+		if (pos != std::string::npos)
 		{
 			std::string tmp("Content-Length:");
 			*theIterator = tmp + sizes;
