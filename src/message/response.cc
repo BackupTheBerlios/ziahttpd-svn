@@ -25,7 +25,7 @@ bool		http::message::bodysize(unsigned long size)
 	char	sizes[100];
 
 
-	sprintf(sizes, "%l", size);
+	sprintf(sizes, "%d", (int)size);
 	std::list<std::string>::iterator theIterator;
 	for(theIterator = response_header_.begin(); theIterator != response_header_.end(); theIterator++)
 	{
