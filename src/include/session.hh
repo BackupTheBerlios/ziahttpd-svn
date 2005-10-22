@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Sat Oct 22 17:19:06 2005 texane
+// Last update Sat Oct 22 17:56:34 2005 texane
 //
 
 
@@ -55,6 +55,9 @@ namespace server
     // Reset http related informations
     void reset_http_information();
 
+    // Response body fetching
+    bool body_fetch();
+
     // Create a worker thread
     bool create_worker_thread();
 
@@ -65,6 +68,10 @@ namespace server
     bool get_body(unsigned char**, sysapi::socket_in::size_t* sz_body, sysapi::socket_in::error_t*);
 
   private:
+    // Fetch the body, helper methods
+    bool body_fetch_from_file();
+    bool body_fetch_from_cgibin();
+
 
     // store http relative information, used
     // to pass information from parser to core.
@@ -82,7 +89,7 @@ namespace server
       
       // Cgi script related
       bool is_cgi_;
-      unsigned char* buf_cgi_;
+      char* buf_cgi_;
       sysapi::socket_in::size_t sz_cgi_;
 
       // Body is read from a file
