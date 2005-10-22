@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Sat Oct 22 13:50:08 2005 texane
+// Last update Sat Oct 22 15:58:01 2005 texane
 //
 
 
@@ -217,6 +217,10 @@ static bool file_query_about(const char* filename, enum file_query q, unsigned l
 {
   DWORD attr;
   bool ret;
+
+  attr = GetFileAttributes(filename);
+  if (attr == INVALID_FILE_ATTRIBUTES)
+    return false;
 
   switch (attr)
     {

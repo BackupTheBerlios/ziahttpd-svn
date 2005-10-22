@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Sat Oct 22 14:22:41 2005 
+// Last update Sat Oct 22 16:19:13 2005 texane
 //
 
 
@@ -41,6 +41,7 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
   socket_in::error_t	err;
   server::session*	sess = reinterpret_cast<server::session*>(param);
   unsigned char*	body;
+  sysapi::socket_in::size_t sz_body;
   char*			ptr_line;
 
   // Main serverloop
@@ -68,14 +69,21 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       delete[] ptr_line;
 
       // Get the body, if any
-      sess->get_body(&body, &err);
+      if (sess->get_body(&body, &sz_body, &err) == true)
+	{
+	  msg.body(reinterpret_cast<const unsigned char*>(body), sz_body);
+	  delete[] body;
+	}
 
-      // msg.make_response();
+      msg.make_response();
 
       // Send the repsonse
-      sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_statusline_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_statusline_)));
-      sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_headerlines_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_headerlines_)));
-      sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_body_, static_cast<sysapi::socket_in::size_t>(sess->http_info_.sz_response_body_));
+      if (sess->http_info_.buf_statusline_)
+	sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_statusline_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_statusline_)));
+      if (sess->http_info_.buf_headerlines_)
+	sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_headerlines_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_headerlines_)));
+      if (sess->http_info_.buf_body_)
+	sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_body_, static_cast<sysapi::socket_in::size_t>(sess->http_info_.sz_response_body_));
     }
   while (sess->is_persistent() == true);
 

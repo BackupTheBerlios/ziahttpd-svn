@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Sat Oct 22 14:47:26 2005 
+// Last update Sat Oct 22 16:09:16 2005 texane
 //
 
 
@@ -62,7 +62,7 @@ namespace server
     bool skip_crlf(char**, sysapi::socket_in::error_t*);
     bool get_statusline(char**, sysapi::socket_in::error_t*);
     bool get_headerline(char**, sysapi::socket_in::error_t*);
-    bool get_body(unsigned char**, sysapi::socket_in::error_t*);
+    bool get_body(unsigned char**, sysapi::socket_in::size_t* sz_body, sysapi::socket_in::error_t*);
 
   private:
 
