@@ -66,7 +66,7 @@ bool	http::message::header(const std::string& data)
 	header_list_s	header_list[] =
 	{
 		{"host", NULL},
-		{"content-length", response_header_content_length},
+		{"content-length", request_header_content_length},
 		{"", NULL}
 	};
 

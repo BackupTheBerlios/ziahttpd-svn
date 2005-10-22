@@ -74,11 +74,12 @@ namespace	http
 
 		bool			uri(const std::string &, int &err);
 		bool			error_code_string(std::string &);
-		bool			make_statusline(char *);
+		bool			make_statusline(char **);
 		bool			make_header(char *);
 		bool			make_body(unsigned char *, sysapi::socket_in::size_t&);
-		static bool		response_header_content_length(server::session *, const std::string&);
+		static bool		request_header_content_length(server::session *, const std::string&);
 		bool			check_default_type(std::string &);
+//		bool			make_cont
 	};
 }
 
