@@ -51,29 +51,6 @@ bool	http::message::statusline(const std::string& data)
 	return (true);
 }
 
-//bool	http::message::statusline()
-//{
-//	// tt le tralala
-//	// open file ... check ... nani kore ?
-//	// recupe de l extention
-//	// check minetype
-//
-//	//if (sysapi::file::exists(path_.c_str()))
-//	//	error_code_ = 404;
-//	//if ((error_code_ != 404) && sysapi::file::is_readable(path_.c_str()))
-//	//	error_code_ = 401;
-//	//std::string err_str;
-//
-//	//if (!error_code_string(err_str))
-//	//{
-//	//	error_code_ = 400;
-//	//	error_code_string(err_str);
-//	//}
-//	//std::cout << "HTTP/" << version_ << " " << error_code_ << " " << err_str << std::endl;
-//	return (true);
-//}
-
-
 bool	http::message::header(const std::string& data)
 {
 	char	*var;

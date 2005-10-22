@@ -1,6 +1,7 @@
 #include <message.hh>
 #include <session.hh>
 #include <sysapi.hh>
+#include <iostream>
 
 bool		http::message::make_response()
 {
@@ -48,6 +49,22 @@ bool		http::message::make_header(char* dest)
 
 bool		http::message::make_body(unsigned char *dest, sysapi::socket_in::size_t& size)
 {
+	struct LALA_s {
+		char		*str;
+		char		*type;
+	};
+	LALA_s	LALA[] = {
+		{"text/html", "html"},
+		{"text/html", "htm"},
+		{0, 0}
+	};
+	std::string			type;
+	std::string::size_type	pos = file_.find (".", 0);
+	type = file_.substr(pos + 1, file_.size() - pos);
+	std::cout << "type: " << type << std::endl;
+	//std::cout << "Content-Type: text/html" << std::endl;
+
+
 	return (true);
 }
 
