@@ -50,27 +50,27 @@ bool	http::message::statusline(const std::string& data)
 	return (true);
 }
 
-bool	http::message::statusline()
-{
-	// tt le tralala
-	// open file ... check ... nani kore ?
-	// recupe de l extention
-	// check minetype
-
-	if (sysapi::file::exists(path_.c_str()))
-		error_code_ = 404;
-	if ((error_code_ != 404) && sysapi::file::is_readable(path_.c_str()))
-		error_code_ = 401;
-	std::string err_str;
-
-	if (!error_code_string(err_str))
-	{
-		error_code_ = 400;
-		error_code_string(err_str);
-	}
-	std::cout << "HTTP/" << version_ << " " << error_code_ << " " << err_str << std::endl;
-	return (true);
-}
+//bool	http::message::statusline()
+//{
+//	// tt le tralala
+//	// open file ... check ... nani kore ?
+//	// recupe de l extention
+//	// check minetype
+//
+//	//if (sysapi::file::exists(path_.c_str()))
+//	//	error_code_ = 404;
+//	//if ((error_code_ != 404) && sysapi::file::is_readable(path_.c_str()))
+//	//	error_code_ = 401;
+//	//std::string err_str;
+//
+//	//if (!error_code_string(err_str))
+//	//{
+//	//	error_code_ = 400;
+//	//	error_code_string(err_str);
+//	//}
+//	//std::cout << "HTTP/" << version_ << " " << error_code_ << " " << err_str << std::endl;
+//	return (true);
+//}
 
 
 bool	http::message::header(const std::string& data)
@@ -121,7 +121,7 @@ bool	http::message::header(const std::string& data)
 		{
 			if (header_list[i].fct_eq)
 				header_list[i].fct_eq(session_, val);
-			header_[var] = val;
+//			header_[var] = val;
 #ifdef _debug
 			std::cout << "[" << var <<"][" << val << "]" << std::endl;
 #endif
@@ -132,21 +132,21 @@ bool	http::message::header(const std::string& data)
 #ifdef _debug
 	std::cout << "uk [" << var <<"][" << val << "]" << std::endl;
 #endif
-	header_[var] = val;
+//	header_[var] = val;
 	free(var);
 	return (true);
 }
 
-bool	http::message::header()
-{
-	std::cout << "Content-Type: text/html" << std::endl;
-	return (true);
-}
+//bool	http::message::header()
+//{
+////	std::cout << "Content-Type: text/html" << std::endl;
+//	return (true);
+//}
 
 bool	http::message::body(const unsigned char* data, size_t size)
 {
 	std::cout << "ERR CODE " << error_code_ << std::endl;
-	if (method_ == "POST")
+	if (method_ == "post")
 	{
 		stringmanager::httpsm	http_par;
 		std::string				s((char *)data);
@@ -154,22 +154,23 @@ bool	http::message::body(const unsigned char* data, size_t size)
 		if (!http_par.query(s, postquery_, error_code_))
 			return (false);
 	}
-	if (method_ == "PUT")
+	if (method_ == "put")
 	{
 		// not yet implemented
 	}
+
 	return (true);
 }
 
-bool	http::message::body()
-{
-	sysapi::file::handle_t	*fd = NULL;
-
-	if (!sysapi::file::open(fd, path_.c_str(), sysapi::file::RDONLY))
-		error_code_ = 404;
-	sysapi::file::close(*fd);
-	return (true);
-}
+//bool	http::message::body()
+//{
+//	//sysapi::file::handle_t	*fd = NULL;
+//
+//	//if (!sysapi::file::open(fd, path_.c_str(), sysapi::file::RDONLY))
+//	//	error_code_ = 404;
+//	//sysapi::file::close(*fd);
+//	return (true);
+//}
 
 bool	http::message::error_code_string(std::string &dest)
 {

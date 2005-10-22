@@ -183,6 +183,9 @@
 					RelativePath=".\src\message\message.cc">
 				</File>
 				<File
+					RelativePath=".\src\message\response.cc">
+				</File>
+				<File
 					RelativePath=".\src\message\statusline.cc">
 				</File>
 			</Filter>

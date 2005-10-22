@@ -7,16 +7,18 @@
 bool	stringmanager::httpsm::method(const std::string&source, std::string& dest, int& err_code)
 {
 	int		i;
+	std::string g(source);
+	stringmanager::string	f;
 
 #ifdef _DEBUG
 	std::cout << "function method" << std::endl;
 #endif
-
+	f.normalize(g);
 	for (i = 0; !http::statusline_key[i].empty(); i++)
 	{
-		if (http::statusline_key[i] == source)
+		if (http::statusline_key[i] == g)
 		{
-			dest = source;
+			dest = g;
 			return (true);
 		}
 	}

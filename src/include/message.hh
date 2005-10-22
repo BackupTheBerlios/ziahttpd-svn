@@ -16,6 +16,8 @@
 
 #include <string>
 #include <map>
+#include <list>
+
 namespace server {
 class session;
 }
@@ -25,7 +27,7 @@ class session;
 
 namespace	http
 {
-	static std::string statusline_key[] = {"GET", "POST", "OPTION", "HEAD", "PUT", "DELETE", "TRACE", "CONNECT", ""};
+	static std::string statusline_key[] = {"get", "post", "option", "head", "put", "delete", "trace", "connect", ""};
 
 	class	message 
 	{
@@ -34,17 +36,12 @@ namespace	http
 		message(server::session *);
 		// check if the status line is correct
 		bool			statusline(const std::string&);
-		// build the status line for the client
-		bool			statusline();
 		// check if the header is correct
 		bool			header(const std::string&);
-		// build the header for the client
-		bool			header();
-		// check if the body is correct .... how i can know ?
-		bool			body(const unsigned char*, size_t);
-		// add the body at the end of the response for the client 
-		bool			body();
-
+		// check if the body is correct ?
+		bool			body(const unsigned char* data, size_t size);
+		// make the response for the client
+		bool			make_response();
 	private:
 		//current session
 		server::session*	session_;
@@ -64,17 +61,23 @@ namespace	http
 		std::string			page_;
 		// variable by GET method
 		bool				page_is_dir;
-		// variable by GET method
-		std::string			path_;
+		// full path of the DocumentRoot + file 
+		std::string			file_;
 		std::map<std::string, std::string>  getquery_;
 		// variable by POST method
 		std::map<std::string, std::string>  postquery_;
 		// list of header fields
-		std::map<std::string, std::string>  header_;
+		//std::map<std::string, std::string>  header_;
+		// status_line_string
+		std::string					statusline_;
+		std::list<std::string>		header_;
 
 		bool			uri(const std::string &, int &err);
 		bool			error_code_string(std::string &);
-	  static bool			response_header_content_length(server::session *, const std::string&);
+		bool			make_statusline(char *);
+		bool			make_header(char *);
+		bool			make_body(unsigned char *, sysapi::socket_in::size_t&);
+		static bool		response_header_content_length(server::session *, const std::string&);
 	};
 }
 
