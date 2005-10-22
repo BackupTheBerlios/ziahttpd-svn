@@ -59,11 +59,17 @@ bool		http::message::make_body(unsigned char *dest, sysapi::socket_in::size_t& s
 		{0, 0}
 	};
 	std::string			type;
+	int					i;
+
 	std::string::size_type	pos = file_.find (".", 0);
 	type = file_.substr(pos + 1, file_.size() - pos);
 	std::cout << "type: " << type << std::endl;
-	//std::cout << "Content-Type: text/html" << std::endl;
+	for (int i; LALA[i].str; i++)
+	{
 
+	}
+	//std::cout << "Content-Type: text/html" << std::endl;
+	
 
 	return (true);
 }

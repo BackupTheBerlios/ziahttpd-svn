@@ -31,6 +31,7 @@ srcs	= core$(SLASH)main.cc \
 	  message$(SLASH)message.cc \
 	  message$(SLASH)statusline.cc \
 	  message$(SLASH)httpstringmanager.cc \
+	  message$(SLASH)response.cc \
 	  stringmanager$(SLASH)stringmanager.cc
 
 objs	= $(srcs:.cc=.o)
