@@ -6,7 +6,7 @@
 bool		http::message::make_response()
 {
 	make_statusline();
-//	make_header();
+	make_header();
 	make_body();
 
 	return (true);
@@ -14,13 +14,29 @@ bool		http::message::make_response()
 
 bool		http::message::stringify()
 {
-	make_header();
 	session_->http_info_.buf_statusline_ = new char[response_statusline_.size() + 1];
 	strcpy(session_->http_info_.buf_statusline_, response_statusline_.c_str());
 	build_header_for_send();
 	return (true);
 }
 
+bool		http::message::bodysize(unsigned long size)
+{
+	char	sizes[100];
+
+
+	sprintf(sizes, "%l", size);
+	std::list<std::string>::iterator theIterator;
+	for(theIterator = response_header_.begin(); theIterator != response_header_.end(); theIterator++)
+	{
+		if (theIterator->find("Content-Length:", 0))
+		{
+			std::string tmp("Content-Length:");
+			*theIterator = tmp + sizes;
+		}
+	}
+	return (true);
+}
 
 bool		http::message::make_statusline()
 {
