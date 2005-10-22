@@ -9,12 +9,12 @@ bool		http::message::make_response()
 	make_header();
 	make_body();
 
-	session_->http_info_.buf_statusline_ = new char[statusline_.size()];
+	session_->http_info_.buf_statusline_ = new char[statusline_.size() + 1];
 	strcpy(session_->http_info_.buf_statusline_, statusline_.c_str());
-	std::cout << "SEND : " << session_->http_info_.buf_statusline_ << std::endl;
-	std::list<std::string>::iterator theIterator;
+//	std::cout << "SEND : " << session_->http_info_.buf_statusline_ << std::endl;
 	build_header_for_send();
-	std::cout << "SEND : " << session_->http_info_.buf_headerlines_ << std::endl;
+//	std::cout << "SEND : " << session_->http_info_.buf_headerlines_ << std::endl;
+
 	return (true);
 }
 
@@ -25,11 +25,14 @@ bool		http::message::make_statusline()
 	std::string statusl;
 
 	file_ = DOCROOT + page_;
+	session_->http_info_.is_file_ = true;
 	if (sysapi::file::is_directory(file_.c_str()))
 	{
 		if (!check_default_type(file_))
 		{
 			// ask for execute the cgi list_directory
+			file_ = DOCROOT + "error.html";
+			session_->http_info_.is_file_ = false;
 			std::cout << "Execute cgi list_directory" << std::endl;
 		}
 	}
@@ -45,6 +48,8 @@ bool		http::message::make_statusline()
 	char err[4];
 	sprintf(err, "%i", error_code_);
 	statusline_ = "HTTP/" + version_ + " " + err + " " + err_str + "\r\n";
+	session_->http_info_.filename_ = new char[file_.size() + 1];
+	strcpy(session_->http_info_.filename_, file_.c_str());
 	return (true);
 }
 

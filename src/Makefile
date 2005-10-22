@@ -21,6 +21,7 @@ srcs	= core$(SLASH)main.cc \
 	  core$(SLASH)session_helper.cc \
 	  core$(SLASH)dataman.cc \
 	  core$(SLASH)cstring_helper.cc \
+	  core$(SLASH)session_body.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)process.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)thread.cc \
