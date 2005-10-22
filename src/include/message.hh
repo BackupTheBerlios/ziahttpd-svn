@@ -63,6 +63,8 @@ namespace	http
 		// what url the client want ?
 		std::string			page_;
 		// variable by GET method
+		// request header
+		std::map<std::string, std::string>  header_;
 		bool				page_is_dir;
 		// full path of the DocumentRoot + file 
 		std::string			file_;
@@ -70,8 +72,8 @@ namespace	http
 		// variable by POST method
 		std::map<std::string, std::string>  postquery_;
 		// status_line_string
-		std::string					statusline_;
-		std::list<std::string>		header_;
+		std::string					response_statusline_;
+		std::list<std::string>		response_header_;
 
 		bool			uri(const std::string &, int &err);
 		bool			error_code_string(std::string &, std::string &);

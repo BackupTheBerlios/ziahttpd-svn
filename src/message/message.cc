@@ -100,7 +100,7 @@ bool	http::message::header(const std::string& data)
 		{
 			if (header_list[i].fct_eq)
 				header_list[i].fct_eq(session_, val);
-//			header_[var] = val;
+			header_[var] = val;
 #ifdef _debug
 			std::cout << "[" << var <<"][" << val << "]" << std::endl;
 #endif
@@ -111,7 +111,7 @@ bool	http::message::header(const std::string& data)
 #ifdef _debug
 	std::cout << "uk [" << var <<"][" << val << "]" << std::endl;
 #endif
-//	header_[var] = val;
+	header_[var] = val;
 	free(var);
 	return (true);
 }
@@ -126,7 +126,7 @@ bool	http::message::body(const unsigned char* data, sysapi::socket_in::size_t si
 
 		if (!http_par.query(s, postquery_, error_code_))
 			return (false);
-		session_->http_info_.is_method_post_ = true;
+//		session_->http_info_.is_method_post_ = true;
 	}
 	if (method_ == "put")
 	{

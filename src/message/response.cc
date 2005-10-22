@@ -9,8 +9,8 @@ bool		http::message::make_response()
 	make_header();
 	make_body();
 
-	session_->http_info_.buf_statusline_ = new char[statusline_.size() + 1];
-	strcpy(session_->http_info_.buf_statusline_, statusline_.c_str());
+	session_->http_info_.buf_statusline_ = new char[response_statusline_.size() + 1];
+	strcpy(session_->http_info_.buf_statusline_, response_statusline_.c_str());
 //	std::cout << "SEND : " << session_->http_info_.buf_statusline_ << std::endl;
 	build_header_for_send();
 //	std::cout << "SEND : " << session_->http_info_.buf_headerlines_ << std::endl;
@@ -48,7 +48,7 @@ bool		http::message::make_statusline()
 	}
 	char err[4];
 	sprintf(err, "%i", error_code_);
-	statusline_ = "HTTP/" + version_ + " " + err + " " + err_str + "\r\n";
+	response_statusline_ = "HTTP/" + version_ + " " + err + " " + err_str + "\r\n";
 	session_->http_info_.filename_ = new char[file_.size() + 1];
 	strcpy(session_->http_info_.filename_, file_.c_str());
 	session_->http_info_.is_file_ = true;
@@ -118,13 +118,16 @@ bool	http::message::response_header_content_type()
 			char		  tmp[1000];
 
 			if (LALA[i].cgi)
+			{
 				session_->http_info_.is_cgi_ = true;
+				session_->http_info_.is_file_ = false;
+			}
 			sprintf(tmp, "Content-Type: %s", LALA[i].str);
-			header_.push_back(tmp);
+			response_header_.push_back(tmp);
 			return (true);
 		}
 	}
-	header_.push_back("Content-Type: text/html");
+	response_header_.push_back("Content-Type: text/html");
 	return (true);
 }
 
@@ -137,13 +140,13 @@ bool	http::message::response_header_content_length()
 	std::string	tmp;
 
 	sprintf(sizestr, "Content-Length: %i", (int)size);
-	header_.push_back(sizestr);
+	response_header_.push_back(sizestr);
 	return (true);
 }
 
 bool		http::message::response_header_server()
 {
-	header_.push_back("Server: KeKette beta 0.1");
+	response_header_.push_back("Server: KeKette HTTPD beta 0.1");
 	return (true);
 }
 
@@ -152,12 +155,12 @@ bool	http::message::build_header_for_send()
 	size_t	size = 0;
 
 	std::list<std::string>::iterator theIterator;
-	for(theIterator = header_.begin(); theIterator != header_.end(); theIterator++)
+	for(theIterator = response_header_.begin(); theIterator != response_header_.end(); theIterator++)
 		size += theIterator->size() + 2;
 	size += 2;
 	session_->http_info_.buf_headerlines_ = new char[size + 1];
 	memset(session_->http_info_.buf_headerlines_, 0, size + 1);
-	for(theIterator = header_.begin(); theIterator != header_.end(); theIterator++ )
+	for(theIterator = response_header_.begin(); theIterator != response_header_.end(); theIterator++ )
 	{
 		strcat(session_->http_info_.buf_headerlines_, theIterator->c_str());
 		strcat(session_->http_info_.buf_headerlines_, "\r\n");
