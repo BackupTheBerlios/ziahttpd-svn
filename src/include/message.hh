@@ -73,13 +73,15 @@ namespace	http
 		std::list<std::string>		header_;
 
 		bool			uri(const std::string &, int &err);
-		bool			error_code_string(std::string &);
-		bool			make_statusline(char **);
-		bool			make_header(char *);
-		bool			make_body(unsigned char *, sysapi::socket_in::size_t&);
+		bool			error_code_string(std::string &, std::string &);
+		bool			make_statusline();
+		bool			make_header();
+		bool			make_body();
+		bool			build_header_for_send();
 		static bool		request_header_content_length(server::session *, const std::string&);
 		bool			check_default_type(std::string &);
-//		bool			make_cont
+		bool			response_header_content_length();
+		bool			response_header_content_type();
 	};
 }
 
