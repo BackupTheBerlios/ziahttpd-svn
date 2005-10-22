@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Sat Oct 22 14:47:59 2005 
+// Last update Sat Oct 22 13:50:08 2005 texane
 //
 
 
@@ -150,96 +150,115 @@ bool	win32::file::seek(win32::file::handle_t handle,
 
 enum file_query
   {
-    EXISTS = 0,
-    DIRECTORY,
-    SIZE,
-    READABLE,
-    WRITTABLE,
-    EXECUTABLE
+    DOES_EXIST = 0,
+    GET_SIZE,
+    IS_DIRECTORY,
+    IS_READABLE,
+    IS_WRITTABLE,
+    IS_EXECUTABLE
   };
+
+static bool normalfile_query_about(const char* filename, enum file_query q, unsigned long* aux)
+{
+  HANDLE hfile;
+  BY_HANDLE_FILE_INFORMATION info;
+  bool ret;
+
+  hfile = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+  if (hfile == INVALID_HANDLE_VALUE)
+    {
+      return false;
+    }
+  if (GetFileInformationByHandle(hfile, &info) == FALSE)
+    return false;
+
+  switch (q)
+    {
+    case DOES_EXIST:
+      ret = true;
+      break;
+
+    case IS_DIRECTORY:
+      break;
+
+    case GET_SIZE:
+      *aux = (unsigned long)info.nFileSizeLow;
+	ret = true;
+      break;
+
+    case IS_READABLE:
+      ret = true;
+      break;
+
+    case IS_WRITTABLE:
+      ret = true;
+      break;
+
+    case IS_EXECUTABLE:
+      ret = true;
+      break;
+
+    default:
+      ret = false;
+      break;      
+    }
+
+  CloseHandle(hfile);
+
+  return ret;
+}
+
+static bool directory_query_about(const char* filename, enum file_query q, unsigned long* aux)
+{
+  return true;
+}
 
 static bool file_query_about(const char* filename, enum file_query q, unsigned long* aux)
 {
-//   bool ret;
-//   HANDLE hdl;
-//   BY_HANDLE_FILE_INFORMATION info;
-//   OFSTRUCT o;
+  DWORD attr;
+  bool ret;
 
-//   ret = true;
+  switch (attr)
+    {
+    case FILE_ATTRIBUTE_DIRECTORY:
+      ret = directory_query_about(filename, q, aux);
+      break;
 
-//   hdl = OpenFile(filename, &o, 0);
-//   if (hdl == HFILE_ERROR)
-//     return false;
+    default:
+      ret = normalfile_query_about(filename, q, aux);
+      break;
+    }
 
-//   if (GetFileInformationByHandle(hdl, &info) == 0)
-//     {
-//       ret = false;
-//     }
-//   else
-//     {
-//       switch (q)
-// 	{
-// 	case EXISTS:
-// 	  ret = true;
-// 	  break;
-
-// 	case DIRECTORY:
-// 	  break;
-
-// 	case SIZE:
-// 	  *aux = (unsigned long)info.
-// 	  ret = true;
-// 	  break;
-
-// 	case READABLE:
-// 	  ret = true;
-// 	  break;
-
-// 	case WRITTABLE:
-// 	  ret = true;
-// 	  break;
-
-// 	case EXECUTABLE:
-// 	  ret = true;
-// 	  break;
-
-// 	default:
-// 	  ret = false;
-// 	  break;
-// 	}
-//     }
-
-//   close(hdl);
-  return false;
+  return ret;
 }
 
 bool	win32::file::exists(const char* filename)
 {
-  return file_query_about(filename, EXISTS, 0);
+  return file_query_about(filename, DOES_EXIST, 0);
 }
 
 bool	win32::file::is_directory(const char* filename)
 {
-  return file_query_about(filename, DIRECTORY, 0);
+  return file_query_about(filename, IS_DIRECTORY, 0);
 }
 
 // Currently, those functions always return true
 bool	win32::file::is_readable(const char* filename)
 {
-  return file_query_about(filename, READABLE, 0);
+  return file_query_about(filename, IS_READABLE, 0);
 }
 
 bool	win32::file::is_writtable(const char* filename)
 {
-  return file_query_about(filename, WRITTABLE, 0);
+  return file_query_about(filename, IS_WRITTABLE, 0);
 }
 
 bool	win32::file::is_executable(const char* filename)
 {
-  return file_query_about(filename, EXECUTABLE, 0);
+  return file_query_about(filename, IS_EXECUTABLE, 0);
 }
 
 bool	win32::file::size(const char* filename, unsigned long* sz)
 {
-  return file_query_information(filename, SIZE, sz);
+  return file_query_about(filename, GET_SIZE, sz);
 }
