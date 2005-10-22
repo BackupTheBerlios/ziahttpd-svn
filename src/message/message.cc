@@ -15,6 +15,7 @@
 #include <stringmanager.hh>
 #include <httpstringmanager.hh>
 #include <message.hh>
+#include <session.hh>
 
 http::message::message(server::session* s)
 {
@@ -115,12 +116,6 @@ bool	http::message::header(const std::string& data)
 	return (true);
 }
 
-//bool	http::message::header()
-//{
-////	std::cout << "Content-Type: text/html" << std::endl;
-//	return (true);
-//}
-
 bool	http::message::body(const unsigned char* data, sysapi::socket_in::size_t size)
 {
 	std::cout << "ERR CODE " << error_code_ << std::endl;
@@ -131,6 +126,7 @@ bool	http::message::body(const unsigned char* data, sysapi::socket_in::size_t si
 
 		if (!http_par.query(s, postquery_, error_code_))
 			return (false);
+		session_->http_info_.is_method_post_ = true;
 	}
 	if (method_ == "put")
 	{
@@ -139,16 +135,6 @@ bool	http::message::body(const unsigned char* data, sysapi::socket_in::size_t si
 
 	return (true);
 }
-
-//bool	http::message::body()
-//{
-//	//sysapi::file::handle_t	*fd = NULL;
-//
-//	//if (!sysapi::file::open(fd, path_.c_str(), sysapi::file::RDONLY))
-//	//	error_code_ = 404;
-//	//sysapi::file::close(*fd);
-//	return (true);
-//}
 
 bool	http::message::error_code_string(std::string &dest, std::string &dest_file)
 {

@@ -42,6 +42,9 @@ namespace	http
 		bool			body(const unsigned char* data, sysapi::socket_in::size_t size);
 		// make the response for the client
 		bool			make_response();
+		// 
+		std::map<std::string, std::string>& getquery() { return (getquery_); };
+		std::map<std::string, std::string>& postquery() { return (postquery_); };
 	private:
 		//current session
 		server::session*	session_;
@@ -66,8 +69,6 @@ namespace	http
 		std::map<std::string, std::string>  getquery_;
 		// variable by POST method
 		std::map<std::string, std::string>  postquery_;
-		// list of header fields
-		//std::map<std::string, std::string>  header_;
 		// status_line_string
 		std::string					statusline_;
 		std::list<std::string>		header_;

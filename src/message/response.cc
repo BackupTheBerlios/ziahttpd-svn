@@ -96,11 +96,13 @@ bool	http::message::response_header_content_type()
 	struct LALA_s {
 		char		*str;
 		char		*type;
+		bool		cgi;
 	};
 	LALA_s	LALA[] = {
-		{"text/html", "html"},
-		{"text/html", "htm"},
-		{"image/gif", "gif"},
+		{"text/html", "html", false},
+		{"text/html", "htm", false},
+		{"image/gif", "gif", false},
+		{"text/html", "exe", true},
 		{0, 0}
 	};
 	std::string			type;
@@ -115,6 +117,8 @@ bool	http::message::response_header_content_type()
 		{
 			char		  tmp[1000];
 
+			if (LALA[i].cgi)
+				session_->http_info_.is_cgi_ = true;
 			sprintf(tmp, "Content-Type: %s", LALA[i].str);
 			header_.push_back(tmp);
 			return (true);

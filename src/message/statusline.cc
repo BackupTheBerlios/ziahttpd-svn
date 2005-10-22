@@ -3,6 +3,7 @@
 #include <message.hh>
 #include <stringmanager.hh>
 #include <httpstringmanager.hh>
+#include <session.hh>
 
 bool		http::message::uri(const std::string &str, int& err)
 {
@@ -26,6 +27,7 @@ bool		http::message::uri(const std::string &str, int& err)
 #endif
 		if (!hp.query(tmpq, getquery_, error_code_))
 			return (false);
+		session_->http_info_.is_method_get_ = true;
 	}
 	if (!hp.url(tmpp, page_, error_code_))
 		return (false);
