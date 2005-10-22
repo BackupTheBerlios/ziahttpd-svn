@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Sat Oct 22 14:22:26 2005 
+// Last update Sat Oct 22 14:47:26 2005 
 //
 
 
@@ -16,7 +16,6 @@
 #include <channel.hh>
 #include <sysapi.hh>
 #include <dataman.hh>
-#include <message.hh>
 
 // The session is the basic runnable execution
 // unit of our server.
@@ -27,6 +26,11 @@
 // channel (channel = local address and, local port).
 // @see channel.hh for information on channels.
 
+namespace http
+{
+  class message;
+}
+
 
 namespace server
 {
@@ -34,7 +38,6 @@ namespace server
 
   class session
   {
-    class http::message;
     friend class http::message;
 
 

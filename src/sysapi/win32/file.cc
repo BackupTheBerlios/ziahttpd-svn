@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Sat Oct 22 13:45:53 2005 
+// Last update Sat Oct 22 14:47:59 2005 
 //
 
 
@@ -146,34 +146,100 @@ bool	win32::file::seek(win32::file::handle_t handle,
 }
 
 
-// file access rights and types
+// Query informations about a given file
+
+enum file_query
+  {
+    EXISTS = 0,
+    DIRECTORY,
+    SIZE,
+    READABLE,
+    WRITTABLE,
+    EXECUTABLE
+  };
+
+static bool file_query_about(const char* filename, enum file_query q, unsigned long* aux)
+{
+//   bool ret;
+//   HANDLE hdl;
+//   BY_HANDLE_FILE_INFORMATION info;
+//   OFSTRUCT o;
+
+//   ret = true;
+
+//   hdl = OpenFile(filename, &o, 0);
+//   if (hdl == HFILE_ERROR)
+//     return false;
+
+//   if (GetFileInformationByHandle(hdl, &info) == 0)
+//     {
+//       ret = false;
+//     }
+//   else
+//     {
+//       switch (q)
+// 	{
+// 	case EXISTS:
+// 	  ret = true;
+// 	  break;
+
+// 	case DIRECTORY:
+// 	  break;
+
+// 	case SIZE:
+// 	  *aux = (unsigned long)info.
+// 	  ret = true;
+// 	  break;
+
+// 	case READABLE:
+// 	  ret = true;
+// 	  break;
+
+// 	case WRITTABLE:
+// 	  ret = true;
+// 	  break;
+
+// 	case EXECUTABLE:
+// 	  ret = true;
+// 	  break;
+
+// 	default:
+// 	  ret = false;
+// 	  break;
+// 	}
+//     }
+
+//   close(hdl);
+  return false;
+}
 
 bool	win32::file::exists(const char* filename)
 {
-  return false;
+  return file_query_about(filename, EXISTS, 0);
 }
 
 bool	win32::file::is_directory(const char* filename)
 {
-  return false;
+  return file_query_about(filename, DIRECTORY, 0);
 }
 
+// Currently, those functions always return true
 bool	win32::file::is_readable(const char* filename)
 {
-  return false;
+  return file_query_about(filename, READABLE, 0);
 }
 
 bool	win32::file::is_writtable(const char* filename)
 {
-  return false;
+  return file_query_about(filename, WRITTABLE, 0);
 }
 
 bool	win32::file::is_executable(const char* filename)
 {
-  return false;
+  return file_query_about(filename, EXECUTABLE, 0);
 }
 
 bool	win32::file::size(const char* filename, unsigned long* sz)
 {
-  return false;
+  return file_query_information(filename, SIZE, sz);
 }
