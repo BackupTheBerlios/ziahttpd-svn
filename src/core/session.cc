@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Sat Oct 22 16:19:13 2005 texane
+// Last update Sat Oct 22 16:51:38 2005 texane
 //
 
 
@@ -75,18 +75,29 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
 	  delete[] body;
 	}
 
+      // Internally build the response message
       msg.make_response();
 
       // Send the repsonse
       if (sess->http_info_.buf_statusline_)
-	sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_statusline_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_statusline_)));
+	{
+	  sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_statusline_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_statusline_)));
+	  delete[] sess->http_info_.buf_statusline_;
+	}
       if (sess->http_info_.buf_headerlines_)
-	sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_headerlines_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_headerlines_)));
+	{
+	  sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_headerlines_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_headerlines_)));
+	  delete[] sess->http_info_.buf_headerlines_;
+	}
       if (sess->http_info_.buf_body_)
-	sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_body_, static_cast<sysapi::socket_in::size_t>(sess->http_info_.sz_response_body_));
+	{
+	  sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_body_, static_cast<sysapi::socket_in::size_t>(sess->http_info_.sz_response_body_));
+	  delete[] sess->http_info_.buf_body_;
+	}
     }
   while (sess->is_persistent() == true);
 
+  sysapi::thread::say("persistency is now false");
   return 0;
 }
 
@@ -109,9 +120,14 @@ bool server::session::create_worker_thread()
 // Reset http related informations
 void server::session::reset_http_information()
 {
+  // Are there ...
   http_info_.is_body_ = false;
   http_info_.is_chunked_ = false;
+  http_info_.is_cgi_ = false;
+
+  // Nullize the buffers
   http_info_.buf_statusline_ = 0;
   http_info_.buf_headerlines_ = 0;
   http_info_.buf_body_ = 0;
+  http_info_.buf_cgi_ = 0;
 }

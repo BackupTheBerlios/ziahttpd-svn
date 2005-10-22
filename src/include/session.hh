@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Sat Oct 22 16:09:16 2005 texane
+// Last update Sat Oct 22 16:53:15 2005 texane
 //
 
 
@@ -50,7 +50,7 @@ namespace server
     server::channel* get_channel() const { return this_chan_; }
     sysapi::socket_in::handle_t get_connection_handle() const { return hdl_con_; }
     sysapi::thread::handle_t get_worker_handle() const { return hdl_worker_; }
-    bool is_persistent() const { return is_persistent_; }
+    bool is_persistent() const { return http_info_.is_persistent_; }
 
     // Reset http related informations
     void reset_http_information();
@@ -79,6 +79,11 @@ namespace server
       bool is_body_;
       bool is_chunked_;
       sysapi::socket_in::size_t sz_body_;
+      
+      // Cgi script related
+      bool is_cgi_;
+      unsigned char* buf_cgi_;
+      sysapi::socket_in::size_t sz_cgi_;
 
       // status line and headers related
       char* buf_statusline_;
@@ -114,7 +119,6 @@ namespace server
 	MAX_IDLE_TIME = 3000,
       };
     long nr_timeout_;
-    bool is_persistent_;
   };
 }
 

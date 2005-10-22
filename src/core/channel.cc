@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 15:07:37 2005 texane
-// Last update Thu Oct 20 21:21:50 2005 
+// Last update Sat Oct 22 16:44:15 2005 texane
 //
 
 
@@ -42,13 +42,14 @@ sysapi::thread::retcode_t server::channel::dispatcher_entry(sysapi::thread::para
 	  return 0;
 	}
       sysapi::thread::say("Dispatcher has accepted new connection");
-      
+
       sess = new server::session(hdl_con, chan);
       if (sess->create_worker_thread() == true)
 	{
 	  sysapi::thread::wait_single(sess->get_worker_handle());
 	  sysapi::thread::release(sess->get_worker_handle());
 	  sysapi::socket_in::terminate_connection(sess->get_connection_handle());
+	  sysapi::thread::say("session has been terminated");
 	}
       delete sess;
     }
