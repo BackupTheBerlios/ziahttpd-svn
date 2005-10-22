@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:32:20 2005 
-// Last update Sat Oct 22 03:49:40 2005 
+// Last update Sat Oct 22 04:18:39 2005 
 //
 
 
@@ -30,10 +30,36 @@ bool	posix::process::create_and_loadexec(handle_t* child_hdl, int ac, const char
 }
 
 
-bool	posix::process::create_outredir_and_loadexec(handle_t*, posix::file::handle_t*, int, const char**, const char**)
+bool	posix::process::create_outredir_and_loadexec(handle_t* child_hdl, posix::file::handle_t* read_hdl, int ac, const char** av, const char** env)
 {
-  
-  return false;
+  int fds[2];
+
+  // Create a pipe
+  if (pipe(fds) == -1)
+    return false;
+
+  // Create a child process
+  if ((*child_hdl = fork()) == -1)
+    return false;
+
+  // We are in the child
+  if (*child_hdl == 0)
+    {
+      // close the read end of the pipe
+      close(fds[0]);
+      // stdout -> write end of the pipe
+      if (dup2(fds[1], 1) == -1)
+	exit(-1);
+      
+      execve(*av, (char* const*)av, (char* const*)env);
+      exit(-1);
+    }
+
+  // close the write end
+  close(fds[1]);
+  *read_hdl = fds[0];
+
+  return true;  
 }
 
 
@@ -57,13 +83,24 @@ bool	posix::process::release(handle_t)
 }
 
 
-bool	posix::process::wait_single(handle_t, state_t* , waitopt_t)
+// !fixme: fill in the state
+bool	posix::process::wait_single(handle_t hdl, state_t* , waitopt_t wopt)
 {
-  return false;
+  int opt = 0;
+  int stat;
+
+  if (wopt == DONTWAIT)
+    opt = WNOHANG;
+
+  if (waitpid(hdl, &stat, opt) == -1)
+    return false;
+
+  return true;
 }
 
-
-bool	posix::process::wait_any(handle_t*, state_t*, waitopt_t)
+// !fixme: fill in the state
+bool	posix::process::wait_any(handle_t* hdl, state_t*, waitopt_t wopt)
 {
+  // SHOULD NOT BE PART OF THE INTERFACE, THE PROCESS HAS TO KEEP TRACK OF CHILDREN AND WAIT_SINGLE
   return false;
 }

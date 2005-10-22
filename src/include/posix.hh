@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Sat Oct 22 03:49:05 2005 
+// Last update Sat Oct 22 04:13:54 2005 
 //
 
 
@@ -26,6 +26,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <arpa/inet.h>
+#include <sys/wait.h>
 #include <netdb.h>
 
 
