@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Sat Oct 22 17:56:34 2005 texane
+// Last update Sat Oct 22 19:56:15 2005 texane
 //
 
 
@@ -77,6 +77,10 @@ namespace server
     // to pass information from parser to core.
     typedef struct
     {
+      // method related
+      bool is_method_get_;
+      bool is_method_post_;
+
       // Connection persistency related
       int nr_rqst_;
       int max_rqst_;
@@ -100,7 +104,6 @@ namespace server
       char* buf_statusline_;
       char* buf_headerlines_;
       unsigned char* buf_body_;
-      sysapi::socket_in::size_t sz_response_body_;
 
     } http_info_t;
     http_info_t http_info_;

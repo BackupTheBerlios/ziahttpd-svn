@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Sat Oct 22 18:16:11 2005 texane
+// Last update Sat Oct 22 20:03:19 2005 texane
 //
 
 
@@ -19,6 +19,7 @@
 
 
 #include <server.hh>
+#include <map>
 #include <iostream>
 
 
@@ -34,19 +35,20 @@ bool server::session::body_fetch_from_file()
   sysapi::thread::say("There is a to fetch from");
   sysapi::thread::say(http_info_.filename_);
 
+  if (sysapi::file::size(http_info_.filename_, &sz_file) == false)
+    {
+      return false;
+    }
+
   if (sysapi::file::open(&hdl_file, http_info_.filename_, sysapi::file::RDONLY) == false)
     {
       sysapi::error::stringify("Cannot open file");
       return false;
     }
 
-  if (sysapi::file::size(http_info_.filename_, &sz_file) == false)
-    {
-      sysapi::file::close(hdl_file);
-      return false;
-    }
-
   http_info_.buf_body_ = new unsigned char[sz_file];
+  sysapi::file::read(hdl_file, http_info_.buf_body_, sz_file);
+
   http_info_.sz_body_ = sz_file;
   
   sysapi::file::close(hdl_file);
@@ -56,11 +58,72 @@ bool server::session::body_fetch_from_file()
 
 
 // !Fixme: only supports get method
+static void add_to_buf(unsigned char** dst, const unsigned char* src, sysapi::file::size_t sz_dst, sysapi::file::size_t sz_src)
+{
+  unsigned char* res;
+  sysapi::file::size_t i;
+  sysapi::file::size_t j;
+
+  res = new unsigned char[sz_dst + sz_src];
+  for (i = 0; i < sz_dst; ++i)
+    res[i] = (*dst)[i];
+  for (j = 0; j < sz_src; ++j, ++i)
+    res[i] = src[j];
+
+  delete[] *dst;
+  *dst = res;
+}
+
+
 bool server::session::body_fetch_from_cgibin()
 {
+  sysapi::process::handle_t hprocess;
+  sysapi::file::handle_t hread;
+  sysapi::file::size_t nread;
+#define NBUF	256
+  unsigned char buf[NBUF];
+  sysapi::file::size_t nbuf;
+  char** env;
+  char* av[2];
+  int ac;
+  bool ret;
+
   sysapi::thread::say("There is a cgi script to execute");
   sysapi::thread::say(http_info_.buf_cgi_);
+
+  ac = 1;
+  av[0] = "";
+  av[1] = 0;
+  env = 0;
+
+  if (http_info_.is_method_get_ == true)
+    {
+      if (sysapi::process::create_outredir_and_loadexec(&hprocess, &hread, ac, (const char**)av, (const char**)env) == true)
+	{
+	  nbuf = 0;
+	  while (sysapi::file::read(hread, buf, sizeof(buf), &nread) == true)
+	    {
+	      add_to_buf(&http_info_.buf_body_, buf, nbuf, nread);
+	      nbuf += nread;
+	    }
+	  http_info_.sz_body_ = nbuf;
+	  sysapi::process::wait_single(hprocess);
+	  sysapi::process::release(hprocess);
+	}
+      else
+	{
+	  sysapi::error::stringify("Creating process");
+	  ret = false;
+	}
+    }
+  else
+    {
+      ret = false;
+    }
+
+  // delete the cgi name
   delete[] http_info_.buf_cgi_;
+
   return true;
 }
 
