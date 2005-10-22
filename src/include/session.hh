@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Sat Oct 22 14:02:56 2005 
+// Last update Sat Oct 22 14:22:26 2005 
 //
 
 
@@ -49,6 +49,9 @@ namespace server
     sysapi::thread::handle_t get_worker_handle() const { return hdl_worker_; }
     bool is_persistent() const { return is_persistent_; }
 
+    // Reset http related informations
+    void reset_http_information();
+
     // Create a worker thread
     bool create_worker_thread();
 
@@ -69,15 +72,16 @@ namespace server
       int max_rqst_;
       bool is_persistent_;
 
-      // status line and headers related
-      char* buf_statusline_;
-      char* buf_headerlines_;
-
-      // Body related
+      // Body related, request
       bool is_body_;
       bool is_chunked_;
       sysapi::socket_in::size_t sz_body_;
+
+      // status line and headers related
+      char* buf_statusline_;
+      char* buf_headerlines_;
       unsigned char* buf_body_;
+      sysapi::socket_in::size_t sz_response_body_;
 
     } http_info_t;
     http_info_t http_info_;

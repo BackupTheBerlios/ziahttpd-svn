@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Sat Oct 22 14:03:10 2005 
+// Last update Sat Oct 22 14:22:41 2005 
 //
 
 
@@ -49,13 +49,11 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       http::message	msg(sess);
 
       thread::say("Servicing the new request");
-      sess->http_info_.is_body_ = false;
-      sess->http_info_.is_chunked_ = false;
-      sess->http_info_.buf_statusline_ = 0;
-      sess->http_info_.buf_headerlines_ = 0;
-      sess->http_info_.buf_body_ = 0;
 
-      // get http message
+      // Reset http informations
+      sess->reset_http_information();
+
+      // Get http message
       sess->get_statusline(&ptr_line, &err);
       msg.statusline((const char*)ptr_line);
       delete[] ptr_line;
@@ -66,16 +64,18 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
 	  delete[] ptr_line;
 	}
 
-      // we are one the last crlf
+      // We are one the last crlf
       delete[] ptr_line;
 
-      // get the body, if any
+      // Get the body, if any
       sess->get_body(&body, &err);
 
-      // send statusline+headers
-      // send(, http_info_.header);
-      
-      // send body
+      // msg.make_response();
+
+      // Send the repsonse
+      sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_statusline_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_statusline_)));
+      sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_headerlines_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_headerlines_)));
+      sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_body_, static_cast<sysapi::socket_in::size_t>(sess->http_info_.sz_response_body_));
     }
   while (sess->is_persistent() == true);
 
@@ -95,4 +95,15 @@ bool server::session::create_worker_thread()
     }
 
   return true;
+}
+
+
+// Reset http related informations
+void server::session::reset_http_information()
+{
+  http_info_.is_body_ = false;
+  http_info_.is_chunked_ = false;
+  http_info_.buf_statusline_ = 0;
+  http_info_.buf_headerlines_ = 0;
+  http_info_.buf_body_ = 0;
 }
