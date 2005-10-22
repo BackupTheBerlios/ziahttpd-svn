@@ -31,8 +31,9 @@ bool		http::message::make_statusline()
 		if (!check_default_type(file_))
 		{
 			// ask for execute the cgi list_directory
-			file_ = DOCROOT + "error.html";
+			file_ = DOCROOT + "/error.html";
 			session_->http_info_.is_file_ = false;
+			session_->http_info_.is_cgi_ = true;
 			std::cout << "Execute cgi list_directory" << std::endl;
 		}
 	}
@@ -58,6 +59,7 @@ bool		http::message::make_header()
 {
 	response_header_content_length();
 	response_header_content_type();
+	response_header_server();
 	return (true);
 }
 
@@ -106,7 +108,7 @@ bool	http::message::response_header_content_type()
 	std::cout << "file " << file_ << std::endl;
 	std::string::size_type	pos = file_.rfind(".", file_.size() - 1);
 	type = file_.substr(pos + 1, file_.size() - pos);
-	std::cout << "type: " << type << " pos:" << pos << std::endl;
+//	std::cout << "type: " << type << " pos:" << pos << std::endl;
 	for (int i = 0; LALA[i].str; i++)
 	{
 		if (LALA[i].type == type)
@@ -135,9 +137,15 @@ bool	http::message::response_header_content_length()
 	return (true);
 }
 
+bool		http::message::response_header_server()
+{
+	header_.push_back("Server: KeKette beta 0.1");
+	return (true);
+}
+
 bool	http::message::build_header_for_send()
 {
-	int	size = 0;
+	size_t	size = 0;
 
 	std::list<std::string>::iterator theIterator;
 	for(theIterator = header_.begin(); theIterator != header_.end(); theIterator++)

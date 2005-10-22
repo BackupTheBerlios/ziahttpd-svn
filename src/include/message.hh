@@ -82,6 +82,7 @@ namespace	http
 		bool			check_default_type(std::string &);
 		bool			response_header_content_length();
 		bool			response_header_content_type();
+		bool			response_header_server();
 	};
 }
 

@@ -145,6 +145,9 @@
 					RelativePath=".\src\core\session.cc">
 				</File>
 				<File
+					RelativePath=".\src\core\session_body.cc">
+				</File>
+				<File
 					RelativePath=".\src\core\session_helper.cc">
 				</File>
 			</Filter>
