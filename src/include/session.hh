@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Sat Oct 22 16:53:15 2005 texane
+// Last update Sat Oct 22 17:19:06 2005 texane
 //
 
 
@@ -84,6 +84,10 @@ namespace server
       bool is_cgi_;
       unsigned char* buf_cgi_;
       sysapi::socket_in::size_t sz_cgi_;
+
+      // Body is read from a file
+      bool is_file_;
+      char* filename_;
 
       // status line and headers related
       char* buf_statusline_;

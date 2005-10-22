@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Sat Oct 22 17:00:59 2005 texane
+// Last update Sat Oct 22 17:21:32 2005 texane
 //
 
 
@@ -15,6 +15,15 @@
 
 using namespace sysapi;
 using namespace http;
+
+
+// There should be only one execution point
+// to fill the body of a repsonse in.
+// That's, if the file is a cgi-bin, call
+// the function cgi-bin(), is this is an
+// html file, call the function readfile()...
+// In this fashion, there is only one point to
+// fill the body in
 
 
 // Construction
@@ -78,6 +87,18 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       // Internally build the response message
       msg.make_response();
 
+      // If there is a cgi script to execute
+      if (sess->http_info_.is_cgi_ == true)
+	{
+	  sysapi::thread::say("There is a cgi script to execute");
+	}
+
+      if (sess->http_info_.is_file_ == true)
+	{
+	  sysapi::thread::say("There is a filename");
+	  sysapi::thread::say(sess->http_info_.filename_);
+	}
+
       // Send the repsonse
       if (sess->http_info_.buf_statusline_)
 	{
@@ -128,10 +149,12 @@ void server::session::reset_http_information()
   http_info_.is_body_ = false;
   http_info_.is_chunked_ = false;
   http_info_.is_cgi_ = false;
+  http_info_.is_file_ = false;
 
   // Nullize the buffers
   http_info_.buf_statusline_ = 0;
   http_info_.buf_headerlines_ = 0;
   http_info_.buf_body_ = 0;
   http_info_.buf_cgi_ = 0;
+  http_info_.filename_ = 0;
 }
