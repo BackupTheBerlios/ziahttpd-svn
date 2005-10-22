@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Sat Oct 22 20:03:19 2005 texane
+// Last update Sat Oct 22 21:05:32 2005 texane
 //
 
 
@@ -32,7 +32,7 @@ bool server::session::body_fetch_from_file()
   sysapi::file::handle_t hdl_file;
   unsigned long sz_file;
 
-  sysapi::thread::say("There is a to fetch from");
+  sysapi::thread::say("There is file a to fetch from");
   sysapi::thread::say(http_info_.filename_);
 
   if (sysapi::file::size(http_info_.filename_, &sz_file) == false)
@@ -89,10 +89,10 @@ bool server::session::body_fetch_from_cgibin()
   bool ret;
 
   sysapi::thread::say("There is a cgi script to execute");
-  sysapi::thread::say(http_info_.buf_cgi_);
+  sysapi::thread::say(http_info_.filename_);
 
   ac = 1;
-  av[0] = "";
+  av[0] = http_info_.filename_;
   av[1] = 0;
   env = 0;
 
@@ -100,12 +100,20 @@ bool server::session::body_fetch_from_cgibin()
     {
       if (sysapi::process::create_outredir_and_loadexec(&hprocess, &hread, ac, (const char**)av, (const char**)env) == true)
 	{
+	  bool read_ret;
+
 	  nbuf = 0;
-	  while (sysapi::file::read(hread, buf, sizeof(buf), &nread) == true)
+	  while ((read_ret = sysapi::file::read(hread, buf, sizeof(buf), &nread)) == true)
 	    {
 	      add_to_buf(&http_info_.buf_body_, buf, nbuf, nread);
 	      nbuf += nread;
 	    }
+// 	  if (read_ret == false)
+// 	    {
+// 	      sysapi::error::stringify("PIPE");
+// 	      return false;
+// 	    }
+
 	  http_info_.sz_body_ = nbuf;
 	  sysapi::process::wait_single(hprocess);
 	  sysapi::process::release(hprocess);
@@ -122,7 +130,7 @@ bool server::session::body_fetch_from_cgibin()
     }
 
   // delete the cgi name
-  delete[] http_info_.buf_cgi_;
+  delete[] http_info_.filename_;
 
   return true;
 }
