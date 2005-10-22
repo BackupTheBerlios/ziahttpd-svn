@@ -50,6 +50,7 @@ bool		http::message::make_statusline()
 	statusline_ = "HTTP/" + version_ + " " + err + " " + err_str + "\r\n";
 	session_->http_info_.filename_ = new char[file_.size() + 1];
 	strcpy(session_->http_info_.filename_, file_.c_str());
+	session_->http_info_.is_file_ = true;
 	return (true);
 }
 
