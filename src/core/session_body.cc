@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Sat Oct 22 17:57:01 2005 texane
+// Last update Sat Oct 22 18:16:11 2005 texane
 //
 
 
@@ -28,8 +28,28 @@ using namespace http;
 
 bool server::session::body_fetch_from_file()
 {
-  sysapi::thread::say("There is a filename");
+  sysapi::file::handle_t hdl_file;
+  unsigned long sz_file;
+
+  sysapi::thread::say("There is a to fetch from");
   sysapi::thread::say(http_info_.filename_);
+
+  if (sysapi::file::open(&hdl_file, http_info_.filename_, sysapi::file::RDONLY) == false)
+    {
+      sysapi::error::stringify("Cannot open file");
+      return false;
+    }
+
+  if (sysapi::file::size(http_info_.filename_, &sz_file) == false)
+    {
+      sysapi::file::close(hdl_file);
+      return false;
+    }
+
+  http_info_.buf_body_ = new unsigned char[sz_file];
+  http_info_.sz_body_ = sz_file;
+  
+  sysapi::file::close(hdl_file);
   delete[] http_info_.filename_;
   return true;
 }
