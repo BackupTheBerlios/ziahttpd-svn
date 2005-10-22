@@ -98,6 +98,7 @@ bool	http::message::response_header_content_type()
 	LALA_s	LALA[] = {
 		{"text/html", "html"},
 		{"text/html", "htm"},
+		{"image/gif", "gif"},
 		{0, 0}
 	};
 	std::string			type;
@@ -123,7 +124,7 @@ bool	http::message::response_header_content_type()
 
 bool	http::message::response_header_content_length()
 {
-	unsigned long size;
+	unsigned long size = 0;
 	char		  sizestr[1000];
 
 	sysapi::file::size(file_.c_str(), &size);
