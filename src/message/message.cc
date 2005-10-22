@@ -121,7 +121,7 @@ bool	http::message::header(const std::string& data)
 //	return (true);
 //}
 
-bool	http::message::body(const unsigned char* data, size_t size)
+bool	http::message::body(const unsigned char* data, sysapi::socket_in::size_t size)
 {
 	std::cout << "ERR CODE " << error_code_ << std::endl;
 	if (method_ == "post")

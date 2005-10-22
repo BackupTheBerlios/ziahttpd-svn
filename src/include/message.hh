@@ -39,7 +39,7 @@ namespace	http
 		// check if the header is correct
 		bool			header(const std::string&);
 		// check if the body is correct ?
-		bool			body(const unsigned char* data, size_t size);
+		bool			body(const unsigned char* data, sysapi::socket_in::size_t size);
 		// make the response for the client
 		bool			make_response();
 	private:
