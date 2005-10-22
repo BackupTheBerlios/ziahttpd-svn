@@ -6,17 +6,21 @@
 bool		http::message::make_response()
 {
 	make_statusline();
-	make_header();
+//	make_header();
 	make_body();
-
-	session_->http_info_.buf_statusline_ = new char[response_statusline_.size() + 1];
-	strcpy(session_->http_info_.buf_statusline_, response_statusline_.c_str());
-//	std::cout << "SEND : " << session_->http_info_.buf_statusline_ << std::endl;
-	build_header_for_send();
-//	std::cout << "SEND : " << session_->http_info_.buf_headerlines_ << std::endl;
 
 	return (true);
 }
+
+bool		http::message::stringify()
+{
+	make_header();
+	session_->http_info_.buf_statusline_ = new char[response_statusline_.size() + 1];
+	strcpy(session_->http_info_.buf_statusline_, response_statusline_.c_str());
+	build_header_for_send();
+	return (true);
+}
+
 
 bool		http::message::make_statusline()
 {
@@ -58,7 +62,7 @@ bool		http::message::make_statusline()
 bool		http::message::make_header()
 {
 	response_header_content_length();
-	response_header_content_type();
+//	response_header_content_type();
 	response_header_server();
 	return (true);
 }
@@ -136,9 +140,9 @@ bool	http::message::response_header_content_length()
 	unsigned long size = 0;
 	char		  sizestr[1000];
 
-	sysapi::file::size(file_.c_str(), &size);
-	std::string	tmp;
-
+	//sysapi::file::size(file_.c_str(), &size);
+	//std::string	tmp;
+	size = session_->http_info_.sz_body_;
 	sprintf(sizestr, "Content-Length: %i", (int)size);
 	response_header_.push_back(sizestr);
 	return (true);

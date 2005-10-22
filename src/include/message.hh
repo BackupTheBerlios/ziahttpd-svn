@@ -43,6 +43,7 @@ namespace	http
 		// make the response for the client
 		bool			make_response();
 		// 
+		bool			stringify();
 		std::map<std::string, std::string>& getquery() { return (getquery_); };
 		std::map<std::string, std::string>& postquery() { return (postquery_); };
 	private:
