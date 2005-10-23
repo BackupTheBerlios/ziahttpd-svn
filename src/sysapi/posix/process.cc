@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:32:20 2005 
-// Last update Sat Oct 22 04:18:39 2005 
+// Last update Sun Oct 23 14:16:14 2005 
 //
 
 
@@ -59,7 +59,39 @@ bool	posix::process::create_outredir_and_loadexec(handle_t* child_hdl, posix::fi
   close(fds[1]);
   *read_hdl = fds[0];
 
-  return true;  
+  return true;
+}
+
+
+bool	posix::process::create_inoutredir_and_loadexec(handle_t* hchild, posix::file::handle_t* hpipe, int ac, const char** av, const char** env)
+{
+  int fds[2];
+
+  // Create a bidirectional communication channel
+  if (socketpair(AF_UNIX, SOCK_STREAM, PF_UNSPEC, fds) == -1)
+    return false;
+
+  // Create a child process
+  if ((*hchild = fork()) == -1)
+    return false;
+
+  // We are in the child
+  if (*hchild == 0)
+    {
+      close(fds[1]);
+      if (dup2(fds[0], 1) == -1)
+	exit(-1);
+      if (dup2(fds[0], 0) == -1)
+	exit(-1);
+      execve(*av, (char* const*)av, (char* const*)env);
+      exit(-1);
+    }
+
+  // close the write end
+  close(fds[0]);
+  *hpipe = fds[1];
+
+  return true;
 }
 
 

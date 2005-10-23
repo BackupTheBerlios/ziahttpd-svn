@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Sat Oct 22 20:45:20 2005 texane
+// Last update Sun Oct 23 13:35:04 2005 
 //
 
 
@@ -72,7 +72,9 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       if (sess->get_body(&body, &sz_body, &err) == true)
 	{
 	  msg.body(reinterpret_cast<const unsigned char*>(body), sz_body);
-	  delete[] body;
+	  sess->http_info_.buf_body_= body;
+	  sess->http_info_.sz_body_ = sz_body;
+	  // !!!! delete[] body;
 	}
       
       // Set internal message informations

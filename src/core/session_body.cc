@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Sat Oct 22 21:05:32 2005 texane
+// Last update Sun Oct 23 14:16:57 2005 
 //
 
 
@@ -75,11 +75,16 @@ static void add_to_buf(unsigned char** dst, const unsigned char* src, sysapi::fi
 }
 
 
+extern char** environ;
+
+
 bool server::session::body_fetch_from_cgibin()
 {
   sysapi::process::handle_t hprocess;
   sysapi::file::handle_t hread;
+  sysapi::file::handle_t hpipe;
   sysapi::file::size_t nread;
+  sysapi::file::size_t nwrite;
 #define NBUF	256
   unsigned char buf[NBUF];
   sysapi::file::size_t nbuf;
@@ -94,27 +99,54 @@ bool server::session::body_fetch_from_cgibin()
   ac = 1;
   av[0] = http_info_.filename_;
   av[1] = 0;
-  env = 0;
+  env = environ;
 
   if (http_info_.is_method_get_ == true)
     {
       if (sysapi::process::create_outredir_and_loadexec(&hprocess, &hread, ac, (const char**)av, (const char**)env) == true)
 	{
 	  bool read_ret;
-
 	  nbuf = 0;
 	  while ((read_ret = sysapi::file::read(hread, buf, sizeof(buf), &nread)) == true)
 	    {
 	      add_to_buf(&http_info_.buf_body_, buf, nbuf, nread);
 	      nbuf += nread;
 	    }
-// 	  if (read_ret == false)
-// 	    {
-// 	      sysapi::error::stringify("PIPE");
-// 	      return false;
-// 	    }
 
 	  http_info_.sz_body_ = nbuf;
+	  sysapi::process::wait_single(hprocess);
+	  sysapi::process::release(hprocess);
+	  sysapi::file::close(hread);
+	}
+      else
+	{
+	  sysapi::error::stringify("Creating process");
+	  ret = false;
+	}
+    }
+  else if (http_info_.is_method_post_ == true)
+    {
+      if (sysapi::process::create_inoutredir_and_loadexec(&hprocess, &hpipe, ac, (const char**)av, (const char**)env) == true)
+	{
+	  bool read_ret;
+
+	  if (http_info_.buf_body_)
+	    {
+	      sysapi::file::write(hpipe, (const unsigned char*)http_info_.buf_body_, http_info_.sz_body_, &nwrite);
+	      sysapi::file::close_wr(hpipe);
+	      delete[] http_info_.buf_body_;
+	      http_info_.buf_body_ = 0;
+	    }
+
+	  nbuf = 0;
+	  while ((read_ret = sysapi::file::read(hpipe, buf, sizeof(buf), &nread)) == true)
+	    {
+	      add_to_buf(&http_info_.buf_body_, buf, nbuf, nread);
+	      nbuf += nread;
+	    }
+
+	  http_info_.sz_body_ = nbuf;
+	  sysapi::file::close(hpipe);
 	  sysapi::process::wait_single(hprocess);
 	  sysapi::process::release(hprocess);
 	}
@@ -126,6 +158,7 @@ bool server::session::body_fetch_from_cgibin()
     }
   else
     {
+      std::cout << "Cannot create process!" << std::endl;
       ret = false;
     }
 

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:10:19 2005 
-// Last update Sat Oct 22 14:31:33 2005 
+// Last update Sun Oct 23 14:09:39 2005 
 //
 
 
@@ -52,12 +52,32 @@ bool	posix::file::close(handle_t hdl, int*)
   return true;
 }
 
+
+// !Fixme: remove from here
+bool	posix::file::close_rd(handle_t hread, int*)
+{
+  shutdown(hread, SHUT_RD);
+  return true;
+}
+
+bool	posix::file::close_wr(handle_t hwrite, int*)
+{
+  shutdown(hwrite, SHUT_WR);
+  return true;
+}
+
 bool	posix::file::read(handle_t hdl, unsigned char* buf, size_t sz_max, size_t* nr_read, int* err)
 {
   ssize_t nr_bytes;
 
   nr_bytes = ::read(hdl, static_cast<void*>(buf), sz_max);
   if (nr_bytes == -1)
+    {
+      return false;
+    }
+
+  // Don't know how to handle the case of a end of file
+  if (nr_bytes == 0)
     {
       return false;
     }

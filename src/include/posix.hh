@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Sat Oct 22 04:13:54 2005 
+// Last update Sun Oct 23 14:15:41 2005 
 //
 
 
@@ -59,6 +59,8 @@ namespace posix
     bool	open(handle_t*, const char*, mode_t, int* = static_cast<int*>(0));
     bool	create(const char*, mode_t = RDWR, handle_t* = static_cast<handle_t*>(0), int* = static_cast<int*>(0));
     bool	close(handle_t, int* = static_cast<int*>(0));
+    bool	close_rd(handle_t, int* = static_cast<int*>(0));
+    bool	close_wr(handle_t, int* = static_cast<int*>(0));
     bool	read(handle_t, unsigned char*, size_t, size_t* = static_cast<size_t*>(0), int* = static_cast<int*>(0));
     bool	write(handle_t, const unsigned char*, size_t, size_t* = static_cast<size_t*>(0), int* = static_cast<int*>(0));
     bool	seek(handle_t, offset_t, pos_t = CURRENT, int* = static_cast<int*>(0));
@@ -104,6 +106,7 @@ namespace posix
     // Public interface
     bool	create_and_loadexec(handle_t*, int, const char**, const char** = NULL);
     bool	create_outredir_and_loadexec(handle_t*, posix::file::handle_t*, int, const char**, const char** = NULL);
+    bool	create_inoutredir_and_loadexec(handle_t*, posix::file::handle_t*, int, const char**, const char** = NULL);
     bool	myhandle(handle_t*);
     bool	signal(handle_t, sigid_t);
     bool	release(handle_t);
