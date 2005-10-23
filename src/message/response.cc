@@ -51,10 +51,11 @@ bool		http::message::make_statusline()
 	session_->http_info_.is_file_ = true;
 	if (sysapi::file::is_directory(file_.c_str()))
 	{
+		std::cout << "file is  a directory" << std::endl;
 		if (!check_default_type(file_))
 		{
 			// ask for execute the cgi list_directory
-			file_ = http::DOCROOT + "error.html";
+			file_ = http::DOCROOT + "dir_list_linux.exe";
 			session_->http_info_.is_file_ = false;
 			session_->http_info_.is_cgi_ = true;
 			std::cout << "Execute cgi list_directory" << std::endl;
@@ -102,8 +103,8 @@ bool		http::message::check_default_type(std::string &dest)
 	for (i = 0; DEF[i]; i++)
 	{
 		tmp = dest + DEF[i];
-		std::cout << "seek " << DEF[i] << std::endl;
-		if (sysapi::file::is_readable(tmp.c_str()))
+		std::cout << "seek " << DEF[i] << "source: " << tmp << std::endl;
+		if (sysapi::file::exists(tmp.c_str()))
 		{
 			std::cout << "find " << DEF[i] << std::endl;
 			dest = tmp;
@@ -159,8 +160,6 @@ bool	http::message::response_header_content_length()
 	unsigned long size = 0;
 	char		  sizestr[1000];
 
-	//sysapi::file::size(file_.c_str(), &size);
-	//std::string	tmp;
 	size = session_->http_info_.sz_body_;
 	sprintf(sizestr, "Content-Length: %i", (int)size);
 	response_header_.push_back(sizestr);
