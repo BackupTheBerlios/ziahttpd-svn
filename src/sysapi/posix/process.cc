@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:32:20 2005 
-// Last update Sun Oct 23 14:16:14 2005 
+// Last update Sun Oct 23 16:36:26 2005 
 //
 
 
@@ -63,7 +63,7 @@ bool	posix::process::create_outredir_and_loadexec(handle_t* child_hdl, posix::fi
 }
 
 
-bool	posix::process::create_inoutredir_and_loadexec(handle_t* hchild, posix::file::handle_t* hpipe, int ac, const char** av, const char** env)
+bool	posix::process::create_inoutredir_and_loadexec(handle_t* hchild, posix::file::handle_t* hread, posix::file::handle_t* hwrite, int ac, const char** av, const char** env)
 {
   int fds[2];
 
@@ -89,7 +89,8 @@ bool	posix::process::create_inoutredir_and_loadexec(handle_t* hchild, posix::fil
 
   // close the write end
   close(fds[0]);
-  *hpipe = fds[1];
+  *hread = fds[1];
+  *hwrite = fds[1];
 
   return true;
 }

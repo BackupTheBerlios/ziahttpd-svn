@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Sun Oct 23 14:15:41 2005 
+// Last update Sun Oct 23 16:34:28 2005 
 //
 
 
@@ -106,7 +106,7 @@ namespace posix
     // Public interface
     bool	create_and_loadexec(handle_t*, int, const char**, const char** = NULL);
     bool	create_outredir_and_loadexec(handle_t*, posix::file::handle_t*, int, const char**, const char** = NULL);
-    bool	create_inoutredir_and_loadexec(handle_t*, posix::file::handle_t*, int, const char**, const char** = NULL);
+    bool	create_inoutredir_and_loadexec(handle_t*, posix::file::handle_t*, posix::file::handle_t*, int, const char**, const char** = NULL);
     bool	myhandle(handle_t*);
     bool	signal(handle_t, sigid_t);
     bool	release(handle_t);
