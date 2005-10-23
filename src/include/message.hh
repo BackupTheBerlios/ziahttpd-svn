@@ -31,7 +31,7 @@ class session;
 namespace	http
 {
 	static std::string statusline_key[] = {"get", "post", "option", "head", "put", "delete", "trace", "connect", ""};
-	static std::string DOCROOT("./");
+	static std::string DOCROOT(".");
 	class	message 
 	{
 	public:
