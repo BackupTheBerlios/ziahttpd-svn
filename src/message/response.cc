@@ -169,7 +169,7 @@ bool	http::message::response_header_content_length()
 
 bool		http::message::response_header_server()
 {
-	response_header_.push_back("Server: KeKette HTTPD beta 0.1");
+	response_header_.push_back("Server: TrancheD Ejambon Ver : sec");
 	return (true);
 }
 
