@@ -43,7 +43,7 @@ bool		http::message::bodysize(unsigned long size)
 
 bool		http::message::make_statusline()
 {
-	std::string	err_str;
+//	std::string	err_str;
 	std::string statusl;
 
 	file_ = http::DOCROOT + page_;
@@ -67,12 +67,6 @@ bool		http::message::make_statusline()
 		error_code_ = 401;
 	if (!sysapi::file::exists(file_.c_str()))
 		error_code_ = 404;
-	if (!error_code_string(err_str, file_))
-	{
-		error_code_ = 400;
-		std::cout << "CANN'T UNDERSTAND STATUS LINE" << std::endl;
-		error_code_string(err_str, file_);
-	}
 	make_statusline_hi();
 	session_->http_info_.is_file_ = true;
 	return (true);
@@ -80,8 +74,15 @@ bool		http::message::make_statusline()
 
 void		http::message::make_statusline_hi()
 {
-	std::string	err_str;
 	char err[4];
+	std::string err_str;
+
+	if (!error_code_string(err_str, file_))
+	{
+		error_code_ = 400;
+		std::cout << "CANN'T UNDERSTAND STATUS LINE" << std::endl;
+		error_code_string(err_str, file_);
+	}
 	sprintf(err, "%i", error_code_);
 	response_statusline_ = "HTTP/" + version_ + " " + err + " " + err_str + "\r\n";
 	session_->http_info_.filename_ = new char[file_.size() + 1];
@@ -116,6 +117,25 @@ bool		http::message::check_default_type(std::string &dest)
 		{
 			std::cout << "find " << DEF[i] << std::endl;
 			dest = tmp;
+			return (true);
+		}
+	}
+
+	// errocode 301
+	for (i = 0; DEF[i]; i++)
+	{
+		tmp = dest + "/" + DEF[i];
+		std::cout << "seek " << DEF[i] << "source: " << tmp << std::endl;
+		if (sysapi::file::exists(tmp.c_str()))
+		{
+			std::string		ret("Location: ");
+			std::cout << "find " << DEF[i] << std::endl;
+			dest = tmp;
+			error_code_ = 301;
+			ret += "http://" + header_["host"] + page_ + "/";
+//			ret += "http://www.barbie.com";
+			std::cout << "redirection: " << ret << std::endl;
+			response_header_.push_back(ret);
 			return (true);
 		}
 	}
