@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Sun Oct 23 14:16:57 2005 
+// Last update Sun Oct 23 13:24:52 2005 texane
 //
 
 
@@ -75,14 +75,11 @@ static void add_to_buf(unsigned char** dst, const unsigned char* src, sysapi::fi
 }
 
 
-extern char** environ;
-
-
 bool server::session::body_fetch_from_cgibin()
 {
   sysapi::process::handle_t hprocess;
   sysapi::file::handle_t hread;
-  sysapi::file::handle_t hpipe;
+  sysapi::file::handle_t hwrite;
   sysapi::file::size_t nread;
   sysapi::file::size_t nwrite;
 #define NBUF	256
@@ -99,7 +96,7 @@ bool server::session::body_fetch_from_cgibin()
   ac = 1;
   av[0] = http_info_.filename_;
   av[1] = 0;
-  env = environ;
+  env = 0;
 
   if (http_info_.is_method_get_ == true)
     {
@@ -126,27 +123,27 @@ bool server::session::body_fetch_from_cgibin()
     }
   else if (http_info_.is_method_post_ == true)
     {
-      if (sysapi::process::create_inoutredir_and_loadexec(&hprocess, &hpipe, ac, (const char**)av, (const char**)env) == true)
+      if (sysapi::process::create_inoutredir_and_loadexec(&hprocess, &hread, &hwrite, ac, (const char**)av, (const char**)env) == true)
 	{
 	  bool read_ret;
 
 	  if (http_info_.buf_body_)
 	    {
-	      sysapi::file::write(hpipe, (const unsigned char*)http_info_.buf_body_, http_info_.sz_body_, &nwrite);
-	      sysapi::file::close_wr(hpipe);
+	      sysapi::file::write(hwrite, (const unsigned char*)http_info_.buf_body_, http_info_.sz_body_, &nwrite);
+	      sysapi::file::close_wr(hwrite);
 	      delete[] http_info_.buf_body_;
 	      http_info_.buf_body_ = 0;
 	    }
 
 	  nbuf = 0;
-	  while ((read_ret = sysapi::file::read(hpipe, buf, sizeof(buf), &nread)) == true)
+	  while ((read_ret = sysapi::file::read(hread, buf, sizeof(buf), &nread)) == true)
 	    {
 	      add_to_buf(&http_info_.buf_body_, buf, nbuf, nread);
 	      nbuf += nread;
 	    }
 
 	  http_info_.sz_body_ = nbuf;
-	  sysapi::file::close(hpipe);
+	  sysapi::file::close_rd(hread);
 	  sysapi::process::wait_single(hprocess);
 	  sysapi::process::release(hprocess);
 	}

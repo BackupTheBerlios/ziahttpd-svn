@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 18:45:02 2005 texane
-// Last update Sat Oct 22 03:32:35 2005 
+// Last update Sun Oct 23 13:37:05 2005 texane
 //
 
 #include <iostream>
@@ -139,6 +139,92 @@ bool	win32::process::create_outredir_and_loadexec(handle_t* child_hdl,
   CloseHandle(write_hdl);
   // Reset the parent stdout
   SetStdHandle(STD_OUTPUT_HANDLE, stdout_hdl);
+  
+  return true;
+}
+
+// Create a child process whose read and write std descriptors are redirected
+// ! Close all handle on error
+bool	win32::process::create_inoutredir_and_loadexec(handle_t* child_hdl,
+						       win32::file::handle_t* hread,
+						       win32::file::handle_t* hwrite,
+						       int ac,
+						       const char** av,
+						       const char** env)
+{
+  SECURITY_ATTRIBUTES sa;
+  PROCESS_INFORMATION psinfo;
+  STARTUPINFO startinfo;
+  HANDLE hwrite_pipe;
+  HANDLE hread_pipe;
+  HANDLE hstdout;
+  HANDLE hstdin;
+  char* cmdline;
+
+  // Create command line from av
+  cmdline = av_to_cmdline(ac, av);
+
+  // save the current stdout handle
+  hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+  if (hstdout == INVALID_HANDLE_VALUE)
+    return false;
+
+  hstdin = GetStdHandle(STD_INPUT_HANDLE);
+  if (hstdin == INVALID_HANDLE_VALUE)
+    {
+      CloseHandle(hstdin);
+      return false;
+    }
+
+  // Create an anonymous pipe
+  sa.nLength = sizeof(sa);
+  sa.bInheritHandle = TRUE;
+  sa.lpSecurityDescriptor = NULL;
+
+  // Create the pipe child will read from
+  if (CreatePipe(hread, &hwrite_pipe, &sa, 0) == FALSE)
+    return false;
+  SetHandleInformation(*hread, HANDLE_FLAG_INHERIT, 0);
+
+
+  // Create the pipe child will write to
+  if (CreatePipe(&hread_pipe, hwrite, &sa, 0) == FALSE)
+    return false;
+  SetHandleInformation(*hwrite, HANDLE_FLAG_INHERIT, 0);
+  
+
+  // Set child handles
+  SetStdHandle(STD_OUTPUT_HANDLE, hread_pipe);
+  SetStdHandle(STD_INPUT_HANDLE, hwrite_pipe);
+
+  // Create a new process
+  ZeroMemory(&psinfo, sizeof(psinfo));
+  ZeroMemory(&startinfo, sizeof(startinfo));
+  startinfo.cb = sizeof(startinfo);
+  startinfo.hStdOutput = hwrite;
+  startinfo.hStdInput = hread;
+  startinfo.dwFlags |= STARTF_USESTDHANDLES;
+  if (CreateProcess(NULL, cmdline,
+		    NULL, NULL,
+		    TRUE,
+		    CREATE_NO_WINDOW,
+		    (LPVOID)env,
+		    NULL,
+		    &startinfo,
+		    &psinfo) == FALSE)
+    return false;
+
+  delete[] cmdline;
+
+  // Get the child handle
+  *child_hdl = psinfo.hProcess;
+
+  // Close the parent write part of the pipe
+  CloseHandle(hwrite_pipe);
+  CloseHandle(hread_pipe);
+  // Reset the parent stdout
+  SetStdHandle(STD_OUTPUT_HANDLE, hstdout);
+  SetStdHandle(STD_INPUT_HANDLE, hstdin);
   
   return true;
 }

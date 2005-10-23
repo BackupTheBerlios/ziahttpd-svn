@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Sat Oct 22 15:58:01 2005 texane
+// Last update Sun Oct 23 13:38:50 2005 texane
 //
 
 
@@ -77,6 +77,19 @@ bool	win32::file::close(win32::file::handle_t handle,
     }
 
   return false;
+}
+
+bool	win32::file::close_rd(win32::file::handle_t hread,
+			      int* err)
+{
+  return close(hread, err);
+}
+
+
+bool	win32::file::close_wr(win32::file::handle_t hwrite,
+			      int* err)
+{
+  return close(hwrite, err);
 }
 
 

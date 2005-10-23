@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Sun Oct 23 14:15:27 2005 
+// Last update Sun Oct 23 13:21:23 2005 texane
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -95,7 +95,7 @@ namespace win32
     // Public interface
     bool	create_and_loadexec(handle_t*, int, const char**, const char** = NULL);
     bool	create_outredir_and_loadexec(handle_t*, win32::file::handle_t*, int, const char**, const char** = NULL);
-    bool	create_inoutredir_and_loadexec(handle_t*, win32::file::handle_t*, int, const char**, const char** = NULL);
+    bool	create_inoutredir_and_loadexec(handle_t*, win32::file::handle_t*, win32::file::handle_t*, int, const char**, const char** = NULL);
     bool	myhandle(handle_t*);
     bool	signal(handle_t, sigid_t);
     bool	release(handle_t);
