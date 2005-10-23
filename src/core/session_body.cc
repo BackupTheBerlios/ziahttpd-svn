@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Sun Oct 23 13:24:52 2005 texane
+// Last update Sun Oct 23 16:42:39 2005 texane
 //
 
 
@@ -129,18 +129,22 @@ bool server::session::body_fetch_from_cgibin()
 
 	  if (http_info_.buf_body_)
 	    {
+	      sysapi::thread::say("WRITING IN PIPE");
 	      sysapi::file::write(hwrite, (const unsigned char*)http_info_.buf_body_, http_info_.sz_body_, &nwrite);
 	      sysapi::file::close_wr(hwrite);
 	      delete[] http_info_.buf_body_;
 	      http_info_.buf_body_ = 0;
 	    }
 
+	  sysapi::thread::say("READING FROM PIPE");
 	  nbuf = 0;
 	  while ((read_ret = sysapi::file::read(hread, buf, sizeof(buf), &nread)) == true)
 	    {
+	      sysapi::thread::say("READING!");
 	      add_to_buf(&http_info_.buf_body_, buf, nbuf, nread);
 	      nbuf += nread;
 	    }
+	  sysapi::thread::say("READING FROM PIPE DONE");
 
 	  http_info_.sz_body_ = nbuf;
 	  sysapi::file::close_rd(hread);

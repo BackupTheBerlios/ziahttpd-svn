@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Sun Oct 23 14:23:00 2005 texane
+// Last update Sun Oct 23 16:38:52 2005 texane
 //
 
 
@@ -103,6 +103,7 @@ bool	win32::file::read(win32::file::handle_t handle,
   DWORD nr_bytes;
   BOOL ret;
 
+  nr_bytes = 0;
   ret = ReadFile(handle, static_cast<LPVOID>(buf), sz, &nr_bytes, NULL);
   if (ret == FALSE)
     {

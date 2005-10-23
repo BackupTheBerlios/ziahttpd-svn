@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 18:45:02 2005 texane
-// Last update Sun Oct 23 13:37:05 2005 texane
+// Last update Sun Oct 23 16:47:14 2005 texane
 //
 
 #include <iostream>
@@ -194,15 +194,15 @@ bool	win32::process::create_inoutredir_and_loadexec(handle_t* child_hdl,
   
 
   // Set child handles
-  SetStdHandle(STD_OUTPUT_HANDLE, hread_pipe);
-  SetStdHandle(STD_INPUT_HANDLE, hwrite_pipe);
+  SetStdHandle(STD_OUTPUT_HANDLE, hwrite_pipe);
+  SetStdHandle(STD_INPUT_HANDLE, hread_pipe);
 
   // Create a new process
   ZeroMemory(&psinfo, sizeof(psinfo));
   ZeroMemory(&startinfo, sizeof(startinfo));
   startinfo.cb = sizeof(startinfo);
-  startinfo.hStdOutput = hwrite;
-  startinfo.hStdInput = hread;
+  startinfo.hStdOutput = hwrite_pipe;
+  startinfo.hStdInput = hread_pipe;
   startinfo.dwFlags |= STARTF_USESTDHANDLES;
   if (CreateProcess(NULL, cmdline,
 		    NULL, NULL,
