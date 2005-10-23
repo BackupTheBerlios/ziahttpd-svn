@@ -43,18 +43,17 @@ bool		http::message::bodysize(unsigned long size)
 
 bool		http::message::make_statusline()
 {
-	std::string	DOCROOT(".");
 	std::string	err_str;
 	std::string statusl;
 
-	file_ = DOCROOT + page_;
+	file_ = http::DOCROOT + page_;
 	session_->http_info_.is_file_ = true;
 	if (sysapi::file::is_directory(file_.c_str()))
 	{
 		if (!check_default_type(file_))
 		{
 			// ask for execute the cgi list_directory
-			file_ = DOCROOT + "/error.html";
+			file_ = http::DOCROOT + "error.html";
 			session_->http_info_.is_file_ = false;
 			session_->http_info_.is_cgi_ = true;
 			std::cout << "Execute cgi list_directory" << std::endl;

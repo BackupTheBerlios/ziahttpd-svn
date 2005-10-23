@@ -177,6 +177,9 @@
 				Name="message"
 				Filter="">
 				<File
+					RelativePath=".\src\message\error_code.cc">
+				</File>
+				<File
 					RelativePath=".\src\message\header.cc">
 				</File>
 				<File

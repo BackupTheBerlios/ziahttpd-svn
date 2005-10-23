@@ -25,17 +25,20 @@ class session;
 #include <sysapi.hh>
 #endif
 
+
+
+
 namespace	http
 {
 	static std::string statusline_key[] = {"get", "post", "option", "head", "put", "delete", "trace", "connect", ""};
-
+	static std::string DOCROOT("./");
 	class	message 
 	{
 	public:
 		//constructor 
 		message(server::session *);
 		// check if the status line is correct
-		bool			statusline(const std::string&);
+		bool			statusline(const char *);
 		// check if the header is correct
 		bool			header(const std::string&);
 		// check if the body is correct ?
