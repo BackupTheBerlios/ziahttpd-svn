@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Sun Oct 23 13:38:50 2005 texane
+// Last update Sun Oct 23 14:23:00 2005 texane
 //
 
 
@@ -235,16 +235,15 @@ static bool file_query_about(const char* filename, enum file_query q, unsigned l
   if (attr == INVALID_FILE_ATTRIBUTES)
     return false;
 
-  switch (attr)
-    {
-    case FILE_ATTRIBUTE_DIRECTORY:
-      ret = directory_query_about(filename, q, aux);
-      break;
+  ret = false;
 
-    default:
-      ret = normalfile_query_about(filename, q, aux);
-      break;
+  if (q == IS_DIRECTORY)
+    {
+      if (attr == FILE_ATTRIBUTE_DIRECTORY)
+	ret = directory_query_about(filename, q, aux);
     }
+  else
+    ret = normalfile_query_about(filename, q, aux);
 
   return ret;
 }
