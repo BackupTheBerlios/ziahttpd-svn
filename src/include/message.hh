@@ -38,7 +38,7 @@ namespace	http
 		//constructor 
 		message(server::session *);
 		// check if the status line is correct
-		bool			statusline(const char *);
+		bool			statusline(const std::string&);
 		// check if the header is correct
 		bool			header(const std::string&);
 		// check if the body is correct ?

@@ -24,18 +24,15 @@ http::message::message(server::session* s)
 	page_is_dir = false;
 }
 
-bool	http::message::statusline(const char* str)
+bool	http::message::statusline(const std::string& data)
 {
 	stringmanager::string					parse;
 	stringmanager::httpsm					http_par;
 	std::vector<std::string>				glist;
-	std::string								data;
+//	std::string								data;
 
 
-	std::cout << "Original client status line : [" << &str << "]" << std::endl; 
-	if (!strlen(str))
-		return (false);
-	data = str;
+	std::cout << "Original client status line : [" << data << "]" << std::endl; 
 	parse.split(data," ", glist);
 #ifdef _DEBUG
 	std::vector<std::string>::iterator theIterator;
