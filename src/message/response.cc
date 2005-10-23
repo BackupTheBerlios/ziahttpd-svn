@@ -47,6 +47,7 @@ bool		http::message::make_statusline()
 	std::string statusl;
 
 	file_ = http::DOCROOT + page_;
+	std::cout << "file :" << file_ << std::endl;
 	session_->http_info_.is_file_ = true;
 	if (sysapi::file::is_directory(file_.c_str()))
 	{

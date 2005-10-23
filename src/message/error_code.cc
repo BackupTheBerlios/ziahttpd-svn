@@ -12,7 +12,7 @@ bool	http::message::error_code_string(std::string &dest, std::string &dest_file)
 	{
 		{100, "Continue", "error.html"},	
 		{101, "Switching Protocols", "error.html"},
-		{200, "OK", "error.html"},
+		{200, "OK", ""},
 		{201, "Created", "error.html"},
 		{202, "Accepted", "error.html"},
 		{203, "Non-Authoritative Information", "error.html"},
@@ -57,7 +57,8 @@ bool	http::message::error_code_string(std::string &dest, std::string &dest_file)
 		if (err_list[i].err_code == error_code_)
 		{
 			dest = err_list[i].str;
-			dest_file = http::DOCROOT + err_list[i].file;
+			if (!err_list[i].file.empty())
+				dest_file = http::DOCROOT + err_list[i].file;
 			return (true);
 		}
 	}
