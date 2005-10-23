@@ -32,6 +32,7 @@ namespace	http
 {
 	static std::string statusline_key[] = {"get", "post", "option", "head", "put", "delete", "trace", "connect", ""};
 	static std::string DOCROOT("./");
+	static std::string CGIDIRLIST("dir_list_linux.exe");
 	class	message 
 	{
 	public:
@@ -91,6 +92,7 @@ namespace	http
 		bool			response_header_content_length();
 		bool			response_header_content_type();
 		bool			response_header_server();
+		void			make_statusline_hi();
 	};
 }
 

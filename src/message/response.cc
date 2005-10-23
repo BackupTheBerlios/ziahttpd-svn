@@ -55,15 +55,11 @@ bool		http::message::make_statusline()
 		if (!check_default_type(file_))
 		{
 			// ask for execute the cgi list_directory
-			file_ = http::DOCROOT + "dir_list_linux.exe";
+			file_ = http::DOCROOT + CGIDIRLIST;
 			session_->http_info_.is_file_ = false;
 			session_->http_info_.is_cgi_ = true;
 			std::cout << "Execute cgi list_directory" << std::endl;
-			char err[4];
-			sprintf(err, "%i", error_code_);
-			response_statusline_ = "HTTP/" + version_ + " " + err + " " + err_str + "\r\n";
-			session_->http_info_.filename_ = new char[file_.size() + 1];
-			strcpy(session_->http_info_.filename_, file_.c_str());
+			make_statusline_hi();
 			return (true);
 		}
 	}
@@ -74,17 +70,23 @@ bool		http::message::make_statusline()
 	if (!error_code_string(err_str, file_))
 	{
 		error_code_ = 400;
+		std::cout << "CANN'T UNDERSTAND STATUS LINE" << std::endl;
 		error_code_string(err_str, file_);
 	}
+	make_statusline_hi();
+	session_->http_info_.is_file_ = true;
+	return (true);
+}
+
+void		http::message::make_statusline_hi()
+{
+	std::string	err_str;
 	char err[4];
 	sprintf(err, "%i", error_code_);
 	response_statusline_ = "HTTP/" + version_ + " " + err + " " + err_str + "\r\n";
 	session_->http_info_.filename_ = new char[file_.size() + 1];
 	strcpy(session_->http_info_.filename_, file_.c_str());
-	session_->http_info_.is_file_ = true;
-	return (true);
 }
-
 bool		http::message::make_header()
 {
 	response_header_content_length();
