@@ -59,6 +59,12 @@ bool		http::message::make_statusline()
 			session_->http_info_.is_file_ = false;
 			session_->http_info_.is_cgi_ = true;
 			std::cout << "Execute cgi list_directory" << std::endl;
+			char err[4];
+			sprintf(err, "%i", error_code_);
+			response_statusline_ = "HTTP/" + version_ + " " + err + " " + err_str + "\r\n";
+			session_->http_info_.filename_ = new char[file_.size() + 1];
+			strcpy(session_->http_info_.filename_, file_.c_str());
+			return (true);
 		}
 	}
 	if (!sysapi::file::is_readable(file_.c_str()))
