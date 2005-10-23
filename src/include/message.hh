@@ -31,8 +31,9 @@ class session;
 namespace	http
 {
 	static std::string statusline_key[] = {"get", "post", "option", "head", "put", "delete", "trace", "connect", ""};
-	static std::string DOCROOT("./");
-	static std::string CGIDIRLIST("dir_list_linux.exe");
+	static std::string DOCROOT("./root/www/");
+	static std::string WWWROOT("./");
+	static std::string CGIDIRLIST("./cgi-bin/dir_list_windows.exe");
 	class	message 
 	{
 	public:

@@ -56,6 +56,7 @@ bool	http::message::error_code_string(std::string &dest, std::string &dest_file)
 	{
 		if (err_list[i].err_code == error_code_)
 		{
+
 			dest = err_list[i].str;
 			if (!err_list[i].file.empty())
 				dest_file = http::DOCROOT + err_list[i].file;
