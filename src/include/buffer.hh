@@ -5,13 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Sun Oct 23 21:33:56 2005 texane
+// Last update Sun Oct 23 23:06:36 2005 texane
 //
 
 
 #ifndef HTTP_DATAMAN_BUFFER_HH
 # define HTTP_DATAMAN_BUFFER_HH
 
+#include <sysapi.hh>
 #include <cstdlib>
 
 namespace http
@@ -24,13 +25,15 @@ namespace http
       buffer();
       buffer(const unsigned char*, size_t);
       buffer(const buffer&);
+      buffer(sysapi::file::handle_t&);
+      buffer(sysapi::socket_in::handle_t&);
 
       ~buffer();
 
       size_t size() const;
       char* c_str() const;
-
       void display() const;
+      unsigned char* dup() const;
 
       buffer operator+(const buffer&);
       buffer& operator+=(const buffer&);

@@ -5,11 +5,12 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Sun Oct 23 21:47:32 2005 texane
+// Last update Sun Oct 23 23:52:27 2005 texane
 //
 
 #include <iostream>
 #include <buffer.hh>
+#include <sysapi.hh>
 
 
 using std::cout;
@@ -61,9 +62,73 @@ http::dataman::buffer::buffer(const buffer& b)
 }
 
 
+http::dataman::buffer::buffer(sysapi::socket_in::handle_t& hsock)
+{
+#define NBLK	256
+  unsigned char blk[NBLK];
+  sysapi::socket_in::size_t nblk;
+  register unsigned char* buf;
+  unsigned char* sav;
+  register int nbuf;
+  bool ret;
+
+  reset();
+
+  nbuf = 0;
+  buf = 0;
+  while ((ret = sysapi::socket_in::recv(hsock, (unsigned char*)blk, sizeof(blk), &nblk)) == true)
+    {
+      sav = buf;
+      buf = new unsigned char[nbuf + nblk];
+      if (sav)
+	{
+	  bufcpy(buf, sav, nbuf);
+	  delete[] sav;
+	}
+      bufcpy(buf + nbuf, blk, nblk);
+      nbuf += nblk;
+    }
+
+  buf_ = buf;
+  sz_ = nbuf;
+}
+
+
+http::dataman::buffer::buffer(sysapi::file::handle_t& hfile)
+{
+  reset();
+#define NBLK	256
+  unsigned char blk[NBLK];
+  sysapi::file::size_t nblk;
+  register unsigned char* buf;
+  unsigned char* sav;
+  register int nbuf;
+  bool ret;
+
+  reset();
+
+  nbuf = 0;
+  buf = 0;
+  while ((ret = sysapi::file::read(hfile, (unsigned char*)blk, sizeof(blk), &nblk)) == true)
+    {
+      sav = buf;
+      buf = new unsigned char[nbuf + nblk];
+      if (sav)
+	{
+	  bufcpy(buf, sav, nbuf);
+	  delete[] sav;
+	}
+      bufcpy(buf + nbuf, blk, nblk);
+      nbuf += nblk;
+    }
+
+  buf_ = buf;
+  sz_ = nbuf;
+}
+
+
 http::dataman::buffer::~buffer()
 {
-  cout << "deleting" << endl;
   delete[] buf_;
   reset();
 }
@@ -103,6 +168,16 @@ void http::dataman::buffer::display() const
 }
 
 
+unsigned char* http::dataman::buffer::dup() const
+{
+  unsigned char* res;
+  
+  res = new unsigned char[sz_];
+  bufcpy(res, buf_, sz_);
+  return res;
+}
+
+
 http::dataman::buffer http::dataman::buffer::operator+(const buffer& b)
 {
   buffer res(buf_, sz_);
@@ -121,11 +196,15 @@ http::dataman::buffer& http::dataman::buffer::operator+=(const buffer& b)
 
   // copy
   wrk = new unsigned char[sz_ + b.sz_];
-  bufcpy(wrk, buf_, sz_);
-  bufcpy(wrk + sz_, b.buf_, b.sz_);
+  if (buf_)
+    {
+      bufcpy(wrk, buf_, sz_);
+      delete[] buf_;
+    }
+  if (b.buf_)
+    bufcpy(wrk + sz_, b.buf_, b.sz_);
 
   // affect and release internal buffer
-  delete[] buf_;
   buf_ = wrk;
   sz_ += b.sz_;
 
@@ -135,7 +214,9 @@ http::dataman::buffer& http::dataman::buffer::operator+=(const buffer& b)
 
 http::dataman::buffer& http::dataman::buffer::operator=(const buffer& b)
 {
-  delete[] buf_;
+  if (buf_)
+    delete[] buf_;
+
   sz_ = b.sz_;
   buf_ = new unsigned char[sz_];
   bufcpy(buf_, b.buf_, sz_);
@@ -146,6 +227,8 @@ http::dataman::buffer& http::dataman::buffer::operator=(const buffer& b)
 
 unsigned char& http::dataman::buffer::operator[](int i)
 {
+  if (!buf_ || (size_t)i < 0 || (size_t)i >= sz_)
+    throw (int)0;
   return buf_[i];
 }
 
