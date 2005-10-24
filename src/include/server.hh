@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:11:05 2005 texane
-// Last update Mon Oct 24 13:48:08 2005 
+// Last update Mon Oct 24 14:51:35 2005 
 //
 
 
@@ -19,7 +19,7 @@
 #include <dataman.hh>
 #include <message.hh>
 #include <buffer.hh>
-#include <resource.hh>
+// #include <resource.hh>
 #include <uri.hh>
 
 #endif // ! SERVER_HH

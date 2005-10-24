@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Mon Oct 24 13:05:38 2005 
+// Last update Mon Oct 24 14:58:11 2005 
 //
 
 #include <iostream>
@@ -59,6 +59,11 @@ http::dataman::buffer::buffer(const buffer& b)
 {
   reset();
   *this = b;
+}
+
+
+http::dataman::buffer::buffer(const uri& u)
+{
 }
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Mon Oct 24 13:05:14 2005 
+// Last update Mon Oct 24 14:55:09 2005 
 //
 
 
@@ -14,6 +14,7 @@
 
 #include <sysapi.hh>
 #include <cstdlib>
+#include <uri.hh>
 
 namespace http
 {
@@ -26,6 +27,7 @@ namespace http
       buffer(const unsigned char*, size_t);
       buffer(const buffer&);
       explicit buffer(sysapi::file::handle_t&);
+      explicit buffer(const uri&);
 
       ~buffer();
 
