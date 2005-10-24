@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Sun Oct 23 23:52:27 2005 texane
+// Last update Mon Oct 24 13:05:38 2005 
 //
 
 #include <iostream>
@@ -59,38 +59,6 @@ http::dataman::buffer::buffer(const buffer& b)
 {
   reset();
   *this = b;
-}
-
-
-http::dataman::buffer::buffer(sysapi::socket_in::handle_t& hsock)
-{
-#define NBLK	256
-  unsigned char blk[NBLK];
-  sysapi::socket_in::size_t nblk;
-  register unsigned char* buf;
-  unsigned char* sav;
-  register int nbuf;
-  bool ret;
-
-  reset();
-
-  nbuf = 0;
-  buf = 0;
-  while ((ret = sysapi::socket_in::recv(hsock, (unsigned char*)blk, sizeof(blk), &nblk)) == true)
-    {
-      sav = buf;
-      buf = new unsigned char[nbuf + nblk];
-      if (sav)
-	{
-	  bufcpy(buf, sav, nbuf);
-	  delete[] sav;
-	}
-      bufcpy(buf + nbuf, blk, nblk);
-      nbuf += nblk;
-    }
-
-  buf_ = buf;
-  sz_ = nbuf;
 }
 
 

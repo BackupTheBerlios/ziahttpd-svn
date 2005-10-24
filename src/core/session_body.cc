@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Sun Oct 23 23:49:35 2005 texane
+// Last update Mon Oct 24 13:23:12 2005 
 //
 
 
@@ -57,24 +57,6 @@ bool server::session::body_fetch_from_file()
 }
 
 
-// !Fixme: only supports get method
-static void add_to_buf(unsigned char** dst, const unsigned char* src, sysapi::file::size_t sz_dst, sysapi::file::size_t sz_src)
-{
-  unsigned char* res;
-  sysapi::file::size_t i;
-  sysapi::file::size_t j;
-
-  res = new unsigned char[sz_dst + sz_src];
-  for (i = 0; i < sz_dst; ++i)
-    res[i] = (*dst)[i];
-  for (j = 0; j < sz_src; ++j, ++i)
-    res[i] = src[j];
-
-  delete[] *dst;
-  *dst = res;
-}
-
-
 bool server::session::body_fetch_from_cgibin()
 {
   sysapi::process::handle_t hprocess;
@@ -101,8 +83,6 @@ bool server::session::body_fetch_from_cgibin()
 	  // Fetch the buffer from hread
 	  http::dataman::buffer body(hread);
 	  http_info_.buf_body_ = body.dup();
-	  std::cout << "DISPLAYING body" << std::endl;
-	  body.display();
 	  http_info_.sz_body_ = (unsigned long)body.size();
 
 	  // Wait for the child to end
@@ -140,13 +120,13 @@ bool server::session::body_fetch_from_cgibin()
 	}
       else
 	{
-	  sysapi::error::stringify("Creating process");
+	  sysapi::thread::say("Unknown method type");
 	  ret = false;
 	}
     }
   else
     {
-      std::cout << "Cannot create process!" << std::endl;
+      sysapi::error::stringify("Creating process");
       ret = false;
     }
 

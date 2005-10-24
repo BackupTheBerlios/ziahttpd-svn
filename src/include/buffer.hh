@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Sun Oct 23 23:06:36 2005 texane
+// Last update Mon Oct 24 13:05:14 2005 
 //
 
 
@@ -25,8 +25,7 @@ namespace http
       buffer();
       buffer(const unsigned char*, size_t);
       buffer(const buffer&);
-      buffer(sysapi::file::handle_t&);
-      buffer(sysapi::socket_in::handle_t&);
+      explicit buffer(sysapi::file::handle_t&);
 
       ~buffer();
 

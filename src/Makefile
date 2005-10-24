@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 05 12:02:12 2005 texane
-## Last update Sun Oct 23 14:18:41 2005 
+## Last update Mon Oct 24 13:49:56 2005 
 ##
 
 # ! Always include this file
@@ -20,6 +20,9 @@ srcs	= core$(SLASH)main.cc \
 	  core$(SLASH)session.cc \
 	  core$(SLASH)session_helper.cc \
 	  core$(SLASH)dataman.cc \
+	  core$(SLASH)uri.cc \
+	  core$(SLASH)resource.cc \
+	  core$(SLASH)buffer.cc \
 	  core$(SLASH)cstring_helper.cc \
 	  core$(SLASH)session_body.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
