@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Sat Oct 22 16:13:11 2005 texane
+// Last update Mon Oct 24 16:12:50 2005 
 //
 
 
@@ -24,6 +24,7 @@ bool	server::session::get_statusline(char** ptrline, sysapi::socket_in::error_t*
 
   while ((ret = http::dataman::get_nextline(hdl_con_, &line, err)) == true && !::strlen((const char*)line))
     delete[] line;
+  if (!ret) return false;
 
   *ptrline = line;
   return ret;

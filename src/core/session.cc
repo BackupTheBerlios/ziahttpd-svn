@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Sun Oct 23 13:35:04 2005 
+// Last update Mon Oct 24 16:10:57 2005 
 //
 
 
@@ -47,6 +47,7 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
   // Main serverloop
   do
     {
+      bool ret;
       http::message	msg(sess);
 
       thread::say("Servicing the new request");
@@ -55,15 +56,16 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       sess->reset_http_information();
 
       // Get http message
-      sess->get_statusline(&ptr_line, &err);
-      msg.statusline((const char*)ptr_line);
+      if (!sess->get_statusline(&ptr_line, &err)) return 0;
+      if (!msg.statusline((const char*)ptr_line)) return 0;
       delete[] ptr_line;
-      while (sess->get_headerline(&ptr_line, &err) && ::strlen((const char*)ptr_line))
+      while ((ret = sess->get_headerline(&ptr_line, &err)) && ::strlen((const char*)ptr_line))
 	{
 	  sysapi::thread::say(ptr_line);
 	  msg.header((const char*)ptr_line);
 	  delete[] ptr_line;
 	}
+      if (!ret) return 0;
 
       // We are one the last crlf
       delete[] ptr_line;
