@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Tue Oct 25 17:35:37 2005 
+// Last update Tue Oct 25 19:27:03 2005 
 //
 
 
@@ -40,9 +40,6 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
 {
   socket_in::error_t	err;
   server::session*	sess = reinterpret_cast<server::session*>(param);
-  unsigned char*	body;
-  sysapi::socket_in::size_t sz_body;
-  char*			ptr_line;
   http::dataman::buffer buf;
 
   // Main serverloop
@@ -57,36 +54,23 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       sess->reset_http_information();
 
       // Get http message
-      if (!sess->get_statusline(&ptr_line, &err)) return 0;
-
-      // --- if (!msg.statusline((const char*)ptr_line)) return 0;
-      // +++
-      buf = ptr_line;
+      if (!sess->get_statusline(buf, &err)) return 0;
       if (!msg.statusline(buf)) return 0;
-      delete[] ptr_line;
 
-      while ((ret = sess->get_headerline(&ptr_line, &err)) && ::strlen((const char*)ptr_line))
-	{
-	  sysapi::thread::say(ptr_line);
+      while ((ret = sess->get_headerline(buf, &err)) && buf.size())
+	msg.header(buf);
 
-	  // --- msg.header((const char*)ptr_line);
-	  // +++
-	  buf = ptr_line;
-	  msg.header(buf);
-	  delete[] ptr_line;
-	}
       if (!ret) return 0;
 
       // We are one the last crlf
-      delete[] ptr_line;
 
       // Get the body, if any
-      if (sess->get_body(&body, &sz_body, &err) == true)
+      if (sess->get_body(buf, &err) == true)
 	{
-	  msg.body(reinterpret_cast<const unsigned char*>(body), sz_body);
-	  sess->http_info_.buf_body_= body;
-	  sess->http_info_.sz_body_ = sz_body;
-	  // !!!! delete[] body;
+	  msg.body(buf);
+	  sess->http_info_.buf_body_= buf.dup();
+	  sess->http_info_.sz_body_ = buf.size();
+	  // !!!! delete[] http_info_.buf_body_;
 	}
       
       // Set internal message informations

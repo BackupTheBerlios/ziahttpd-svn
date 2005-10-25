@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Sat Oct 22 19:56:15 2005 texane
+// Last update Tue Oct 25 18:13:32 2005 
 //
 
 
@@ -16,6 +16,7 @@
 #include <channel.hh>
 #include <sysapi.hh>
 #include <dataman.hh>
+#include <buffer.hh>
 
 // The session is the basic runnable execution
 // unit of our server.
@@ -63,9 +64,10 @@ namespace server
 
     // Getting the request from the network
     bool skip_crlf(char**, sysapi::socket_in::error_t*);
-    bool get_statusline(char**, sysapi::socket_in::error_t*);
-    bool get_headerline(char**, sysapi::socket_in::error_t*);
-    bool get_body(unsigned char**, sysapi::socket_in::size_t* sz_body, sysapi::socket_in::error_t*);
+
+    bool get_statusline(http::dataman::buffer&, sysapi::socket_in::error_t*);
+    bool get_headerline(http::dataman::buffer&, sysapi::socket_in::error_t*);
+    bool get_body(http::dataman::buffer&, sysapi::socket_in::error_t*);
 
   private:
     // Fetch the body, helper methods

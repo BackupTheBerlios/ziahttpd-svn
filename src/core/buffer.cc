@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Tue Oct 25 17:34:05 2005 
+// Last update Tue Oct 25 19:26:23 2005 
 //
 
 #include <cstring>
@@ -36,8 +36,11 @@ static void inline bufcpy(unsigned char* dst, const unsigned char* src, size_t s
 }
 
 // helper 
-void inline http::dataman::buffer::reset()
+void http::dataman::buffer::reset()
 {
+  if (buf_)
+    delete[] buf_;
+
   buf_ = 0;
   sz_ = 0;
   mmaped_ = false;
@@ -45,12 +48,14 @@ void inline http::dataman::buffer::reset()
 
 http::dataman::buffer::buffer()
 {
+  buf_ = 0;
   reset();
 }
 
 
 http::dataman::buffer::buffer(const unsigned char* buf, size_t sz)
 {
+  buf_ =  0;
   reset();
   buf_ = new unsigned char[sz];
   bufcpy(buf_, buf, sz);
@@ -60,6 +65,7 @@ http::dataman::buffer::buffer(const unsigned char* buf, size_t sz)
 
 http::dataman::buffer::buffer(const buffer& b)
 {
+  buf_ =  0;
   reset();
   *this = b;
 }
@@ -72,7 +78,6 @@ http::dataman::buffer::buffer(const uri& u)
 
 http::dataman::buffer::buffer(sysapi::file::handle_t& hfile)
 {
-  reset();
 #define NBLK	256
   unsigned char blk[NBLK];
   sysapi::file::size_t nblk;
@@ -81,6 +86,7 @@ http::dataman::buffer::buffer(sysapi::file::handle_t& hfile)
   register int nbuf;
   bool ret;
 
+  buf_ =  0;
   reset();
 
   nbuf = 0;
@@ -105,7 +111,6 @@ http::dataman::buffer::buffer(sysapi::file::handle_t& hfile)
 
 http::dataman::buffer::~buffer()
 {
-  delete[] buf_;
   reset();
 }
 
@@ -190,8 +195,7 @@ http::dataman::buffer& http::dataman::buffer::operator+=(const buffer& b)
 
 http::dataman::buffer& http::dataman::buffer::operator=(const buffer& b)
 {
-  if (buf_)
-    delete[] buf_;
+  reset();
 
   sz_ = b.sz_;
   buf_ = new unsigned char[sz_];
@@ -203,12 +207,13 @@ http::dataman::buffer& http::dataman::buffer::operator=(const buffer& b)
 
 http::dataman::buffer& http::dataman::buffer::operator=(const string& s)
 {
-  if (buf_)
-    delete buf_;
-  
-  sz_ = strlen(s.c_str());
-  buf_ = new unsigned char[strlen(s.c_str()) + 1];
-  strcpy(reinterpret_cast<char*>(buf_), s.c_str());
+  reset();
+
+  if ((sz_ = strlen(s.c_str())))
+    {
+      buf_ = new unsigned char[sz_];
+      bufcpy(buf_, reinterpret_cast<const unsigned char*>(s.c_str()), (size_t)strlen(s.c_str()));
+    }
 
   return *this;
 }
@@ -225,4 +230,14 @@ unsigned char& http::dataman::buffer::operator[](int i)
 http::dataman::buffer::operator unsigned char*()
 {
   return buf_;
+}
+
+
+// Mutators, to remove
+void http::dataman::buffer::buf(unsigned char* buf, size_t sz)
+{
+  reset();
+  buf_ = new unsigned char[sz];
+  bufcpy(buf_, buf, sz);
+  sz_ = sz;
 }

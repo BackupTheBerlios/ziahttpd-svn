@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Tue Oct 25 17:32:56 2005 
+// Last update Tue Oct 25 19:14:57 2005 
 //
 
 
@@ -32,10 +32,15 @@ namespace http
 
       ~buffer();
 
+      // mutators, to remove
+      void buf(unsigned char*, size_t);
+
       size_t size() const;
       char* c_str() const;
       void display() const;
       unsigned char* dup() const;
+
+      void reset();
 
       buffer operator+(const buffer&);
       buffer& operator+=(const buffer&);
@@ -44,8 +49,8 @@ namespace http
       unsigned char& operator[](int);
       operator unsigned char*();
 
+
     private:
-      void reset();
 
       bool mmaped_;
       unsigned char* buf_;
