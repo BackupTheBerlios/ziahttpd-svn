@@ -88,7 +88,7 @@ bool	http::message::header(const http::dataman::buffer& buf)
 	//tmp2 = (const_cast<http::dataman::buffer&>(buf));
 	tmp2 = buf.c_str();
 	data = tmp2;
-
+	delete[] tmp2;
 
 #ifdef _debug
 	std::cout << "function header" << std::endl;
