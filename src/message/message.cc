@@ -35,7 +35,6 @@ bool	http::message::statusline(const http::dataman::buffer& buf)
 	
 	//tmp = (const_cast<http::dataman::buffer&>(buf));
 	tmp = buf.c_str();
-	//tmp[bu]
 	data = tmp;
 	delete[] tmp;
 	std::cout << "Original client status line : [" << data << "]" << std::endl; 
@@ -78,7 +77,7 @@ bool	http::message::header(const http::dataman::buffer& buf)
 		bool (*fct_eq)(server::session*, const std::string&);
 	};
 	char					*tmp2;
-	std::string					data;
+	std::string				data;
 	header_list_s	header_list[] =
 	{
 		{"host", NULL},

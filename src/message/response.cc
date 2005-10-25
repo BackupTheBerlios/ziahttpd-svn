@@ -162,7 +162,7 @@ bool	http::message::response_header_date()
 	tmp = "Date: " + v[0] + ", " + v[2] + " " 
 		+ v[1] + " " + v[4] + " " + v[3] + " GMT";
 	response_header_.push_back(tmp);
-	free (datestr);
+	//free (datestr);
 	return (true);
 }
 
