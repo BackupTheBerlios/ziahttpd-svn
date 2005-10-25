@@ -212,7 +212,7 @@ bool	http::message::response_header_content_length()
 	unsigned long size = 0;
 	char		  sizestr[1000];
 
-	size = session_->http_info_.sz_body_;
+	size = session_->http_info_.response_body_.size();
 	sprintf(sizestr, "Content-Length: %i", (int)size);
 	response_header_.push_back(sizestr);
 	return (true);
