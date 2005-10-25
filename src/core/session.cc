@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Tue Oct 25 20:48:47 2005 
+// Last update Tue Oct 25 21:03:54 2005 
 //
 
 
@@ -74,7 +74,7 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       sess->body_fetch();
 
       // modify the size of the body
-      msg.bodysize(sess->http_info_.request_body_.size());
+      msg.bodysize(sess->http_info_.response_body_.size());
 
       // Stringify the response
       msg.stringify();

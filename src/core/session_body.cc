@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Tue Oct 25 20:51:15 2005 
+// Last update Tue Oct 25 21:13:11 2005 
 //
 
 
@@ -27,6 +27,8 @@
 using namespace sysapi;
 using namespace http;
 using http::dataman::buffer;
+using std::cout;
+using std::endl;
 
 
 bool server::session::body_fetch_from_file()
@@ -52,6 +54,7 @@ bool server::session::body_fetch_from_file()
   buf = new unsigned char[sz_file];
   sysapi::file::read(hfile, buf, sz_file);
   http_info_.response_body_.buf(buf, sz_file);
+  cout << "size: " << sz_file << endl;
 
   sysapi::file::close(hfile);
   delete[] http_info_.filename_;
@@ -101,9 +104,9 @@ bool server::session::body_fetch_from_cgibin()
     {
       if (sysapi::process::create_inoutredir_and_loadexec(&hprocess, &hread, &hwrite, ac, (const char**)av, (const char**)env) == true)
 	{
-	  if (http_info_.buf_body_)
+	  if (http_info_.request_body_.size())
 	    {
-	      sysapi::file::write(hwrite, (const unsigned char*)http_info_.buf_body_, http_info_.sz_body_, &nwrite);
+	      sysapi::file::write(hwrite, (const unsigned char*)http_info_.request_body_, http_info_.request_body_.size(), &nwrite);
 	      sysapi::file::close_wr(hwrite);
 	      delete[] http_info_.buf_body_;
 	      http_info_.buf_body_ = 0;
@@ -112,7 +115,7 @@ bool server::session::body_fetch_from_cgibin()
 
 	  // Fetch the body from hread
 	  http::dataman::buffer body(hread);
-	  http_info_.request_body_ = body;
+	  http_info_.response_body_ = body;
 
 	  // Close the read part of the pipe and wait child
 	  sysapi::file::close_rd(hread);
