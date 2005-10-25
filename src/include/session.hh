@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Tue Oct 25 22:38:48 2005 
+// Last update Tue Oct 25 23:37:24 2005 
 //
 
 
@@ -17,6 +17,7 @@
 #include <sysapi.hh>
 #include <dataman.hh>
 #include <buffer.hh>
+#include <uri.hh>
 
 // The session is the basic runnable execution
 // unit of our server.
@@ -89,32 +90,22 @@ namespace server
       bool is_persistent_;
 
       // Request body
-      bool is_body_;
       bool is_chunked_;
       http::dataman::buffer request_body_;
-
-//       sysapi::socket_in::size_t sz_body_;
-//       unsigned char* buf_body_;
-
+      http::dataman::uri request_uri_;
 
       // Response body
       http::dataman::buffer response_body_;
-
-
+      http::dataman::uri response_uri_;
       
-      // Cgi script related
+      // Which type of file
       bool is_cgi_;
-      char* buf_cgi_;
-      sysapi::socket_in::size_t sz_cgi_;
-
-      // Body is read from a file
       bool is_file_;
-      char* filename_;
 
-      // status line and headers related
+      // buffers for cstrings
+      char* filename_;
       char* buf_statusline_;
       char* buf_headerlines_;
-
 
     } http_info_t;
     http_info_t http_info_;

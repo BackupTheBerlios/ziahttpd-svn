@@ -5,38 +5,57 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:48:55 2005 
-// Last update Mon Oct 24 14:52:41 2005 
+// Last update Tue Oct 25 23:32:17 2005 
 //
 
 
+#include <string>
 #include <uri.hh>
 
 
-http::dataman::uri::uri(const char* universal_name)
+using std::string;
+
+
+http::dataman::uri::uri()
 {
+}
+
+
+http::dataman::uri::uri(const string& universal_name)
+{
+  // turn it into a local path
 }
 
 
 http::dataman::uri::~uri()
-{
-}
-
-
-// Map the universal name to a local one
-void http::dataman::uri::map(const char* universal_name)
-{
-}
+{}
 
 
 // Universal name accessor
-const char* http::dataman::uri::universal_name() const
+const string& http::dataman::uri::universal_name() const
 {
-  return 0;
+  return universal_name_;
 }
 
 
 // Local name accessor
-const char* http::dataman::uri::local_name() const
+const string& http::dataman::uri::local_name() const
 {
-  return 0;
+  return local_name_;
+}
+
+
+// Static member function
+string http::dataman::uri::map_universal_to_local(const std::string& universal_name)
+{
+  string fake;
+  return fake;
+}
+
+
+// Static member function
+string http::dataman::uri::map_local_to_universal(const std::string& local)
+{
+  string fake;
+  return fake;
 }

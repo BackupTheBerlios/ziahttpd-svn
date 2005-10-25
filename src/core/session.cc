@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Tue Oct 25 22:39:06 2005 
+// Last update Tue Oct 25 23:41:01 2005 
 //
 
 
@@ -56,13 +56,9 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       // Get http message
       if (!sess->get_statusline(buf, &err)) return 0;
       if (!msg.statusline(buf)) return 0;
-
       while ((ret = sess->get_headerline(buf, &err)) && buf.size())
 	msg.header(buf);
-
       if (!ret) return 0;
-
-      // We are one the last crlf
 
       // Get the body, if any
       sess->get_body(sess->http_info_.request_body_, &err);
@@ -70,15 +66,12 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       // Set internal message informations
       msg.make_response();
 
-      // Fill in the body
+      // Fetch the body
       sess->body_fetch();
-
-      // modify the size of the body
       msg.bodysize(sess->http_info_.response_body_.size());
 
       // Stringify the response
       msg.stringify();
-
 
       // Send the repsonse
       if (sess->http_info_.buf_statusline_)
@@ -123,7 +116,6 @@ bool server::session::create_worker_thread()
 void server::session::reset_http_information()
 {
   // Are there ...
-  http_info_.is_body_ = false;
   http_info_.is_chunked_ = false;
   http_info_.is_cgi_ = false;
   http_info_.is_file_ = false;
@@ -133,7 +125,5 @@ void server::session::reset_http_information()
   // Nullize the buffers
   http_info_.buf_statusline_ = 0;
   http_info_.buf_headerlines_ = 0;
-//   http_info_.buf_body_ = 0;
-  http_info_.buf_cgi_ = 0;
   http_info_.filename_ = 0;
 }

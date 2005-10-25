@@ -5,12 +5,15 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:46:22 2005 
-// Last update Mon Oct 24 14:37:52 2005 
+// Last update Tue Oct 25 23:32:30 2005 
 //
 
 
 #ifndef HTTP_DATAMAN_URI_HH
 # define HTTP_DATAMAN_URI_HH
+
+
+#include <string>
 
 
 // Name a resource from the client stand point
@@ -28,18 +31,19 @@ namespace http
     class uri
     {
     public:
-      uri(const char*);
+      uri();
+      uri(const std::string&);
       ~uri();
 
-      void map(const char* = 0);
-      void map();
+      const std::string& universal_name() const;
+      const std::string& local_name() const;
 
-      const char* universal_name() const;
-      const char* local_name() const;
+      static std::string map_universal_to_local(const std::string&);
+      static std::string map_local_to_universal(const std::string&);
 
     private:
-      char* universal_name_;
-      char* local_name_;
+      std::string universal_name_;
+      std::string local_name_;
 
       // const config& conf_;
     };
