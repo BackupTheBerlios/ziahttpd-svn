@@ -18,15 +18,12 @@
 #include <map>
 #include <list>
 
+
 namespace server {
 class session;
 }
-#ifndef _TEST
 #include <sysapi.hh>
-#endif
-
-
-
+#include <buffer.hh>
 
 namespace	http
 {
@@ -40,9 +37,9 @@ namespace	http
 		//constructor 
 		message(server::session *);
 		// check if the status line is correct
-		bool			statusline(const std::string&);
+		bool			statusline(const http::dataman::buffer&);
 		// check if the header is correct
-		bool			header(const std::string&);
+		bool			header(const http::dataman::buffer&);
 		// check if the body is correct ?
 		bool			body(const unsigned char* data, sysapi::socket_in::size_t size);
 		// make the response for the client

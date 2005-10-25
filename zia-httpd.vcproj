@@ -127,6 +127,9 @@
 				Name="core"
 				Filter="">
 				<File
+					RelativePath=".\src\core\buffer.cc">
+				</File>
+				<File
 					RelativePath=".\src\core\channel.cc">
 				</File>
 				<File
@@ -207,6 +210,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\src\include\buffer.hh">
+			</File>
 			<File
 				RelativePath=".\src\include\channel.hh">
 			</File>

@@ -24,14 +24,17 @@ http::message::message(server::session* s)
 	page_is_dir = false;
 }
 
-bool	http::message::statusline(const std::string& data)
+bool	http::message::statusline(const http::dataman::buffer& buf)
 {
 	stringmanager::string					parse;
 	stringmanager::httpsm					http_par;
 	std::vector<std::string>				glist;
-//	std::string								data;
+	const char								*tmp;
+	std::string								data;
 
-
+	tmp = buf.c_str();
+	data = tmp;
+	delete[] tmp;
 	std::cout << "Original client status line : [" << data << "]" << std::endl; 
 	parse.split(data," ", glist);
 #ifdef _DEBUG
@@ -60,7 +63,7 @@ bool	http::message::statusline(const std::string& data)
 	return (true);
 }
 
-bool	http::message::header(const std::string& data)
+bool	http::message::header(const http::dataman::buffer& buf)
 {
 	char	*var;
 	char	*val;
@@ -71,6 +74,8 @@ bool	http::message::header(const std::string& data)
 		std::string	var;
 		bool (*fct_eq)(server::session*, const std::string&);
 	};
+	const char								*tmp2;
+	std::string								data;
 
 	header_list_s	header_list[] =
 	{
@@ -78,7 +83,9 @@ bool	http::message::header(const std::string& data)
 		{"content-length", request_header_content_length},
 		{"", NULL}
 	};
-
+	tmp2 = buf.c_str();
+	data = tmp2;
+	delete[] tmp2;
 #ifdef _debug
 	std::cout << "function header" << std::endl;
 #endif
