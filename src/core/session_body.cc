@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Mon Oct 24 13:23:12 2005 
+// Last update Tue Oct 25 20:51:15 2005 
 //
 
 
@@ -18,40 +18,42 @@
 // fill the body in
 
 
-#include <server.hh>
 #include <map>
 #include <iostream>
+#include <server.hh>
+#include <buffer.hh>
 
 
 using namespace sysapi;
 using namespace http;
+using http::dataman::buffer;
 
 
 bool server::session::body_fetch_from_file()
 {
-  sysapi::file::handle_t hdl_file;
+  sysapi::file::handle_t hfile;
   unsigned long sz_file;
+  unsigned char* buf;
 
   sysapi::thread::say("There is file a to fetch from");
   sysapi::thread::say(http_info_.filename_);
 
   if (sysapi::file::size(http_info_.filename_, &sz_file) == false)
-    {
-      return false;
-    }
+    return false;
 
-  if (sysapi::file::open(&hdl_file, http_info_.filename_, sysapi::file::RDONLY) == false)
+  if (sysapi::file::open(&hfile, http_info_.filename_, sysapi::file::RDONLY) == false)
     {
       sysapi::error::stringify("Cannot open file");
       return false;
     }
 
-  http_info_.buf_body_ = new unsigned char[sz_file];
-  sysapi::file::read(hdl_file, http_info_.buf_body_, sz_file);
+  // ! FROM URI
+  // http_info_.response_body_ = buffer(uri);
+  buf = new unsigned char[sz_file];
+  sysapi::file::read(hfile, buf, sz_file);
+  http_info_.response_body_.buf(buf, sz_file);
 
-  http_info_.sz_body_ = sz_file;
-  
-  sysapi::file::close(hdl_file);
+  sysapi::file::close(hfile);
   delete[] http_info_.filename_;
   return true;
 }
@@ -82,8 +84,7 @@ bool server::session::body_fetch_from_cgibin()
 	{
 	  // Fetch the buffer from hread
 	  http::dataman::buffer body(hread);
-	  http_info_.buf_body_ = body.dup();
-	  http_info_.sz_body_ = (unsigned long)body.size();
+	  http_info_.response_body_ = body;
 
 	  // Wait for the child to end
 	  sysapi::process::wait_single(hprocess);
@@ -106,12 +107,12 @@ bool server::session::body_fetch_from_cgibin()
 	      sysapi::file::close_wr(hwrite);
 	      delete[] http_info_.buf_body_;
 	      http_info_.buf_body_ = 0;
+	      http_info_.sz_body_ = 0;
 	    }
 
 	  // Fetch the body from hread
 	  http::dataman::buffer body(hread);
-	  http_info_.sz_body_ = (unsigned long)body.size();
-	  http_info_.buf_body_ = body.dup();
+	  http_info_.request_body_ = body;
 
 	  // Close the read part of the pipe and wait child
 	  sysapi::file::close_rd(hread);
@@ -142,19 +143,9 @@ bool server::session::body_fetch()
   bool ret;
 
   ret = true;
-  if (http_info_.is_file_ == true)
-    {
-      ret = body_fetch_from_file();
-    }
-  else if (http_info_.is_cgi_ == true)
-    {
-      ret = body_fetch_from_cgibin();
-    }
-  else
-    {
-      // unknown file type
-      ret = false;
-    }
+  if (http_info_.is_file_ == true)	ret = body_fetch_from_file();
+  else if (http_info_.is_cgi_ == true)	ret = body_fetch_from_cgibin();
+  else					ret = false;
 
   return ret;
 }

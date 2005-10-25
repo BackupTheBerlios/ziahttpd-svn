@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Tue Oct 25 19:23:02 2005 
+// Last update Tue Oct 25 20:11:36 2005 
 //
 
 
@@ -29,8 +29,11 @@ bool	server::session::get_statusline(http::dataman::buffer& buf, sysapi::socket_
   char*	line;
 
   while ((ret = http::dataman::get_nextline(hdl_con_, &line, err)) && !strlen((const char*)line))
-    delete[] line;
-  if (!ret) return false;
+    {
+      std::cout << "GOT STATUS LINE" << std::endl;
+      delete[] line;
+    }
+  if (!ret) {       std::cout << "GOT STATUS LINE FALSE" << std::endl; return false;}
   
   buf = (const string)line;
   return ret;  

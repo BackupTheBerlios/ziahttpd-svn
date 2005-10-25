@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Tue Oct 25 19:27:03 2005 
+// Last update Tue Oct 25 20:48:47 2005 
 //
 
 
@@ -65,13 +65,7 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       // We are one the last crlf
 
       // Get the body, if any
-      if (sess->get_body(buf, &err) == true)
-	{
-	  msg.body(buf);
-	  sess->http_info_.buf_body_= buf.dup();
-	  sess->http_info_.sz_body_ = buf.size();
-	  // !!!! delete[] http_info_.buf_body_;
-	}
+      sess->get_body(sess->http_info_.request_body_, &err);
       
       // Set internal message informations
       msg.make_response();
@@ -80,7 +74,7 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       sess->body_fetch();
 
       // modify the size of the body
-      msg.bodysize(sess->http_info_.sz_body_);
+      msg.bodysize(sess->http_info_.request_body_.size());
 
       // Stringify the response
       msg.stringify();
@@ -89,23 +83,19 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       // Send the repsonse
       if (sess->http_info_.buf_statusline_)
 	{
-	  sysapi::thread::say("sending status line");
-	  sysapi::thread::say(sess->http_info_.buf_statusline_);
 	  sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_statusline_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_statusline_)));
 	  delete[] sess->http_info_.buf_statusline_;
 	}
       if (sess->http_info_.buf_headerlines_)
 	{
-	  sysapi::thread::say("sending header lines");
-	  sysapi::thread::say(sess->http_info_.buf_headerlines_);
 	  sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_headerlines_, static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_headerlines_)));
 	  delete[] sess->http_info_.buf_headerlines_;
 	}
-      if (sess->http_info_.buf_body_)
-	{
-	  sysapi::socket_in::send(sess->hdl_con_, (const unsigned char*)sess->http_info_.buf_body_, static_cast<sysapi::socket_in::size_t>(sess->http_info_.sz_body_));
-	  delete[] sess->http_info_.buf_body_;
-	}
+
+      // Send the body
+      if (sess->http_info_.response_body_.size())
+	sysapi::socket_in::send(sess->hdl_con_, (unsigned char*)sess->http_info_.response_body_, (sysapi::socket_in::size_t)sess->http_info_.response_body_.size());
+      
     }
   while (sess->is_persistent() == true);
 
