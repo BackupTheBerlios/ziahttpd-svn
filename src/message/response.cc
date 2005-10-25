@@ -147,22 +147,22 @@ bool		http::message::check_default_type(std::string &dest)
 
 bool	http::message::response_header_date()
 {
-	struct tm				*newtime;
-	time_t					aclock;
+//	struct tm				*newtime;
 	char					*datestr;
 	stringmanager::string	p;
 	std::vector<std::string> v;
 	std::string				tmp;
+	time_t t;
+	struct tm *tb;
 
-	time(&aclock);
-	newtime = localtime(&aclock);
-	datestr = asctime(newtime);
+	t = time(NULL);
+	tb = localtime(&t);
+	datestr = ctime(&t);
 	datestr[strlen(datestr) - 1] = '\0';
 	p.split(datestr, " ", v);
 	tmp = "Date: " + v[0] + ", " + v[2] + " " 
 		+ v[1] + " " + v[4] + " " + v[3] + " GMT";
 	response_header_.push_back(tmp);
-	//free (datestr);
 	return (true);
 }
 
@@ -177,6 +177,7 @@ bool	http::message::response_header_content_type()
 		{"text/html", "html", false},
 		{"text/html", "htm", false},
 		{"image/gif", "gif", false},
+		{"image/png", "png", false},
 		{"text/html", "exe", true},
 		{0, 0}
 	};
