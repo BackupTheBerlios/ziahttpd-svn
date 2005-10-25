@@ -5,14 +5,17 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Mon Oct 24 14:58:11 2005 
+// Last update Tue Oct 25 17:34:05 2005 
 //
 
+#include <cstring>
+#include <string>
 #include <iostream>
 #include <buffer.hh>
 #include <sysapi.hh>
 
 
+using std::string;
 using std::cout;
 using std::endl;
 
@@ -194,6 +197,19 @@ http::dataman::buffer& http::dataman::buffer::operator=(const buffer& b)
   buf_ = new unsigned char[sz_];
   bufcpy(buf_, b.buf_, sz_);
   
+  return *this;
+}
+
+
+http::dataman::buffer& http::dataman::buffer::operator=(const string& s)
+{
+  if (buf_)
+    delete buf_;
+  
+  sz_ = strlen(s.c_str());
+  buf_ = new unsigned char[strlen(s.c_str()) + 1];
+  strcpy(reinterpret_cast<char*>(buf_), s.c_str());
+
   return *this;
 }
 

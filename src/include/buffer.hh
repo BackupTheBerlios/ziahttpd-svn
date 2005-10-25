@@ -5,13 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Mon Oct 24 14:55:09 2005 
+// Last update Tue Oct 25 17:32:56 2005 
 //
 
 
 #ifndef HTTP_DATAMAN_BUFFER_HH
 # define HTTP_DATAMAN_BUFFER_HH
 
+#include <string>
 #include <sysapi.hh>
 #include <cstdlib>
 #include <uri.hh>
@@ -39,6 +40,7 @@ namespace http
       buffer operator+(const buffer&);
       buffer& operator+=(const buffer&);
       buffer& operator=(const buffer&);
+      buffer& operator=(const std::string&);
       unsigned char& operator[](int);
       operator unsigned char*();
 

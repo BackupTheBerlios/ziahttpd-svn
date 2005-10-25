@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Mon Oct 24 16:10:57 2005 
+// Last update Tue Oct 25 17:35:37 2005 
 //
 
 
@@ -43,6 +43,7 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
   unsigned char*	body;
   sysapi::socket_in::size_t sz_body;
   char*			ptr_line;
+  http::dataman::buffer buf;
 
   // Main serverloop
   do
@@ -57,12 +58,21 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
 
       // Get http message
       if (!sess->get_statusline(&ptr_line, &err)) return 0;
-      if (!msg.statusline((const char*)ptr_line)) return 0;
+
+      // --- if (!msg.statusline((const char*)ptr_line)) return 0;
+      // +++
+      buf = ptr_line;
+      if (!msg.statusline(buf)) return 0;
       delete[] ptr_line;
+
       while ((ret = sess->get_headerline(&ptr_line, &err)) && ::strlen((const char*)ptr_line))
 	{
 	  sysapi::thread::say(ptr_line);
-	  msg.header((const char*)ptr_line);
+
+	  // --- msg.header((const char*)ptr_line);
+	  // +++
+	  buf = ptr_line;
+	  msg.header(buf);
 	  delete[] ptr_line;
 	}
       if (!ret) return 0;
