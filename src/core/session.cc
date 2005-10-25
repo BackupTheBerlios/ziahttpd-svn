@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Tue Oct 25 21:03:54 2005 
+// Last update Tue Oct 25 22:39:06 2005 
 //
 
 
@@ -133,7 +133,7 @@ void server::session::reset_http_information()
   // Nullize the buffers
   http_info_.buf_statusline_ = 0;
   http_info_.buf_headerlines_ = 0;
-  http_info_.buf_body_ = 0;
+//   http_info_.buf_body_ = 0;
   http_info_.buf_cgi_ = 0;
   http_info_.filename_ = 0;
 }

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Tue Oct 25 20:11:36 2005 
+// Last update Tue Oct 25 22:55:51 2005 
 //
 
 
@@ -62,13 +62,16 @@ bool	server::session::get_body(http::dataman::buffer& buf, sysapi::socket_in::er
 
   ret = false;
 
-  if (http_info_.is_body_ == true)
+//   if (http_info_.is_body_ == true)
+  if (buf.size())
     {
       unsigned char* ptr;
-      ret = http::dataman::get_nextblock(hdl_con_, &ptr, http_info_.sz_body_, &sz, err);
+      ret = http::dataman::get_nextblock(hdl_con_, &ptr, buf.size(), &sz, err);
       if (ret == true)
 	{
 	  buf.buf(ptr, (size_t)sz);
+	  std::cout << "EXE" << std::endl;
+	  buf.display();
 	  delete[] ptr;
 	}
     }

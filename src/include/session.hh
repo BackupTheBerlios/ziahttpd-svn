@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Tue Oct 25 20:47:24 2005 
+// Last update Tue Oct 25 22:38:48 2005 
 //
 
 
@@ -93,8 +93,8 @@ namespace server
       bool is_chunked_;
       http::dataman::buffer request_body_;
 
-      sysapi::socket_in::size_t sz_body_;
-      unsigned char* buf_body_;
+//       sysapi::socket_in::size_t sz_body_;
+//       unsigned char* buf_body_;
 
 
       // Response body

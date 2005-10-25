@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Tue Oct 25 19:26:23 2005 
+// Last update Tue Oct 25 22:45:26 2005 
 //
 
 #include <cstring>
@@ -239,5 +239,11 @@ void http::dataman::buffer::buf(unsigned char* buf, size_t sz)
   reset();
   buf_ = new unsigned char[sz];
   bufcpy(buf_, buf, sz);
+  sz_ = sz;
+}
+
+
+void http::dataman::buffer::size(size_t sz)
+{
   sz_ = sz;
 }

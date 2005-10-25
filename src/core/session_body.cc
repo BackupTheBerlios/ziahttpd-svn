@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Tue Oct 25 21:13:11 2005 
+// Last update Tue Oct 25 22:39:44 2005 
 //
 
 
@@ -108,9 +108,9 @@ bool server::session::body_fetch_from_cgibin()
 	    {
 	      sysapi::file::write(hwrite, (const unsigned char*)http_info_.request_body_, http_info_.request_body_.size(), &nwrite);
 	      sysapi::file::close_wr(hwrite);
-	      delete[] http_info_.buf_body_;
-	      http_info_.buf_body_ = 0;
-	      http_info_.sz_body_ = 0;
+// 	      delete[] http_info_.buf_body_;
+// 	      http_info_.buf_body_ = 0;
+// 	      http_info_.sz_body_ = 0;
 	    }
 
 	  // Fetch the body from hread
