@@ -55,7 +55,7 @@ bool		http::message::make_statusline()
 		if (!check_default_type(file_))
 		{
 			// ask for execute the cgi list_directory
-			file_ = http::DOCROOT + CGIDIRLIST;
+			file_ = /*http::DOCROOT + */CGIDIRLIST;
 			session_->http_info_.is_file_ = false;
 			session_->http_info_.is_cgi_ = true;
 			std::cout << "Execute cgi list_directory" << std::endl;

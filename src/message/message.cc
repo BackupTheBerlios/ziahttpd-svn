@@ -29,12 +29,12 @@ bool	http::message::statusline(const http::dataman::buffer& buf)
 	stringmanager::string					parse;
 	stringmanager::httpsm					http_par;
 	std::vector<std::string>				glist;
-	const char								*tmp;
+	unsigned char							*tmp;
 	std::string								data;
 
-	tmp = buf.c_str();
-	data = tmp;
-	delete[] tmp;
+	
+	tmp = (const_cast<http::dataman::buffer&>(buf));
+	data = (const char *)tmp;
 	std::cout << "Original client status line : [" << data << "]" << std::endl; 
 	parse.split(data," ", glist);
 #ifdef _DEBUG
@@ -74,8 +74,8 @@ bool	http::message::header(const http::dataman::buffer& buf)
 		std::string	var;
 		bool (*fct_eq)(server::session*, const std::string&);
 	};
-	const char								*tmp2;
-	std::string								data;
+	unsigned char				*tmp2;
+	std::string					data;
 
 	header_list_s	header_list[] =
 	{
@@ -83,9 +83,8 @@ bool	http::message::header(const http::dataman::buffer& buf)
 		{"content-length", request_header_content_length},
 		{"", NULL}
 	};
-	tmp2 = buf.c_str();
-	data = tmp2;
-	delete[] tmp2;
+	tmp2 = (const_cast<http::dataman::buffer&>(buf));
+	data = (const char *)tmp2;
 #ifdef _debug
 	std::cout << "function header" << std::endl;
 #endif
@@ -131,15 +130,18 @@ bool	http::message::header(const http::dataman::buffer& buf)
 	return (true);
 }
 
-bool	http::message::body(const unsigned char* data, sysapi::socket_in::size_t size)
+bool	http::message::body(const http::dataman::buffer& buf)
 {
 	std::cout << "ERR CODE " << error_code_ << std::endl;
 	if (method_ == "post")
 	{
 		stringmanager::httpsm	http_par;
-		std::string				s((char *)data);
+		std::string				s;
 		int						si = -1;
+		unsigned char			*tmp;
 
+		tmp = (const_cast<http::dataman::buffer&>(buf));
+		s = (const char *)tmp;
 		si = atoi(header_["content-length"].c_str());
 		if (si)
 			s = s.substr(0, si);

@@ -28,9 +28,9 @@ class session;
 namespace	http
 {
 	static std::string statusline_key[] = {"get", "post", "option", "head", "put", "delete", "trace", "connect", ""};
-	static std::string DOCROOT("./root/www/");
-	static std::string WWWROOT("./");
-	static std::string CGIDIRLIST("./cgi-bin/dir_list_windows.exe");
+	static std::string DOCROOT("../root/www/");
+//	static std::string WWWROOT("../");
+	static std::string CGIDIRLIST("../root/cgi-bin/dir_list_linux.exe");
 	class	message 
 	{
 	public:
@@ -41,7 +41,7 @@ namespace	http
 		// check if the header is correct
 		bool			header(const http::dataman::buffer&);
 		// check if the body is correct ?
-		bool			body(const unsigned char* data, sysapi::socket_in::size_t size);
+		bool			body(const http::dataman::buffer&);
 		// make the response for the client
 		bool			make_response();
 		// 
