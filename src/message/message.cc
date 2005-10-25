@@ -29,12 +29,15 @@ bool	http::message::statusline(const http::dataman::buffer& buf)
 	stringmanager::string					parse;
 	stringmanager::httpsm					http_par;
 	std::vector<std::string>				glist;
-	unsigned char							*tmp;
+	char									*tmp;
 	std::string								data;
 
 	
-	tmp = (const_cast<http::dataman::buffer&>(buf));
-	data = (const char *)tmp;
+	//tmp = (const_cast<http::dataman::buffer&>(buf));
+	tmp = buf.c_str();
+	//tmp[bu]
+	data = tmp;
+	delete[] tmp;
 	std::cout << "Original client status line : [" << data << "]" << std::endl; 
 	parse.split(data," ", glist);
 #ifdef _DEBUG
@@ -74,17 +77,19 @@ bool	http::message::header(const http::dataman::buffer& buf)
 		std::string	var;
 		bool (*fct_eq)(server::session*, const std::string&);
 	};
-	unsigned char				*tmp2;
+	char					*tmp2;
 	std::string					data;
-
 	header_list_s	header_list[] =
 	{
 		{"host", NULL},
 		{"content-length", request_header_content_length},
 		{"", NULL}
 	};
-	tmp2 = (const_cast<http::dataman::buffer&>(buf));
-	data = (const char *)tmp2;
+	//tmp2 = (const_cast<http::dataman::buffer&>(buf));
+	tmp2 = buf.c_str();
+	data = tmp2;
+
+
 #ifdef _debug
 	std::cout << "function header" << std::endl;
 #endif

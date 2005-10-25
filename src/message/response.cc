@@ -2,6 +2,8 @@
 #include <session.hh>
 #include <sysapi.hh>
 #include <iostream>
+#include <stringmanager.hh>
+#include <time.h>
 
 bool		http::message::make_response()
 {
@@ -93,6 +95,7 @@ bool		http::message::make_header()
 	response_header_content_length();
 	response_header_content_type();
 	response_header_server();
+	response_header_date();
 	return (true);
 }
 
@@ -142,6 +145,26 @@ bool		http::message::check_default_type(std::string &dest)
 	return (false);
 }
 
+bool	http::message::response_header_date()
+{
+	struct tm				*newtime;
+	time_t					aclock;
+	char					*datestr;
+	stringmanager::string	p;
+	std::vector<std::string> v;
+	std::string				tmp;
+
+	time(&aclock);
+	newtime = localtime(&aclock);
+	datestr = asctime(newtime);
+	datestr[strlen(datestr) - 1] = '\0';
+	p.split(datestr, " ", v);
+	tmp = "Date: " + v[0] + ", " + v[2] + " " 
+		+ v[1] + " " + v[4] + " " + v[3] + " GMT";
+	response_header_.push_back(tmp);
+	free (datestr);
+	return (true);
+}
 
 bool	http::message::response_header_content_type()
 {

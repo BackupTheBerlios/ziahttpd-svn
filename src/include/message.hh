@@ -90,6 +90,7 @@ namespace	http
 		bool			response_header_content_length();
 		bool			response_header_content_type();
 		bool			response_header_server();
+		bool			response_header_date();
 		void			make_statusline_hi();
 	};
 }
