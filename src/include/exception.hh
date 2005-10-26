@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 26 15:24:49 2005 
-// Last update Wed Oct 26 16:15:31 2005 
+// Last update Wed Oct 26 16:18:49 2005 
 //
 
 
@@ -22,10 +22,10 @@
 
 namespace server
 {
-  namespace exception
-  {
-    class interface
-    {
+//   namespace exception
+//   {
+//     class interface
+//     {
 //     public:
 //       virtual std::string	tostring() const = 0;
 //       virtual bool		resolve() = 0;
@@ -42,8 +42,8 @@ namespace server
 //     private:
 //       sysapi::socket_in::handle_t hcon_;
 
-    };
-  }
+//     };
+//   }
 }
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:44:55 2005 
-// Last update Wed Oct 26 16:03:01 2005 
+// Last update Wed Oct 26 16:17:22 2005 
 //
 
 
@@ -72,6 +72,9 @@ namespace http
       bool post_;
       bool put_;
       int errcode_;
+
+
+      // static 
     };
   }
 }
