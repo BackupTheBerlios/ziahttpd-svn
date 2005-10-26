@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:26 2005 texane
-// Last update Wed Oct 19 23:05:00 2005 
+// Last update Wed Oct 26 16:21:55 2005 
 //
 
 #ifndef SYSAPI_HH
@@ -21,6 +21,7 @@ namespace sysapi = posix;
 
 #elif _SYSAPI == 2
 # include <win32.hh>
+# undef interface
 namespace sysapi = win32;
 
 #else

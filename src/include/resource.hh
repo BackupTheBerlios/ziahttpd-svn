@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:44:55 2005 
-// Last update Wed Oct 26 16:17:22 2005 
+// Last update Wed Oct 26 16:28:45 2005 
 //
 
 
@@ -41,8 +41,8 @@ namespace http
       std::string type() const;
 
       // Location related
-      const char* universal_name() const;
-      const char* local_name() const;
+      const std::string& universal_name() const;
+      const std::string& local_name() const;
       bool access();
 
       // Filling {int, out} related
@@ -53,12 +53,6 @@ namespace http
     private:
       uri	uri_;
       buffer	buf_;
-
-      // - Backward compatibility -
-      // Later, use the uri instead of name and path
-      char* uriname_;
-      char* filename_;
-      char** arg_;
 
       // For the moment, implements resource
       // type as booleans; we should derive later.
@@ -71,10 +65,11 @@ namespace http
       bool get_;
       bool post_;
       bool put_;
+
       int errcode_;
 
-
-      // static 
+      // private member function
+      void reset();
     };
   }
 }
