@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 05 12:02:12 2005 texane
-## Last update Mon Oct 24 14:53:32 2005 
+## Last update Wed Oct 26 15:30:59 2005 
 ##
 
 # ! Always include this file
@@ -16,6 +16,7 @@ include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 name	= ziad.x
 srcs	= core$(SLASH)main.cc \
 	  core$(SLASH)core.cc \
+	  core$(SLASH)exception.cc \
 	  core$(SLASH)channel.cc \
 	  core$(SLASH)session.cc \
 	  core$(SLASH)session_helper.cc \
