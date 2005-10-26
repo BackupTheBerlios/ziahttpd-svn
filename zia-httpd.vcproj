@@ -229,6 +229,9 @@
 				RelativePath=".\src\include\client.hh">
 			</File>
 			<File
+				RelativePath=".\src\include\ConfManager.hh">
+			</File>
+			<File
 				RelativePath=".\src\include\core.hh">
 			</File>
 			<File
@@ -266,6 +269,12 @@
 			</File>
 			<File
 				RelativePath=".\src\include\sysapi.hh">
+			</File>
+			<File
+				RelativePath=".\src\include\tinystr.hh">
+			</File>
+			<File
+				RelativePath=".\src\include\tinyxml.hh">
 			</File>
 			<File
 				RelativePath=".\src\include\uri.hh">
