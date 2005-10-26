@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-** Last update Tue Oct 25 17:59:08 2005 jean-philippe bosquer
+// Last update Wed Oct 26 21:09:59 2005 
 */
 
 #ifndef __ConfManager_H__
@@ -16,7 +16,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "tinyxml.h"
+#include <tinyxml.hh>
 
 using namespace	std;
 
