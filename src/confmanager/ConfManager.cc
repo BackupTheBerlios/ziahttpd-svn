@@ -5,10 +5,10 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Tue Oct 25 18:00:38 2005 jean-philippe bosquer
+// Last update Wed Oct 26 18:49:35 2005 texane
 //
 
-#include "ConfManager.h"
+#include <ConfManager.hh>
 
 ConfManager::ConfManager(char **av, const char &conf_file)
 {

@@ -1,16 +1,16 @@
 ##
-## Makefile<4> for  in 
+## Makefile for  in 
 ## 
 ## Made by texane
 ## Login   <texane@gmail.com>
 ## 
-## Started on  Wed Oct 05 12:02:12 2005 texane
-## Last update Wed Oct 26 15:30:59 2005 
+## Started on  Wed Oct 26 18:43:53 2005 texane
+## Last update Wed Oct 26 18:50:12 2005 texane
 ##
 
 # ! Always include this file
-#!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= ziad.x
@@ -38,7 +38,13 @@ srcs	= core$(SLASH)main.cc \
 	  message$(SLASH)httpstringmanager.cc \
 	  message$(SLASH)response.cc \
 	  message$(SLASH)error_code.cc \
-	  stringmanager$(SLASH)stringmanager.cc
+	  stringmanager$(SLASH)stringmanager.cc \
+	  tinyxml$(SLASH)tinystr.cc \
+	  tinyxml$(SLASH)tinyxml.cc \
+	  tinyxml$(SLASH)tinyxmlerror.cc \
+	  tinyxml$(SLASH)tinyxmlparser.cc \
+	  confmanager$(SLASH)ConfManager.cc
+
 
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \

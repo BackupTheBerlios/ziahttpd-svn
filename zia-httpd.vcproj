@@ -71,7 +71,7 @@
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			CharacterSet="2"
-			ManagedExtensions="TRUE">
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-D &quot;_WIN32&quot; -D &quot;_CONSOLE&quot; -D &quot;_MT&quot; -D &quot;_SYSAPI&quot;=2  -Wp64 -EHsc"

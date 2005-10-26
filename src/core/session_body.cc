@@ -4,10 +4,9 @@
 // Made by texane
 // Login   <texane@gmail.com>
 // 
-// Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Wed Oct 26 18:08:19 2005 
+// Started on  Wed Oct 26 18:46:04 2005 texane
+// Last update Wed Oct 26 18:48:24 2005 texane
 //
-
 
 // There should be only one execution point
 // to fill the body of a repsonse in.
@@ -81,9 +80,6 @@ bool server::session::body_fetch_from_cgibin()
   char* av[2];
   int ac;
   bool ret;
-
-  sysapi::thread::say("There is a cgi script to execute");
-  sysapi::thread::say(http_info_.filename_);
 
   ac = 1;
   av[0] = http_info_.filename_;
