@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:48:55 2005 
-// Last update Tue Oct 25 23:32:17 2005 
+// Last update Wed Oct 26 17:21:19 2005 
 //
 
 
@@ -32,14 +32,14 @@ http::dataman::uri::~uri()
 
 
 // Universal name accessor
-const string& http::dataman::uri::universal_name() const
+string& http::dataman::uri::universal_name()
 {
   return universal_name_;
 }
 
 
 // Local name accessor
-const string& http::dataman::uri::local_name() const
+string& http::dataman::uri::local_name()
 {
   return local_name_;
 }

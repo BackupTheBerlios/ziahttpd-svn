@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:49:09 2005 
-// Last update Wed Oct 26 17:07:17 2005 
+// Last update Wed Oct 26 17:19:58 2005 
 //
 
 
@@ -30,13 +30,21 @@ http::dataman::resource::resource(const uri& u) : uri_(u), buf_(u)
 }
 
 
+http::dataman::resource::resource(const buffer& buf) : buf_(buf)
+{
+  reset();
+}
+
+
 http::dataman::resource::~resource()
 {
   reset();
 }
 
 
-void	http::dataman::resource::reset()
+// - Reset internal state of the resource
+
+void		http::dataman::resource::reset()
 {
   cgi_ = false;
   raw_ = false;
@@ -51,34 +59,43 @@ void	http::dataman::resource::reset()
 }
 
 
-const string&	http::dataman::resource::universal_name() const
+
+// - Naming related
+
+string&		http::dataman::resource::universal_name()
 {
   return uri_.universal_name();
 }
 
 
-const string&	http::dataman::resource::local_name() const
+string&		http::dataman::resource::local_name()
 {
   return uri_.local_name();
 }
 
 
-// Check for the resource accessibility, and fill in the resource error code
 bool		http::dataman::resource::access()
 {
   return false;
 }
 
 
-// Fetch the resource from the specified uri(ie. GET, POST... requests)
-bool http::dataman::resource::fetch(const uri&)
+// - Resource buffer related
+
+// Fetch the resource from the given buffer
+bool		http::dataman::resource::fetch(const buffer& buf)
 {
   return false;
 }
 
+// Fetch the resource from the given uri
+bool		http::dataman::resource::fetch(const uri& uri)
+{
+  return false;
+}
 
-// Dump the resource to the specified uri(ie. PUT... requests)
-bool http::dataman::resource::dump(const uri&)
+// Dump the resource content to the specified uri
+bool		http::dataman::resource::dump(const uri& uri)
 {
   return false;
 }

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:46:22 2005 
-// Last update Tue Oct 25 23:32:30 2005 
+// Last update Wed Oct 26 17:20:50 2005 
 //
 
 
@@ -35,8 +35,8 @@ namespace http
       uri(const std::string&);
       ~uri();
 
-      const std::string& universal_name() const;
-      const std::string& local_name() const;
+      std::string&	universal_name();
+      std::string&	local_name();
 
       static std::string map_universal_to_local(const std::string&);
       static std::string map_local_to_universal(const std::string&);

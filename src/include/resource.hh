@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:44:55 2005 
-// Last update Wed Oct 26 17:06:19 2005 
+// Last update Wed Oct 26 17:15:04 2005 
 //
 
 
@@ -35,7 +35,13 @@ namespace http
     public:
       resource();
       resource(const uri&);
+      resource(const buffer&);
       ~resource();
+
+      // Naming related
+      std::string& universal_name();
+      std::string& local_name();
+      bool access();
 
       // Ressource type related
       bool is_cgi() const;
@@ -48,12 +54,8 @@ namespace http
       bool is_put() const;
       bool is_local() const;
 
-      // Location related
-      const std::string& universal_name() const;
-      const std::string& local_name() const;
-      bool access();
-
       // Filling {int, out} related
+      bool fetch(const buffer&);
       bool fetch(const uri&);
       bool dump(const uri&);
 
