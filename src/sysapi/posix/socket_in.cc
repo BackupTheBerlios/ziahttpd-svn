@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:40:35 2005 
-// Last update Mon Oct 24 15:57:16 2005 
+// Last update Wed Oct 26 18:09:33 2005 
 //
 
 
@@ -54,6 +54,7 @@ static void inline set_nonblocking_mode(posix::socket_in::handle_t hdl)
 // Here, increase the maximum fd by process to ~ 80
 bool posix::socket_in::init_subsystem(error_t*)
 {
+  signal(SIGPIPE, SIG_IGN);
   return true;
 }
 

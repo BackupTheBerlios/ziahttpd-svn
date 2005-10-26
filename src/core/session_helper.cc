@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Wed Oct 26 16:47:08 2005 
+// Last update Wed Oct 26 18:04:14 2005 
 //
 
 
@@ -21,6 +21,7 @@
 
 
 using std::string;
+using server::exception::connection_closed;
 
 
 // - Get helper functions
@@ -34,7 +35,9 @@ bool	server::session::get_statusline(http::dataman::buffer& buf, sysapi::socket_
     delete[] line;
 
   if (!ret)
-    return false;
+    {
+      throw connection_closed();
+    }
   
   buf = (const string)line;
   return ret;  
@@ -50,7 +53,10 @@ bool	server::session::get_headerline(http::dataman::buffer& buf, sysapi::socket_
   if (ret == true)
     buf = (const string)line;
   else
-    buf.reset();
+    {
+      throw connection_closed();
+      buf.reset();
+    }
 
   return ret;
 }
@@ -63,7 +69,6 @@ bool	server::session::get_body(http::dataman::buffer& buf, sysapi::socket_in::er
 
   ret = false;
 
-//   if (http_info_.is_body_ == true)
   if (buf.size())
     {
       unsigned char* ptr;
@@ -71,9 +76,11 @@ bool	server::session::get_body(http::dataman::buffer& buf, sysapi::socket_in::er
       if (ret == true)
 	{
 	  buf.buf(ptr, (size_t)sz);
-	  std::cout << "EXE" << std::endl;
-	  buf.display();
 	  delete[] ptr;
+	}
+      else
+	{
+	  throw connection_closed();
 	}
     }
 
@@ -118,7 +125,11 @@ bool	server::session::send_body()
 
   ret = false;
   if (http_info_.response_body_.size())
-    ret = sysapi::socket_in::send(hdl_con_, (const unsigned char*)http_info_.response_body_, (sysapi::socket_in::size_t)http_info_.response_body_.size());
+    {
+      ret = sysapi::socket_in::send(hdl_con_, (const unsigned char*)http_info_.response_body_, (sysapi::socket_in::size_t)http_info_.response_body_.size());
+      if (ret == false)
+	throw connection_closed();
+    }
 
   return ret;
 }

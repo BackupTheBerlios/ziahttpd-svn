@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Mon Oct 24 13:28:20 2005 
+// Last update Wed Oct 26 18:09:54 2005 
 //
 
 
@@ -28,6 +28,7 @@
 #include <arpa/inet.h>
 #include <sys/wait.h>
 #include <netdb.h>
+#include <signal.h>
 
 
 namespace posix

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Wed Oct 26 17:33:02 2005 
+// Last update Wed Oct 26 18:08:19 2005 
 //
 
 
@@ -22,11 +22,13 @@
 #include <iostream>
 #include <server.hh>
 #include <buffer.hh>
+#include <exception.hh>
 
 
 using namespace sysapi;
 using namespace http;
 using http::dataman::buffer;
+using server::exception::connection_closed;
 using std::cout;
 using std::endl;
 
@@ -54,7 +56,12 @@ bool server::session::body_fetch_from_file()
   // http_info_.response_res_.uri_() = uri;
 
   buf = new unsigned char[sz_file];
-  sysapi::file::read(hfile, buf, sz_file);
+  if (!sysapi::file::read(hfile, buf, sz_file))
+    {
+      delete[] buf;
+      throw connection_closed();
+    }
+
   http_info_.response_body_.buf(buf, sz_file);
   cout << "size: " << sz_file << endl;
 

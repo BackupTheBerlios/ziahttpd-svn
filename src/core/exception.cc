@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 26 15:29:43 2005 
-// Last update Wed Oct 26 16:15:58 2005 
+// Last update Wed Oct 26 17:43:32 2005 
 //
 
 #include <string>
@@ -22,21 +22,21 @@ using std::ostringstream;
 
 // Connection closed exception implementation
 
-// string	server::exception::connection_closed::tostring() const
-// {
-//   ostringstream strm;
-//   strm << "<ERROR>: connection close for handle " << (unsigned int)hcon_;
-//   return strm.str();
-// }
+string	server::exception::connection_closed::tostring() const
+{
+  ostringstream strm;
+  strm << "<ERROR>: connection close for handle " << (unsigned int)hcon_;
+  return strm.str();
+}
 
 
-// bool	server::exception::connection_closed::resolve()
-// {
-//   return false;
-// }
+bool	server::exception::connection_closed::resolve()
+{
+  return false;
+}
 
 
-// server::exception::connection_closed::~connection_closed()
-// {
+server::exception::connection_closed::~connection_closed()
+{
   
-// }
+}

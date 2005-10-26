@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Wed Oct 26 17:01:09 2005 
+// Last update Wed Oct 26 17:53:45 2005 
 //
 
 
@@ -70,9 +70,9 @@ namespace server
     bool skip_crlf(char**, sysapi::socket_in::error_t*);
 
     // get helper functions
-    bool get_statusline(http::dataman::buffer&, sysapi::socket_in::error_t*);
-    bool get_headerline(http::dataman::buffer&, sysapi::socket_in::error_t*);
-    bool get_body(http::dataman::buffer&, sysapi::socket_in::error_t*);
+    bool get_statusline(http::dataman::buffer&, sysapi::socket_in::error_t* = 0);
+    bool get_headerline(http::dataman::buffer&, sysapi::socket_in::error_t* = 0);
+    bool get_body(http::dataman::buffer&, sysapi::socket_in::error_t* = 0);
 
     // send helper functions
     bool send_statusline();

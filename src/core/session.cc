@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Wed Oct 26 16:44:40 2005 
+// Last update Wed Oct 26 17:58:07 2005 
 //
 
 
@@ -15,6 +15,7 @@
 
 using namespace sysapi;
 using namespace http;
+using server::exception::connection_closed;
 
 
 // Construction
@@ -38,49 +39,59 @@ server::session::~session()
 // It loops until the connection is no more persistent.
 sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t param)
 {
-  socket_in::error_t	err;
   server::session*	sess = reinterpret_cast<server::session*>(param);
   http::dataman::buffer buf;
 
   // Main serverloop
-  do
+  try
     {
-      bool ret;
-      http::message	msg(sess);
+      do
+	{
 
-      thread::say("Servicing the new request");
+	  http::message	msg(sess);
 
-      // Reset http informations
-      sess->reset_http_information();
+	  thread::say("Servicing the new request");
+	  sess->reset_http_information();
 
-      // Get http message
-      if (!sess->get_statusline(buf, &err)) return 0;
-      if (!msg.statusline(buf)) return 0;
-      while ((ret = sess->get_headerline(buf, &err)) && buf.size())
-	msg.header(buf);
-      if (!ret) return 0;
+	  // Get status line
+	  sess->get_statusline(buf);
+	  msg.statusline(buf);
 
-      // Get the body, if any
-      sess->get_body(sess->http_info_.request_body_, &err);
+	  // Get headerlines
+	  while (sess->get_headerline(buf) && buf.size())
+	    msg.header(buf);
+
+	  // Get the body, if any
+	  sess->get_body(sess->http_info_.request_body_);
       
-      // Set internal message informations
-      msg.make_response();
+	  // Set internal message informations
+	  msg.make_response();
 
-      // Fetch the body
-      sess->body_fetch();
-      msg.bodysize(sess->http_info_.response_body_.size());
+	  // Fetch the body
+	  sess->body_fetch();
+	  msg.bodysize(sess->http_info_.response_body_.size());
 
-      // Stringify the response
-      msg.stringify();
+	  // Stringify the response
+	  msg.stringify();
 
-      // Send the repsonse
-      sess->send_statusline();
-      sess->send_headerlines();
-      sess->send_body();
+	  // Send the repsonse
+	  sess->send_statusline();
+	  sess->send_headerlines();
+	  sess->send_body();
+	}
+      while (sess->is_persistent() == true);
     }
-  while (sess->is_persistent() == true);
 
-  sysapi::thread::say("persistency is now false");
+  // Catch errors
+  catch (connection_closed)
+    {
+      sysapi::thread::say("connection has been closed");
+    }
+  catch (...)
+    {
+      sysapi::thread::say("unknown exception catched");
+    }
+
   return 0;
 }
 
