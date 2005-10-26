@@ -64,6 +64,11 @@ bool	http::message::statusline(const http::dataman::buffer& buf)
 		return (false);
 	return (true);
 }
+//
+//bool	http::message::statusline(http::dataman::resource& res)
+//{
+//
+//}
 
 bool	http::message::header(const http::dataman::buffer& buf)
 {

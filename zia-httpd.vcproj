@@ -142,7 +142,13 @@
 					RelativePath=".\src\core\dataman.cc">
 				</File>
 				<File
+					RelativePath=".\src\core\exception.cc">
+				</File>
+				<File
 					RelativePath=".\src\core\main.cc">
+				</File>
+				<File
+					RelativePath=".\src\core\resource.cc">
 				</File>
 				<File
 					RelativePath=".\src\core\session.cc">
@@ -152,6 +158,9 @@
 				</File>
 				<File
 					RelativePath=".\src\core\session_helper.cc">
+				</File>
+				<File
+					RelativePath=".\src\core\uri.cc">
 				</File>
 			</Filter>
 			<Filter
@@ -229,6 +238,9 @@
 				RelativePath=".\src\include\dataman.hh">
 			</File>
 			<File
+				RelativePath=".\src\include\exception.hh">
+			</File>
+			<File
 				RelativePath=".\src\include\httpstringmanager.hh">
 			</File>
 			<File
@@ -236,6 +248,9 @@
 			</File>
 			<File
 				RelativePath=".\src\include\posix.hh">
+			</File>
+			<File
+				RelativePath=".\src\include\resource.hh">
 			</File>
 			<File
 				RelativePath=".\src\include\server.hh">
@@ -251,6 +266,9 @@
 			</File>
 			<File
 				RelativePath=".\src\include\sysapi.hh">
+			</File>
+			<File
+				RelativePath=".\src\include\uri.hh">
 			</File>
 			<File
 				RelativePath=".\src\include\virtual_host.hh">

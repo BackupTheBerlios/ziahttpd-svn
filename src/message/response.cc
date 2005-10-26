@@ -60,6 +60,7 @@ bool		http::message::make_statusline()
 			file_ = /*http::DOCROOT + */CGIDIRLIST;
 			session_->http_info_.is_file_ = false;
 			session_->http_info_.is_cgi_ = true;
+
 			std::cout << "Execute cgi list_directory" << std::endl;
 			make_statusline_hi();
 			return (true);
