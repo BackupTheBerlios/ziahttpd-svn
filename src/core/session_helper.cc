@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Thu Oct 20 19:28:39 2005 
-// Last update Tue Oct 25 22:55:51 2005 
+// Last update Wed Oct 26 16:47:08 2005 
 //
 
 
@@ -23,17 +23,18 @@
 using std::string;
 
 
+// - Get helper functions
+
 bool	server::session::get_statusline(http::dataman::buffer& buf, sysapi::socket_in::error_t* err)
 {
   bool	ret;
   char*	line;
 
   while ((ret = http::dataman::get_nextline(hdl_con_, &line, err)) && !strlen((const char*)line))
-    {
-      std::cout << "GOT STATUS LINE" << std::endl;
-      delete[] line;
-    }
-  if (!ret) {       std::cout << "GOT STATUS LINE FALSE" << std::endl; return false;}
+    delete[] line;
+
+  if (!ret)
+    return false;
   
   buf = (const string)line;
   return ret;  
@@ -75,6 +76,49 @@ bool	server::session::get_body(http::dataman::buffer& buf, sysapi::socket_in::er
 	  delete[] ptr;
 	}
     }
+
+  return ret;
+}
+
+
+// - Send helper functions
+
+bool	server::session::send_statusline()
+{
+  bool	ret;
+
+  ret = false;
+  if (http_info_.buf_headerlines_)
+    {
+      ret = sysapi::socket_in::send(hdl_con_, reinterpret_cast<const unsigned char*>(http_info_.buf_statusline_), static_cast<sysapi::socket_in::size_t>(strlen(http_info_.buf_statusline_)));
+      delete[] http_info_.buf_statusline_;
+    }
+  return ret;
+}
+
+
+bool	server::session::send_headerlines()
+{
+  bool	ret;
+
+  ret = false;
+  if (http_info_.buf_headerlines_)
+    {
+      ret = sysapi::socket_in::send(hdl_con_, reinterpret_cast<const unsigned char*>(http_info_.buf_headerlines_), static_cast<sysapi::socket_in::size_t>(strlen(http_info_.buf_headerlines_)));
+      delete[] http_info_.buf_headerlines_;
+    }
+
+  return ret;
+}
+
+
+bool	server::session::send_body()
+{
+  bool	ret;
+
+  ret = false;
+  if (http_info_.response_body_.size())
+    ret = sysapi::socket_in::send(hdl_con_, (const unsigned char*)http_info_.response_body_, (sysapi::socket_in::size_t)http_info_.response_body_.size());
 
   return ret;
 }

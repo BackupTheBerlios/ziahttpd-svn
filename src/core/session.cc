@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 19 23:29:57 2005 
-// Last update Wed Oct 26 16:02:08 2005 
+// Last update Wed Oct 26 16:44:40 2005 
 //
 
 
@@ -74,27 +74,9 @@ sysapi::thread::retcode_t server::session::worker_entry_(sysapi::thread::param_t
       msg.stringify();
 
       // Send the repsonse
-      if (sess->http_info_.buf_statusline_)
-	{
-	  sysapi::socket_in::send(sess->hdl_con_,
-				  reinterpret_cast<const unsigned char*>(sess->http_info_.buf_statusline_),
-				  static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_statusline_)));
-	  delete[] sess->http_info_.buf_statusline_;
-	}
-      if (sess->http_info_.buf_headerlines_)
-	{
-	  sysapi::socket_in::send(sess->hdl_con_,
-				  reinterpret_cast<const unsigned char*>(sess->http_info_.buf_headerlines_),
-				  static_cast<sysapi::socket_in::size_t>(strlen(sess->http_info_.buf_headerlines_)));
-	  delete[] sess->http_info_.buf_headerlines_;
-	}
-
-      // Send the body
-      if (sess->http_info_.response_body_.size())
-	sysapi::socket_in::send(sess->hdl_con_,
-				(const unsigned char*)sess->http_info_.response_body_,
-				(sysapi::socket_in::size_t)sess->http_info_.response_body_.size());
-      
+      sess->send_statusline();
+      sess->send_headerlines();
+      sess->send_body();
     }
   while (sess->is_persistent() == true);
 

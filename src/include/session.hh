@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Wed Oct 26 16:01:19 2005 
+// Last update Wed Oct 26 16:37:01 2005 
 //
 
 
@@ -71,6 +71,11 @@ namespace server
     bool get_statusline(http::dataman::buffer&, sysapi::socket_in::error_t*);
     bool get_headerline(http::dataman::buffer&, sysapi::socket_in::error_t*);
     bool get_body(http::dataman::buffer&, sysapi::socket_in::error_t*);
+
+    bool send_statusline();
+    bool send_headerlines();
+    bool send_body();
+
 
   private:
     // Fetch the body, helper methods
