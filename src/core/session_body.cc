@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Wed Oct 26 17:27:31 2005 
+// Last update Wed Oct 26 17:33:02 2005 
 //
 
 
@@ -50,7 +50,9 @@ bool server::session::body_fetch_from_file()
     }
 
   // ! FROM URI
-  // http_info_.response_body_ = buffer(uri);
+  // http_info_.response_res_.buf_() = buffer(uri);
+  // http_info_.response_res_.uri_() = uri;
+
   buf = new unsigned char[sz_file];
   sysapi::file::read(hfile, buf, sz_file);
   http_info_.response_body_.buf(buf, sz_file);
@@ -157,14 +159,15 @@ bool	server::session::fetch_response_resource()
 
   ret = false;
 
+  // Response body must be fetched from a cgi
   if (http_info_.response_res_.cgi())
-    {
-      ret = body_fetch_from_cgibin();
-    }
+    ret = body_fetch_from_cgibin();
+
+  // Response body must be fetched from a raw file
   else if (http_info_.response_res_.raw())
-    {
-      ret = body_fetch_from_file();
-    }
+    ret = body_fetch_from_file();
+
+  // ???
   else
     {}
 
