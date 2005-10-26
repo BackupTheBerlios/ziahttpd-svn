@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:49:09 2005 
-// Last update Wed Oct 26 16:30:31 2005 
+// Last update Wed Oct 26 17:07:17 2005 
 //
 
 
@@ -51,14 +51,6 @@ void	http::dataman::resource::reset()
 }
 
 
-string		http::dataman::resource::type() const
-{
-  ostringstream strm;
-  strm << "<UNKNOWN_TYPE>";
-  return strm.str();
-}
-
-
 const string&	http::dataman::resource::universal_name() const
 {
   return uri_.universal_name();
@@ -89,4 +81,50 @@ bool http::dataman::resource::fetch(const uri&)
 bool http::dataman::resource::dump(const uri&)
 {
   return false;
+}
+
+
+// - Resource type related
+
+bool		http::dataman::resource::is_cgi() const
+{
+  return cgi_;
+}
+
+
+bool		http::dataman::resource::is_raw() const
+{
+  return mod_;
+}
+
+
+bool		http::dataman::resource::is_mod() const
+{
+  return raw_;
+}
+
+
+// - Resource access method related
+
+bool		http::dataman::resource::is_get() const
+{
+  return get_;
+}
+
+
+bool		http::dataman::resource::is_post() const
+{
+  return post_;
+}
+
+
+bool		http::dataman::resource::is_put() const
+{
+  return put_;
+}
+
+
+bool		http::dataman::resource::is_local() const
+{
+  return local_;
 }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Wed Oct 26 16:37:01 2005 
+// Last update Wed Oct 26 17:01:09 2005 
 //
 
 
@@ -59,8 +59,9 @@ namespace server
     // Reset http related informations
     void reset_http_information();
 
-    // Response body fetching
+    // Fetch the response resource
     bool body_fetch();
+    bool fetch_response_resource();
 
     // Create a worker thread
     bool create_worker_thread();
@@ -68,10 +69,12 @@ namespace server
     // Getting the request from the network
     bool skip_crlf(char**, sysapi::socket_in::error_t*);
 
+    // get helper functions
     bool get_statusline(http::dataman::buffer&, sysapi::socket_in::error_t*);
     bool get_headerline(http::dataman::buffer&, sysapi::socket_in::error_t*);
     bool get_body(http::dataman::buffer&, sysapi::socket_in::error_t*);
 
+    // send helper functions
     bool send_statusline();
     bool send_headerlines();
     bool send_body();

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Tue Oct 25 23:33:46 2005 
+// Last update Wed Oct 26 17:08:27 2005 
 //
 
 
@@ -33,9 +33,9 @@ using std::endl;
 
 bool server::session::body_fetch_from_file()
 {
-  sysapi::file::handle_t hfile;
-  unsigned long sz_file;
-  unsigned char* buf;
+  sysapi::file::handle_t	hfile;
+  unsigned long			sz_file;
+  unsigned char*		buf;
 
   sysapi::thread::say("There is file a to fetch from");
   sysapi::thread::say(http_info_.filename_);
@@ -146,6 +146,27 @@ bool server::session::body_fetch()
   if (http_info_.is_file_ == true)	ret = body_fetch_from_file();
   else if (http_info_.is_cgi_ == true)	ret = body_fetch_from_cgibin();
   else					ret = false;
+
+  return ret;
+}
+
+
+bool	server::session::fetch_response_resource()
+{
+  bool	ret;
+
+  ret = false;
+
+  if (http_info_.response_res_.is_cgi())
+    {
+      ret = body_fetch_from_cgibin();
+    }
+  else if (http_info_.response_res_.is_raw())
+    {
+      ret = body_fetch_from_file();
+    }
+  else
+    {}
 
   return ret;
 }

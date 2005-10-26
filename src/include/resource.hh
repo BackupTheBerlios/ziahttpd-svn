@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:44:55 2005 
-// Last update Wed Oct 26 16:28:45 2005 
+// Last update Wed Oct 26 17:06:19 2005 
 //
 
 
@@ -38,7 +38,15 @@ namespace http
       ~resource();
 
       // Ressource type related
-      std::string type() const;
+      bool is_cgi() const;
+      bool is_raw() const;
+      bool is_mod() const;
+
+      // Resource access method related
+      bool is_get() const;
+      bool is_post() const;
+      bool is_put() const;
+      bool is_local() const;
 
       // Location related
       const std::string& universal_name() const;
