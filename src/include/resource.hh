@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:44:55 2005 
-// Last update Wed Oct 26 17:15:04 2005 
+// Last update Wed Oct 26 17:27:59 2005 
 //
 
 
@@ -44,15 +44,15 @@ namespace http
       bool access();
 
       // Ressource type related
-      bool is_cgi() const;
-      bool is_raw() const;
-      bool is_mod() const;
+      bool& cgi();
+      bool& raw();
+      bool& mod();
 
       // Resource access method related
-      bool is_get() const;
-      bool is_post() const;
-      bool is_put() const;
-      bool is_local() const;
+      bool& get();
+      bool& post();
+      bool& put();
+      bool& local();
 
       // Filling {int, out} related
       bool fetch(const buffer&);

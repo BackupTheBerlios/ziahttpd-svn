@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:46:22 2005 
-// Last update Wed Oct 26 17:20:50 2005 
+// Last update Wed Oct 26 17:22:30 2005 
 //
 
 
@@ -42,8 +42,8 @@ namespace http
       static std::string map_local_to_universal(const std::string&);
 
     private:
-      std::string universal_name_;
-      std::string local_name_;
+      std::string	universal_name_;
+      std::string	local_name_;
 
       // const config& conf_;
     };

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Oct 22 17:37:54 2005 texane
-// Last update Wed Oct 26 17:08:27 2005 
+// Last update Wed Oct 26 17:27:31 2005 
 //
 
 
@@ -157,11 +157,11 @@ bool	server::session::fetch_response_resource()
 
   ret = false;
 
-  if (http_info_.response_res_.is_cgi())
+  if (http_info_.response_res_.cgi())
     {
       ret = body_fetch_from_cgibin();
     }
-  else if (http_info_.response_res_.is_raw())
+  else if (http_info_.response_res_.raw())
     {
       ret = body_fetch_from_file();
     }

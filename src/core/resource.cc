@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:49:09 2005 
-// Last update Wed Oct 26 17:19:58 2005 
+// Last update Wed Oct 26 17:26:28 2005 
 //
 
 
@@ -103,45 +103,45 @@ bool		http::dataman::resource::dump(const uri& uri)
 
 // - Resource type related
 
-bool		http::dataman::resource::is_cgi() const
+bool&		http::dataman::resource::cgi()
 {
   return cgi_;
 }
 
 
-bool		http::dataman::resource::is_raw() const
-{
-  return mod_;
-}
-
-
-bool		http::dataman::resource::is_mod() const
+bool&		http::dataman::resource::raw()
 {
   return raw_;
 }
 
 
+bool&		http::dataman::resource::mod()
+{
+  return mod_;
+}
+
+
 // - Resource access method related
 
-bool		http::dataman::resource::is_get() const
+bool&		http::dataman::resource::get()
 {
   return get_;
 }
 
 
-bool		http::dataman::resource::is_post() const
+bool&		http::dataman::resource::post()
 {
   return post_;
 }
 
 
-bool		http::dataman::resource::is_put() const
+bool&		http::dataman::resource::put()
 {
   return put_;
 }
 
 
-bool		http::dataman::resource::is_local() const
+bool&		http::dataman::resource::local()
 {
   return local_;
 }
