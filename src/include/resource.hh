@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:44:55 2005 
-// Last update Mon Oct 24 15:31:41 2005 
+// Last update Wed Oct 26 16:03:01 2005 
 //
 
 
@@ -13,6 +13,7 @@
 # define HTTP_DATAMAN_RESOURCE_HH
 
 
+#include <string>
 #include <sysapi.hh>
 #include <buffer.hh>
 #include <uri.hh>
@@ -32,11 +33,12 @@ namespace http
     class resource
     {
     public:
+      resource();
       resource(const uri&);
       ~resource();
 
       // Ressource type related
-      const char* type() const;
+      std::string type() const;
 
       // Location related
       const char* universal_name() const;
@@ -49,8 +51,8 @@ namespace http
 
 
     private:
-      const uri& uri_;
-      buffer buf_;
+      uri	uri_;
+      buffer	buf_;
 
       // - Backward compatibility -
       // Later, use the uri instead of name and path
@@ -65,6 +67,7 @@ namespace http
       bool mod_;
 
       // method to access resource
+      bool local_;
       bool get_;
       bool post_;
       bool put_;

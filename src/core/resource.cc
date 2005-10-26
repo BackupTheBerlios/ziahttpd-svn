@@ -5,11 +5,22 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:49:09 2005 
-// Last update Tue Oct 25 18:08:01 2005 
+// Last update Wed Oct 26 16:02:51 2005 
 //
 
 
+#include <string>
+#include <sstream>
 #include <resource.hh>
+
+
+using std::ostringstream;
+using std::string;
+
+
+http::dataman::resource::resource()
+{
+}
 
 
 http::dataman::resource::resource(const uri& u) : uri_(u), buf_(u)
@@ -22,19 +33,21 @@ http::dataman::resource::~resource()
 }
 
 
-inline const char* http::dataman::resource::type() const
+string  http::dataman::resource::type() const
 {
-  return "UNKNOWN TYPE";
+  ostringstream strm;
+  strm << "<UNKNOWN_TYPE>";
+  return strm.str();
 }
 
 
-inline const char* http::dataman::resource::universal_name() const
+const char* http::dataman::resource::universal_name() const
 {
   return "UNKNOWN UNIVERSAL NAME";
 }
 
 
-inline const char* http::dataman::resource::local_name() const
+const char* http::dataman::resource::local_name() const
 {
   return "UNKNOWN LOCAL NAME";
 }

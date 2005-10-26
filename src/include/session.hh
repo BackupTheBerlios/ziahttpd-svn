@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 13:54:54 2005 texane
-// Last update Tue Oct 25 23:37:24 2005 
+// Last update Wed Oct 26 16:01:19 2005 
 //
 
 
@@ -17,7 +17,9 @@
 #include <sysapi.hh>
 #include <dataman.hh>
 #include <buffer.hh>
+#include <resource.hh>
 #include <uri.hh>
+
 
 // The session is the basic runnable execution
 // unit of our server.
@@ -89,14 +91,16 @@ namespace server
       int max_rqst_;
       bool is_persistent_;
 
-      // Request body
-      bool is_chunked_;
-      http::dataman::buffer request_body_;
-      http::dataman::uri request_uri_;
+      // Request related
+      http::dataman::resource	request_res_;
+      http::dataman::buffer	request_body_;
+      http::dataman::uri	request_uri_;
+      bool			is_chunked_;
 
-      // Response body
-      http::dataman::buffer response_body_;
-      http::dataman::uri response_uri_;
+      // Response related
+      http::dataman::buffer	response_body_;
+      http::dataman::uri	response_uri_;
+      http::dataman::resource	response_res_;
       
       // Which type of file
       bool is_cgi_;
