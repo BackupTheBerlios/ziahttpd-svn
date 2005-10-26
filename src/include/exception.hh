@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 26 15:24:49 2005 
-// Last update Wed Oct 26 15:45:17 2005 
+// Last update Wed Oct 26 16:15:31 2005 
 //
 
 
@@ -26,21 +26,21 @@ namespace server
   {
     class interface
     {
-    public:
-      virtual std::string	tostring() const = 0;
-      virtual bool		resolve() = 0;
-    };
+//     public:
+//       virtual std::string	tostring() const = 0;
+//       virtual bool		resolve() = 0;
+//     };
 
-    class connection_closed : public interface
-    {
-    public:
-      std::string	tostring() const;
-      bool		resolve();
+//     class connection_closed : public interface
+//     {
+//     public:
+//       std::string	tostring() const;
+//       bool		resolve();
 
-      virtual ~connection_closed();
+//       virtual ~connection_closed();
 
-    private:
-      sysapi::socket_in::handle_t hcon_;
+//     private:
+//       sysapi::socket_in::handle_t hcon_;
 
     };
   }
