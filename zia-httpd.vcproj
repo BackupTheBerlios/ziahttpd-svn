@@ -214,6 +214,29 @@
 					RelativePath=".\src\stringmanager\stringmanager.cc">
 				</File>
 			</Filter>
+			<Filter
+				Name="tinyxml"
+				Filter="">
+				<File
+					RelativePath=".\src\tinyxml\tinystr.cc">
+				</File>
+				<File
+					RelativePath=".\src\tinyxml\tinyxml.cc">
+				</File>
+				<File
+					RelativePath=".\src\tinyxml\tinyxmlerror.cc">
+				</File>
+				<File
+					RelativePath=".\src\tinyxml\tinyxmlparser.cc">
+				</File>
+			</Filter>
+			<Filter
+				Name="confmanager"
+				Filter="">
+				<File
+					RelativePath=".\src\confmanager\ConfManager.cc">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
