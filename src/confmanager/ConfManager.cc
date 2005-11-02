@@ -5,37 +5,63 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Wed Oct 26 18:49:35 2005 texane
+// Last update Wed Nov 02 11:24:05 2005 Bigand Xavier
 //
 
-#include <ConfManager.hh>
+#include "ConfManager.hh"
 
-ConfManager::ConfManager(char **av, const char &conf_file)
+ConfManager::ConfManager(char **av, const char &ConfFile)
 {
-  _pConfFile = new TiXmlDocument(&conf_file);
-
   init_fct_ptr();
+  // appeler la fonction qui gere les options (char **av)
+  Reload(&ConfFile);
+}
+
+ConfManager::~ConfManager()
+{
+}
+
+int	ConfManager::Clear()
+{
+  _mSimpleData.clear();
+  _mListData.clear();
+  return true;
+}
+
+int	ConfManager::Load(string sConfFile)
+{
+  TiXmlDocument	*_pConfFile;
+
+  _svListInclude.push_back(sConfFile);
+  _pConfFile = new TiXmlDocument(sConfFile.c_str());
   if (_pConfFile->LoadFile())
     {
-//       cout << "Chargement du fichier de configuration." << endl;
-//       cout << "Traitement du fichier de configuration." << endl << endl;
-//       _pConfFile->Print();
+      cout << "Chargement du fichier de configuration." << endl;
+      cout << "Traitement du fichier de configuration." << endl << endl;
       DumpToMemory(_pConfFile);
-//       cout << endl << "Traitement du fichier configuration termine." << endl;
-//       cout << "Verification des parametres manquants." << endl;
+      cout << endl << "Traitement du fichier configuration termine." << endl;
+      cout << "Verification des parametres manquants." << endl;
       // verifier que la validite des parametres indispensable
     }
   else
     {
       // voir pour indiquer les erreurs de syntaxe ou autre
-//       cout << "Erreur lors du chargement du fichier de configration." << endl;
-//       cout << "Initialisation de la configuration de base." << endl;
+      cout << "Erreur lors du chargement du fichier de configration." << endl;
+      cout << "Initialisation de la configuration de base." << endl;
     }
   delete _pConfFile;
+  return true;
 }
 
-ConfManager::~ConfManager()
+int	ConfManager::Reload(string sConfFile)
 {
+  Clear();
+  if (sConfFile == "")
+    sConfFile = _LoadedFile;
+  else
+    _LoadedFile = sConfFile;
+  Load(sConfFile);
+  return true;
 }
 
 void	ConfManager::init_fct_ptr()
@@ -46,8 +72,8 @@ void	ConfManager::init_fct_ptr()
   _Container[0].fct = &ConfManager::ManageRequiere;
   _Container[1].sContainer = "include";
   _Container[1].fct = &ConfManager::ManageInclude;
-  _Container[2].sContainer = "set";
-  _Container[2].fct = &ConfManager::ManageSet;
+  _Container[2].sContainer = "var";
+  _Container[2].fct = &ConfManager::ManageVar;
   _Container[3].sContainer = "del";
   _Container[3].fct = &ConfManager::ManageDel;
   _Container[4].sContainer = "list";
@@ -66,53 +92,116 @@ TiXmlNode	*ConfManager::ManageRequiere(TiXmlNode *pCurrentContainer)
 
 TiXmlNode	*ConfManager::ManageInclude(TiXmlNode *pCurrentContainer)
 {
-  string	value;
-  TiXmlNode	*pChildContainer;
+  int				i;
+  int				iStop;
+  string			sValue;
+  TiXmlNode			*pChildContainer;
+  tStringVector::iterator	itIterator;
 
   pChildContainer = pCurrentContainer->FirstChild();
-  value = (pChildContainer->ToText())->ValueStr();
+  if (pChildContainer)
+    {
+      sValue = (pChildContainer->ToText())->ValueStr();
+      for (i = 0, iStop = 0, itIterator = _svListInclude.begin();
+	   !iStop && itIterator != _svListInclude.end();
+	   i++, itIterator++)
+	if (sValue == _svListInclude[i])
+	  iStop = 1;
+      if (!iStop)
+	Load(sValue);
+    }
   return pCurrentContainer->NextSibling();
 }
 
-TiXmlNode	*ConfManager::ManageSet(TiXmlNode *pCurrentContainer)
+TiXmlNode	*ConfManager::ManageVar(TiXmlNode *pCurrentContainer)
 {
-  string	sName;
-  string	sValue;
-  TiXmlNode	*pChildContainer;
+  string			sName;
+  string			sValue;
+  TiXmlNode			*pChildContainer;
+  tStringVector::iterator	itIterator;
 
   if (pCurrentContainer->ToElement())
-    sName = (pCurrentContainer->ToElement())->Attribute("name");
-  pChildContainer = pCurrentContainer->FirstChild();
-  if (pChildContainer)
-    sValue = (pChildContainer->ToText())->ValueStr();
-  _mSimpleData[sName] = sValue;
+    sName = MyAttribute(pCurrentContainer->ToElement(), "name");
+  if (sName != "")
+    {
+      pChildContainer = pCurrentContainer->FirstChild();
+      if (pChildContainer->ToText()) // contient directement une valeur
+	_mSimpleData[sName] = (pChildContainer->ToText())->ValueStr(); // can copy ""
+      else // contient d'autres balises (comme une var deja declaree)
+	{
+	  string	sName2;
+	  TiXmlNode	*pChildChildContainer;
+
+	  if (pChildContainer->ToElement())
+	    {
+	      sName2 = MyAttribute(pChildContainer->ToElement(), "name");
+	      _mSimpleData[sName] = _mSimpleData[sName2]; // can copy ""
+	    }
+	}
+    }
   return pCurrentContainer->NextSibling();
 }
 
 TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 {
+  int		i;
   string	sName;
+  TiXmlNode	*pChildContainer;
+  TiXmlNode	*pNextContainer;
 
-  sName = (pCurrentContainer->ToElement())->Attribute("name");
-  for (pCurrentContainer = pCurrentContainer->NextSibling();
-       pCurrentContainer && pCurrentContainer->ValueStr() == "add";
-       pCurrentContainer->NextSibling())
-    {
-      cout << (pCurrentContainer->ToText())->ValueStr() << endl;
-      _mListData[sName].push_back((pCurrentContainer->ToText())->ValueStr());
-    }
-  return pCurrentContainer;
+  pNextContainer = pCurrentContainer->NextSibling();
+  sName = MyAttribute(pCurrentContainer->ToElement(), "name");
+  if (sName != "") // do anything if attribute name doesn't exist
+    for (pCurrentContainer = pCurrentContainer->FirstChild();
+	 pCurrentContainer;
+	 pCurrentContainer = pCurrentContainer->NextSibling())
+      {
+	if (InsensitiveCmp(pCurrentContainer->ValueStr(), "add"))
+	  {
+	    pChildContainer = pCurrentContainer->FirstChild();
+	    if (pChildContainer)
+	      _mListData[sName].push_back((pChildContainer->ToText())->ValueStr());
+	  }
+// 	else if (InsensitiveCmp(pCurrentContainer->ValueStr(), "del"))
+// 	  {
+// 	    string			value;
+// 	    tStringVector::iterator	itIterator;
+
+// 	    value = ((pCurrentContainer->FirstChild())->ToText())->ValueStr();
+// 	    for (i = 0, itIterator = _mListData[sName].begin();
+// 		 itIterator != _mListData[sName].end() && i < atoi(value.c_str()) - 1;
+// 		 i++, itIterator++)
+// 	      ;
+// 	    _mListData[sName].erase(itIterator);
+// 	  }
+      }
+  return pNextContainer;
 }
-
 
 TiXmlNode	*ConfManager::ManageDel(TiXmlNode *pCurrentContainer)
 {
-  // le erase est secure (ne plante pas si la clef n'existe pas)
-  string	sClef;
+  string	sName;
+  string	sElem;
+  int		i;
+  tStringVector::iterator	itIterator;
 
-  sClef = (pCurrentContainer->ToElement())->Attribute("name");
-  _mSimpleData.erase(sClef);
-  _mListData.erase(sClef);
+
+  cout << endl << "ici" << endl;
+  sName = MyAttribute(pCurrentContainer->ToElement(), "name");
+  sElem = MyAttribute(pCurrentContainer->ToElement(), "elem");
+  if (sElem != "")
+    {
+      for (i = 0, itIterator = _mListData[sName].begin();
+	   itIterator != _mListData[sName].end() && i < atoi(sElem.c_str()) - 1;
+	   i++, itIterator++)
+	;
+      _mListData[sName].erase(itIterator);
+    }
+  else
+    {
+      _mSimpleData.erase(sName);
+      _mListData.erase(sName);
+    }
   return pCurrentContainer->NextSibling();
 }
 
@@ -138,7 +227,7 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
 	  for (i = 0, iStop = 0; !iStop && i < NB_CONTAINER; i++)
 	    {
 	      iStop = 0;
-	      if (_Container[i].sContainer == sElement)
+	      if (InsensitiveCmp(_Container[i].sContainer, sElement))
 		{
 		  pCurrentContainer = (this->*_Container[i].fct)(pCurrentContainer);
 		  iStop = 1;
@@ -153,4 +242,43 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
       else
 	pCurrentContainer = pCurrentContainer->NextSibling(); // continue file analize's
     }
+}
+
+string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
+{
+  const char		*tmp;	// for protect string to NULL return
+  string		sCurrentAttribute;
+  TiXmlAttribute	*pCurrentAttribute;
+  int			iStop;
+
+  transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), tolower);
+  for (pCurrentAttribute = pElement->FirstAttribute(), iStop = 0;
+       !iStop && pCurrentAttribute;
+       pCurrentAttribute = pCurrentAttribute->Next())
+    {
+      iStop = 0;
+      tmp = pCurrentAttribute->Name();
+      if (tmp)
+	{
+	  sCurrentAttribute = tmp;
+	  transform(sCurrentAttribute.begin(), sCurrentAttribute.end(),
+		    sCurrentAttribute.begin(), tolower);
+	  if (sCurrentAttribute == sAttribute)
+	    {
+	      iStop = 1;
+	      tmp = pCurrentAttribute->Value();
+	      if (tmp)
+		return tmp;
+	      return "";
+	    }
+	}
+    }
+  return "";
+}
+
+int	ConfManager::InsensitiveCmp(string sValue1, string sValue2)
+{
+  transform(sValue1.begin(), sValue1.end(), sValue1.begin(), tolower);
+  transform(sValue2.begin(), sValue2.end(), sValue2.begin(), tolower);
+  return (sValue1 == sValue2);
 }

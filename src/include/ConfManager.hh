@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Wed Oct 26 21:09:59 2005 
+** Last update Wed Nov 02 11:25:30 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -16,7 +16,9 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <tinyxml.hh>
+#include <cctype>	// for using std::tolwer and std::toupper
+#include <algorithm>	// for using std::transform (convert string case)
+#include "tinyxml.hh"
 
 using namespace	std;
 
@@ -35,36 +37,39 @@ class	ConfManager
     // mettre le pointeur dans un enum pour le surchager
     TiXmlNode	*(ConfManager::*fct)(TiXmlNode *pCurrentContainer);
   };
-  void	init_fct_ptr();	// in progress
+  tStringVector		_svListInclude;	// protect against multiple inclusion
 
+  void			init_fct_ptr();	// in progress
+  string		MyAttribute(TiXmlElement *pElement, string sAttribute);	// waiting for correcte NULL return and case insensitive version
+  int			InsensitiveCmp(string sValue1, string sValue2);
+  int			Load(string sConfFile);
 
 
  protected:
-  TiXmlDocument			*_pConfFile;
+  string			_LoadedFile;	// sav conf file path for reload
   map<string, string>		_mSimpleData;
   map<string, tStringVector>	_mListData;
   ManageContainer		_Container[NB_CONTAINER];
 
   TiXmlNode	*ManageRequiere(TiXmlNode *pCurrentContainer);	// in progress
   TiXmlNode	*ManageInclude(TiXmlNode *pCurrentContainer);	// in progress
-  TiXmlNode	*ManageSet(TiXmlNode *pCurrentContainer);	// OK
+  TiXmlNode	*ManageVar(TiXmlNode *pCurrentContainer);	// OK for assignation, not for read
   TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
-  TiXmlNode	*ManageList(TiXmlNode *pCurrentContainer);	// in progress
-  void		DumpToMemory(TiXmlNode * pParent);	// OK
+  TiXmlNode	*ManageList(TiXmlNode *pCurrentContainer);	// OK
+  void		DumpToMemory(TiXmlNode *pParent);		// OK
 
 
 
  public:
-  ConfManager(char **av, const char &conf_file = DEFAULT_FILE[0]);
-  ~ConfManager();
+  ConfManager(char **av, const char &ConfFile = DEFAULT_FILE[0]);	// OK
+  ~ConfManager();							// OK
 
   string	&GetSimpleString(string sVar) {return _mSimpleData[sVar];};	// OK
   tStringVector	&GelListVector(string sVar) {return _mListData[sVar];};		// OK
-
-  // A confirmer :
-  // surcharger l'operateur [] pour faire "value = ConfManger[var];"
-  // surcharger l'operateur = pour faire "ConfManager[var] = value;"
-  // les surcharges doivent gere les string et les vector
+  int		SetSimpleString(string sVar, string sValue) {_mSimpleData[sVar] = sValue; return true;};	// OK
+  int		SetListVector(string sVar, tStringVector Value) {_mListData[sVar] = Value; return true;};	// OK
+  int		Clear();			// OK
+  int		Reload(string sConfFile = "");	// OK
 };
 
 #endif // __ConfManager_H__
