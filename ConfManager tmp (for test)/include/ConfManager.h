@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-** Last update Wed Nov 02 15:12:29 2005 Bigand Xavier
+** Last update Wed Nov 02 19:56:42 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -24,7 +24,11 @@ using namespace	std;
 
 #define DEFAULT_FILE		"./conf/zia.conf"
 #define NB_CONTAINER		5
-
+#define	SINGLE_VALUE		0
+#define	LIST_VALUE		1
+#define	EXPR_VALUE		2
+#define	EXPR_TRUE		"true"
+#define	EXPR_FALSE		"false"
 
 typedef	vector<string>		tStringVector;
 
@@ -43,7 +47,7 @@ class	ConfManager
   string	MyAttribute(TiXmlElement *pElement, string sAttribute);	// waiting for correcte NULL return and case insensitive version
   int		InsensitiveCmp(string sValue1, string sValue2);
   int		Load(string sConfFile);
-  void		GetValues(TiXmlNode *pCurrentContainer, string *sValue, tStringVector *svValue);
+  void		GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue); // in Progress, may replace ManageVar and ManageList
 
 
 

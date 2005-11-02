@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Wed Nov 02 14:48:50 2005 Bigand Xavier
+// Last update Wed Nov 02 21:02:46 2005 Bigand Xavier
 //
 
 #include "ConfManager.h"
@@ -113,32 +113,44 @@ TiXmlNode	*ConfManager::ManageInclude(TiXmlNode *pCurrentContainer)
   return pCurrentContainer->NextSibling();
 }
 
-void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string *sValue, tStringVector *svValue)
+void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue)
 {
-  if (pCurrentContainer->ToText() && sValue) // contient directement une valeur
-    {
-      sValue = new string((pCurrentContainer->ToText())->ValueStr()); // can copy ""
-    }
+  if (pCurrentContainer->ToText()) // contient directement une simple valeur
+    sValue = (pCurrentContainer->ToText())->ValueStr(); // can copy ""
   else // contient d'autres balises (comme une var deja declaree)
     {
       TiXmlNode	*pChildContainer;
+      string	sName;
+//       string	sElem;		// index value
+      string	sElement;	// type of element (var, list, ...)
 
+      if (pCurrentContainer->ToElement())
+	{
+	  sName = MyAttribute(pCurrentContainer->ToElement(), "name");
+// 	  sElem = MyAttribute(pCurrentContainer->ToElement(), "elem");
+	  sElement = pCurrentContainer->ValueStr();
+	}
       pChildContainer = pCurrentContainer->FirstChild();
-      // obtenir les info sur la balise courante pour seter les info
       if (pChildContainer)
 	{
-	  string	*sTmp;
-	  tStringVector	*svTmp;
+	  string	sTmp;
+	  tStringVector	svTmp;
 
-	  sTmp = NULL;
-	  svTmp = NULL;
 	  GetValues(pChildContainer, sTmp, svTmp); // debut de la recursivite
-	  // enregistrer les valeurs dans les maps (test les NULL)
+	  if (InsensitiveCmp(sElement, "var") && sTmp != "") // ne pas remplacer une valeur par ""
+	    _mSimpleData[sName] = sTmp; // replace old value by new
+	  else if (InsensitiveCmp(sElement, "list"))
+	    {
+// 	      if (sElem != "")
+// 		{
 
+// 		}
+// 	      else (svTmp.size() > 0)
+	      _mListData[sName].insert(_mListData[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
+	    }
 	}
-
-      // ressortir de la liste la valeur contenu dans les maps
-      // la valeur peut avoir ete seter par la recursion juste avant
+      sValue = _mSimpleData[sName];
+      svValue = _mListData[sName];
     }
 }
 
@@ -245,8 +257,8 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
       iTypeContainer = pCurrentContainer->Type();
       if (iTypeContainer == TiXmlNode::ELEMENT)
 	{
-	  int	i;
-	  int	iStop;	// use to break search faster
+	  int		i;
+	  int		iStop;	// use to break search faster
 	  string	sElement;
 	  string	value;
 

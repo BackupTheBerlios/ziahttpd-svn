@@ -1,21 +1,56 @@
+Jeudi :
+- Tester la fonction GetValues
+- Les fonctions ManageList et ManageVar doivent faire appel a GetValues
+  faire attention a ne pas enregistrer la valeur "" elle est non valide
+
+
+- Commencer la documentation sur le fichier de conf a fin de fixer les limites
+  de tolerence (ce qui ne peux pas etre pris en compte)
+- Commencer les commentaires pour doxygene
+- Gere les expressions (une fonction qui retourne deux valeurs)
+- Integrer la gestion des expression a GetValues
+
+
+
+- Creer une methode specifique pour gere une valeur particuliere d'une liste
+  <var name="test" elem="10"> ou <var name="test" elem="i">
+  la methode doit directement retourner la bonne valeur sous forme de string
+  ou "" si elle echoue
+
+A faire pour les jours suivants :
+
+
+
 - surcharger l'operateur [] (doit avoir le meme effet que les fonctions Get*())
 - surcharger l'operateur =  (doit avoir le meme effet que les fonctions Set*())
 - gerer aussi l'operateur + pour concatener deux vertors ou deux string
 
 
-- gere la possibilite d'atteindre une valeur d'une liste
-- gerer la possibilite de copier une variable dans une autre
-
 - gerer le env
 
-- gerer les conditions
 - gerer les boucles
 
 - voir pour les options (ligne de commande)
 
 - gerer aussi la conf par defaut s'il n'y a pas de fichier
 
-- mettre les commentaires pour doxygene
+- enlever les variables non reconnues par le serveur (case sensitive sur les noms des variables)
+
+
+
+
+
+- faire des test de robostesse car il y a beaucoup de pointeur non tester et il faut verifier qu'ils ne puissent pas etre NULL et a la limite voir si certain test ne sont pas inutiles
+
+
+
+
+- revoir le tri des fonctions (plusieurs fichiers?)
+
+- ne pas enregistrer les variables egale a ""
+
+
+
 
 
 Pour les variables d'environnement
