@@ -1,0 +1,24 @@
+- surcharger l'operateur [] (doit avoir le meme effet que les fonctions Get*())
+- surcharger l'operateur =  (doit avoir le meme effet que les fonctions Set*())
+- gerer aussi l'operateur + pour concatener deux vertors ou deux string
+
+
+- gere la possibilite d'atteindre une valeur d'une liste
+- gerer la possibilite de copier une variable dans une autre
+
+- gerer le env
+
+- gerer les conditions
+- gerer les boucles
+
+- voir pour les options (ligne de commande)
+
+- gerer aussi la conf par defaut s'il n'y a pas de fichier
+
+- mettre les commentaires pour doxygene
+
+
+Pour les variables d'environnement
+#include "stringmanager.hh"
+stringmanager::sring p;
+p.split();
