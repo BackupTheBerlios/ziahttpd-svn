@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:46:59 2005 Bigand Xavier
-// Last update Thu Oct 27 12:02:06 2005 Bigand Xavier
+// Last update Sat Nov 05 12:13:20 2005 Bigand Xavier
 //
 
 #include <iostream>
@@ -22,7 +22,7 @@ int		main(int ac, char **av)
   Conf.SetSimpleString("TimeOut", "512");
   std::cout << "modified TimeOut : " << Conf.GetSimpleString("TimeOut") << std::endl;
   std::cout << "timeout : " << Conf.GetSimpleString("timeout") << std::endl;
-  var = Conf.GelListVector("UnusedPort");
+  var = Conf.GetListVector("UnusedPort");
 
   for (i = 0; i < var.size(); i++)
     {
@@ -30,7 +30,7 @@ int		main(int ac, char **av)
       var.at(i) = "512";
     }
   Conf.SetListVector("UnusedPort", var);
-  var = Conf.GelListVector("UnusedPort");
+  var = Conf.GetListVector("UnusedPort");
   for (i = 0; i < var.size(); i++)
     {
       std::cout << "modified UnusedPort : " << var.at(i) << std::endl;
@@ -42,7 +42,7 @@ int		main(int ac, char **av)
   std::cout << std::endl << "after reload" << std::endl;
   std::cout << "TimeOut : " << Conf.GetSimpleString("TimeOut") << std::endl;
   std::cout << "timeout : " << Conf.GetSimpleString("timeout") << std::endl;
-  var = Conf.GelListVector("UnusedPort");
+  var = Conf.GetListVector("UnusedPort");
   for (i = 0; i < var.size(); i++)
     {
       std::cout << "UnusedPort : " << var.at(i) << std::endl;

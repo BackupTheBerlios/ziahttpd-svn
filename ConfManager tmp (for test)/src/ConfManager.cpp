@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Wed Nov 02 21:02:46 2005 Bigand Xavier
+// Last update Sat Nov 05 12:29:52 2005 Bigand Xavier
 //
 
 #include "ConfManager.h"
@@ -121,13 +121,11 @@ void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStri
     {
       TiXmlNode	*pChildContainer;
       string	sName;
-//       string	sElem;		// index value
       string	sElement;	// type of element (var, list, ...)
 
       if (pCurrentContainer->ToElement())
 	{
 	  sName = MyAttribute(pCurrentContainer->ToElement(), "name");
-// 	  sElem = MyAttribute(pCurrentContainer->ToElement(), "elem");
 	  sElement = pCurrentContainer->ValueStr();
 	}
       pChildContainer = pCurrentContainer->FirstChild();
@@ -139,15 +137,8 @@ void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStri
 	  GetValues(pChildContainer, sTmp, svTmp); // debut de la recursivite
 	  if (InsensitiveCmp(sElement, "var") && sTmp != "") // ne pas remplacer une valeur par ""
 	    _mSimpleData[sName] = sTmp; // replace old value by new
-	  else if (InsensitiveCmp(sElement, "list"))
-	    {
-// 	      if (sElem != "")
-// 		{
-
-// 		}
-// 	      else (svTmp.size() > 0)
-	      _mListData[sName].insert(_mListData[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
-	    }
+	  else if (InsensitiveCmp(sElement, "list") && !svTmp.empty())
+	    _mListData[sName].insert(_mListData[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
 	}
       sValue = _mSimpleData[sName];
       svValue = _mListData[sName];
@@ -158,35 +149,22 @@ TiXmlNode	*ConfManager::ManageVar(TiXmlNode *pCurrentContainer)
 {
   string			sName;
   string			sValue;
-  TiXmlNode			*pChildContainer;
   tStringVector::iterator	itIterator;
+  tStringVector			unused;
 
-  if (pCurrentContainer->ToElement())
-    sName = MyAttribute(pCurrentContainer->ToElement(), "name");
-  if (sName != "")
-    {
-      pChildContainer = pCurrentContainer->FirstChild();
-      if (pChildContainer->ToText()) // contient directement une valeur
-	_mSimpleData[sName] = (pChildContainer->ToText())->ValueStr(); // can copy ""
-      else // contient d'autres balises (comme une var deja declaree)
-	{
-	  string	sName2;
-
-	  if (pChildContainer->ToElement())
-	    {
-	      sName2 = MyAttribute(pChildContainer->ToElement(), "name");
-	      _mSimpleData[sName] = _mSimpleData[sName2]; // can copy ""
-	    }
-	}
-    }
+  GetValues(pCurrentContainer, sValue, unused);
+  // This function reconize element var -> auto-set value
+  // It's why I give her the current container (element)
   return pCurrentContainer->NextSibling();
 }
 
 TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 {
   string	sName;
+  string	sValue;
   TiXmlNode	*pChildContainer;
   TiXmlNode	*pNextContainer;
+  tStringVector	svValue;
 
   pNextContainer = pCurrentContainer->NextSibling();
   sName = MyAttribute(pCurrentContainer->ToElement(), "name");
@@ -195,24 +173,17 @@ TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 	 pCurrentContainer;
 	 pCurrentContainer = pCurrentContainer->NextSibling())
       {
-	if (InsensitiveCmp(pCurrentContainer->ValueStr(), "add"))
+	if (InsensitiveCmp(pCurrentContainer->ValueStr(), "add") &&
+	    (pChildContainer = pCurrentContainer->FirstChild()))
 	  {
-	    pChildContainer = pCurrentContainer->FirstChild();
-	    if (pChildContainer)
-	      _mListData[sName].push_back((pChildContainer->ToText())->ValueStr());
+	    GetValues(pChildContainer, sValue, svValue);
+	    // This function don't reconize element add -> don't set value
+	    // It's why I give her the child container (element)
+	    if (sValue != "")
+	      _mListData[sName].push_back(sValue);
+	    else
+	      _mListData[sName].insert(_mListData[sName].begin(), svValue.begin(), svValue.end()); // add new vector at the old
 	  }
-// 	else if (InsensitiveCmp(pCurrentContainer->ValueStr(), "del"))
-// 	  {
-// 	    string			value;
-// 	    tStringVector::iterator	itIterator;
-
-// 	    value = ((pCurrentContainer->FirstChild())->ToText())->ValueStr();
-// 	    for (i = 0, itIterator = _mListData[sName].begin();
-// 		 itIterator != _mListData[sName].end() && i < atoi(value.c_str()) - 1;
-// 		 i++, itIterator++)
-// 	      ;
-// 	    _mListData[sName].erase(itIterator);
-// 	  }
       }
   return pNextContainer;
 }

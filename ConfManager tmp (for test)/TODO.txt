@@ -1,9 +1,4 @@
 Jeudi :
-- Tester la fonction GetValues
-- Les fonctions ManageList et ManageVar doivent faire appel a GetValues
-  faire attention a ne pas enregistrer la valeur "" elle est non valide
-
-
 - Commencer la documentation sur le fichier de conf a fin de fixer les limites
   de tolerence (ce qui ne peux pas etre pris en compte)
 - Commencer les commentaires pour doxygene
@@ -15,7 +10,7 @@ Jeudi :
 - Creer une methode specifique pour gere une valeur particuliere d'une liste
   <var name="test" elem="10"> ou <var name="test" elem="i">
   la methode doit directement retourner la bonne valeur sous forme de string
-  ou "" si elle echoue
+  ou "" si elle echoue et integrer cette fonction a GetValues (faire un appel)
 
 A faire pour les jours suivants :
 
@@ -49,7 +44,7 @@ A faire pour les jours suivants :
 
 - ne pas enregistrer les variables egale a ""
 
-
+- tracer toutes les erreurs dans un fichier de log
 
 
 

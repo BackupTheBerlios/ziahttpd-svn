@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-** Last update Wed Nov 02 19:56:42 2005 Bigand Xavier
+** Last update Sat Nov 05 12:13:07 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -71,7 +71,7 @@ class	ConfManager
   ~ConfManager();							// OK
 
   string	&GetSimpleString(string sVar) {return _mSimpleData[sVar];};	// OK
-  tStringVector	&GelListVector(string sVar) {return _mListData[sVar];};		// OK
+  tStringVector	&GetListVector(string sVar) {return _mListData[sVar];};		// OK
   int		SetSimpleString(string sVar, string sValue) {_mSimpleData[sVar] = sValue; return true;};	// OK
   int		SetListVector(string sVar, tStringVector Value) {_mListData[sVar] = Value; return true;};	// OK
   int		Clear();			// OK
