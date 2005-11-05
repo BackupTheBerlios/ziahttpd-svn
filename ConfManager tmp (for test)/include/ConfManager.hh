@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-** Last update Sat Nov 05 12:13:07 2005 Bigand Xavier
+// Last update Sat Nov 05 16:05:02 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -18,7 +18,7 @@
 #include <vector>
 #include <cctype>	// for using std::tolwer and std::toupper
 #include <algorithm>	// for using std::transform (convert string case)
-#include "tinyxml.h"
+#include "tinyxml.hh"
 
 using namespace	std;
 
@@ -79,3 +79,29 @@ class	ConfManager
 };
 
 #endif // __ConfManager_H__
+
+//! \file
+//! \brief This is a brief description of class.hh
+//!
+//! Here this is the more
+//! detail description, spanning over more than one line.
+
+//! \class foo
+//! \brief description of the foo class
+//!
+//! This class does nothing is a more detailed
+//! descritpion.
+//! This detailed description spans over more
+//! than one line.
+
+//! \fn void foo::display() const
+//! \brief display contents of the class
+//!
+//! detailed description of the display method
+
+//! \fn void foo::access(const char*)
+//! \brief access...
+//!
+//! \param pathname name of the path.
+//!
+//! This is a detailed description

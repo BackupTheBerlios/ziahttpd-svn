@@ -1,7 +1,4 @@
 Jeudi :
-- Commencer la documentation sur le fichier de conf a fin de fixer les limites
-  de tolerence (ce qui ne peux pas etre pris en compte)
-- Commencer les commentaires pour doxygene
 - Gere les expressions (une fonction qui retourne deux valeurs)
 - Integrer la gestion des expression a GetValues
 
