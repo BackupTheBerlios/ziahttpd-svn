@@ -1,0 +1,191 @@
+................................................................................
+.                                                                              .
+.                                                                              .
+.                                                                              .
+. Projet Zia.........................Documentation du fichier de configuration .
+.                                                                              .
+. Bigand Xavier.....................................................05/11/2005 .
+.                                                                              .
+.                                                                              .
+.                                                                              .
+................................................................................
+
+La présente documentation porte sur le fichier de configuration du serveur Zia.
+Le fichier de configuration respecte les specifications du format XML dans sa
+version 1.0 fixées par le W3C, pour plus de précision sur ce format sur reporter
+à la RFC 3076. Toute fois il peut y avoir des écarts fait à la RFC dus à
+l'utilisation de la librairie externe TinyXML pour l'interprétation du fichier.
+Pour plus de précision sur la librairie TinyXML se référer au site
+http://sourceforge.net/projects/tinyxml/, la version utilisée est la 2.4.2.
+
+
+
+Sommaire :
+I.......................................................... Notes sur la syntaxe
+II.......................................................Politique d'utilisation
+III......................................Arbre des balises et de leurs attributs
+IV.................................Utilisation des balises et de leurs attributs
+IV.1.........................................................................Var
+IV.2........................................................................List
+IV.2.1.......................................................................Add
+IV.3.........................................................................Del
+IV.4.....................................................................Include
+IV.5....................................................................Requiere	// Not implemented now
+IV.6........................................................................Eval	// Not implemented now
+IV.6.1....................................................................Header
+IV.6.1.1...............................................................Expresion
+IV.6.1.2.................................................................Liaison
+IV.6.2........................................................................Do
+IV.7......................................................................Boucle	// Not implemented now
+IV.7.1.............................................................Do (optionel)
+IV.7.2..............................................Eval (et ses balises filles)
+IV.7.3.............................................................Do (optionel)
+IV.8....................................................................Iterator	// Not implemented now
+V..................................................Les limites de l'interprêteur
+VI..........................Liste des variables prisent en compte par le serveur
+VII...........................................................Valeurs par défaut
+VIII......................................................Conseils d'utilisation
+IX.......................................................................Crédits	// Dans le même genre
+
+
+
+I.	Notes sur la syntaxe :
+	- Les noms des balises ainsi ceux des attributs ne se pas sensibles à la
+	  casse. Toute fois le nom de la balise fermante doit etre étre écrit de
+	  la même façon que l'ouvrante, ex :
+	     - valide : <Color type="defined">black</Color> ou
+	       <color Type="defined">black</color>
+
+	     - invalide : <Color type="defined">black</color> ou
+	       <color Type="defined">black</Color>
+
+	- Les valeurs des attributs ou celles entre deux balises sont sensibles
+	  à la casse.
+
+
+
+II.	Politique d'utilisation :
+	- Le fichier de configuration est totalement optionnel, le serveur
+	  utilise les valeurs par defaut si elles ne sont pas précisées
+	  (cf : VIII)
+
+	- Le fichier de configuration permet uniquement d'attribuer des valeurs
+	  aux variables qui serront utilisées par le serveur
+
+	- Supporte deux types de variables, les variables dites "simples" qui ne
+	  peuvent contenir qu'une seule valeur et les variables dites "listes"
+	  qui sont des tableaux de valeurs. Atteindre (demander) une valeur
+	  précise d'une liste revient à obtenir une variable simple.
+
+	- Supporte les imbriquations (voir les limites cf : VI)
+
+	- Les valeurs sont ajoutées aux anciennes pour les listes
+
+	- Les erreurs sont inscrites dans le fichier de log :				// Not implemented now
+
+	- Toutes les valeurs sont traitées sous forme de chaînes de caractères,
+	  mais lors des évaluations des expressions une vérifiaction est déjà
+	  effectuée pour savoir s'il ne s'agit pas de valeurs numérique, si
+	  c'est le cas elles sont considérées comme telles.
+
+	- Le parcours du l'arboressance se fait du parent vers les enfants
+	  puis vers les membres de même niveau.
+
+
+
+III.	Arbre des balises et de leurs attributs :
+
+
+
+IV.	Utilisation des balises et de leurs attributs :
+
+IV.1.		Var :
+
+
+IV.2.		List :
+
+IV.2.1.			Add :
+
+
+IV.3.		Del :
+
+
+IV.4.		Include :
+
+
+IV.5.		Requiere :
+
+
+IV.6.		Eval :
+
+IV.6.1.			Header :
+
+IV.6.1.1.			Expresion :
+
+IV.6.1.2.			Liaison :
+
+IV.6.2.			Do :
+
+
+IV.7.		Boucle :
+
+IV.7.1.			Do (optionel) :
+
+IV.7.2.			Eval (et ses balises filles) :
+
+IV.7.3.			Do (optionel) :
+
+
+IV.8.		Iterator :
+
+
+
+V.	Les limites de l'interprêteur :
+	- Il est possible d'affecter la valeur d'une variable à une autre. ex :
+	  <var name="sous">25 euros</var>
+	  <var name="argent"><var name="sous"/></var>
+	  'argent' vaut maintenant '25 euros'
+
+	- Il est possible d'affecter plusieurs variables à une même valeur en
+	  une seule fois. ex :
+	  <var name="president"><var name="president actuel">Chirac</var></var>
+	  'president' et 'president' actuel valent 'Chirac'
+
+	- L'interprêteur est capable d'accepter une l'appel à une liste ou à une
+	  variable comme membre à la balise Add, mais ne peux pas affecter une
+	  liste elle même en cours d'affectation à une autre. ex :
+	  valide :
+	  <var name="chef de groupe">attal_m</var>
+	  <list name="binomes">
+		<add><var name="chef de groupe" /></add>
+		<add>bigand_x</add>
+		<add>bosque_j</add>
+		<add>eang_v</add>
+		<add>le-men_f</add>
+	  </list>
+
+	  invalide :
+	  <list name="binomes">
+		<add>bigand_x</add>
+		<add>bosque_j</add>
+		<list name="binomes">	// même si le nom de cette liste été
+		      <add>eang_v</add>	// différent (le résultat est indéfini)
+		      <add>le-men_f</add> // pourrait être implémenté sans trop
+		</list>			// de difficulté (mais chiant)
+	  </list>
+
+
+
+VI.	Liste des variables prisent en compte par le serveur :
+
+
+
+VII.	Valeurs par défaut :
+
+
+
+VIII.	Conseils d'utilisation :
+
+
+
+IX.	Crédits	:
