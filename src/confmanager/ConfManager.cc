@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Wed Nov 02 11:24:05 2005 Bigand Xavier
+// Last update Sat Nov 05 16:04:22 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
@@ -113,41 +113,58 @@ TiXmlNode	*ConfManager::ManageInclude(TiXmlNode *pCurrentContainer)
   return pCurrentContainer->NextSibling();
 }
 
+void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue)
+{
+  if (pCurrentContainer->ToText()) // contient directement une simple valeur
+    sValue = (pCurrentContainer->ToText())->ValueStr(); // can copy ""
+  else // contient d'autres balises (comme une var deja declaree)
+    {
+      TiXmlNode	*pChildContainer;
+      string	sName;
+      string	sElement;	// type of element (var, list, ...)
+
+      if (pCurrentContainer->ToElement())
+	{
+	  sName = MyAttribute(pCurrentContainer->ToElement(), "name");
+	  sElement = pCurrentContainer->ValueStr();
+	}
+      pChildContainer = pCurrentContainer->FirstChild();
+      if (pChildContainer)
+	{
+	  string	sTmp;
+	  tStringVector	svTmp;
+
+	  GetValues(pChildContainer, sTmp, svTmp); // debut de la recursivite
+	  if (InsensitiveCmp(sElement, "var") && sTmp != "") // ne pas remplacer une valeur par ""
+	    _mSimpleData[sName] = sTmp; // replace old value by new
+	  else if (InsensitiveCmp(sElement, "list") && !svTmp.empty())
+	    _mListData[sName].insert(_mListData[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
+	}
+      sValue = _mSimpleData[sName];
+      svValue = _mListData[sName];
+    }
+}
+
 TiXmlNode	*ConfManager::ManageVar(TiXmlNode *pCurrentContainer)
 {
   string			sName;
   string			sValue;
-  TiXmlNode			*pChildContainer;
   tStringVector::iterator	itIterator;
+  tStringVector			unused;
 
-  if (pCurrentContainer->ToElement())
-    sName = MyAttribute(pCurrentContainer->ToElement(), "name");
-  if (sName != "")
-    {
-      pChildContainer = pCurrentContainer->FirstChild();
-      if (pChildContainer->ToText()) // contient directement une valeur
-	_mSimpleData[sName] = (pChildContainer->ToText())->ValueStr(); // can copy ""
-      else // contient d'autres balises (comme une var deja declaree)
-	{
-	  string	sName2;
-	  TiXmlNode	*pChildChildContainer;
-
-	  if (pChildContainer->ToElement())
-	    {
-	      sName2 = MyAttribute(pChildContainer->ToElement(), "name");
-	      _mSimpleData[sName] = _mSimpleData[sName2]; // can copy ""
-	    }
-	}
-    }
+  GetValues(pCurrentContainer, sValue, unused);
+  // This function reconize element var -> auto-set value
+  // It's why I give her the current container (element)
   return pCurrentContainer->NextSibling();
 }
 
 TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 {
-  int		i;
   string	sName;
+  string	sValue;
   TiXmlNode	*pChildContainer;
   TiXmlNode	*pNextContainer;
+  tStringVector	svValue;
 
   pNextContainer = pCurrentContainer->NextSibling();
   sName = MyAttribute(pCurrentContainer->ToElement(), "name");
@@ -156,24 +173,17 @@ TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 	 pCurrentContainer;
 	 pCurrentContainer = pCurrentContainer->NextSibling())
       {
-	if (InsensitiveCmp(pCurrentContainer->ValueStr(), "add"))
+	if (InsensitiveCmp(pCurrentContainer->ValueStr(), "add") &&
+	    (pChildContainer = pCurrentContainer->FirstChild()))
 	  {
-	    pChildContainer = pCurrentContainer->FirstChild();
-	    if (pChildContainer)
-	      _mListData[sName].push_back((pChildContainer->ToText())->ValueStr());
+	    GetValues(pChildContainer, sValue, svValue);
+	    // This function don't reconize element add -> don't set value
+	    // It's why I give her the child container (element)
+	    if (sValue != "")
+	      _mListData[sName].push_back(sValue);
+	    else
+	      _mListData[sName].insert(_mListData[sName].begin(), svValue.begin(), svValue.end()); // add new vector at the old
 	  }
-// 	else if (InsensitiveCmp(pCurrentContainer->ValueStr(), "del"))
-// 	  {
-// 	    string			value;
-// 	    tStringVector::iterator	itIterator;
-
-// 	    value = ((pCurrentContainer->FirstChild())->ToText())->ValueStr();
-// 	    for (i = 0, itIterator = _mListData[sName].begin();
-// 		 itIterator != _mListData[sName].end() && i < atoi(value.c_str()) - 1;
-// 		 i++, itIterator++)
-// 	      ;
-// 	    _mListData[sName].erase(itIterator);
-// 	  }
       }
   return pNextContainer;
 }
@@ -218,8 +228,8 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
       iTypeContainer = pCurrentContainer->Type();
       if (iTypeContainer == TiXmlNode::ELEMENT)
 	{
-	  int	i;
-	  int	iStop;	// use to break search faster
+	  int		i;
+	  int		iStop;	// use to break search faster
 	  string	sElement;
 	  string	value;
 

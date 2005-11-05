@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-** Last update Wed Nov 02 11:25:30 2005 Bigand Xavier
+// Last update Sat Nov 05 16:05:02 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -24,7 +24,11 @@ using namespace	std;
 
 #define DEFAULT_FILE		"./conf/zia.conf"
 #define NB_CONTAINER		5
-
+#define	SINGLE_VALUE		0
+#define	LIST_VALUE		1
+#define	EXPR_VALUE		2
+#define	EXPR_TRUE		"true"
+#define	EXPR_FALSE		"false"
 
 typedef	vector<string>		tStringVector;
 
@@ -37,12 +41,14 @@ class	ConfManager
     // mettre le pointeur dans un enum pour le surchager
     TiXmlNode	*(ConfManager::*fct)(TiXmlNode *pCurrentContainer);
   };
-  tStringVector		_svListInclude;	// protect against multiple inclusion
+  tStringVector	_svListInclude;	// protect against multiple inclusion
 
-  void			init_fct_ptr();	// in progress
-  string		MyAttribute(TiXmlElement *pElement, string sAttribute);	// waiting for correcte NULL return and case insensitive version
-  int			InsensitiveCmp(string sValue1, string sValue2);
-  int			Load(string sConfFile);
+  void		init_fct_ptr();	// in progress
+  string	MyAttribute(TiXmlElement *pElement, string sAttribute);	// waiting for correcte NULL return and case insensitive version
+  int		InsensitiveCmp(string sValue1, string sValue2);
+  int		Load(string sConfFile);
+  void		GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue); // in Progress, may replace ManageVar and ManageList
+
 
 
  protected:
@@ -65,7 +71,7 @@ class	ConfManager
   ~ConfManager();							// OK
 
   string	&GetSimpleString(string sVar) {return _mSimpleData[sVar];};	// OK
-  tStringVector	&GelListVector(string sVar) {return _mListData[sVar];};		// OK
+  tStringVector	&GetListVector(string sVar) {return _mListData[sVar];};		// OK
   int		SetSimpleString(string sVar, string sValue) {_mSimpleData[sVar] = sValue; return true;};	// OK
   int		SetListVector(string sVar, tStringVector Value) {_mListData[sVar] = Value; return true;};	// OK
   int		Clear();			// OK
@@ -73,3 +79,29 @@ class	ConfManager
 };
 
 #endif // __ConfManager_H__
+
+//! \file
+//! \brief This is a brief description of class.hh
+//!
+//! Here this is the more
+//! detail description, spanning over more than one line.
+
+//! \class foo
+//! \brief description of the foo class
+//!
+//! This class does nothing is a more detailed
+//! descritpion.
+//! This detailed description spans over more
+//! than one line.
+
+//! \fn void foo::display() const
+//! \brief display contents of the class
+//!
+//! detailed description of the display method
+
+//! \fn void foo::access(const char*)
+//! \brief access...
+//!
+//! \param pathname name of the path.
+//!
+//! This is a detailed description
