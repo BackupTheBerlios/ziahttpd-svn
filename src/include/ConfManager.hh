@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Sat Nov 05 16:05:02 2005 Bigand Xavier
+// Last update Sat Nov 05 17:28:34 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -81,27 +81,65 @@ class	ConfManager
 #endif // __ConfManager_H__
 
 //! \file
-//! \brief This is a brief description of class.hh
+//! \brief This file contains the class ConfManager
 //!
-//! Here this is the more
-//! detail description, spanning over more than one line.
+//! She is based on the TinyXml lib which respects the RFC 3076
 
-//! \class foo
-//! \brief description of the foo class
+//! \class ConfManager
+//! \brief This class is used to load a configuration
 //!
-//! This class does nothing is a more detailed
-//! descritpion.
-//! This detailed description spans over more
-//! than one line.
+//! This class can load a configuration starting from a file of configuration
+//! or since its own resources to have the configuration by default.
+//! After the loading starting from a file it supplements the missing data or
+//! on the contrary removes those which are not recognized by the server.
 
-//! \fn void foo::display() const
-//! \brief display contents of the class
+//! \fn ConfManager::ConfManager(char **av, const char &ConfFile = DEFAULT_FILE[0])
+//! \brief This is the constructor
 //!
-//! detailed description of the display method
+//! He analyse the programme's line commande and load the configuration file, if
+//! there is no file, he try too load the default file or even configuration by
+//! default.
+//! The line commande is not read actualy.
 
-//! \fn void foo::access(const char*)
-//! \brief access...
+//! \fn ConfManager::~ConfManager()
+//! \brief This is the destructor
 //!
-//! \param pathname name of the path.
+//! He destroy all allocated objects
+
+//! \fn string &ConfManager::GetSimpleString(string sVar)
+//! \brief Returns the value which corresponds to the string
 //!
-//! This is a detailed description
+//! This function returns a string value which corresponds to the string passed
+//! in parameter. The returned string can be wrong but not empty
+
+//! \fn tStringVector &ConfManager::GetListVector(string sVar)
+//! \brief returns the values which corresponds to the string
+//!
+//! This function returns a string vector which contains values which
+//! corresponds to the string passed in parameter.
+
+//! \fn int ConfManager::SetSimpleString(string sVar, string sValue)
+//! \brief Set sVar at sValue
+//!
+//! This function associates the value sValue at the variable sVar.
+//! Always returns true.
+
+//! \fn int ConfManager::SetListVector(string sVar, tStringVector Value)
+//! \brief returns the values which corresponds to the string
+//!
+//! This function returns a string vector which contains values which
+//! corresponds to the string passed in parameter.
+//! Always returns true.
+
+//! \fn int ConfManager::Clear();
+//! \brief Destroy all data
+//!
+//! This fonction clear all data.
+//! Always returns true.
+
+//! \fn int ConfManager::Reload(string sConfFile = "");
+//! \brief Reload the configuration.
+//!
+//! This function reload the configuration. If there is no parameter the last
+//! file which used for load the configuration is choose for the reload.
+//! Always returns true.
