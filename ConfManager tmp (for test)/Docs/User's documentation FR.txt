@@ -34,9 +34,9 @@ IV.5....................................................................Requiere
 IV.6........................................................................Eval	// Not implemented now
 IV.6.1....................................................................Header
 IV.6.1.1...............................................................Expresion
-IV.6.1.2.................................................................Liaison
+IV.6.1.2................................................................Operator
 IV.6.2........................................................................Do
-IV.7......................................................................Boucle	// Not implemented now
+IV.7........................................................................Loop	// Not implemented now
 IV.7.1.............................................................Do (optionel)
 IV.7.2..............................................Eval (et ses balises filles)
 IV.7.3.............................................................Do (optionel)
@@ -122,12 +122,12 @@ IV.6.1.			Header :
 
 IV.6.1.1.			Expresion :
 
-IV.6.1.2.			Liaison :
+IV.6.1.2.			Operator :
 
 IV.6.2.			Do :
 
 
-IV.7.		Boucle :
+IV.7.		Loop :
 
 IV.7.1.			Do (optionel) :
 
@@ -173,6 +173,11 @@ V.	Les limites de l'interprêteur :
 		      <add>le-men_f</add> // pourrait être implémenté sans trop
 		</list>			// de difficulté (mais chiant)
 	  </list>
+
+	- Lors de l'évaluation des expressions il n'est pas possible de spéfier
+	  des propriétés, les tests sont effectués en ligne. Il est toute fois
+	  possible de contourner ce problème en enregistrant le résultat d'une
+	  expression dans une variable temporaire.
 
 
 

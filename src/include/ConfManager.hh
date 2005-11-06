@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Sat Nov 05 17:28:34 2005 Bigand Xavier
+// Last update Sun Nov 06 19:06:14 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -23,12 +23,17 @@
 using namespace	std;
 
 #define DEFAULT_FILE		"./conf/zia.conf"
-#define NB_CONTAINER		5
+#define NB_CONTAINER		6
 #define	SINGLE_VALUE		0
 #define	LIST_VALUE		1
 #define	EXPR_VALUE		2
 #define	EXPR_TRUE		"true"
 #define	EXPR_FALSE		"false"
+#define EVAL_SIMPLE		0
+#define EVAL_LOOP		1
+#define OP_UNDEFINED		-1
+#define OP_OR			0
+#define	OP_AND			1
 
 typedef	vector<string>		tStringVector;
 
@@ -38,16 +43,16 @@ class	ConfManager
   struct	ManageContainer
   {
     string	sContainer;
-    // mettre le pointeur dans un enum pour le surchager
     TiXmlNode	*(ConfManager::*fct)(TiXmlNode *pCurrentContainer);
   };
   tStringVector	_svListInclude;	// protect against multiple inclusion
 
   void		init_fct_ptr();	// in progress
   string	MyAttribute(TiXmlElement *pElement, string sAttribute);	// waiting for correcte NULL return and case insensitive version
-  int		InsensitiveCmp(string sValue1, string sValue2);
-  int		Load(string sConfFile);
-  void		GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue); // in Progress, may replace ManageVar and ManageList
+  int		InsensitiveCmp(string sValue1, string sValue2);	// OK, but can optimize with stricmp()?
+  int		Load(string sConfFile);	// OK
+  void		GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue); // OK, but juste add "expression var", "header var" and "List value"
+  string	Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes);	// OK, but juste add "<", ">", "<=" and ">=" comparator
 
 
 
@@ -58,10 +63,12 @@ class	ConfManager
   ManageContainer		_Container[NB_CONTAINER];
 
   TiXmlNode	*ManageRequiere(TiXmlNode *pCurrentContainer);	// in progress
-  TiXmlNode	*ManageInclude(TiXmlNode *pCurrentContainer);	// in progress
-  TiXmlNode	*ManageVar(TiXmlNode *pCurrentContainer);	// OK for assignation, not for read
-  TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
+  TiXmlNode	*ManageInclude(TiXmlNode *pCurrentContainer);	// OK
+  TiXmlNode	*ManageVar(TiXmlNode *pCurrentContainer);	// OK
   TiXmlNode	*ManageList(TiXmlNode *pCurrentContainer);	// OK
+  TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer) {return ManageEval(pCurrentContainer, EVAL_SIMPLE, NULL);};	// OK
+  TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool *pbRes);	// OK, must test it, and some features depend to Eval_Expression()
+  TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
   void		DumpToMemory(TiXmlNode *pParent);		// OK
 
 

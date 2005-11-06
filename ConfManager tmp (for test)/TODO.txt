@@ -1,8 +1,5 @@
 Jeudi :
-- Gere les expressions (une fonction qui retourne deux valeurs)
-- Integrer la gestion des expression a GetValues
-
-
+- Integrer la gestion des expressions et des headers a GetValues
 
 - Creer une methode specifique pour gere une valeur particuliere d'une liste
   <var name="test" elem="10"> ou <var name="test" elem="i">
@@ -48,7 +45,7 @@ A faire pour les jours suivants :
   Le serveur doit verifier les valeurs apres un (re)chargement?
 
 - formatter le code (limiter les lignes a 80 caracteres)
-
+- voir pour d'evantuelles optimisation (surtout sur les test inutile et les pointeurs (non) stocke)
 
 Pour les variables d'environnement
 #include "stringmanager.hh"

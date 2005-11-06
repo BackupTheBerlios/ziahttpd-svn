@@ -5,27 +5,35 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Sat Nov 05 16:04:22 2005 Bigand Xavier
+// Last update Sun Nov 06 18:53:21 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
 
-ConfManager::ConfManager(char **av, const char &ConfFile)
-{
-  init_fct_ptr();
-  // appeler la fonction qui gere les options (char **av)
-  Reload(&ConfFile);
-}
 
-ConfManager::~ConfManager()
-{
-}
 
-int	ConfManager::Clear()
+//
+// Private members
+//
+
+
+
+void	ConfManager::init_fct_ptr()
 {
-  _mSimpleData.clear();
-  _mListData.clear();
-  return true;
+  // Faire attention a ce que NB_CONTAINER soit correctement definie
+
+  _Container[0].sContainer = "requiere";
+  _Container[0].fct = &ConfManager::ManageRequiere;
+  _Container[1].sContainer = "include";
+  _Container[1].fct = &ConfManager::ManageInclude;
+  _Container[2].sContainer = "var";
+  _Container[2].fct = &ConfManager::ManageVar;
+  _Container[3].sContainer = "del";
+  _Container[3].fct = &ConfManager::ManageDel;
+  _Container[4].sContainer = "list";
+  _Container[4].fct = &ConfManager::ManageList;
+  _Container[5].sContainer = "eval";
+  _Container[5].fct = &ConfManager::ManageEval;
 }
 
 int	ConfManager::Load(string sConfFile)
@@ -53,32 +61,124 @@ int	ConfManager::Load(string sConfFile)
   return true;
 }
 
-int	ConfManager::Reload(string sConfFile)
+void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue)
 {
-  Clear();
-  if (sConfFile == "")
-    sConfFile = _LoadedFile;
-  else
-    _LoadedFile = sConfFile;
-  Load(sConfFile);
-  return true;
+  if (!pCurrentContainer)
+    return ;
+
+  if (pCurrentContainer->ToText()) // contient directement une simple valeur
+    sValue = (pCurrentContainer->ToText())->ValueStr(); // can copy ""
+  else // contient d'autres balises (comme une var deja declaree)
+    {
+      TiXmlNode	*pChildContainer;
+      string	sName;
+      string	sElement;	// type of element (var, list, ...)
+
+//       if (pCurrentContainer->ToElement())
+// 	{
+      sName = MyAttribute(pCurrentContainer->ToElement(), "name");
+      sElement = pCurrentContainer->ValueStr();
+// 	}
+      pChildContainer = pCurrentContainer->FirstChild();
+      if (pChildContainer)
+	{
+	  string	sTmp;
+	  tStringVector	svTmp;
+
+	  GetValues(pChildContainer, sTmp, svTmp); // debut de la recursivite
+	  if (InsensitiveCmp(sElement, "var") && sTmp != "") // ne pas remplacer une valeur par ""
+	    _mSimpleData[sName] = sTmp; // replace old value by new
+	  else if (InsensitiveCmp(sElement, "list") && !svTmp.empty())
+	    _mListData[sName].insert(_mListData[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
+	}
+      sValue = _mSimpleData[sName];
+      svValue = _mListData[sName];
+    }
 }
 
-void	ConfManager::init_fct_ptr()
+string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
 {
-  // Faire attention a ce que NB_CONTAINER soit correctement definie
+  if (!pElement)
+    return "";
 
-  _Container[0].sContainer = "requiere";
-  _Container[0].fct = &ConfManager::ManageRequiere;
-  _Container[1].sContainer = "include";
-  _Container[1].fct = &ConfManager::ManageInclude;
-  _Container[2].sContainer = "var";
-  _Container[2].fct = &ConfManager::ManageVar;
-  _Container[3].sContainer = "del";
-  _Container[3].fct = &ConfManager::ManageDel;
-  _Container[4].sContainer = "list";
-  _Container[4].fct = &ConfManager::ManageList;
+  const char		*tmp;	// for protect string to NULL return
+  string		sCurrentAttribute;
+  TiXmlAttribute	*pCurrentAttribute;
+  int			iStop;
+
+  transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), tolower);
+  for (pCurrentAttribute = pElement->FirstAttribute(), iStop = 0;
+       !iStop && pCurrentAttribute;
+       pCurrentAttribute = pCurrentAttribute->Next())
+    {
+      iStop = 0;
+      tmp = pCurrentAttribute->Name();
+      if (tmp)
+	{
+	  sCurrentAttribute = tmp;
+	  transform(sCurrentAttribute.begin(), sCurrentAttribute.end(),
+		    sCurrentAttribute.begin(), tolower);
+	  if (sCurrentAttribute == sAttribute)
+	    {
+	      iStop = 1;
+	      tmp = pCurrentAttribute->Value();
+	      if (tmp)
+		return tmp;
+	      return "";
+	    }
+	}
+    }
+  return "";
 }
+
+int	ConfManager::InsensitiveCmp(string sValue1, string sValue2)
+{
+  transform(sValue1.begin(), sValue1.end(), sValue1.begin(), tolower);
+  transform(sValue2.begin(), sValue2.end(), sValue2.begin(), tolower);
+  return (sValue1 == sValue2);
+}
+
+string	ConfManager::Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes)
+{
+  string	sValue1;
+  string	sValue2;
+  string	sCompartor;
+
+  sValue1 = MyAttribute(pCurrentContainer->ToElement(), "value1");
+  sValue2 = MyAttribute(pCurrentContainer->ToElement(), "value2");
+  if (pCurrentContainer->ToText())
+    sCompartor = (pCurrentContainer->ToText())->ValueStr();
+  if (sCompartor == "equal")
+    {
+      if (sValue1 == sValue2)
+	{
+	  *pbRes = true;
+	  return EXPR_TRUE;
+	}
+      *pbRes = false;
+      return EXPR_FALSE;
+    }
+  if (sCompartor == "diff")
+    {
+      if (sValue1 != sValue2)
+	{
+	  *pbRes = true;
+	  return EXPR_TRUE;
+	}
+      *pbRes = false;
+      return EXPR_FALSE;
+    }
+  *pbRes = false;
+  return EXPR_FALSE;
+}
+
+
+
+//
+// Protected members
+//
+
+
 
 TiXmlNode	*ConfManager::ManageRequiere(TiXmlNode *pCurrentContainer)
 {
@@ -113,38 +213,6 @@ TiXmlNode	*ConfManager::ManageInclude(TiXmlNode *pCurrentContainer)
   return pCurrentContainer->NextSibling();
 }
 
-void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue)
-{
-  if (pCurrentContainer->ToText()) // contient directement une simple valeur
-    sValue = (pCurrentContainer->ToText())->ValueStr(); // can copy ""
-  else // contient d'autres balises (comme une var deja declaree)
-    {
-      TiXmlNode	*pChildContainer;
-      string	sName;
-      string	sElement;	// type of element (var, list, ...)
-
-      if (pCurrentContainer->ToElement())
-	{
-	  sName = MyAttribute(pCurrentContainer->ToElement(), "name");
-	  sElement = pCurrentContainer->ValueStr();
-	}
-      pChildContainer = pCurrentContainer->FirstChild();
-      if (pChildContainer)
-	{
-	  string	sTmp;
-	  tStringVector	svTmp;
-
-	  GetValues(pChildContainer, sTmp, svTmp); // debut de la recursivite
-	  if (InsensitiveCmp(sElement, "var") && sTmp != "") // ne pas remplacer une valeur par ""
-	    _mSimpleData[sName] = sTmp; // replace old value by new
-	  else if (InsensitiveCmp(sElement, "list") && !svTmp.empty())
-	    _mListData[sName].insert(_mListData[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
-	}
-      sValue = _mSimpleData[sName];
-      svValue = _mListData[sName];
-    }
-}
-
 TiXmlNode	*ConfManager::ManageVar(TiXmlNode *pCurrentContainer)
 {
   string			sName;
@@ -162,8 +230,8 @@ TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 {
   string	sName;
   string	sValue;
-  TiXmlNode	*pChildContainer;
   TiXmlNode	*pNextContainer;
+  TiXmlNode	*pChildContainer;
   tStringVector	svValue;
 
   pNextContainer = pCurrentContainer->NextSibling();
@@ -185,6 +253,92 @@ TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 	      _mListData[sName].insert(_mListData[sName].begin(), svValue.begin(), svValue.end()); // add new vector at the old
 	  }
       }
+  return pNextContainer;
+}
+
+TiXmlNode	*ConfManager::ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool *pbRes)
+{
+  bool		bRes;
+  TiXmlNode	*pNextContainer;
+  TiXmlNode	*pChildContainer;
+  TiXmlNode	*pDoTrueContainer;
+  TiXmlNode	*pDoFalseContainer;
+  string	sElement;
+  string	sAttribute;
+
+  pDoTrueContainer = NULL;
+  pDoFalseContainer = NULL;
+  pNextContainer = pCurrentContainer->NextSibling();
+  for (pCurrentContainer = pCurrentContainer->FirstChild();
+       pCurrentContainer;
+       pCurrentContainer = pCurrentContainer->NextSibling())
+    {
+      sElement = pCurrentContainer->ValueStr();
+      if (InsensitiveCmp(sElement, "header"))
+	{
+	  int		i;	// use for test if it must be 'expression' or 'liaison'
+	  bool		bTmpRes;
+	  bool		bBreak;	// break when the balise order isn't correct
+	  int		iOperator;
+	  string	sChildElement;
+	  string	sChildAttribute;
+
+	  for (pChildContainer = pCurrentContainer->FirstChild(), i = 2,
+		 bBreak = false, iOperator = OP_UNDEFINED; pChildContainer && !bBreak;
+	       pChildContainer = pChildContainer->NextSibling(), i++)
+	    {
+	      sChildElement = pChildContainer->ValueStr();
+	      if (i % 2 == 0)
+		{
+		  if (!InsensitiveCmp(sChildElement, "expression"))
+		    bBreak = true;
+		  else
+		    switch (iOperator)
+		      {
+		      case OP_UNDEFINED:
+			Eval_Expression(pChildContainer, &bTmpRes);
+			if (i == 2)
+			  bRes = bTmpRes;	// init bRes
+			break;
+		      case OP_OR:
+			bRes = bRes || bTmpRes;
+			break;
+		      case OP_AND:
+			bRes = bRes && bTmpRes;
+			break;
+		      }
+		  iOperator = OP_UNDEFINED;	// init operator
+		}
+	      else
+		{
+		  if (!InsensitiveCmp(sChildElement, "operator"))
+		    bBreak = true;
+		  else
+		    {
+		      sChildAttribute = MyAttribute(pChildContainer->ToElement(), "value");
+		      if (sChildAttribute == "or")
+			iOperator = OP_OR;
+		      else if (sChildAttribute == "and")
+			iOperator = OP_AND;
+		    }
+		}
+	    }
+	  if (pbRes)
+	    *pbRes = bRes;	// for the 'loop' knows when break
+	}
+      else if (InsensitiveCmp(sElement, "do"))
+	{
+	  sAttribute = MyAttribute(pCurrentContainer->ToElement(), "type");
+	  if (iFlag == EVAL_LOOP || sAttribute == "true")
+	    pDoTrueContainer = pCurrentContainer;
+	  else if (sAttribute == "false")
+	    pDoFalseContainer = pCurrentContainer;
+	}
+    }
+  if ((iFlag == EVAL_LOOP || bRes == true) && pDoTrueContainer)
+    DumpToMemory(pDoTrueContainer->FirstChild());
+  else if (pDoFalseContainer)
+    DumpToMemory(pDoFalseContainer->FirstChild());
   return pNextContainer;
 }
 
@@ -231,7 +385,6 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
 	  int		i;
 	  int		iStop;	// use to break search faster
 	  string	sElement;
-	  string	value;
 
 	  sElement = pCurrentContainer->ValueStr();
 	  for (i = 0, iStop = 0; !iStop && i < NB_CONTAINER; i++)
@@ -254,41 +407,39 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
     }
 }
 
-string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
-{
-  const char		*tmp;	// for protect string to NULL return
-  string		sCurrentAttribute;
-  TiXmlAttribute	*pCurrentAttribute;
-  int			iStop;
 
-  transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), tolower);
-  for (pCurrentAttribute = pElement->FirstAttribute(), iStop = 0;
-       !iStop && pCurrentAttribute;
-       pCurrentAttribute = pCurrentAttribute->Next())
-    {
-      iStop = 0;
-      tmp = pCurrentAttribute->Name();
-      if (tmp)
-	{
-	  sCurrentAttribute = tmp;
-	  transform(sCurrentAttribute.begin(), sCurrentAttribute.end(),
-		    sCurrentAttribute.begin(), tolower);
-	  if (sCurrentAttribute == sAttribute)
-	    {
-	      iStop = 1;
-	      tmp = pCurrentAttribute->Value();
-	      if (tmp)
-		return tmp;
-	      return "";
-	    }
-	}
-    }
-  return "";
+
+//
+// Public members
+//
+
+
+
+ConfManager::ConfManager(char **av, const char &ConfFile)
+{
+  init_fct_ptr();
+  // appeler la fonction qui gere les options (char **av)
+  Reload(&ConfFile);
 }
 
-int	ConfManager::InsensitiveCmp(string sValue1, string sValue2)
+ConfManager::~ConfManager()
 {
-  transform(sValue1.begin(), sValue1.end(), sValue1.begin(), tolower);
-  transform(sValue2.begin(), sValue2.end(), sValue2.begin(), tolower);
-  return (sValue1 == sValue2);
+}
+
+int	ConfManager::Clear()
+{
+  _mSimpleData.clear();
+  _mListData.clear();
+  return true;
+}
+
+int	ConfManager::Reload(string sConfFile)
+{
+  Clear();
+  if (sConfFile == "")
+    sConfFile = _LoadedFile;
+  else
+    _LoadedFile = sConfFile;
+  Load(sConfFile);
+  return true;
 }
