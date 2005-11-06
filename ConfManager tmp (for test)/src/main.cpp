@@ -9,7 +9,7 @@
 //
 
 #include <iostream>
-#include "ConfManager.h"
+#include "ConfManager.hh"
 
 int		main(int ac, char **av)
 {

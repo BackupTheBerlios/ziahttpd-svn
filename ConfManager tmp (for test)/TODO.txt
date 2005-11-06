@@ -47,6 +47,8 @@ A faire pour les jours suivants :
 - Faire en sorte que le server puisse demander une valeur par defaut en cas de valeur conrompue (dans ce cas reset la variable a sa valeur par defaut)
   Le serveur doit verifier les valeurs apres un (re)chargement?
 
+- formatter le code (limiter les lignes a 80 caracteres)
+
 
 Pour les variables d'environnement
 #include "stringmanager.hh"

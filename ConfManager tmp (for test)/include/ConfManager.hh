@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Sat Nov 05 16:05:02 2005 Bigand Xavier
+// Last update Sun Nov 06 15:14:57 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -23,12 +23,14 @@
 using namespace	std;
 
 #define DEFAULT_FILE		"./conf/zia.conf"
-#define NB_CONTAINER		5
+#define NB_CONTAINER		6
 #define	SINGLE_VALUE		0
 #define	LIST_VALUE		1
 #define	EXPR_VALUE		2
 #define	EXPR_TRUE		"true"
 #define	EXPR_FALSE		"false"
+#define EVAL_SIMPLE		0
+#define EVAL_LOOP		1
 
 typedef	vector<string>		tStringVector;
 
@@ -38,7 +40,6 @@ class	ConfManager
   struct	ManageContainer
   {
     string	sContainer;
-    // mettre le pointeur dans un enum pour le surchager
     TiXmlNode	*(ConfManager::*fct)(TiXmlNode *pCurrentContainer);
   };
   tStringVector	_svListInclude;	// protect against multiple inclusion
@@ -60,8 +61,10 @@ class	ConfManager
   TiXmlNode	*ManageRequiere(TiXmlNode *pCurrentContainer);	// in progress
   TiXmlNode	*ManageInclude(TiXmlNode *pCurrentContainer);	// in progress
   TiXmlNode	*ManageVar(TiXmlNode *pCurrentContainer);	// OK for assignation, not for read
-  TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
   TiXmlNode	*ManageList(TiXmlNode *pCurrentContainer);	// OK
+  TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer) {return ManageEval(pCurrentContainer, EVAL_SIMPLE);};	// OK
+  TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer, int iFlag);	// in progress
+  TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
   void		DumpToMemory(TiXmlNode *pParent);		// OK
 
 
