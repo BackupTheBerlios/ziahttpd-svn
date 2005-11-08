@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Tue Oct 25 22:44:52 2005 
+// Last update Tue Nov  8 13:02:05 2005 
 //
 
 
@@ -60,6 +60,79 @@ namespace http
     };
   }
 }
+
+
+
+//! \file
+//! \brief Buffer class
+//!
+//! Buffers are used to manage memory allocated resources,
+//! in order to be able to internally specialize a storage method
+//! for a given resouce.
+//! Furthermore, centralizing memory managed resources helps
+//! in program debugging.
+
+//! \class http::dataman::buffer
+//! \brief buffer class
+//!
+//! Buffers are used to manage memory allocated resources,
+//! in order to be able to internally specialize a storage method
+//! for a given resouce.
+//! Furthermore, centralizing memory managed resources helps
+//! in program debugging.
+
+//! \fn http::dataman::buffer::buffer(const unsigned char* buf, size_t sz)
+//! \brief Fetch a buffer from the c-like buffer passed in argument.
+//! 
+
+//! \fn http::dataman::buffer::buffer(const buffer& b)
+//! \brief Fetch a buffer from the buffer passed in argument
+//! 
+
+//! \fn http::dataman::buffer::buffer(sysapi::file::handle_t& hfile)
+//! \brief Fetch a buffer from a file
+//! 
+
+//! \fn size_t http::dataman::buffer::size() const
+//! \brief return the size of the buffer
+//! 
+
+//! \fn char* http::dataman::buffer::c_str() const
+//! \brief return an allocated c-like string
+//! 
+
+//! \fn void http::dataman::buffer::display() const
+//! \brief turn the buffer into a human readable form and dump it on std::cout
+//! 
+
+//! \fn unsigned char* http::dataman::buffer::dup() const
+//! \brief return a duplicated buffer. Memory is allocated for the new buffer.
+//! 
+
+//! \fn void http::dataman::buffer::reset()
+//! \brief Reset the buffer, deallocating memory if already allocated.
+//! 
+
+//! \fn http::dataman::buffer http::dataman::buffer::operator+(const buffer& b)
+//! \brief Return a new buffer form by adding this one and the one passed as argument.
+//! 
+
+//! \fn http::dataman::buffer& http::dataman::buffer::operator+=(const buffer& b)
+//! \brief Add the buffer passed in argument to this one, return this one.
+//! 
+
+//! \fn http::dataman::buffer& http::dataman::buffer::operator=(const buffer& b)
+//! \brief Delete this buffer if already allocated and affect to the one passed as argument.
+//! 
+
+//! \fn http::dataman::buffer::operator unsigned char*()
+//! \brief Return a pointer to the internal buffer. Memory is not allocated.
+//! 
+
+//! \fn unsigned char& http::dataman::buffer::operator[](int i)
+//! \brief Return the byte at index i in the buffer.
+//! 
+
 
 
 #endif // ! HTTP_DATAMAN_BUFFER_HH

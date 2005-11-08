@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 24 13:46:22 2005 
-// Last update Wed Oct 26 17:22:30 2005 
+// Last update Tue Nov  8 13:07:55 2005 
 //
 
 
@@ -49,6 +49,37 @@ namespace http
     };
   }
 }
+
+
+//! \file
+//! \brief unique resource identifier class
+//!
+//! Name a resource from the client stand point
+//! For the server standpoint, tell the actual location
+//! of the resource.
+//! The only goal of this class is to map the universal name
+//! to a local one ACCORDING TO THE CONFIGURATION FILE.
+//! In order to do so, it must take a configuration as argument.
+//! Access checks is delegated to the resource class.
+
+//! \class http::dataman::uri
+//! \brief unique resource identifier class
+//!
+//! Name a resource from the client stand point
+//! For the server standpoint, tell the actual location
+//! of the resource.
+//! The only goal of this class is to map the universal name
+//! to a local one ACCORDING TO THE CONFIGURATION FILE.
+//! In order to do so, it must take a configuration as argument.
+//! Access checks is delegated to the resource class.
+
+//! \fn string& http::dataman::uri::universal_name()
+//! \brief Return a string containing the universal name for the resource.
+//! 
+
+//! \fn string& http::dataman::uri::local_name()
+//! \brief Return a string containing the local name for the resource.
+//! 
 
 
 #endif // ! HTTP_DATAMAN_URI
