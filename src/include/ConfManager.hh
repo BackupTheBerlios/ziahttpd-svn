@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Sun Nov 06 21:05:51 2005 Bigand Xavier
+// Last update Tue Nov 08 13:00:41 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -50,7 +50,7 @@ class	ConfManager
 
   void		init_fct_ptr();	// in progress
   string	MyAttribute(TiXmlElement *pElement, string sAttribute);	// waiting for correcte NULL return and case insensitive version
-  int		InsensitiveCmp(string sValue1, string sValue2);	// OK, but can optimize with stricmp()?
+  bool		InsensitiveCmp(string sValue1, string sValue2);	// OK, but can optimize with stricmp()?
   int		Load(string sConfFile);	// OK
   void		GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue); // OK, but juste add "expression var", "header var" and "List value"
   string	Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes);	// OK, but juste add "<", ">", "<=" and ">=" comparator
