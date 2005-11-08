@@ -5,9 +5,10 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Sun Nov 06 18:53:21 2005 Bigand Xavier
+// Last update Tue Nov  8 12:31:41 2005 
 //
 
+#include <ctype.h>
 #include "ConfManager.hh"
 
 
@@ -106,7 +107,7 @@ string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
   TiXmlAttribute	*pCurrentAttribute;
   int			iStop;
 
-  transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), tolower);
+  transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), to_lower_2);
   for (pCurrentAttribute = pElement->FirstAttribute(), iStop = 0;
        !iStop && pCurrentAttribute;
        pCurrentAttribute = pCurrentAttribute->Next())
