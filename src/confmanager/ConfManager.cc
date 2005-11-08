@@ -5,10 +5,9 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Tue Nov  8 12:31:41 2005 
+// Last update Tue Nov 08 12:34:07 2005 Bigand Xavier
 //
 
-#include <ctype.h>
 #include "ConfManager.hh"
 
 
@@ -107,7 +106,7 @@ string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
   TiXmlAttribute	*pCurrentAttribute;
   int			iStop;
 
-  transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), to_lower_2);
+//   transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), tolower);
   for (pCurrentAttribute = pElement->FirstAttribute(), iStop = 0;
        !iStop && pCurrentAttribute;
        pCurrentAttribute = pCurrentAttribute->Next())
@@ -117,9 +116,10 @@ string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
       if (tmp)
 	{
 	  sCurrentAttribute = tmp;
-	  transform(sCurrentAttribute.begin(), sCurrentAttribute.end(),
-		    sCurrentAttribute.begin(), tolower);
-	  if (sCurrentAttribute == sAttribute)
+// 	  transform(sCurrentAttribute.begin(), sCurrentAttribute.end(),
+// 		    sCurrentAttribute.begin(), tolower);
+// 	  if (sCurrentAttribute == sAttribute)
+	  if (stricmp(sCurrentAttribute.c_str(), sAttribute.c_str()))
 	    {
 	      iStop = 1;
 	      tmp = pCurrentAttribute->Value();
@@ -147,6 +147,7 @@ string	ConfManager::Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes)
 
   sValue1 = MyAttribute(pCurrentContainer->ToElement(), "value1");
   sValue2 = MyAttribute(pCurrentContainer->ToElement(), "value2");
+  pCurrentContainer = pCurrentContainer->FirstChild();
   if (pCurrentContainer->ToText())
     sCompartor = (pCurrentContainer->ToText())->ValueStr();
   if (sCompartor == "equal")
