@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Tue Nov 08 12:59:13 2005 Bigand Xavier
+// Last update Tue Nov 08 16:07:36 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
@@ -96,35 +96,6 @@ void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStri
     }
 }
 
-bool	my_stricmp(string sStr1, string sStr2)
-{
-  int	i;
-  bool	bStop;
-  const char	*pStr1;
-  const char	*pStr2;
-  char	c1;
-  char	c2;
-
-  if (sStr1.size() != sStr2.size())
-    return false;
-  pStr1 = sStr1.c_str();
-  pStr2 = sStr2.c_str();
-  for (i = 0, bStop = false; pStr1[i] && pStr2[i] && !bStop; i++)
-    {
-      c1 = pStr1[i];
-      c2 = pStr2[i];
-      if (c1 >= 'A' && c1 <= 'Z')
-	c1 += 'a' - 'A';
-      if (c2 >= 'A' && c2 <= 'Z')
-	c2 += 'a' - 'A';
-      if (c1 != c2)
-	bStop = true;
-    }
-  if (!bStop)
-    return true;
-  return false;
-}
-
 string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
 {
   if (!pElement)
@@ -135,7 +106,6 @@ string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
   TiXmlAttribute	*pCurrentAttribute;
   int			iStop;
 
-//   transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), tolower);
   for (pCurrentAttribute = pElement->FirstAttribute(), iStop = 0;
        !iStop && pCurrentAttribute;
        pCurrentAttribute = pCurrentAttribute->Next())
@@ -145,9 +115,6 @@ string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
       if (tmp)
 	{
 	  sCurrentAttribute = tmp;
-// 	  transform(sCurrentAttribute.begin(), sCurrentAttribute.end(),
-// 		    sCurrentAttribute.begin(), tolower);
-// 	  if (sCurrentAttribute == sAttribute)
 	  if (InsensitiveCmp(sCurrentAttribute, sAttribute))
 	    {
 	      iStop = 1;
@@ -203,7 +170,7 @@ string	ConfManager::Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes)
     sCompartor = (pCurrentContainer->ToText())->ValueStr();
   if (sCompartor == "equal")
     {
-      if (sValue1 == sValue2)
+      if (_mSimpleData[sValue1] == _mSimpleData[sValue2])
 	{
 	  *pbRes = true;
 	  return EXPR_TRUE;
@@ -213,7 +180,7 @@ string	ConfManager::Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes)
     }
   if (sCompartor == "diff")
     {
-      if (sValue1 != sValue2)
+      if (_mSimpleData[sValue1] != _mSimpleData[sValue2])
 	{
 	  *pbRes = true;
 	  return EXPR_TRUE;
@@ -287,6 +254,7 @@ TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
   TiXmlNode	*pChildContainer;
   tStringVector	svValue;
 
+  pChildContainer = NULL;
   pNextContainer = pCurrentContainer->NextSibling();
   sName = MyAttribute(pCurrentContainer->ToElement(), "name");
   if (sName != "") // do anything if attribute name doesn't exist
@@ -319,6 +287,7 @@ TiXmlNode	*ConfManager::ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool
   string	sElement;
   string	sAttribute;
 
+  bRes = false;
   pDoTrueContainer = NULL;
   pDoFalseContainer = NULL;
   pNextContainer = pCurrentContainer->NextSibling();
@@ -336,8 +305,9 @@ TiXmlNode	*ConfManager::ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool
 	  string	sChildElement;
 	  string	sChildAttribute;
 
+	  bTmpRes = false;
 	  for (pChildContainer = pCurrentContainer->FirstChild(), i = 2,
-		 bBreak = false, iOperator = OP_UNDEFINED; pChildContainer && !bBreak;
+		 bBreak = false, iOperator = OP_UNDEFINED; !bBreak && pChildContainer;
 	       pChildContainer = pChildContainer->NextSibling(), i++)
 	    {
 	      sChildElement = pChildContainer->ValueStr();
@@ -346,21 +316,23 @@ TiXmlNode	*ConfManager::ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool
 		  if (!InsensitiveCmp(sChildElement, "expression"))
 		    bBreak = true;
 		  else
-		    switch (iOperator)
-		      {
-		      case OP_UNDEFINED:
-			Eval_Expression(pChildContainer, &bTmpRes);
-			if (i == 2)
-			  bRes = bTmpRes;	// init bRes
-			break;
-		      case OP_OR:
-			bRes = bRes || bTmpRes;
-			break;
-		      case OP_AND:
-			bRes = bRes && bTmpRes;
-			break;
-		      }
-		  iOperator = OP_UNDEFINED;	// init operator
+		    {
+		      Eval_Expression(pChildContainer, &bTmpRes);
+		      switch (iOperator)
+			{
+			case OP_UNDEFINED:
+			  if (i == 2)
+			    bRes = bTmpRes;	// init bRes
+			  break;
+			case OP_OR:
+			  bRes = bRes || bTmpRes;
+			  break;
+			case OP_AND:
+			  bRes = bRes && bTmpRes;
+			  break;
+			}
+		      iOperator = OP_UNDEFINED;	// init operator
+		    }
 		}
 	      else
 		{
@@ -389,9 +361,9 @@ TiXmlNode	*ConfManager::ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool
 	}
     }
   if ((iFlag == EVAL_LOOP || bRes == true) && pDoTrueContainer)
-    DumpToMemory(pDoTrueContainer->FirstChild());
+    DumpToMemory(pDoTrueContainer);
   else if (pDoFalseContainer)
-    DumpToMemory(pDoFalseContainer->FirstChild());
+    DumpToMemory(pDoFalseContainer);
   return pNextContainer;
 }
 
