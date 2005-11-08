@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Sun Nov 06 18:53:21 2005 Bigand Xavier
+// Last update Tue Nov 08 12:59:13 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
@@ -96,6 +96,35 @@ void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStri
     }
 }
 
+bool	my_stricmp(string sStr1, string sStr2)
+{
+  int	i;
+  bool	bStop;
+  const char	*pStr1;
+  const char	*pStr2;
+  char	c1;
+  char	c2;
+
+  if (sStr1.size() != sStr2.size())
+    return false;
+  pStr1 = sStr1.c_str();
+  pStr2 = sStr2.c_str();
+  for (i = 0, bStop = false; pStr1[i] && pStr2[i] && !bStop; i++)
+    {
+      c1 = pStr1[i];
+      c2 = pStr2[i];
+      if (c1 >= 'A' && c1 <= 'Z')
+	c1 += 'a' - 'A';
+      if (c2 >= 'A' && c2 <= 'Z')
+	c2 += 'a' - 'A';
+      if (c1 != c2)
+	bStop = true;
+    }
+  if (!bStop)
+    return true;
+  return false;
+}
+
 string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
 {
   if (!pElement)
@@ -106,7 +135,7 @@ string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
   TiXmlAttribute	*pCurrentAttribute;
   int			iStop;
 
-  transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), tolower);
+//   transform(sAttribute.begin(), sAttribute.end(), sAttribute.begin(), tolower);
   for (pCurrentAttribute = pElement->FirstAttribute(), iStop = 0;
        !iStop && pCurrentAttribute;
        pCurrentAttribute = pCurrentAttribute->Next())
@@ -116,9 +145,10 @@ string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
       if (tmp)
 	{
 	  sCurrentAttribute = tmp;
-	  transform(sCurrentAttribute.begin(), sCurrentAttribute.end(),
-		    sCurrentAttribute.begin(), tolower);
-	  if (sCurrentAttribute == sAttribute)
+// 	  transform(sCurrentAttribute.begin(), sCurrentAttribute.end(),
+// 		    sCurrentAttribute.begin(), tolower);
+// 	  if (sCurrentAttribute == sAttribute)
+	  if (InsensitiveCmp(sCurrentAttribute, sAttribute))
 	    {
 	      iStop = 1;
 	      tmp = pCurrentAttribute->Value();
@@ -131,11 +161,33 @@ string	ConfManager::MyAttribute(TiXmlElement *pElement, string sAttribute)
   return "";
 }
 
-int	ConfManager::InsensitiveCmp(string sValue1, string sValue2)
+bool	ConfManager::InsensitiveCmp(string sStr1, string sStr2)
 {
-  transform(sValue1.begin(), sValue1.end(), sValue1.begin(), tolower);
-  transform(sValue2.begin(), sValue2.end(), sValue2.begin(), tolower);
-  return (sValue1 == sValue2);
+  int		i;
+  bool		bStop;
+  const char	*pStr1;
+  const char	*pStr2;
+  char		c1;
+  char		c2;
+
+  if (sStr1.size() != sStr2.size())
+    return false;
+  pStr1 = sStr1.c_str();
+  pStr2 = sStr2.c_str();
+  for (i = 0, bStop = false; pStr1[i] && pStr2[i] && !bStop; i++)
+    {
+      c1 = pStr1[i];
+      c2 = pStr2[i];
+      if (c1 >= 'A' && c1 <= 'Z')
+	c1 += 'a' - 'A';
+      if (c2 >= 'A' && c2 <= 'Z')
+	c2 += 'a' - 'A';
+      if (c1 != c2)
+	bStop = true;
+    }
+  if (!bStop)
+    return true;
+  return false;
 }
 
 string	ConfManager::Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes)
@@ -146,6 +198,7 @@ string	ConfManager::Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes)
 
   sValue1 = MyAttribute(pCurrentContainer->ToElement(), "value1");
   sValue2 = MyAttribute(pCurrentContainer->ToElement(), "value2");
+  pCurrentContainer = pCurrentContainer->FirstChild();
   if (pCurrentContainer->ToText())
     sCompartor = (pCurrentContainer->ToText())->ValueStr();
   if (sCompartor == "equal")
