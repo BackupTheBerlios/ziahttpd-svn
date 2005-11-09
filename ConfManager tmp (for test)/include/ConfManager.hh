@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Tue Nov 08 13:00:41 2005 Bigand Xavier
+// Last update Wed Nov 09 15:42:27 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -24,6 +24,7 @@ using namespace	std;
 
 #define DEFAULT_FILE		"./conf/zia.conf"
 #define NB_CONTAINER		6
+#define NB_RECOGNIZED_VAR	2
 #define	SINGLE_VALUE		0
 #define	LIST_VALUE		1
 #define	EXPR_VALUE		2
@@ -46,14 +47,23 @@ class	ConfManager
     string	sContainer;
     TiXmlNode	*(ConfManager::*fct)(TiXmlNode *pCurrentContainer);
   };
+
+  struct	VarInformation
+  {
+    string	sID;
+    bool	bVarType;	// set for know if it's a "List" or a "Var"
+    string	sReelType;
+  };
+
   tStringVector	_svListInclude;	// protect against multiple inclusion
 
-  void		init_fct_ptr();	// in progress
+  void		InitRecognizedVar(); // in progress
+  void		InitFctPtr();	// OK
   string	MyAttribute(TiXmlElement *pElement, string sAttribute);	// waiting for correcte NULL return and case insensitive version
   bool		InsensitiveCmp(string sValue1, string sValue2);	// OK, but can optimize with stricmp()?
   int		Load(string sConfFile);	// OK
   void		GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue); // OK, but juste add "expression var", "header var" and "List value"
-  string	Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes);	// OK, but juste add "<", ">", "<=" and ">=" comparator
+  string	EvalExpression(TiXmlNode *pCurrentContainer, bool *pbRes);	// OK, but juste add "<", ">", "<=" and ">=" comparator
 
 
 
@@ -62,6 +72,7 @@ class	ConfManager
   map<string, string>		_mSimpleData;
   map<string, tStringVector>	_mListData;
   ManageContainer		_Container[NB_CONTAINER];
+  VarInformation		_RecognizedVar[NB_RECOGNIZED_VAR];
 
   TiXmlNode	*ManageRequiere(TiXmlNode *pCurrentContainer);	// in progress
   TiXmlNode	*ManageInclude(TiXmlNode *pCurrentContainer);	// OK
@@ -71,7 +82,7 @@ class	ConfManager
   TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool *pbRes);	// OK, must test it, and some features depend to Eval_Expression()
   TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
   void		DumpToMemory(TiXmlNode *pParent);		// OK
-
+  void		RemoveUnrecognizedVar();
 
 
  public:

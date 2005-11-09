@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Tue Nov 08 16:07:36 2005 Bigand Xavier
+// Last update Wed Nov 09 15:42:48 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
@@ -18,20 +18,36 @@
 
 
 
-void	ConfManager::init_fct_ptr()
+void	ConfManager::InitRecognizedVar()
+{
+  _RecognizedVar[0].sID = "TimeOut";
+  _RecognizedVar[0].bVarType = SINGLE_VALUE;
+  _RecognizedVar[0].sReelType = "integer";
+
+  _RecognizedVar[1].sID = "UnusedPort";
+  _RecognizedVar[1].bVarType = LIST_VALUE;
+  _RecognizedVar[1].sReelType = "integer";
+}
+
+void	ConfManager::InitFctPtr()
 {
   // Faire attention a ce que NB_CONTAINER soit correctement definie
 
   _Container[0].sContainer = "requiere";
   _Container[0].fct = &ConfManager::ManageRequiere;
+
   _Container[1].sContainer = "include";
   _Container[1].fct = &ConfManager::ManageInclude;
+
   _Container[2].sContainer = "var";
   _Container[2].fct = &ConfManager::ManageVar;
+
   _Container[3].sContainer = "del";
   _Container[3].fct = &ConfManager::ManageDel;
+
   _Container[4].sContainer = "list";
   _Container[4].fct = &ConfManager::ManageList;
+
   _Container[5].sContainer = "eval";
   _Container[5].fct = &ConfManager::ManageEval;
 }
@@ -157,7 +173,7 @@ bool	ConfManager::InsensitiveCmp(string sStr1, string sStr2)
   return false;
 }
 
-string	ConfManager::Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes)
+string	ConfManager::EvalExpression(TiXmlNode *pCurrentContainer, bool *pbRes)
 {
   string	sValue1;
   string	sValue2;
@@ -317,7 +333,7 @@ TiXmlNode	*ConfManager::ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool
 		    bBreak = true;
 		  else
 		    {
-		      Eval_Expression(pChildContainer, &bTmpRes);
+		      EvalExpression(pChildContainer, &bTmpRes);
 		      switch (iOperator)
 			{
 			case OP_UNDEFINED:
@@ -432,6 +448,11 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
     }
 }
 
+void	ConfManager::RemoveUnrecognizedVar()
+{
+
+}
+
 
 
 //
@@ -442,7 +463,8 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
 
 ConfManager::ConfManager(char **av, const char &ConfFile)
 {
-  init_fct_ptr();
+  InitRecognizedVar();
+  InitFctPtr();
   // appeler la fonction qui gere les options (char **av)
   Reload(&ConfFile);
 }
@@ -466,5 +488,6 @@ int	ConfManager::Reload(string sConfFile)
   else
     _LoadedFile = sConfFile;
   Load(sConfFile);
+  RemoveUnrecognizedVar();
   return true;
 }
