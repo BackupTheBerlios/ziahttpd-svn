@@ -23,7 +23,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-D &quot;_WIN32&quot; -D &quot;_CONSOLE&quot; -D &quot;_MT&quot; -D &quot;_SYSAPI&quot;=2  -Wp64 -EHsc"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;.\src\include&quot;"
+				AdditionalIncludeDirectories="..\..\src\include;..\..\src\include\dataman"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
@@ -123,6 +123,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath=".\c.cpp">
+			</File>
 			<File
 				RelativePath="..\..\src\main.cc">
 			</File>
