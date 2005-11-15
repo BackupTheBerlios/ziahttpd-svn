@@ -1,0 +1,14 @@
+[ ] http/
+[ ] server/
+[ ] dataman/
+
+
+[ ] doxygen
+
+[ ] Mat
+-> stringmanager in dataman
+-> message in http
+
+
+[ ] Xavier
+-> include of the tinyxml lib

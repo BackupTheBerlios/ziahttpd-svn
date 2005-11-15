@@ -1,0 +1,23 @@
+[*] Note on the sysapi design
+
+
+[*] Goals
+sysapi is a generic way to interact with system specific apis to handle
+common concepts, such as file handling, error report, thread and process creations,
+memory management...
+
+
+[*] Notes for zia developpers
+Always use sysapi facility to develop system specific functions
+
+
+[*] Using the sysapi namespace
+sysapi::{file, process, thread, error} are the namespaces planned to be implemented.
+@see include/sysapi.hh, include/{win32, posix}.hh for interfaces
+@see sysapi/{win32, posix}/{file, process, thread, error}.cc for implementations
+
+
+[*] Work in progress
+posix implementation
+implementation of the mutex objects(do it in a class?)
+implementation of a class for the mmap interface(both on win32 and posix operating systems)

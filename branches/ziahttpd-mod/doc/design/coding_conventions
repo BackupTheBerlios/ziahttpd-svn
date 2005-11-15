@@ -1,0 +1,16 @@
+[*] Header files protection
+Header files must be protected with a macro following this syntax $(NAMESPACE)_$(FILE)_HH
+If the file is the root one defining a new namespace, don't put an underscore in front of the macro.
+
+[*] Class attributes
+Class attributes must be suffixed by underscore ('_')
+
+
+[*] Return values
+In order to simplify usage of your apis, all public functions should return a bool value, set
+to false to indicate that an error occured during the function processing.
+In addition, the user should be able to pass a pointer to a value result for the error code
+to be retrieved; This pointer should have a default value of NULL, so that the uninterested user
+has not to keep the error code.
+For instance:
+bool open(const char* filename, int* err = 0);

@@ -1,0 +1,63 @@
+[*] Goals
+In order to not spent time editing make files again and again, we want to factorize what
+we have already written in modules, as we do with functions in the c programming language for instance.
+So we want to gather build functionnalities that won't change into files, so that they can be included
+in the other files and even other projects. Really, this save a lot of time.
+Furthermore, we want to be portable among operating environnements, so that typing a command
+such as make will build the project, no matter wether we are working on a windows or a gnu environement.
+We won't use gnu's configure like methods. They add an important overhead to the build process, and we
+have to keep in mind that files involved in our system must be read and edited by developpers; Thus
+we have to code only the common part of the build process, that's the part that can spread among operating
+environements without tremendous efforts.
+So keep it simple, stupid.
+
+
+[*] Files used by the build process
++ A main makefile
++ a windows.mk
++ a gnu.mk
+The two latter ones containe rules and tools for the main one.
+
+
+[*] Variables and rules used in the build process
+Internally, our build system uses the following variables:
++ PATH should points to the directory where your compilation suite is;
++ PROJ_ROOT should be set to the root directory of your project;
++ PROJ_ENV is internally used by make to guess your programming environnement;	Possible values are {windows, gnu}.
++ PROJ_SYSAPI should be set to either win32 or posix
+
++ type nmake ziad.x to build the ziad executable
+
+[*] File extensions
+On most moderne operating environement, its a common mistake to think that file extensions
+doesn't indicate the file's meaning.
+In programmer's standpoint, extensions are of importance, since this is how utility such as gnu make
+allow one to define so-called RULES (especially inferred rules such as %.o : %.cc).
+Nmake, the Microsoft gnu make version rely on the same mechanism; Furhtermore, the microsoft c++ compiler
+relies on the fact object files always have the .obj suffixes(-c switch).
+Knowing that, we will use common extensions among operating environement to defined a file semantic.
+As less is better, here are our portable file extensions along with their meanings:
+%.lo: a loadable object file(Dll or Shared object for instance);
+%.cc: c++ source files;
+%.hh: c++ header files;
+%.lib: an archive containing a collection of object files;
+%.o: an object file;
+%.x: an executable binary file containing machine code;
+%.mk: file used by make-like tools
+
+
+[*] Some words
++ The $(*OUT) variable and the name of the file to be generated must be stucked together; For instance: $(LDOUT)$(OUTFILE)
++ Before commiting changes you've made to the project, always clean your developpement tree... Thus, don't add files that are
+binary-dependant of the operating environnement(object files, executables ones...)
++ To add to the content to a variable, do the following: var=$(var)some_content
++ Use the $(SLASH) variable to separate components of in the path of a file
+
+
+[*] Feedbacks, improvements...
+texane@gmail.com
+
+
+[*] Resources
+nmkake useful links:
+@see http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vccore/html/_asug_filename_macros.asp
