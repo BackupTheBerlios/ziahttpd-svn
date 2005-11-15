@@ -23,7 +23,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-D &quot;_WIN32&quot; -D &quot;_CONSOLE&quot; -D &quot;_MT&quot; -D &quot;_SYSAPI&quot;=2  -Wp64 -EHsc"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;.\src\include&quot;"
+				AdditionalIncludeDirectories="..\..\src\include;..\..\src\include\dataman"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
@@ -75,7 +75,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-D &quot;_WIN32&quot; -D &quot;_CONSOLE&quot; -D &quot;_MT&quot; -D &quot;_SYSAPI&quot;=2  -Wp64 -EHsc"
-				AdditionalIncludeDirectories="&quot;.\src\include&quot;"
+				AdditionalIncludeDirectories="..\..\src\include;..\..\src\include\dataman"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -123,119 +123,104 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath=".\c.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\main.cc">
+			</File>
 			<Filter
 				Name="core"
 				Filter="">
+			</Filter>
+			<Filter
+				Name="dataman"
+				Filter="">
 				<File
-					RelativePath=".\src\core\buffer.cc">
+					RelativePath="..\..\src\dataman\buffer.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\channel.cc">
+					RelativePath="..\..\src\dataman\ConfManager.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\core.cc">
+					RelativePath="..\..\src\dataman\cstring_helper.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\cstring_helper.cc">
+					RelativePath="..\..\src\dataman\inet_helper.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\dataman.cc">
+					RelativePath="..\..\src\dataman\stringmanager.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\exception.cc">
+					RelativePath="..\..\src\dataman\tinystr.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\main.cc">
+					RelativePath="..\..\src\dataman\tinyxml.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\resource.cc">
+					RelativePath="..\..\src\dataman\tinyxmlerror.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\session.cc">
+					RelativePath="..\..\src\dataman\tinyxmlparser.cc">
+				</File>
+			</Filter>
+			<Filter
+				Name="http"
+				Filter="">
+				<File
+					RelativePath="..\..\src\http\msgdata.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\session_body.cc">
+					RelativePath="..\..\src\http\session.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\session_helper.cc">
+					RelativePath="..\..\src\http\uri.cc">
+				</File>
+			</Filter>
+			<Filter
+				Name="server"
+				Filter="">
+				<File
+					RelativePath="..\..\src\server\core.cc">
 				</File>
 				<File
-					RelativePath=".\src\core\uri.cc">
+					RelativePath="..\..\src\server\modman.cc">
+				</File>
+				<File
+					RelativePath="..\..\src\server\module.cc">
+				</File>
+				<File
+					RelativePath="..\..\src\server\service.cc">
 				</File>
 			</Filter>
 			<Filter
 				Name="sysapi"
 				Filter="">
-				<File
-					RelativePath=".\src\sysapi\win32\error.cc">
-				</File>
-				<File
-					RelativePath=".\src\sysapi\win32\file.cc">
-				</File>
-				<File
-					RelativePath=".\src\sysapi\win32\mutex.cc">
-				</File>
-				<File
-					RelativePath=".\src\sysapi\win32\process.cc">
-				</File>
-				<File
-					RelativePath=".\src\sysapi\win32\socket_in.cc">
-				</File>
-				<File
-					RelativePath=".\src\sysapi\win32\thread.cc">
-				</File>
-			</Filter>
-			<Filter
-				Name="message"
-				Filter="">
-				<File
-					RelativePath=".\src\message\error_code.cc">
-				</File>
-				<File
-					RelativePath=".\src\message\header.cc">
-				</File>
-				<File
-					RelativePath=".\src\message\httpstringmanager.cc">
-				</File>
-				<File
-					RelativePath=".\src\message\message.cc">
-				</File>
-				<File
-					RelativePath=".\src\message\response.cc">
-				</File>
-				<File
-					RelativePath=".\src\message\statusline.cc">
-				</File>
-			</Filter>
-			<Filter
-				Name="stringmanager"
-				Filter="">
-				<File
-					RelativePath=".\src\stringmanager\stringmanager.cc">
-				</File>
-			</Filter>
-			<Filter
-				Name="tinyxml"
-				Filter="">
-				<File
-					RelativePath=".\src\tinyxml\tinystr.cc">
-				</File>
-				<File
-					RelativePath=".\src\tinyxml\tinyxml.cc">
-				</File>
-				<File
-					RelativePath=".\src\tinyxml\tinyxmlerror.cc">
-				</File>
-				<File
-					RelativePath=".\src\tinyxml\tinyxmlparser.cc">
-				</File>
-			</Filter>
-			<Filter
-				Name="confmanager"
-				Filter="">
-				<File
-					RelativePath=".\src\confmanager\ConfManager.cc">
-				</File>
+				<Filter
+					Name="win32"
+					Filter="">
+					<File
+						RelativePath="..\..\src\sysapi\win32\error.cc">
+					</File>
+					<File
+						RelativePath="..\..\src\sysapi\win32\file.cc">
+					</File>
+					<File
+						RelativePath="..\..\src\sysapi\win32\mutex.cc">
+					</File>
+					<File
+						RelativePath="..\..\src\sysapi\win32\process.cc">
+					</File>
+					<File
+						RelativePath="..\..\src\sysapi\win32\shared_object.cc">
+					</File>
+					<File
+						RelativePath="..\..\src\sysapi\win32\socket_in.cc">
+					</File>
+					<File
+						RelativePath="..\..\src\sysapi\win32\thread.cc">
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -243,71 +228,90 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\src\include\buffer.hh">
+				RelativePath="..\..\src\include\zia.hh">
 			</File>
-			<File
-				RelativePath=".\src\include\channel.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\client.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\ConfManager.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\core.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\cstring_helper.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\dataman.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\exception.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\httpstringmanager.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\message.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\posix.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\resource.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\server.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\session.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\sockin.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\stringmanager.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\sysapi.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\tinystr.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\tinyxml.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\uri.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\virtual_host.hh">
-			</File>
-			<File
-				RelativePath=".\src\include\win32.hh">
-			</File>
+			<Filter
+				Name="dataman"
+				Filter="">
+				<File
+					RelativePath="..\..\src\include\dataman\buffer.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\conf.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\ConfManager.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\cstring_helper.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\dataman.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\inet_helper.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\stringmanager.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\tinystr.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\tinyxml.hh">
+				</File>
+			</Filter>
+			<Filter
+				Name="http"
+				Filter="">
+				<File
+					RelativePath="..\..\src\include\http\http.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\http\msgdata.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\http\session.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\http\uri.hh">
+				</File>
+			</Filter>
+			<Filter
+				Name="server"
+				Filter="">
+				<File
+					RelativePath="..\..\src\include\server\core.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\server\exception.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\server\modhelper.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\server\modman.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\server\module.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\server\server.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\server\service.hh">
+				</File>
+			</Filter>
+			<Filter
+				Name="sysapi"
+				Filter="">
+				<File
+					RelativePath="..\..\src\include\sysapi\sysapi.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\sysapi\win32.hh">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
