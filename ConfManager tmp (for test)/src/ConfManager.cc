@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Wed Nov 09 15:42:48 2005 Bigand Xavier
+// Last update Thu Nov 10 13:04:05 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
@@ -22,11 +22,11 @@ void	ConfManager::InitRecognizedVar()
 {
   _RecognizedVar[0].sID = "TimeOut";
   _RecognizedVar[0].bVarType = SINGLE_VALUE;
-  _RecognizedVar[0].sReelType = "integer";
+  _RecognizedVar[0].sReelType = T_INTEGER;
 
   _RecognizedVar[1].sID = "UnusedPort";
   _RecognizedVar[1].bVarType = LIST_VALUE;
-  _RecognizedVar[1].sReelType = "integer";
+  _RecognizedVar[1].sReelType = T_INTEGER;
 }
 
 void	ConfManager::InitFctPtr()

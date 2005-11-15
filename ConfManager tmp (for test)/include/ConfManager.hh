@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Wed Nov 09 15:42:27 2005 Bigand Xavier
+// Last update Thu Nov 10 13:07:39 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -35,6 +35,10 @@ using namespace	std;
 #define OP_UNDEFINED		-1
 #define OP_OR			0
 #define	OP_AND			1
+#define T_INTEGER		0
+#define T_FLOAT			1
+#define T_DOUBLE		2
+#define T_STRING		3
 
 /// An useful typedef
 typedef	vector<string>		tStringVector;
@@ -48,11 +52,13 @@ class	ConfManager
     TiXmlNode	*(ConfManager::*fct)(TiXmlNode *pCurrentContainer);
   };
 
-  struct	VarInformation
+  struct		VarInformation
   {
-    string	sID;
-    bool	bVarType;	// set for know if it's a "List" or a "Var"
-    string	sReelType;
+    string		sID;
+    bool		bVarType;	// set for know if it's a "List" or a "Var" (understand vector<string> or string)
+    char		sReelType;	// it's a flag type
+    string		sValue;
+    tStringVector	svValue;
   };
 
   tStringVector	_svListInclude;	// protect against multiple inclusion
