@@ -127,7 +127,7 @@
 				RelativePath="..\..\src\main.cc">
 			</File>
 			<Filter
-				Name="code"
+				Name="core"
 				Filter="">
 			</Filter>
 			<Filter
