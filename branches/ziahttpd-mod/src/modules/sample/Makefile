@@ -5,16 +5,16 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Tue Nov 15 16:47:13 2005 texane
+## Last update Tue Nov 15 18:43:56 2005 texane
 ##
 
 # ! Always include this file
-#!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= sample.lo
-srcs	= src/main.cc
+srcs	= src$(SLASH)main.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \
