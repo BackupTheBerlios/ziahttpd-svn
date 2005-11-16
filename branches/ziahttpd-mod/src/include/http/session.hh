@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Mon Nov 14 16:19:14 2005 
+// Last update Wed Nov 16 13:30:43 2005 
 //
 
 
@@ -21,6 +21,7 @@
 // for them to modify session related informations.
 
 
+#include <list>
 #include <dataman/conf.hh>
 #include <dataman/buffer.hh>
 #include <http/msgdata.hh>
@@ -43,12 +44,23 @@ namespace http
     session(dataman::conf&);
     ~session();
 
-    sysapi::socket_in::handle_t& hsock_con();
-    sysapi::socket_in::handle_t& hsock_srv();
+    // Access the client dedicated connection handle.
+    sysapi::socket_in::handle_t& hsock_con()
+    { return hsock_con_; }
+
+    // Access the server dedicated connection handle,
+    // bound on the local port.
+    sysapi::socket_in::handle_t& hsock_srv()
+    { return hsock_srv_; }
+
+    // {In, out}put (client's request, server's response) data related accessors
+    std::list<dataman::buffer>& hdrlines_in()	{ return hdrlines_in_; }
+    dataman::buffer& content_in()		{ return content_in_; }
+    std::list<dataman::buffer>& hdrlines_out()	{ return hdrlines_out_; }
+    dataman::buffer& content_out()		{ return content_out_; }
 
     // Put here for the moment, avoiding undef sym in symbols ...
     server::service* services_;
-
 
   private:
     // Server configuration related
@@ -64,7 +76,7 @@ namespace http
 
     // Client request (in) related
     http::msgdata info_in_;
-    dataman::buffer hdrlines_in_;
+    std::list<dataman::buffer> hdrlines_in_;
     dataman::buffer content_in_;
 
     // Requested resource naming related
@@ -72,7 +84,7 @@ namespace http
 
     // Server response (out) related
     http::msgdata info_out_;
-    dataman::buffer hdrlines_out_;
+    std::list<dataman::buffer> hdrlines_out_;
     dataman::buffer content_out_;
   };
 }

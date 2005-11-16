@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Tue Nov 15 16:45:33 2005 texane
+// Last update Wed Nov 16 12:11:18 2005 
 //
 
 
@@ -78,18 +78,15 @@ bool	server::core::reload_conf()
 {
   // Load modules
 # if defined (_WIN32)
+#	define MODDEFLT	"modules\\adm\\admin.lo"
 #	define MODTEST	"modules\\test\\test.lo"
 #	define MODADM	"modules\\adm\\admin.lo"
 # else
-#	define MODTEST	"modules/test/test.lo"
-#	define MODADM	"modules/adm/admin.lo"
+#	define MODDEFLT	"modules/default/default.lo"
 # endif // _WIN32
 
-  if (modman_.load_at_beginning(MODTEST) == false)
-    sysapi::error::stringify("ERROR LOAD MODULE");
-
-  if (modman_.load_at_beginning(MODADM, true) == false)
-    sysapi::error::stringify("ERROR LOAD MODULE");
+  if (modman_.load_at_beginning(MODDEFLT) == false)
+    sysapi::error::stringify("ERROR LOADING MODULE");
 
   return true;
 }

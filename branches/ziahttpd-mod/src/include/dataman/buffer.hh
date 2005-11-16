@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Sun Nov 13 14:27:20 2005 
+// Last update Wed Nov 16 13:39:36 2005 
 //
 
 
@@ -50,6 +50,8 @@ namespace dataman
     buffer& operator=(const std::string&);
     unsigned char& operator[](int);
     operator unsigned char*();
+
+    void prettyprint(int = 0) const;
 
 
   private:

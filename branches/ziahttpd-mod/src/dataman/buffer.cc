@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Sun Nov 13 14:51:32 2005 
+// Last update Wed Nov 16 14:01:58 2005 
 //
 
 
@@ -248,4 +248,20 @@ void	dataman::buffer::buf(unsigned char* buf, size_t sz)
 void	dataman::buffer::size(size_t sz)
 {
   sz_ = sz;
+}
+
+
+void	dataman::buffer::prettyprint(int indent) const
+{
+  for (unsigned int sz = 0; sz < sz_; ++sz)
+    {
+      if ((sz % 80) == 0)
+	{
+	  if (sz) cout << endl;
+	  for (int i = 0; i < indent; ++i) cout << "\t";
+	  cout << "[" << sz << "]: ";
+	}
+      cout << buf_[sz];
+    }
+  cout << endl;
 }
