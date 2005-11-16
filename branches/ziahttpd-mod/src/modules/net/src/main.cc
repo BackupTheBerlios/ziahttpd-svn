@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Wed Nov 16 15:26:57 2005 
+// Last update Wed Nov 16 15:58:43 2005 
 //
 
 
@@ -175,7 +175,7 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
 }
 
 
-MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session&, server::core*, int&)
+MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session& session, server::core*, int&)
 {
   // ?
   // Relasing connection.
@@ -184,6 +184,7 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session&, server::core*, int&)
   // at close time.
     
   cout << "\t[<Default Module>] Releasing connection" << endl;
+  sysapi::socket_in::terminate_connection(session.hsock_con());
 
   return true;
 }
