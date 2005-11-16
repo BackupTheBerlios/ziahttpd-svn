@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Wed Nov 16 15:58:43 2005 
+// Last update Wed Nov 16 16:16:13 2005 
 //
 
 
@@ -68,7 +68,7 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   {
     if (dataman::get_nextline(session.hsock_con(), &line, &err) == false)
       {
-	cerr << "\t\t[<Default Module>] Cannot read metadata" << endl;
+	cerr << "\t[<Default Module>] Cannot read metadata" << endl;
 	return false;
       }
 

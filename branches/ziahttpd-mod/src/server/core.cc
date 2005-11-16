@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Wed Nov 16 15:21:11 2005 
+// Last update Wed Nov 16 16:06:54 2005 
 //
 
 
@@ -79,11 +79,16 @@ bool	server::core::reload_conf()
   // Load modules
 # if defined (_WIN32)
 #	define MODNET	"modules\\net\\net.lo"
+#	define MODADM	"modules\\admin\\admin.lo"
 # else
 #	define MODNET	"modules/net/net.lo"
+#	define MODADM	"modules/admin/admin.lo"
 # endif // _WIN32
 
   if (modman_.load_at_beginning(MODNET) == false)
+    sysapi::error::stringify("ERROR LOADING MODULE");
+
+  if (modman_.load_at_beginning(MODADM) == false)
     sysapi::error::stringify("ERROR LOADING MODULE");
 
   return true;
@@ -104,6 +109,9 @@ bool	server::core::run()
   // One thread implement request handling, in order to begin
   // modularization of the request processing flow.
 
+  for (;;)
+    {
+
   // Create the server connection, accepting incoming ones
   http::session* session = new http::session(conf_);
   sysapi::socket_in::handle_t hsock_srv;
@@ -121,6 +129,8 @@ bool	server::core::run()
 
   // Delete the session
   delete session;
+
+    }
 
   return true;
 }

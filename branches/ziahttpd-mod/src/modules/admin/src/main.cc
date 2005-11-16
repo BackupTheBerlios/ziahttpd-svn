@@ -5,8 +5,16 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Mon Nov 14 16:19:53 2005 
+// Last update Wed Nov 16 16:18:30 2005 
 //
+
+
+// ?
+// This module handles administration facilities, allowing for
+// remote command line administration over http:
+// . LOAD VERSION uri
+// . UNLOAD HTTP_VERSION uri
+// . DEBUG HTTP_VERSION
 
 
 #include <zia.hh>
@@ -24,15 +32,20 @@ using std::string;
 MOD_EXPORT( HK_CREATE_CONNECTION )(http::session&, server::core*, int&);
 
 
+
 // Exported function definitions
 
 
-MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core* core, int&)
+MOD_EXPORT( HK_PARSE_RQST_METADATA )(http::session& session, server::core* core, int&)
 {
-  cout << "\t[ * ] Administration module called" << endl;
-  if (core)
-    session.services_->echo("MESSAGE FROM ADMINISTRATION MODULE");
-  cout << endl;
+
+  // ?
+  // The module must be loaded after http parser in the zia
+  // configuration file (actually it needs the status line to be parsed).
+
+  // if (session.msgdata... == LOAD | UNLOAD | DEBUG)
+
+  cout << "[ + <Administration module>] " << endl;
 
   return true;
 }
