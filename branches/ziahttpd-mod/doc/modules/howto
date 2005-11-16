@@ -1,0 +1,14 @@
+[*] Module programming guidelines for the zia project.
+
+
+[*] Programming notes
+The server has a modular design. Everyone can plugged its own module, being load at runtime by the server core.
+As a programmer, you may want to develop your own module; In order to do so, you will have to follow a certain
+number of rules, and take into account details that are described in this note.
+. A module can be placed anywhere in your filesystem, but src/modules/ is used as a convenient place, so use it;
+. src/modules/sample/ is a skul directory containing default module files; DON'T COPY SVN FILES into you newly
+  created directory (by emiting some command such as cp -rf ...)!
+. Rename <my_module>/build/sample.vcproj with your module name
+. Set the environement variable $(PROJ_ENV) $(PROJ_ROOT) $(PROJ_SYSAPI) to correct values before making
+. Typing make create a <your_module>.lo file, that's the on being load by the server core
+. The file $(PROJ_ROOT)/src/include/modhelper.hh contains necessary defined values to export module hooks
