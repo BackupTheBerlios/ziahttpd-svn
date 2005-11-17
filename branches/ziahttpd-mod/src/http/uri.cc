@@ -19,11 +19,13 @@ using std::string;
 
 http::uri::uri()
 {
+	status_ = 200;
 }
 
 
-http::uri::uri(session&)
+http::uri::uri(session& s)
 {
+
 }
 
 
@@ -31,6 +33,12 @@ int&	http::uri::status()
 {
   return status_;
 }
+
+string&	http::uri::strstatus()
+{
+  return strstatus_;
+}
+
 
 
 string&	http::uri::localname()

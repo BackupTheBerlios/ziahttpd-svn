@@ -29,6 +29,7 @@ namespace http
     uri(session&);
 
     int& status();
+    std::string& strstatus();
 
     std::string& localname();
     std::string& widename();
@@ -38,6 +39,7 @@ namespace http
   private:
 
     int status_;
+	std::string strstatus_;
 
     std::string localname_;
     std::string widename_;
@@ -50,7 +52,31 @@ namespace http
 //! \class http::uri
 //! \brief Resources naming related
 //!
-//! UNDOCUMENTED
+//! This call convert the current client query to local file from the hardisk
 
+//! \fn int& http::uri::status()
+//! \brief return the status code of the response
+//!
+//! \return status code
+
+//! \fn std::string& http::uri::strstatus()
+//! \brief return the string status code of the response
+//!
+//! \return string status code
+
+//! \fn std::string& http::uri::localname();
+//! \brief return the localname (hard disk file)
+//!
+//! \return localname
+
+//! \fn std::string& http::uri::widename();
+//! \brief return the widename (request asking page)
+//!
+//! \return widename
+
+//! \fn std::string& http::uri::extension();
+//! \brief return the file extension
+//!
+//! \return extension
 
 #endif // ! HTTP_URI_HH
