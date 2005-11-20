@@ -42,6 +42,6 @@ MOD_EXPORT( HK_PARSE_RQST_METADATA )(http::session& session, server::core* core,
 MOD_EXPORT (HK_BUILD_RESP_METADATA)(http::session& session, server::core* core, int&)
 {
 	if (session.uri().status() == 301)
-		session.info_out()["Location"] = "http://" + session.info_in()["host"] + session.uri().localname();
+		session.info_out()["Location"] = "http://" + session.info_in()["host"] + session.uri().widename();
 	return (true);
 }

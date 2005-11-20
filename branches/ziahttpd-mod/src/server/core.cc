@@ -82,12 +82,22 @@ bool	server::core::reload_conf()
 #	define MODNET	"modules\\net\\net.lo"
 #	define MODADM	"modules\\admin\\admin.lo"
 #	define MODHTTP	"modules\\http1.1\\http1.1.lo"
+#	define MODWWW2LOCAL	"modules\\www2local\\www2local.lo"
+#	define MODMOVEURI "modules\\moveuri\\moveuri.lo"
 # else
 #	define MODHTTP	"modules/admin/admin.lo"
 #	define MODNET	"modules/net/net.lo"
 #	define MODADM	"modules/admin/admin.lo"
-
+#   define MODWWW2LOCAL "modules/www2local/www2local.lo"
+#   define MODMOVEURI "modules/moveuri/moveuri.lo"
 # endif // _WIN32
+
+
+	if (modman_.load_at_beginning(MODMOVEURI) == false)
+		sysapi::error::stringify("ERROR LOADING MODULE");
+
+	if (modman_.load_at_beginning(MODWWW2LOCAL) == false)
+		sysapi::error::stringify("ERROR LOADING MODULE");
 
 	if (modman_.load_at_beginning(MODHTTP) == false)
 		sysapi::error::stringify("ERROR LOADING MODULE");

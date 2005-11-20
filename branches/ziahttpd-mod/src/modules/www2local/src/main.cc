@@ -30,6 +30,6 @@ MOD_EXPORT( HK_PARSE_RQST_METADATA )(http::session&, server::core*, int&);
 MOD_EXPORT( HK_PARSE_RQST_METADATA )(http::session& session, server::core* core, int&)
 {
 	session.uri().localname() = "../root/www" + session.uri().widename();
-
+	std::cout << "localfile :" << session.uri().localname() << std::endl;
 	return (true);
 }

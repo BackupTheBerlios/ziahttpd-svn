@@ -91,6 +91,8 @@ bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 	if (!*str)
 		return (false);
 	*str++ = '\0';
+	while (*str == ' ')
+		str++;
 	p.normalize(tmp);
 	hdrlines_[tmp] = str;
 	return (true);
