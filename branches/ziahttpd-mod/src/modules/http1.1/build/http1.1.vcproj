@@ -124,26 +124,30 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\..\..\dataman\buffer.cc">
-			</File>
-			<File
 				RelativePath="..\src\error_code.cc">
-			</File>
-			<File
-				RelativePath="..\..\..\sysapi\win32\file.cc">
 			</File>
 			<File
 				RelativePath="..\src\main.cc">
 			</File>
-			<File
-				RelativePath="..\..\..\http\msgdata.cc">
-			</File>
-			<File
-				RelativePath="..\..\..\dataman\stringmanager.cc">
-			</File>
-			<File
-				RelativePath="..\..\..\http\uri.cc">
-			</File>
+			<Filter
+				Name="extern"
+				Filter="">
+				<File
+					RelativePath="..\..\..\dataman\buffer.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\sysapi\win32\file.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\http\msgdata.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\dataman\stringmanager.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\http\uri.cc">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"

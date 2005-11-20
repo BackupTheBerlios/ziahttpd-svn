@@ -126,9 +126,13 @@
 			<File
 				RelativePath="..\src\main.cc">
 			</File>
-			<File
-				RelativePath="..\..\..\http\uri.cc">
-			</File>
+			<Filter
+				Name="extern"
+				Filter="">
+				<File
+					RelativePath="..\..\..\http\uri.cc">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
