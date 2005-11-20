@@ -31,7 +31,7 @@ namespace http
 
     bool parse_rqstline(dataman::buffer&, uri&);
     bool build_respline(msgdata& rqst, const uri&);
-    bool stringify_respline(dataman::buffer& metada);
+	bool stringify_respline(dataman::buffer& metada,  http::uri&);
 
     std::string& query_string();
     

@@ -15,6 +15,7 @@
 #include <dataman/buffer.hh>
 #include <vector>
 #include <dataman/stringmanager.hh>
+#include <stdio.h>
 
 using std::string;
 using dataman::buffer;
@@ -130,8 +131,20 @@ bool	http::msgdata::parse_uri(std::string& uri)
 	return (true);
 }
 
-bool	http::msgdata::stringify_respline(buffer& metadata)
+bool	http::msgdata::stringify_respline(buffer& metadata, uri& u)
 {
+	char sta[10];
 
+	sprintf(sta, "%i", u.strstatus());
+	metadata = version_ 
+			+ " "
+			+ sta 
+			+ " " 
+			+ u.strstatus() 
+			+ "\r\n";
+	for (int i = 0; i < hdrlines_.size(); i++)
+	{
+
+	}
 	return (true);
 }
