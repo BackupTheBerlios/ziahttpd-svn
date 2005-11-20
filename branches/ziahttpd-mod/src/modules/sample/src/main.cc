@@ -9,7 +9,9 @@
 //
 
 
-#include <zia.hh>
+#include <server/core.hh>
+#include <http/session.hh>
+#include <server/modhelper.hh>
 #include <string>
 #include <iostream>
 
@@ -29,10 +31,6 @@ MOD_EXPORT( HK_CREATE_CONNECTION )(http::session&, server::core*, int&);
 
 MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core* core, int&)
 {
-  cout << "\t[ * ] Administration module called" << endl;
-  if (core)
-    session.services_->echo("MESSAGE FROM ADMINISTRATION MODULE");
-  cout << endl;
-
+		session.services_->echo("salutr les amis comment ca roule");
   return true;
 }

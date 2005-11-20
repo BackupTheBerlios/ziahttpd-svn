@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Wed Nov 16 11:35:03 2005 
+## Last update Sun Nov 20 14:22:05 2005 texane
 ##
 
 # ! Always include this file
-# !include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix	
+!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix	
 
 # Give your own variables here
 name	= ziad.x
@@ -25,6 +25,7 @@ srcs	= main.cc \
 	  dataman$(SLASH)buffer.cc \
 	  dataman$(SLASH)inet_helper.cc \
 	  dataman$(SLASH)cstring_helper.cc \
+	  dataman$(SLASH)stringmanager.cc \
 	  dataman$(SLASH)ConfManager.cc \
 	  dataman$(SLASH)tinystr.cc \
 	  dataman$(SLASH)tinyxml.cc \
