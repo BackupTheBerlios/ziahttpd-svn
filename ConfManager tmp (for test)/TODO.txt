@@ -7,7 +7,17 @@ Par ordre de priorite:
 - surcharger l'operateur =  (doit avoir le meme effet que les fonctions Set*())
 - gerer aussi l'operateur + pour concatener deux vertors ou deux string
 
+- Voir s'il ne serrait pas interessant de creer une autre classe proche de la
+  TinyXml dont le ConfManager heriterait (peut etre une interface, avec toutes
+  les methodes en virtual pur)
+
 - tracer toutes les erreurs dans un fichier de log (voir la class de log)
+
+
+
+
+
+
 
 
 - Integrer la gestion des expressions et des headers a GetValues
@@ -24,18 +34,22 @@ Par ordre de priorite:
 
 
 
-- faire des test de robostesse car il y a beaucoup de pointeur non tester et il faut verifier qu'ils ne puissent pas etre NULL et a la limite voir si certain test ne sont pas inutiles
+- faire des test de robostesse car il y a beaucoup de pointeur non tester et il
+  faut verifier qu'ils ne puissent pas etre NULL et a la limite voir si certain
+  test ne sont pas inutiles
 
 
 
 
 
 
-- Faire en sorte que le server puisse demander une valeur par defaut en cas de valeur conrompue (dans ce cas reset la variable a sa valeur par defaut)
+- Faire en sorte que le server puisse demander une valeur par defaut en cas de
+  valeur conrompue (dans ce cas reset la variable a sa valeur par defaut)
   Le serveur doit verifier les valeurs apres un (re)chargement?
 
 - formatter le code (limiter les lignes a 80 caracteres)
-- voir pour d'evantuelles optimisation (surtout sur les test inutile et les pointeurs (non) stocke)
+- voir pour d'evantuelles optimisation (surtout sur les test inutile et les
+  pointeurs (non) stocke)
 
 Pour le parsing des variables d'environnement
 #include "stringmanager.hh"
