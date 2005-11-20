@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 11 17:27:27 2005 texane
-// Last update Mon Nov 14 16:09:44 2005 
+// Last update Sun Nov 20 18:00:03 2005 texane
 //
 
 
@@ -25,6 +25,8 @@ namespace server
   class core
   {
   public:
+
+    friend class service;
 
     // Initialization
     core();

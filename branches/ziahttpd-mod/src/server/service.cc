@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Sun Nov 20 17:38:54 2005 texane
+// Last update Sun Nov 20 18:25:37 2005 texane
 //
 
 
@@ -34,29 +34,36 @@ void	server::service::echo(const string& what)
 // {Load/Unload/Stat} modules services
 
 bool	server::service::load_module(const security_token_t& token,
-				     const string&,
+				     const string& before,
 				     const string& target,
-				     const string&)
+				     const string& after)
 {
   cout << "[!] Loading module: " << target
        << "with token id 0x" << std::hex
        << token << endl;
 
-//   modman_->load();
-
-  // Module loading succeeded
-  return true;
+  return core::instance()->modman_.load_at_beginning(target);
 }
 
-bool	server::service::unload_module(const security_token_t&,
-				       const string&)
+bool	server::service::unload_module(const security_token_t& token,
+				       const string& target)
 {
-  return false;
+  cout << "[!] Loading module: " << target
+       << "with token id 0x" << std::hex
+       << token << endl;
+
+  return core::instance()->modman_.unload(target);
 }
 
-bool	server::service::stat_module(const security_token_t&,
-				     const string&)
+bool	server::service::stat_module(const security_token_t& token,
+				     const string& target)
 {
+  cout << "[!] Loading module: " << target
+       << "with token id 0x" << std::hex
+       << token << endl;
+
+  cout << "[!] SERVICE NOT YET IMPLEMENTED BY SERVER" << endl;
+
   return false;
 }
 

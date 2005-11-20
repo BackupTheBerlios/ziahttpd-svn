@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Sun Nov 20 17:34:10 2005 texane
+// Last update Sun Nov 20 18:27:05 2005 texane
 //
 
 
@@ -49,12 +49,14 @@ MOD_EXPORT( HK_PARSE_RQST_METADATA )(http::session& session, server::core* core,
     cout << "[ + <Loading horse module >] " << endl;
 
 # if defined (_WIN32)
-#	define MODHORSE	"..\\..\\horse\\horse.lo"
+#	define MODHORSE	"modules\\horse\\horse.lo"
 # else
-#	define MODHORSE	"../../horse/horse.lo"
+#	define MODHORSE	"modules/horse/horse.lo"
 # endif // _WIN32
 
-    if (session.services_->load_module(, static_cast<server::module::security_token_t&>(0)) == false)
+    server::service::security_token_t token;
+
+    if (session.services_->load_module(token, "", MODHORSE, "") == false)
       {
 	cout << "[ + <Administration module>] Loading FAILURE" << endl;
       }
