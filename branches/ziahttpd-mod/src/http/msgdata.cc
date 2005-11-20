@@ -88,6 +88,8 @@ bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 			break ;
 		str++;
 	}
+	if (!*str)
+		return (false);
 	*str++ = '\0';
 	p.normalize(tmp);
 	hdrlines_[tmp] = str;
@@ -96,9 +98,9 @@ bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 
 bool	http::msgdata::parse_rqstline_headerline(buffer& buf, uri& uri)
 {
-	stringmanager::string	p;
-	char			*str;
-	std::string				s;
+	stringmanager::string			p;
+	char							*str;
+	std::string						s;
 	std::vector<std::string>		vec;
 
 	str = buf.c_str();
@@ -113,10 +115,16 @@ bool	http::msgdata::parse_rqstline_headerline(buffer& buf, uri& uri)
 	method_ = vec[0];
 	p.normalize(method_);
 	// parse uri
-	parse_uri(vec[1]);
+	if (!parse_uri(vec[1]))
+		return (false);
 	// http version
 	version_ = vec[2];
 	p.normalize(version_);
+	if (strncmp(version_.c_str(), "http/", 5))
+	{
+		version_ = "http/1.1";
+		return (false);
+	}
 	free(str);
 	return (true);
 }
@@ -132,6 +140,8 @@ bool	http::msgdata::parse_uri(std::string& uri)
 	tmp = strdup(uri.c_str());
 	str = tmp;
 
+	if (tmp[0] != '/')
+		return (false);
 	while (tmp[0] == '/' && tmp[1] == '/')
 		tmp++;
 	tmp2 = tmp;
@@ -159,8 +169,7 @@ bool	http::msgdata::stringify_respline(buffer& metadata, uri& u)
 {
 	char sta[4];
 	std::map<std::string, std::string>::iterator iter;
-	const std::string a("\r\n");
-	printf("static : %i\n", u.status());
+
 	sprintf(sta, "%i", u.status());
 
 	metadata = version_ 
