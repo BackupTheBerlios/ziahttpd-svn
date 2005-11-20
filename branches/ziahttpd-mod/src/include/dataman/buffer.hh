@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Wed Nov 16 13:39:36 2005 
+// Last update Sun Nov 20 14:49:07 2005 texane
 //
 
 
@@ -46,6 +46,7 @@ namespace dataman
 
     buffer operator+(const buffer&);
     buffer& operator+=(const buffer&);
+    buffer& operator+=(const std::string&);
     buffer& operator=(const buffer&);
     buffer& operator=(const std::string&);
     unsigned char& operator[](int);

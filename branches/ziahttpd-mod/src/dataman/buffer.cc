@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Wed Nov 16 14:01:58 2005 
+// Last update Sun Nov 20 14:56:32 2005 texane
 //
 
 
@@ -177,7 +177,7 @@ dataman::buffer& dataman::buffer::operator+=(const buffer& b)
 {
   unsigned char* wrk;
 
-  // copy
+  // Copy
   wrk = new unsigned char[sz_ + b.sz_];
   if (buf_)
     {
@@ -190,6 +190,30 @@ dataman::buffer& dataman::buffer::operator+=(const buffer& b)
   // affect and release internal buffer
   buf_ = wrk;
   sz_ += b.sz_;
+
+  return *this;
+}
+
+
+dataman::buffer&	dataman::buffer::operator+=(const string& s)
+{
+  unsigned char* wrk;
+
+  if (!s.size())
+    return *this;
+  
+  // Copy
+  wrk = new unsigned char[sz_ + s.size()];
+  if (buf_)
+    {
+      bufcpy(wrk, buf_, sz_);
+      delete[] buf_;
+    }
+
+  // Append the string content to (buf_, sz_)
+  bufcpy(wrk + sz_, reinterpret_cast<const unsigned char*>(s.c_str()), s.size());
+  buf_ = wrk;
+  sz_ += s.size();
 
   return *this;
 }
