@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 26 15:24:49 2005 
-// Last update Sun Nov 20 14:38:26 2005 texane
+// Last update Sun Nov 20 15:08:08 2005 texane
 //
 
 
@@ -37,8 +37,18 @@ namespace server
     {
       // Base class for error handling
     public:
-      bool	report();
-      bool	solve();
+      bool	report()
+      {
+	std::cerr << "Unknown error occured (<zia-base-exception>)" << std::endl;
+	return false;
+      }
+
+      bool	solve()
+      {
+	std::cerr << "Fatal error, no error handler." << std::endl;
+	exit(-1);
+	return false;
+      }
     };
   }
 }
@@ -56,15 +66,11 @@ namespace server
     public:
       bool	report()
       {
-	cerr << "Unknown error occured (" << EID << ")" << endl;
-	return false;
+	return base::report();
       }
-
       bool	solve()
       {
-	cerr << "Fatal error, no error handler." << endl;
-	exit(-EID);
-	return false;
+	return base::solve();
       }
     };
   }

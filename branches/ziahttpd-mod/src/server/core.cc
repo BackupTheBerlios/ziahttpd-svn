@@ -5,13 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Sun Nov 20 14:18:27 2005 texane
+// Last update Sun Nov 20 15:04:46 2005 texane
 //
 
 
 #include <string>
 #include <iostream>
 #include <server/core.hh>
+#include <server/server.hh>
 #include <server/modhelper.hh>
 #include <sysapi/sysapi.hh>
 #include <dataman/conf.hh>
@@ -112,23 +113,23 @@ bool	server::core::run()
   for (;;)
     {
 
-  // Create the server connection, accepting incoming ones
-  http::session* session = new http::session(conf_);
-  sysapi::socket_in::handle_t hsock_srv;
-  sysapi::socket_in::handle_t hsock_con;
-  sysapi::socket_in::create_listening(&hsock_srv, 40000);
-  session->hsock_srv() = hsock_srv;
-  sysapi::socket_in::accept(&hsock_con, hsock_srv);
-  session->hsock_con() = hsock_con;
+      // Create the server connection, accepting incoming ones
+      http::session* session = new http::session(conf_);
+      sysapi::socket_in::handle_t hsock_srv;
+      sysapi::socket_in::handle_t hsock_con;
+      sysapi::socket_in::create_listening(&hsock_srv, 40000);
+      session->hsock_srv() = hsock_srv;
+      sysapi::socket_in::accept(&hsock_con, hsock_srv);
+      session->hsock_con() = hsock_con;
 
-  // Create the request processing thread
-  sysapi::thread::handle_t hthread;
-  sysapi::thread::create_and_exec(&hthread, server::core::process_request, reinterpret_cast<sysapi::thread::param_t>(session));
-  sysapi::thread::wait_single(hthread);
-  sysapi::thread::release(hthread);
+      // Create the request processing thread
+      sysapi::thread::handle_t hthread;
+      sysapi::thread::create_and_exec(&hthread, server::core::process_request, reinterpret_cast<sysapi::thread::param_t>(session));
+      sysapi::thread::wait_single(hthread);
+      sysapi::thread::release(hthread);
 
-  // Delete the session
-  delete session;
+      // Delete the session
+      delete session;
 
     }
 
@@ -166,9 +167,14 @@ sysapi::thread::retcode_t	server::core::process_request(sysapi::thread::param_t 
       modman::instance()->call_hooks(core::instance(), modman::RELEASE_CON, session);
 
     }
+  catch (exception::base& err)
+    {
+      err.report();
+      err.solve();
+    }
   catch (...)
     {
-      cerr << "[!] Error occured in error processing" << endl;
+      cerr << "<not-a-zia> exception caugth" << endl;
     }
 
   cout << "[?] Returning from processing function" << endl;

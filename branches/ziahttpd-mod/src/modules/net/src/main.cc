@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Wed Nov 16 16:16:13 2005 
+// Last update Sun Nov 20 15:16:23 2005 texane
 //
 
 
@@ -72,7 +72,7 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
 	return false;
       }
 
-    dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), reinterpret_cast<size_t>(strlen(line)));
+    dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
     session.hdrlines_in().push_front(buffer);
     free(line);
   }
@@ -80,7 +80,7 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   // Read headerlines
   while (dataman::get_nextline(session.hsock_con(), &line, &err) && strlen(line))
     {
-      dataman::buffer buffer(reinterpret_cast<unsigned char*>(line), reinterpret_cast<size_t>(strlen(line)));
+      dataman::buffer buffer(reinterpret_cast<unsigned char*>(line), strlen(line));
       session.hdrlines_in().push_back(buffer);
       free(line);
     }
