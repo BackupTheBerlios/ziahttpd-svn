@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Sun Nov 20 14:22:05 2005 texane
+## Last update Sun Nov 20 14:25:11 2005 texane
 ##
 
 # ! Always include this file
@@ -19,6 +19,7 @@ srcs	= main.cc \
 	  server$(SLASH)modman.cc \
 	  server$(SLASH)module.cc \
 	  server$(SLASH)service.cc \
+	  server$(SLASH)exception.cc \
 	  http$(SLASH)session.cc \
 	  http$(SLASH)msgdata.cc \
 	  http$(SLASH)uri.cc \
