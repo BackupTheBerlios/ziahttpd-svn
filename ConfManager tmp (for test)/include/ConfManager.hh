@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Sun Nov 20 16:44:30 2005 Bigand Xavier
+// Last update Sun Nov 20 18:07:59 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -18,6 +18,7 @@
 #include <vector>
 #include <cctype>	// for using std::tolwer and std::toupper
 #include <algorithm>	// for using std::transform (convert string case)
+
 #include "tinyxml.hh"
 
 using namespace	std;
@@ -92,7 +93,7 @@ class	ConfManager
   void		CheckValue(string sSearch, int iVarType);	// in progress
 
  public:
-  ConfManager(char **av = NULL, const char &ConfFile = DEFAULT_FILE[0]);	// OK
+  ConfManager(int ac = 0, char **av = NULL, const char &ConfFile = DEFAULT_FILE[0]);	// OK
   ~ConfManager();							// OK
 
   string	&GetSimpleString(string sVar) {return (*_mSimpleData)[sVar];};	// OK
@@ -117,6 +118,12 @@ class	ConfManager
 /// or since its own resources to have the configuration by default.
 /// After the loading starting from a file it supplements the missing data or
 /// on the contrary removes those which are not recognized by the server.
+
+
+
+//
+// Private members
+//
 
 
 
@@ -166,6 +173,12 @@ class	ConfManager
 /// At this time, she can only do an "equal" or "diff" comparaison.
 /// In futher she must convert 'string' in 'double' for the others comparaison
 /// operator.
+
+
+
+//
+// Protected members
+//
 
 
 
@@ -229,6 +242,26 @@ class	ConfManager
 ///
 /// This function analyses the file and save variables in memory, she is also
 /// call for excute "Do" block for a "Loop" or a "Eval".
+
+/// \fn void ConfManager::RemoveAndAddVar()
+/// \brief this function remove unreconized variable
+///
+/// This function seeks the recognized variables, checks them and records them.
+/// If the variable does not exist (absent from file of configuration) it will
+/// use the variable by defect.
+/// The not recognized variables will not be recorded.
+
+/// \fn void ConfManager::CheckValue(string sSearch, int iVarType)
+/// \brief this function is called by "RemoveAndAddVar()"
+///
+/// This function set value wich correspond at the key sSearch at the default
+/// value if the variable is not correct.
+
+
+
+//
+// Public members
+//
 
 
 

@@ -1,4 +1,15 @@
-Jeudi :
+Par ordre de priorite:
+- Definir les option de la ligne de commande pour coder ensuite son traitement
+
+- Faire la fonction "ConfManager::CheckValue(string sSearch, int iVarType)"
+
+- surcharger l'operateur [] (doit avoir le meme effet que les fonctions Get*())
+- surcharger l'operateur =  (doit avoir le meme effet que les fonctions Set*())
+- gerer aussi l'operateur + pour concatener deux vertors ou deux string
+
+- tracer toutes les erreurs dans un fichier de log (voir la class de log)
+
+
 - Integrer la gestion des expressions et des headers a GetValues
 
 - Creer une methode specifique pour gere une valeur particuliere d'une liste
@@ -6,25 +17,9 @@ Jeudi :
   la methode doit directement retourner la bonne valeur sous forme de string
   ou "" si elle echoue et integrer cette fonction a GetValues (faire un appel)
 
-A faire pour les jours suivants :
-
-
-
-- surcharger l'operateur [] (doit avoir le meme effet que les fonctions Get*())
-- surcharger l'operateur =  (doit avoir le meme effet que les fonctions Set*())
-- gerer aussi l'operateur + pour concatener deux vertors ou deux string
-
-
 - gerer le env
 
 - gerer les boucles
-
-- voir pour les options (ligne de commande)
-
-- gerer aussi la conf par defaut s'il n'y a pas de fichier
-
-- enlever les variables non reconnues par le serveur (case sensitive sur les noms des variables)
-
 
 
 
@@ -34,11 +29,6 @@ A faire pour les jours suivants :
 
 
 
-- revoir le tri des fonctions (plusieurs fichiers?)
-
-- ne pas enregistrer les variables egale a ""
-
-- tracer toutes les erreurs dans un fichier de log
 
 
 - Faire en sorte que le server puisse demander une valeur par defaut en cas de valeur conrompue (dans ce cas reset la variable a sa valeur par defaut)
@@ -47,7 +37,7 @@ A faire pour les jours suivants :
 - formatter le code (limiter les lignes a 80 caracteres)
 - voir pour d'evantuelles optimisation (surtout sur les test inutile et les pointeurs (non) stocke)
 
-Pour les variables d'environnement
+Pour le parsing des variables d'environnement
 #include "stringmanager.hh"
 stringmanager::sring p;
 p.split();

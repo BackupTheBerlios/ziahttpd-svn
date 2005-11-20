@@ -13,7 +13,7 @@
 
 int		main(int ac, char **av)
 {
-  ConfManager	Conf(av);
+  ConfManager	Conf(ac, av);
   tStringVector	var;
   int		i;
 

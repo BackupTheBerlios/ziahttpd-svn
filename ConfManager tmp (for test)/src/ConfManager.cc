@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Sun Nov 20 17:26:39 2005 Bigand Xavier
+// Last update Sun Nov 20 18:07:45 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
@@ -105,7 +105,7 @@ void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStri
 	  tStringVector	svTmp;
 
 	  GetValues(pChildContainer, sTmp, svTmp); // debut de la recursivite
-	  if (InsensitiveCmp(sElement, "var") && sTmp != "") // ne pas remplacer une valeur par ""
+	  if (InsensitiveCmp(sElement, "var") && !sTmp.empty()) // ne pas remplacer une valeur par ""
 	    (*_mSimpleData)[sName] = sTmp; // replace old value by new
 	  else if (InsensitiveCmp(sElement, "list") && !svTmp.empty())
 	    (*_mListData)[sName].insert((*_mListData)[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
@@ -276,7 +276,7 @@ TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
   pChildContainer = NULL;
   pNextContainer = pCurrentContainer->NextSibling();
   sName = MyAttribute(pCurrentContainer->ToElement(), "name");
-  if (sName != "") // do anything if attribute name doesn't exist
+  if (!sName.empty()) // do anything if attribute name doesn't exist
     for (pCurrentContainer = pCurrentContainer->FirstChild();
 	 pCurrentContainer;
 	 pCurrentContainer = pCurrentContainer->NextSibling())
@@ -287,7 +287,7 @@ TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 	    GetValues(pChildContainer, sValue, svValue);
 	    // This function don't reconize element add -> don't set value
 	    // It's why I give her the child container (element)
-	    if (sValue != "")
+	    if (!sValue.empty())
 	      (*_mListData)[sName].push_back(sValue);
 	    else
 	      (*_mListData)[sName].insert((*_mListData)[sName].begin(), svValue.begin(), svValue.end()); // add new vector at the old
@@ -396,7 +396,7 @@ TiXmlNode	*ConfManager::ManageDel(TiXmlNode *pCurrentContainer)
   cout << endl << "ici" << endl;
   sName = MyAttribute(pCurrentContainer->ToElement(), "name");
   sElem = MyAttribute(pCurrentContainer->ToElement(), "elem");
-  if (sElem != "")
+  if (!sElem.empty())
     {
       for (i = 0, itIterator = (*_mListData)[sName].begin();
 	   itIterator != (*_mListData)[sName].end() && i < atoi(sElem.c_str()) - 1;
@@ -506,7 +506,7 @@ void	ConfManager::CheckValue(string sSearch, int iVarType)
 
 
 
-ConfManager::ConfManager(char **av, const char &ConfFile)
+ConfManager::ConfManager(int ac, char **av, const char &ConfFile)
 {
   //InitRecognizedVar();
   // appeler la fonction qui gere les options (char **av)
@@ -531,7 +531,7 @@ int	ConfManager::Clear()
 int	ConfManager::Reload(string sConfFile)
 {
   Clear();
-  if (sConfFile == "")
+  if (sConfFile.empty())
     sConfFile = _LoadedFile;
   else
     _LoadedFile = sConfFile;
