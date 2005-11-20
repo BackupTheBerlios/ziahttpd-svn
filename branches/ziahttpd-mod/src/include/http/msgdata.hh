@@ -28,13 +28,17 @@ namespace http
     ~msgdata();
 
     std::string& operator[](const std::string&);
-
+	std::string& operator=(const std::string&);
     bool parse_rqstline(dataman::buffer&, uri&);
     bool build_respline(msgdata& rqst, const uri&);
 	bool stringify_respline(dataman::buffer& metada,  http::uri&);
 
-    std::string& query_string();
-    
+	std::string& method_string()	{ return method_; };
+	std::string& version_string()	{ return version_; };
+	std::string& uri_string()		{ return uri_; };
+	std::string& query_string();
+
+	msgdata& operator=(msgdata&);
   private:
 	  std::string								method_;
 	  std::string								uri_;

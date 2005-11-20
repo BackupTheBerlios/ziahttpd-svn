@@ -16,8 +16,10 @@
 #include <vector>
 #include <dataman/stringmanager.hh>
 #include <stdio.h>
+#include <iostream>
 
 using std::string;
+
 using dataman::buffer;
 
 
@@ -36,22 +38,33 @@ string&	http::msgdata::operator[](const string& key)
 	return (hdrlines_[str]);
 }
 
+string&	http::msgdata::operator=(const string& val)
+{
+	string t(val);
+	return (t);
+}
 
 bool	http::msgdata::parse_rqstline(buffer& buf, uri& uri)
 {
 	static	bool	status_line = true;
 
 	if (!status_line)
+	{
+		status_line = false;
 		return (parse_rqstline_statusline(buf, uri));
+	}
 	else
+	{
+		status_line = false;
 		return (parse_rqstline_headerline(buf, uri));
+	}
 	return false;
 }
 
 
 bool	http::msgdata::build_respline(msgdata& rqst, const uri&)
 {
-	
+
 	return (false);
 }
 
@@ -84,33 +97,44 @@ bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 bool	http::msgdata::parse_rqstline_headerline(buffer& buf, uri& uri)
 {
 	stringmanager::string	p;
-	unsigned char			*str;
+	char			*str;
 	std::string				s;
 	std::vector<std::string>		vec;
 
-	str = (const_cast<dataman::buffer&>(buf));
+	str = buf.c_str();
 	s = (char *)str;
 	p.split(s, " ", vec);
 	if (vec.size() != 3)
+	{
+		free(str);
 		return (false);
+	}
 	// method
-	method_ = p.normalize(vec[0]);
+	method_ = vec[0];
+	p.normalize(method_);
 	// parse uri
 	parse_uri(vec[1]);
 	// http version
-	version_ = p.normalize(vec[2]);
+	version_ = vec[2];
+	p.normalize(version_);
+	free(str);
 	return (true);
 }
 
 bool	http::msgdata::parse_uri(std::string& uri)
 {
 	char	*tmp;
+	char	*tmp2;
 	char	*str;
 	int		flag;
 	stringmanager::string	p;
 
 	tmp = strdup(uri.c_str());
 	str = tmp;
+
+	while (tmp[0] == '/' && tmp[1] == '/')
+		tmp++;
+	tmp2 = tmp;
 	flag = 0;
 	while (*tmp)
 	{
@@ -122,7 +146,7 @@ bool	http::msgdata::parse_uri(std::string& uri)
 		tmp++;
 	}
 	*tmp = '\0';
-	uri_ = str;
+	uri_ = tmp2;
 	p.unconvert_hexa(uri_);
 	if (flag)
 		query_ = ++tmp;
@@ -133,18 +157,31 @@ bool	http::msgdata::parse_uri(std::string& uri)
 
 bool	http::msgdata::stringify_respline(buffer& metadata, uri& u)
 {
-	char sta[10];
+	char sta[4];
+	std::map<std::string, std::string>::iterator iter;
+	const std::string a("\r\n");
+	printf("static : %i\n", u.status());
+	sprintf(sta, "%i", u.status());
 
-	sprintf(sta, "%i", u.strstatus());
 	metadata = version_ 
 			+ " "
-			+ sta 
+			+ sta
 			+ " " 
 			+ u.strstatus() 
 			+ "\r\n";
-	for (int i = 0; i < hdrlines_.size(); i++)
+	for(iter = hdrlines_.begin(); iter != hdrlines_.end(); iter++)
 	{
-
+		metadata += iter->first + ": " + iter->second + "\r\n";
 	}
+	metadata += "\r\n";
 	return (true);
+}
+
+http::msgdata& http::msgdata::operator=(http::msgdata& msg)
+{
+	this->method_ = msg.method_string();
+	version_ = msg.version_string();
+	uri_ = msg.uri_string();
+	query_ = msg.query_string();
+	return (*this);
 }

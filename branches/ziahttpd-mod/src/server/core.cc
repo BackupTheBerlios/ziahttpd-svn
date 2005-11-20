@@ -81,12 +81,17 @@ bool	server::core::reload_conf()
 # if defined (_WIN32)
 #	define MODNET	"modules\\net\\net.lo"
 #	define MODADM	"modules\\admin\\admin.lo"
+#	define MODHTTP	"modules\\http1.1\\http1.1.lo"
 # else
 #	define MODNET	"modules/net/net.lo"
 #	define MODADM	"modules/admin/admin.lo"
+
 # endif // _WIN32
 
-  if (modman_.load_at_beginning(MODNET) == false)
+	if (modman_.load_at_beginning(MODHTTP) == false)
+		sysapi::error::stringify("ERROR LOADING MODULE");
+
+	if (modman_.load_at_beginning(MODNET) == false)
     sysapi::error::stringify("ERROR LOADING MODULE");
 
   if (modman_.load_at_beginning(MODADM) == false)
