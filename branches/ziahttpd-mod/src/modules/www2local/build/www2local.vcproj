@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="moveuri"
+	Name="www2local"
 	ProjectGUID="{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}"
 	RootNamespace="zia-httpd"
 	Keyword="Win32Proj">
@@ -124,19 +124,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\..\..\dataman\buffer.cc">
-			</File>
-			<File
-				RelativePath="..\..\..\sysapi\win32\file.cc">
-			</File>
-			<File
 				RelativePath="..\src\main.cc">
-			</File>
-			<File
-				RelativePath="..\..\..\http\msgdata.cc">
-			</File>
-			<File
-				RelativePath="..\..\..\dataman\stringmanager.cc">
 			</File>
 			<File
 				RelativePath="..\..\..\http\uri.cc">
