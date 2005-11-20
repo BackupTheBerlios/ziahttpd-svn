@@ -12,12 +12,34 @@
 #include <zia.hh>
 #include <string>
 #include <iostream>
+#include <dataman/stringmanager.hh>
+#include <time.h>
 
 using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
 bool	error_code_string(int status, std::string &dest);
+
+bool	response_header_date(string& dest)
+{
+	//	struct tm				*newtime;
+	char					*datestr;
+	stringmanager::string	p;
+	std::vector<std::string> v;
+	time_t t;
+	struct tm *tb;
+
+	t = time(NULL);
+	tb = localtime(&t);
+	datestr = ctime(&t);
+	datestr[strlen(datestr) - 1] = '\0';
+	p.split(datestr, " ", v);
+	dest = v[0] + ", " + v[2] + " " 
+		+ v[1] + " " + v[4] + " " + v[3] + " GMT";
+	return (true);
+}
+
 
 // List of exported functions
 MOD_EXPORT( HK_CREATE_CONNECTION )(http::session&, server::core*, int&);
@@ -59,8 +81,9 @@ MOD_EXPORT(HK_BUILD_RESP_METADATA) (http::session& session, server::core* core, 
 {
 
 	session.info_out().build_respline(session.info_in(), session.uri());
-	session.info_out()["ServEur"] = "salut";
 	session.info_out()["Serveur"] = "TrancheD Ejambon 0.1 beta version ;)";
+	response_header_date(session.info_out()["Date"]);
+
 	return (true);
 }
 
@@ -68,8 +91,8 @@ MOD_EXPORT(HK_BUILD_RESP_METADATA) (http::session& session, server::core* core, 
 MOD_EXPORT(HK_ALTER_RESP_METADATA) (http::session& session, server::core* core, int& status)
 {
 	error_code_string(session.uri().status(), session.uri().strstatus());
-	session.info_out().stringify_respline(session.content_out(), session.uri());
-	session.content_out().display();
+	session.info_out().stringify_respline(session.hdrlines_out(), session.uri());
+	session.hdrlines_out().display();
 	return (true);
 }
 
