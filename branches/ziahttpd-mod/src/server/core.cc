@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Sun Nov 20 17:33:02 2005 texane
+// Last update Sun Nov 20 19:14:05 2005 texane
 //
 
 
@@ -83,6 +83,7 @@ bool	server::core::reload_conf()
 #	define MODADM	"modules\\admin\\admin.lo"
 #	define MODHTTP	"modules\\http1.1\\http1.1.lo"
 # else
+#	define MODHTTP	"modules/admin/admin.lo"
 #	define MODNET	"modules/net/net.lo"
 #	define MODADM	"modules/admin/admin.lo"
 

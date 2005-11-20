@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Sun Nov 20 19:04:40 2005 texane
+// Last update Sun Nov 20 19:12:58 2005 texane
 //
 
 
@@ -153,14 +153,6 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
 
     cout << "\t[<Default Module>] Response metadata" << endl;
     cout << "\t{" << endl;
-    cout << "\t}" << endl;
-  }
-
-  // Display data
-  {
-    cout << "\t[<Default Module>] Response data, size: " << session.content_out().size() << endl;
-    cout << "\t{" << endl;
-    session.content_out().prettyprint(2);
     cout << "\t}" << endl;
   }
 
