@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Thu Nov 10 13:07:39 2005 Bigand Xavier
+// Last update Sun Nov 20 16:44:30 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
@@ -55,8 +55,8 @@ class	ConfManager
   struct		VarInformation
   {
     string		sID;
-    bool		bVarType;	// set for know if it's a "List" or a "Var" (understand vector<string> or string)
-    char		sReelType;	// it's a flag type
+    int			iVarType;	// set for know if it's a "List" or a "Var" (understand vector<string> or string)
+    char		cReelType;	// it's a flag type
     string		sValue;
     tStringVector	svValue;
   };
@@ -75,10 +75,10 @@ class	ConfManager
 
  protected:
   string			_LoadedFile;	// sav conf file path for reload
-  map<string, string>		_mSimpleData;
-  map<string, tStringVector>	_mListData;
-  ManageContainer		_Container[NB_CONTAINER];
-  VarInformation		_RecognizedVar[NB_RECOGNIZED_VAR];
+  map<string, string>		*_mSimpleData;
+  map<string, tStringVector>	*_mListData;
+  ManageContainer		*_Container;
+  VarInformation		*_RecognizedVar;
 
   TiXmlNode	*ManageRequiere(TiXmlNode *pCurrentContainer);	// in progress
   TiXmlNode	*ManageInclude(TiXmlNode *pCurrentContainer);	// OK
@@ -88,17 +88,17 @@ class	ConfManager
   TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool *pbRes);	// OK, must test it, and some features depend to Eval_Expression()
   TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
   void		DumpToMemory(TiXmlNode *pParent);		// OK
-  void		RemoveUnrecognizedVar();
-
+  void		RemoveAndAddVar();				// in progrees
+  void		CheckValue(string sSearch, int iVarType);	// in progress
 
  public:
-  ConfManager(char **av, const char &ConfFile = DEFAULT_FILE[0]);	// OK
+  ConfManager(char **av = NULL, const char &ConfFile = DEFAULT_FILE[0]);	// OK
   ~ConfManager();							// OK
 
-  string	&GetSimpleString(string sVar) {return _mSimpleData[sVar];};	// OK
-  tStringVector	&GetListVector(string sVar) {return _mListData[sVar];};		// OK
-  int		SetSimpleString(string sVar, string sValue) {_mSimpleData[sVar] = sValue; return true;};	// OK
-  int		SetListVector(string sVar, tStringVector Value) {_mListData[sVar] = Value; return true;};	// OK
+  string	&GetSimpleString(string sVar) {return (*_mSimpleData)[sVar];};	// OK
+  tStringVector	&GetListVector(string sVar) {return (*_mListData)[sVar];};		// OK
+  int		SetSimpleString(string sVar, string sValue) {(*_mSimpleData)[sVar] = sValue; return true;};	// OK
+  int		SetListVector(string sVar, tStringVector Value) {(*_mListData)[sVar] = Value; return true;};	// OK
   int		Clear();			// OK
   int		Reload(string sConfFile = "");	// OK
 };

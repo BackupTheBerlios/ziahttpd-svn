@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Thu Nov 10 13:04:05 2005 Bigand Xavier
+// Last update Sun Nov 20 17:26:39 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
@@ -21,12 +21,12 @@
 void	ConfManager::InitRecognizedVar()
 {
   _RecognizedVar[0].sID = "TimeOut";
-  _RecognizedVar[0].bVarType = SINGLE_VALUE;
-  _RecognizedVar[0].sReelType = T_INTEGER;
+  _RecognizedVar[0].iVarType = SINGLE_VALUE;
+  _RecognizedVar[0].cReelType = T_INTEGER;
 
   _RecognizedVar[1].sID = "UnusedPort";
-  _RecognizedVar[1].bVarType = LIST_VALUE;
-  _RecognizedVar[1].sReelType = T_INTEGER;
+  _RecognizedVar[1].iVarType = LIST_VALUE;
+  _RecognizedVar[1].cReelType = T_INTEGER;
 }
 
 void	ConfManager::InitFctPtr()
@@ -62,7 +62,10 @@ int	ConfManager::Load(string sConfFile)
     {
       cout << "Chargement du fichier de configuration." << endl;
       cout << "Traitement du fichier de configuration." << endl << endl;
+      _Container = new ManageContainer[NB_CONTAINER];
+      InitFctPtr();
       DumpToMemory(_pConfFile);
+      delete[] _Container;
       cout << endl << "Traitement du fichier configuration termine." << endl;
       cout << "Verification des parametres manquants." << endl;
       // verifier que la validite des parametres indispensable
@@ -103,12 +106,12 @@ void		ConfManager::GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStri
 
 	  GetValues(pChildContainer, sTmp, svTmp); // debut de la recursivite
 	  if (InsensitiveCmp(sElement, "var") && sTmp != "") // ne pas remplacer une valeur par ""
-	    _mSimpleData[sName] = sTmp; // replace old value by new
+	    (*_mSimpleData)[sName] = sTmp; // replace old value by new
 	  else if (InsensitiveCmp(sElement, "list") && !svTmp.empty())
-	    _mListData[sName].insert(_mListData[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
+	    (*_mListData)[sName].insert((*_mListData)[sName].begin(), svTmp.begin(), svTmp.end()); // add new vector at the old
 	}
-      sValue = _mSimpleData[sName];
-      svValue = _mListData[sName];
+      sValue = (*_mSimpleData)[sName];
+      svValue = (*_mListData)[sName];
     }
 }
 
@@ -186,7 +189,7 @@ string	ConfManager::EvalExpression(TiXmlNode *pCurrentContainer, bool *pbRes)
     sCompartor = (pCurrentContainer->ToText())->ValueStr();
   if (sCompartor == "equal")
     {
-      if (_mSimpleData[sValue1] == _mSimpleData[sValue2])
+      if ((*_mSimpleData)[sValue1] == (*_mSimpleData)[sValue2])
 	{
 	  *pbRes = true;
 	  return EXPR_TRUE;
@@ -196,7 +199,7 @@ string	ConfManager::EvalExpression(TiXmlNode *pCurrentContainer, bool *pbRes)
     }
   if (sCompartor == "diff")
     {
-      if (_mSimpleData[sValue1] != _mSimpleData[sValue2])
+      if ((*_mSimpleData)[sValue1] != (*_mSimpleData)[sValue2])
 	{
 	  *pbRes = true;
 	  return EXPR_TRUE;
@@ -279,15 +282,15 @@ TiXmlNode	*ConfManager::ManageList(TiXmlNode *pCurrentContainer)
 	 pCurrentContainer = pCurrentContainer->NextSibling())
       {
 	if (InsensitiveCmp(pCurrentContainer->ValueStr(), "add") &&
-	    (pChildContainer = pCurrentContainer->FirstChild()))
+	    (pChildContainer = pCurrentContainer->FirstChild())) // don't change condition order
 	  {
 	    GetValues(pChildContainer, sValue, svValue);
 	    // This function don't reconize element add -> don't set value
 	    // It's why I give her the child container (element)
 	    if (sValue != "")
-	      _mListData[sName].push_back(sValue);
+	      (*_mListData)[sName].push_back(sValue);
 	    else
-	      _mListData[sName].insert(_mListData[sName].begin(), svValue.begin(), svValue.end()); // add new vector at the old
+	      (*_mListData)[sName].insert((*_mListData)[sName].begin(), svValue.begin(), svValue.end()); // add new vector at the old
 	  }
       }
   return pNextContainer;
@@ -390,22 +393,21 @@ TiXmlNode	*ConfManager::ManageDel(TiXmlNode *pCurrentContainer)
   int		i;
   tStringVector::iterator	itIterator;
 
-
   cout << endl << "ici" << endl;
   sName = MyAttribute(pCurrentContainer->ToElement(), "name");
   sElem = MyAttribute(pCurrentContainer->ToElement(), "elem");
   if (sElem != "")
     {
-      for (i = 0, itIterator = _mListData[sName].begin();
-	   itIterator != _mListData[sName].end() && i < atoi(sElem.c_str()) - 1;
+      for (i = 0, itIterator = (*_mListData)[sName].begin();
+	   itIterator != (*_mListData)[sName].end() && i < atoi(sElem.c_str()) - 1;
 	   i++, itIterator++)
 	;
-      _mListData[sName].erase(itIterator);
+      (*_mListData)[sName].erase(itIterator);
     }
   else
     {
-      _mSimpleData.erase(sName);
-      _mListData.erase(sName);
+      (*_mSimpleData).erase(sName);
+      (*_mListData).erase(sName);
     }
   return pCurrentContainer->NextSibling();
 }
@@ -415,7 +417,7 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
   if (!pCurrentContainer)
     return;
 
-  int		iTypeContainer;
+  int	iTypeContainer;
 
   pCurrentContainer = pCurrentContainer->FirstChild(); // skip DOCUMENT
   while (pCurrentContainer)
@@ -448,7 +450,50 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
     }
 }
 
-void	ConfManager::RemoveUnrecognizedVar()
+void	ConfManager::RemoveAndAddVar()
+{
+  int		i;
+  string	sSearch;
+  map<string, string>		*_mTmpSimpleData;
+  map<string, tStringVector>	*_mTmpListData;
+
+  _mTmpSimpleData = new map<string, string>;
+  _mTmpListData = new map<string, tStringVector>;
+  _RecognizedVar = new VarInformation[NB_RECOGNIZED_VAR];
+  InitRecognizedVar();
+  for (i = 0; i < NB_RECOGNIZED_VAR; i++)
+    {
+      sSearch = _RecognizedVar[i].sID;
+      switch (_RecognizedVar[i].iVarType)
+	{
+	case SINGLE_VALUE:
+	  if (!(*_mSimpleData)[sSearch].empty())
+	    {
+	      CheckValue(sSearch, SINGLE_VALUE);
+	      (*_mTmpSimpleData)[sSearch] = (*_mSimpleData)[sSearch];
+	    }
+	  else
+	    (*_mTmpSimpleData)[sSearch] = _RecognizedVar[i].sValue;
+	  break;
+	case LIST_VALUE:
+	  if (!(*_mListData)[sSearch].empty())
+	    {
+	      CheckValue(sSearch, LIST_VALUE);
+	      (*_mTmpListData)[sSearch] = (*_mListData)[sSearch];
+	    }
+	  else
+	    (*_mTmpListData)[sSearch] = _RecognizedVar[i].svValue;
+	  break;
+	}
+    }
+  delete _mSimpleData;	// delete old values
+  delete _mListData;
+  _mSimpleData = _mTmpSimpleData;	// copy new values
+  _mListData = _mTmpListData;
+  delete[] _RecognizedVar;
+}
+
+void	ConfManager::CheckValue(string sSearch, int iVarType)
 {
 
 }
@@ -463,20 +508,23 @@ void	ConfManager::RemoveUnrecognizedVar()
 
 ConfManager::ConfManager(char **av, const char &ConfFile)
 {
-  InitRecognizedVar();
-  InitFctPtr();
+  //InitRecognizedVar();
   // appeler la fonction qui gere les options (char **av)
+  _mSimpleData = new map<string, string>;
+  _mListData = new map<string, tStringVector>;
   Reload(&ConfFile);
 }
 
 ConfManager::~ConfManager()
 {
+  delete _mSimpleData;
+  delete _mListData;
 }
 
 int	ConfManager::Clear()
 {
-  _mSimpleData.clear();
-  _mListData.clear();
+  (*_mSimpleData).clear();
+  (*_mListData).clear();
   return true;
 }
 
@@ -488,6 +536,6 @@ int	ConfManager::Reload(string sConfFile)
   else
     _LoadedFile = sConfFile;
   Load(sConfFile);
-  RemoveUnrecognizedVar();
+  RemoveAndAddVar();
   return true;
 }
