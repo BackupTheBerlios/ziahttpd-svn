@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Sun Nov 20 18:54:14 2005 texane
+// Last update Sun Nov 20 19:04:40 2005 texane
 //
 
 
@@ -149,18 +149,10 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
 {
   // Display meta data
   {
-    list<dataman::buffer>::iterator cur = session.hdrlines_out().begin();
-    list<dataman::buffer>::iterator end = session.hdrlines_out().end();
     int i = 0;
 
     cout << "\t[<Default Module>] Response metadata" << endl;
     cout << "\t{" << endl;
-    while (cur != end)
-      {
-	cout << "\t\t[" << i << "]: " << (unsigned char*)*cur << endl;
-	++i;
-	++cur;
-      }
     cout << "\t}" << endl;
   }
 
@@ -173,7 +165,7 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
   }
 
   // Send the response
-  return (sysapi::socket_in::send(session.hsock_con(), (unsigned char*)session.content_out(), session.content_out().size()));
+  return (sysapi::socket_in::send(session.hsock_con(), (unsigned char*)session.hdrlines_out(), session.hdrlines_out().size()));
 }
 
 
