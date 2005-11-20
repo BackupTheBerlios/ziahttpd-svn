@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 11 15:54:10 2005 texane
-// Last update Mon Nov 14 13:13:01 2005 
+// Last update Sun Nov 20 15:51:45 2005 texane
 //
 
 
@@ -102,6 +102,12 @@ namespace server
 //! of the request processing flow.
 //! See the API documentation for more information on how
 //! a request is processed by the server core.
+//! <b>TODOLIST:</b>
+//! -# Improve the module system, in order to include list of pending
+//! sessions for a given module(modules have to pass information).
+//! -# The above problem might be solved by adding a current_operation
+//! attribute in the session, in order for the module to check completion
+//! status of the services it called.
 
 
 //! \fn bool server::modman::load_at_beginning(const std::string& id,

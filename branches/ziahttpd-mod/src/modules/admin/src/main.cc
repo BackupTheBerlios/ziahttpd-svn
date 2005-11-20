@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Wed Nov 16 16:18:30 2005 
+// Last update Sun Nov 20 17:34:10 2005 texane
 //
 
 
@@ -29,7 +29,7 @@ using std::string;
 
 
 // List of exported functions
-MOD_EXPORT( HK_CREATE_CONNECTION )(http::session&, server::core*, int&);
+MOD_EXPORT( HK_PARSE_RQST_METADATA )(http::session&, server::core*, int&);
 
 
 
@@ -44,8 +44,25 @@ MOD_EXPORT( HK_PARSE_RQST_METADATA )(http::session& session, server::core* core,
   // configuration file (actually it needs the status line to be parsed).
 
   // if (session.msgdata... == LOAD | UNLOAD | DEBUG)
+  {
+    cout << "[ + <Administration module>] " << endl;
+    cout << "[ + <Loading horse module >] " << endl;
 
-  cout << "[ + <Administration module>] " << endl;
+# if defined (_WIN32)
+#	define MODHORSE	"..\\..\\horse\\horse.lo"
+# else
+#	define MODHORSE	"../../horse/horse.lo"
+# endif // _WIN32
+
+    if (session.services_->load_module(, static_cast<server::module::security_token_t&>(0)) == false)
+      {
+	cout << "[ + <Administration module>] Loading FAILURE" << endl;
+      }
+    else
+      {
+	cout << "[ + <Administration module>] Loading SUCCESS" << endl;
+      }
+  }
 
   return true;
 }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Sun Nov 20 14:56:32 2005 texane
+// Last update Sun Nov 20 17:44:49 2005 texane
 //
 
 
@@ -145,6 +145,7 @@ void	dataman::buffer::display() const
 {
   size_t i;
 
+  cout << "size: " << static_cast<int>(sz_) << ", ";
   for (i = 0; i < sz_; ++i)
     cout << buf_[i];
   cout << endl;

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Sun Nov 20 15:16:23 2005 texane
+// Last update Sun Nov 20 17:48:02 2005 texane
 //
 
 
@@ -95,7 +95,8 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
     cout << "\t{" << endl;
     while (cur != end)
       {
-	cout << "\t\t[" << i << "]: " << (unsigned char*)*cur << endl;
+	cout << "\t\t[" << i << "]: ";
+	(*cur).display();
 	++i;
 	++cur;
       }

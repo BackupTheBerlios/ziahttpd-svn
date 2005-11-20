@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Mon Nov 14 16:19:53 2005 
+// Last update Sun Nov 20 17:29:32 2005 texane
 //
 
 
@@ -31,6 +31,6 @@ MOD_EXPORT( HK_CREATE_CONNECTION )(http::session&, server::core*, int&);
 
 MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core* core, int&)
 {
-		session.services_->echo("salutr les amis comment ca roule");
+  session.services_->echo("salutr les amis comment ca roule");
   return true;
 }
