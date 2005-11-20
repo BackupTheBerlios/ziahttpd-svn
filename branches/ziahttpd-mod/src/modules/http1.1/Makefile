@@ -17,7 +17,7 @@ name	= http1.1.lo
 srcs	= src$(SLASH)main.cc	\
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)buffer.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)http$(SLASH)uri.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)http$(SLASH)error_code.cc \
+	  src$(SLASH)error_code.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)stringmanager.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)http$(SLASH)msgdata.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)cstring_helper.cc \

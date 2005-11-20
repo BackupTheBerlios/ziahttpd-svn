@@ -127,7 +127,7 @@
 				RelativePath="..\..\..\dataman\buffer.cc">
 			</File>
 			<File
-				RelativePath="..\..\..\http\error_code.cc">
+				RelativePath="..\src\error_code.cc">
 			</File>
 			<File
 				RelativePath="..\..\..\sysapi\win32\file.cc">
@@ -140,9 +140,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\dataman\stringmanager.cc">
-			</File>
-			<File
-				RelativePath=".\t.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\http\uri.cc">
