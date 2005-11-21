@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Mon Nov 21 15:52:25 2005 texane
+// Last update Mon Nov 21 20:09:48 2005 texane
 //
 
 
@@ -66,6 +66,26 @@ namespace http
     server::service* services_;
 
   private:
+
+    struct resource
+    {
+      // As connections are persistent
+      // resources associated with it should
+      // be too.
+      
+      // list of the current cgi scripts
+      struct cgi
+      {
+	int retcode_;
+	sysapi::process::handle_t hproc_;
+      };
+      std::list<sysapi::process::handle_t> hprocs_;
+
+      
+      
+
+    };
+
     // Server configuration related
     dataman::conf& conf_;
 

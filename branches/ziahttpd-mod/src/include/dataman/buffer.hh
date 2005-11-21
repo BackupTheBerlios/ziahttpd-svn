@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Sun Nov 20 14:49:07 2005 texane
+// Last update Mon Nov 21 23:17:49 2005 texane
 //
 
 
@@ -52,8 +52,10 @@ namespace dataman
     unsigned char& operator[](int);
     operator unsigned char*();
 
-    void prettyprint(int = 0) const;
-
+    std::string to_string(unsigned int = 0,
+			  unsigned int = 3,
+			  unsigned int = 1,
+			  unsigned int = 16) const;
 
   private:
 

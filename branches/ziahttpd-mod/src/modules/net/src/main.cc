@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Mon Nov 21 19:37:57 2005 texane
+// Last update Mon Nov 21 23:29:23 2005 texane
 //
 
 
@@ -73,6 +73,8 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
       }
 
     dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
+    cout << buffer.to_string() << endl;
+
     session.hdrlines_in().push_front(buffer);
     free(line);
   }

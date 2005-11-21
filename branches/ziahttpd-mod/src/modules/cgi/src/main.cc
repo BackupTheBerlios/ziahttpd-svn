@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Mon Nov 21 19:45:01 2005 texane
+// Last update Mon Nov 21 20:04:53 2005 texane
 //
 
 
@@ -169,8 +169,6 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core*, int&)
       char** env = 0;
 
       cout << "\t[ * ] CGI MODULE CALLED with method <GET>" << endl;
-      session.uri().localname() = "dir_list_windows.exe";
-//       session.uri().localname() = "cgi-get-windows.exe";
       cout << "uri      : " << session.uri().widename() << endl;
       cout << "localname: " << session.uri().localname() << endl;
       cout << "extension: " << session.uri().extension() << endl;

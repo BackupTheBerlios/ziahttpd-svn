@@ -5,11 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Sun Nov 20 17:44:49 2005 texane
+// Last update Mon Nov 21 23:29:43 2005 texane
 //
 
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <cstring>
 #include <sysapi/sysapi.hh>
@@ -17,6 +19,10 @@
 #include <http/uri.hh>
 
 
+using std::setfill;
+using std::setw;
+using std::hex;
+using std::ostringstream;
 using std::string;
 using std::cout;
 using std::endl;
@@ -276,17 +282,71 @@ void	dataman::buffer::size(size_t sz)
 }
 
 
-void	dataman::buffer::prettyprint(int indent) const
+// helper function
+
+inline static char to_printable(char c)
 {
-  for (unsigned int sz = 0; sz < sz_; ++sz)
+  if (c > 32 && c <= 127)
+    return c;
+  return '.';
+}
+
+
+string	dataman::buffer::to_string(unsigned int windent,
+				   unsigned int wborder,
+				   unsigned int wspace,
+				   unsigned int wstep) const
+{
+  ostringstream idnt;
+  ostringstream wbrd;
+  ostringstream wspc;
+  ostringstream prnt;
+  ostringstream strm;
+
+  for (unsigned int i = 0; i < windent; ++i)
+    idnt << ' ';
+
+  for (unsigned int i = 0; i < wborder; ++i)
+    wbrd << ' ';
+
+  for (unsigned int i = 0; i < wspace; ++i)
+    wspc << ' ';
+
+  for (unsigned int offset = 0; offset < sz_; ++offset)
     {
-      if ((sz % 80) == 0)
+      if ((offset % wstep) == 0)
 	{
-	  if (sz) cout << endl;
-	  for (int i = 0; i < indent; ++i) cout << "\t";
-	  cout << "[" << sz << "]: ";
+	  strm << idnt.str()
+	       << "[0x" << setfill('0')
+	       << setw(8) << offset
+	       << hex << "]"
+	       << wbrd.str();
 	}
-      cout << buf_[sz];
+
+      strm << hex << (unsigned int)buf_[offset];
+      prnt << to_printable(buf_[offset]);
+
+      if (((offset + 1) % wstep) == 0)
+	{
+	  strm << wbrd.str() << prnt.str() << "\n";
+	  prnt.str("");
+	}
+      else
+	{
+	  strm << wspc.str();
+	}
     }
-  cout << endl;
+
+  if ((offset % wstep) != 0)
+    {
+      for (int nmiss = wstep - offset % wstep; nmiss > 0; --nmiss)
+	{
+	  strm << "  ";
+	  if (nmiss > 1)
+	    strm << wspc.str();
+	}
+      strm << wbrd.str() << prnt.str();
+    }
+
+  return strm.str();
 }
