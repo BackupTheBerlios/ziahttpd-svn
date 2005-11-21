@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Sun Nov 13 23:37:51 2005 texane
+// Last update Mon Nov 21 18:34:52 2005 texane
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -91,7 +91,6 @@ namespace win32
 
     // Handle on the process
     typedef HANDLE handle_t;
-
 
     // Public interface
     bool	create_and_loadexec(handle_t*, int, const char**, const char** = NULL);
