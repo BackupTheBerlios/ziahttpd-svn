@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Sun Nov 20 19:02:34 2005 texane
+// Last update Mon Nov 21 15:52:25 2005 texane
 //
 
 
@@ -58,9 +58,10 @@ namespace http
     dataman::buffer& content_in()		{ return content_in_; }
     dataman::buffer& hdrlines_out()		{ return hdrlines_out_; }
     dataman::buffer& content_out()		{ return content_out_; }
-	http::uri& uri()					{ return uri_; }
-	http::msgdata& info_in()			{ return info_in_; }
-	http::msgdata& info_out()			{ return info_out_; }
+    http::uri& uri()				{ return uri_; }
+    http::msgdata& info_in()			{ return info_in_; }
+    http::msgdata& info_out()			{ return info_out_; }
+
     // Put here for the moment, avoiding undef sym in symbols ...
     server::service* services_;
 
