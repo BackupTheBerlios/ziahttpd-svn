@@ -1,6 +1,0 @@
-change the name of the modules in the Makefile.
-in build directory change the name of the .vcproj file.
-open the vcproj file and change the name of the project.
-add the module to the svn repository.
-do what you have to do ;).
-add the module to the zia-httpd project.
