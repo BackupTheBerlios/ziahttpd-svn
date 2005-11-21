@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Sun Nov 20 19:12:58 2005 texane
+// Last update Mon Nov 21 19:37:57 2005 texane
 //
 
 
@@ -157,7 +157,15 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
   }
 
   // Send the response
-  return (sysapi::socket_in::send(session.hsock_con(), (unsigned char*)session.hdrlines_out(), session.hdrlines_out().size()));
+  if (sysapi::socket_in::send(session.hsock_con(), (unsigned char*)session.hdrlines_out(), session.hdrlines_out().size()) == true &&
+      sysapi::socket_in::send(session.hsock_con(), (unsigned char*)session.content_out(), session.content_out().size()) == true)
+    {
+      cout << "\t[ * ] From net module: Sending Success" << endl;
+      return true;
+    }
+
+  cout << "\t[ * ] From net module: Sending Failure" << endl;
+  return false;
 }
 
 

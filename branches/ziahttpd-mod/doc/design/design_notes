@@ -1,32 +1,6 @@
+[ * ] Concerning cgi script execution:
 
-
-
-Server listens on multiple fd to accept incoming connections.
-At a first glance, it creates multiple threads listening to all
-ports specified in the configuration file.
-
-
-
-// vector of port count
-class channel
-{
-	unsigned int nr_port_;
-
-	// debugging purposes
-	int nr_con_;
-
-	// one thread at a time is accepting
-	mutex_t lock_accept_;
-	int fd_accept_;
-	
-};
-
-
-// One thread at a time should be blocked in an accept
-// call in the channel for a given port.
-vector<channel> channels[nr_port];
-
-class connection
-{
-	int fd;
-};
+ -> the session should have a list of resources
+in usage in order to maintain the pid of the associated
+cgi script the client requested. + connections are
+persistent by default, so session have to.

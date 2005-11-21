@@ -5,13 +5,14 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Mon Nov 21 18:49:28 2005 texane
+// Last update Mon Nov 21 19:45:01 2005 texane
 //
 
 
 #include <zia.hh>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 
 using std::cout;
@@ -54,20 +55,20 @@ static bool fetch_content_from_cgi(
   hin_inuse = false;
 
   // Create redirected process for the cgi execution
-  if (bufsrc.size())
+  if (bufsrc.size() == 0)
     {
       // In our case, this is a get method,
       // only the out endpoint has to be redir'ed
       ret = sysapi::process::create_outredir_and_loadexec(&hproc,
-							 &hout,
-							 ac, av, env);
+							  &hout,
+							  ac, av, env);
     }
   else
     {
       // In our case, this is a post request,
       // the two pipe endpoints have to be redir'ed.
       ret = sysapi::process::create_inoutredir_and_loadexec(&hproc,
-							    &hin, &hout,
+							    &hout, &hin,
 							    ac, av, env);
       hin_inuse = true;
     }
@@ -83,7 +84,6 @@ static bool fetch_content_from_cgi(
   if (bufsrc.size() && hin_inuse == true)
     {
       unsigned char* ptrbuf = (unsigned char*)bufsrc;
-      cout << "writing to cgi: " << bufsrc.size() << endl;
       if (sysapi::file::write(hout, const_cast<const unsigned char*>(ptrbuf), bufsrc.size()) == false)
 	{
 	  sysapi::error::stringify("Cannot write src buffer to cgi");
@@ -91,10 +91,13 @@ static bool fetch_content_from_cgi(
 	}
     }
 
-  // Read from the process(hout)
+  // Read from the process(hout),
+  // and wait for it to end
   {
     // ! Do more error checks
     buffer tmpbuf(hout);
+    sysapi::process::wait_single(hproc);
+    sysapi::process::release(hproc);
     bufdst = tmpbuf;
   }
 
@@ -135,13 +138,19 @@ static bool post_process_context(char** av,
 {
   // Release the process context.
 
-  for (int i = 0; av[i]; ++i)
-    delete[] av[i];
-  delete[] av;
+  if (av)
+    {
+      for (int i = 0; av[i]; ++i)
+	delete[] av[i];
+      delete[] av;
+    }
 
-  for (int i = 0; env[i]; ++i)
-    delete[] env[i];
-  delete[] env;
+  if (env)
+    {
+      for (int i = 0; env[i]; ++i)
+	delete[] env[i];
+      delete[] env;
+    }
 
   return true;
 }
@@ -160,6 +169,8 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core*, int&)
       char** env = 0;
 
       cout << "\t[ * ] CGI MODULE CALLED with method <GET>" << endl;
+      session.uri().localname() = "dir_list_windows.exe";
+//       session.uri().localname() = "cgi-get-windows.exe";
       cout << "uri      : " << session.uri().widename() << endl;
       cout << "localname: " << session.uri().localname() << endl;
       cout << "extension: " << session.uri().extension() << endl;
@@ -182,6 +193,16 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core*, int&)
 
       // Release the child process context
       post_process_context(av, env);
+
+      // Alter the content length for the reponse
+      // Remove from the hook and put it in the net one
+      // + Add an exception for the process creation failure
+      {
+// 	std::ostringstream strm;
+// 	strm << (unsigned int)session.content_out().size();
+// 	cout << "size of the response body will be " << strm.str() << endl;
+// 	(session.info_out())["content-length"] = strm.str();
+      }
 
     }
   else
