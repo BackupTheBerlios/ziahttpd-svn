@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Sun Nov 20 19:14:05 2005 texane
+// Last update Mon Nov 21 16:49:05 2005 texane
 //
 
 
@@ -78,35 +78,32 @@ bool	server::core::release()
 bool	server::core::reload_conf()
 {
   // Load modules
+  // Currently only bootstrap with hardcoded modules
+  // in the above array.
+
+  const char* modnams_[] =
+    {
 # if defined (_WIN32)
-#	define MODNET	"modules\\net\\net.lo"
-#	define MODADM	"modules\\admin\\admin.lo"
-#	define MODHTTP	"modules\\http1.1\\http1.1.lo"
-#	define MODWWW2LOCAL	"modules\\www2local\\www2local.lo"
-#	define MODMOVEURI "modules\\moveuri\\moveuri.lo"
-# else
-#	define MODHTTP	"modules/admin/admin.lo"
-#	define MODNET	"modules/net/net.lo"
-#	define MODADM	"modules/admin/admin.lo"
-#   define MODWWW2LOCAL "modules/www2local/www2local.lo"
-#   define MODMOVEURI "modules/moveuri/moveuri.lo"
+      "modules\\net\\net.lo",
+      "modules\\admin\\admin.lo",
+      "modules\\http1.1\\http1.1.lo",
+      "modules\\cgi\\cgi.lo",
+      "modules\\nmtrans\\nmtrans.lo"
+#else
+      "modules/net/net.lo",
+      "modules/admin/admin.lo",
+      "modules/http1.1/http1.1.lo",
+      "modules/cgi/cgi.lo",
+      "modules/nmtrans/nmtrans.lo"
 # endif // _WIN32
+    };
 
-
-	if (modman_.load_at_beginning(MODMOVEURI) == false)
-		sysapi::error::stringify("ERROR LOADING MODULE");
-
-	if (modman_.load_at_beginning(MODWWW2LOCAL) == false)
-		sysapi::error::stringify("ERROR LOADING MODULE");
-
-	if (modman_.load_at_beginning(MODHTTP) == false)
-		sysapi::error::stringify("ERROR LOADING MODULE");
-
-	if (modman_.load_at_beginning(MODNET) == false)
-    sysapi::error::stringify("ERROR LOADING MODULE");
-
-  if (modman_.load_at_beginning(MODADM) == false)
-    sysapi::error::stringify("ERROR LOADING MODULE");
+  for (int i = 0; i < sizeof(modnams_) / sizeof(modnams_[0]); ++i)
+    if (modman_.load_at_beginning(modnams_[i]) == false)
+      {
+	cerr << "module name: " << modnams_[i] << endl;
+	sysapi::error::stringify(modnams_[i]);
+      }
 
   return true;
 }
