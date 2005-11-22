@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Sat Nov 19 22:04:40 2005 texane
+## Last update Tue Nov 22 05:00:39 2005 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -25,7 +25,7 @@ CCPATHS	=	-I"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/
 		-I"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Include/" \
 		-I"$(PROJ_ROOT)/src/include/dataman" \
 		-I"$(PROJ_ROOT)/src/include/"
-CCDEFS	=	-D "_WIN32" -D "_CONSOLE" -D "_MBCS" -D "_MT" -D "_SYSAPI"=2 -TP -MD
+CCDEFS	=	-D "ENABLE_DEBUG_LOGGING" -D "_WIN32" -D "_CONSOLE" -D "_MBCS" -D "_MT" -D "_SYSAPI"=2 -TP -MD
 CCGEN	=	-O2 -Wp64 -EHsc
 CCWARNS	=	-W3
 CCOUT	=	-c

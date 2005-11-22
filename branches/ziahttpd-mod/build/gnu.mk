@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Mon Nov 14 15:27:20 2005 
+## Last update Tue Nov 22 04:52:07 2005 texane
 ##
 
 
@@ -23,7 +23,7 @@ __GNU_MK	=	1
 CC	:=	g++
 CCPATHS	:=	-I$(PROJ_ROOT)/src/include/dataman/ \
 		-I$(PROJ_ROOT)/src/include/
-CCDEFS	:=	-D_SYSAPI=1 -D_REENTRANT
+CCDEFS	:=	-D_SYSAPI=1 -DENABLE_DEBUG_LOGGING -D_REENTRANT
 CCGEN	:=	-O2
 CCWARNS	:=	-Wall
 CCOUT	:=	-c
