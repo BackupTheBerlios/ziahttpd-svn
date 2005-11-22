@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Tue Nov 22 18:45:49 2005 texane
+// Last update Tue Nov 22 18:56:04 2005 texane
 //
 
 
@@ -51,6 +51,12 @@ namespace server
     // hide its implementation details; For instance, it can
     // use iomultiplexing or even simple blocking calls, this
     // doesn't matter for modules.
+    // - Information passing between modules and server
+    // iovec_t, information passing between server and module
+    // In order for the server and the module(client) to communicate
+    // information (completion error code, buffers...), the api defines
+    // iovec_t to be the auxilliary structure containing necessary datas.
+
     // ?
     // The function should receive an error argument
     // in order for the core server to communicate
@@ -154,6 +160,10 @@ namespace server
 //!
 //! Stat the module; <b>Stat structure has not yet been defined</b>
 
+//! \enum sever::service::eventid_t
+//!
+//! \brief Event identifiers
+
 //! \fn virtual bool server::service::register_callback(sysapi::socket_in::handle_t& hsock,
 //!							server::service::eventid_t evid,
 //!							server::service::callback_t& cb)
@@ -185,12 +195,11 @@ namespace server
 //! hide its implementation details; For instance, it can
 //! use iomultiplexing or even simple blocking calls, this
 //! doesn't matter for modules.
-//! -# iovec_t, information passing between server and module
+//! -# Information passing between modules and server
+//! iovec_t, information passing between server and module
 //! In order for the server and the module(client) to communicate
 //! information (completion error code, buffers...), the api defines
 //! iovec_t to be the auxilliary structure containing necessary datas.
-
-
 
 
 #endif // ! SERVER_SERVICE_HH
