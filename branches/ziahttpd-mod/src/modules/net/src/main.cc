@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Mon Nov 21 23:29:23 2005 texane
+// Last update Tue Nov 22 05:08:43 2005 texane
 //
 
 
@@ -119,9 +119,12 @@ MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&)
   unsigned char* content;
   sysapi::socket_in::size_t ncontent;
 
-  cout << "\t[<Default Module>] Request metadata, size: " << session.content_in().size() << endl;
-  cout << "\t{" << endl;
-  cout << "\t}" << endl;
+  debug_open(MODULE)
+    << debug::setindent(4)
+    << debug::setpunct('?')
+    << "Requesting MetaData, Size: " << session.content_in().size() << debug::fmt<debug::NEWLINE>
+  debug_close()
+    ;
   
   if (session.content_in().size() == 0)
     return true;
@@ -131,7 +134,12 @@ MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&)
     content = new unsigned char[session.content_in().size()];
     if (sysapi::socket_in::recv(session.hsock_con(), content, session.content_in().size(), &ncontent) == false)
       {
-	cerr << "\t\t[<Default Module>] Cannot read content" << endl;
+	debug_open(MODULE)
+	  << debug::setindent(4)
+	  << debug::setpunct('!')
+	  << "Cannot read content"
+	debug_close()
+	  ;
 	return false;
       }
   }

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:01:55 2005 
-// Last update Sun Nov 13 14:02:33 2005 
+// Last update Tue Nov 22 04:53:48 2005 texane
 //
 
 
@@ -16,6 +16,7 @@
 #include <server/server.hh>
 #include <dataman/dataman.hh>
 #include <http/http.hh>
+#include <debug/debug.hh>
 
 
 #endif // ! ZIA_HH
