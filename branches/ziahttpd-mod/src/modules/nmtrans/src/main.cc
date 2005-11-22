@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Mon Nov 21 16:39:00 2005 texane
+// Last update Tue Nov 22 09:58:27 2005 texane
 //
 
 
@@ -42,6 +42,8 @@ MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
 	  session.uri().status() = 301;
 	}
     }
+
+  session.uri().localname() = "cgi-get-windows.exe";
   
   return true;
 }

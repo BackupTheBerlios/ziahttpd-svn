@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Sun Nov 20 18:25:37 2005 texane
+// Last update Tue Nov 22 18:34:27 2005 texane
 //
 
 
@@ -15,12 +15,14 @@
 #include <http/session.hh>
 #include <server/modman.hh>
 #include <server/service.hh>
+#include <dataman/buffer.hh>
 
 
 using std::string;
 using std::cout;
 using std::endl;
 using http::session;
+using dataman::buffer;
 
 
 // Simple logging service
@@ -69,23 +71,42 @@ bool	server::service::stat_module(const security_token_t& token,
 
 
 // Current session {Connection, Io} related services
+// Pass the whole session to callback'ed functions
+// so that they can store module-related error codes
 
-bool	server::service::open_connection(session&)
+// Callback registering services
+
+bool	server::service::register_callback(sysapi::socket_in::handle_t& hsock,
+					   server::service::eventid_t evid,
+					   server::service::callback_t& cb)
 {
+  // @see service.hh for a list callbacks
+  // supported by the server.
+  
+//   if (callbacks_[reinterpret_cast<unsigned int>(evid)] == 0)
+//     {
+//       return true;
+//     }
+
+//   callbacks_[reinterpret_cast<unsigned int>(evid)].cb_ = cb;
+
   return false;
 }
 
-bool	server::service::close_connection(session&)
-{
-  return false;
-}
 
-bool	server::service::write_to_connection(session&)
-{
-  return false;
-}
+// Io operations
 
-bool	server::service::read_from_connection(session&)
+bool	server::service::perform_io(sysapi::socket_in::handle_t& hsock,
+				    server::service::eventid_t evid,
+				    server::service::iovec_t& iov)
 {
-  return false;
+  // Perform operation related to
+  // io (read, write, timeout, close)
+
+//   if (callbacks_[reinterpret_cast<unsigned int>(evid)] == 0)
+//     {
+//       return false;
+//     }
+  
+  return true;
 }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Mon Nov 21 16:49:05 2005 texane
+// Last update Tue Nov 22 08:15:11 2005 texane
 //
 
 
@@ -85,13 +85,11 @@ bool	server::core::reload_conf()
     {
 # if defined (_WIN32)
       "modules\\net\\net.lo",
-      "modules\\admin\\admin.lo",
       "modules\\http1.1\\http1.1.lo",
       "modules\\cgi\\cgi.lo",
       "modules\\nmtrans\\nmtrans.lo"
 #else
       "modules/net/net.lo",
-      "modules/admin/admin.lo",
       "modules/http1.1/http1.1.lo",
       "modules/cgi/cgi.lo",
       "modules/nmtrans/nmtrans.lo"
@@ -125,7 +123,6 @@ bool	server::core::run()
 
   for (;;)
     {
-
       // Create the server connection, accepting incoming ones
       http::session* session = new http::session(conf_);
       sysapi::socket_in::handle_t hsock_srv;
@@ -164,20 +161,23 @@ sysapi::thread::retcode_t	server::core::process_request(sysapi::thread::param_t 
 
   try
     {
-      // - Request reception part
-      modman::instance()->call_hooks(core::instance(), modman::CREATE_CON, session);
-      modman::instance()->call_hooks(core::instance(), modman::READ_RQST_METADATA, session);
-      modman::instance()->call_hooks(core::instance(), modman::READ_RQST_DATA, session);
-      modman::instance()->call_hooks(core::instance(), modman::PARSE_RQST_METADATA, session);
-      modman::instance()->call_hooks(core::instance(), modman::ALTER_RQST_DATA, session);
+      while (session->persistent() == true)
+	{
+	  // - Request reception part
+	  modman::instance()->call_hooks(core::instance(), modman::CREATE_CON, session);
+	  modman::instance()->call_hooks(core::instance(), modman::READ_RQST_METADATA, session);
+	  modman::instance()->call_hooks(core::instance(), modman::READ_RQST_DATA, session);
+	  modman::instance()->call_hooks(core::instance(), modman::PARSE_RQST_METADATA, session);
+	  modman::instance()->call_hooks(core::instance(), modman::ALTER_RQST_DATA, session);
 
-      // - Response creation part
-      modman::instance()->call_hooks(core::instance(), modman::BUILD_RESP_METADATA, session);
-      modman::instance()->call_hooks(core::instance(), modman::BUILD_RESP_DATA, session);
-      modman::instance()->call_hooks(core::instance(), modman::ALTER_RESP_DATA, session);
-      modman::instance()->call_hooks(core::instance(), modman::ALTER_RESP_METADATA, session);
-      modman::instance()->call_hooks(core::instance(), modman::SEND_RESP, session);
-      modman::instance()->call_hooks(core::instance(), modman::RELEASE_CON, session);
+	  // - Response creation part
+	  modman::instance()->call_hooks(core::instance(), modman::BUILD_RESP_METADATA, session);
+	  modman::instance()->call_hooks(core::instance(), modman::BUILD_RESP_DATA, session);
+	  modman::instance()->call_hooks(core::instance(), modman::ALTER_RESP_DATA, session);
+	  modman::instance()->call_hooks(core::instance(), modman::ALTER_RESP_METADATA, session);
+	  modman::instance()->call_hooks(core::instance(), modman::SEND_RESP, session);
+	  modman::instance()->call_hooks(core::instance(), modman::RELEASE_CON, session);
+	}
 
     }
   catch (exception::base& err)

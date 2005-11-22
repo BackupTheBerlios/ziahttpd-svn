@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Sun Nov 20 16:58:58 2005 texane
+// Last update Tue Nov 22 18:45:49 2005 texane
 //
 
 
@@ -43,11 +43,50 @@ namespace server
     virtual bool stat_module(const security_token_t&,
 			     const std::string&);
 
+
     // - Network io related operations
-    virtual bool open_connection(http::session&);
-    virtual bool close_connection(http::session&);
-    virtual bool write_to_connection(http::session&);
-    virtual bool read_from_connection(http::session&);
+    // This mechanism might appear to be somewhat complex
+    // (for instance comparing with a single write() call);
+    // However, this is necessary in order for the server to
+    // hide its implementation details; For instance, it can
+    // use iomultiplexing or even simple blocking calls, this
+    // doesn't matter for modules.
+    // ?
+    // The function should receive an error argument
+    // in order for the core server to communicate
+    // the module with the operation completion status.
+    // More generally, we should define a type for handle
+    // operation status for core <-> module communication.
+
+    typedef struct
+    {
+      // This structure implements core <-> module
+      // io completion information passing. This
+      // is necessary since the server can derefferd
+      // the call to a read/write operation.
+
+      // buffer to read/write from/to
+      dataman::buffer	buf_;
+      // nbytes actually sent/recveived
+      unsigned int	nbytes_;
+      // Io completion error code
+      unsigned int	errcode_;
+    } iovec_t;
+
+    // Register callbacks on events
+    typedef enum
+      {
+	EVREAD = 0,
+	EVWRITE,
+	EVCLOSE,
+	EVTIMEOUT
+      } eventid_t;
+
+    // Io related operations.
+    // ? (if someone out there knows how to have virtual templated methods...)
+    typedef bool (*callback_t)(sysapi::socket_in::handle_t&, iovec_t&);
+    virtual bool register_callback(sysapi::socket_in::handle_t&, eventid_t, callback_t&);
+    virtual bool perform_io(sysapi::socket_in::handle_t&, eventid_t, iovec_t&);
 
     // - Conf related operations
     // ?
@@ -115,39 +154,42 @@ namespace server
 //!
 //! Stat the module; <b>Stat structure has not yet been defined</b>
 
-//! \fn virtual bool server::service::open_connection(http::session& session)
-//! \brief Open a connection for the given port(?)
+//! \fn virtual bool server::service::register_callback(sysapi::socket_in::handle_t& hsock,
+//!							server::service::eventid_t evid,
+//!							server::service::callback_t& cb)
+//! \brief Register a callback to be called when event evid occures.
 //!
-//! \param session Current session
-//! \return success or failure
+//! \param hsock Handle of the internet socket on which to perform operation
+//! \param evid Identifer of the event
+//! \param cb Address of the function to be called when event occures
+//! \return Return true on success, false else (?)
 //!
-//! Ask the server to open a new connection, that's creating a listening socket
+//! Ask the server to register a callback for the given event on a given socket handle
+//! @see the header file for a list of event identifiers
 
-//! \fn virtual bool server::service::write_to_connection(http::session& session)
-//! \brief Write to the session endpart of the connection
+//! \fn virtual bool server::service::perform_io(sysapi::socket_in::handle_t& hsock,
+//!						 server::service::eventid_t evid,
+//!						 server::service::iovec_t& iov)
+//! \brief Tell the server to perform an io operation
 //!
-//! \param session Current session
-//! \return success or failure
+//! \param hsock Handle of the internet socket on which to perform operation
+//! \param evid Identifer of the event
+//! \param iov Vector for information passing between module and server
+//! \return Return false if the event has no registered callback.
 //!
-//! Ask the server to write the buffer to the session associated endpart of the
-//! connection; <b>TEMPORARLY OMIT BUFFER AND SIZE PARAMS, DATAMAN::BUFFER&</b>
+//! Ask the server to perform an operation.
+//! -# Network io related operations
+//! This mechanism might appear to be somewhat complex
+//! (for instance comparing with a single write() call);
+//! However, this is necessary in order for the server to
+//! hide its implementation details; For instance, it can
+//! use iomultiplexing or even simple blocking calls, this
+//! doesn't matter for modules.
+//! -# iovec_t, information passing between server and module
+//! In order for the server and the module(client) to communicate
+//! information (completion error code, buffers...), the api defines
+//! iovec_t to be the auxilliary structure containing necessary datas.
 
-//! \fn virtual bool server::service::read_from_connection(http::session& session)
-//! \brief Read from the session endpart of the connection
-//!
-//! \param session Current session
-//! \return success or failure
-//!
-//! Ask the server to read the buffer from the session associated endpart of the
-//! connection; <b>TEMPORARLY OMIT BUFFER AND SIZE PARAMS, DATAMAN::BUFFER&</b>
-
-//! \fn virtual bool server::service::close_connection(http::session& session)
-//! \brief Close the connection associated to session
-//!
-//! \param session Current session
-//! \return success or failure
-//!
-//! Ask the server to close the connection associtaed with session
 
 
 

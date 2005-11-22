@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Mon Nov 21 20:09:48 2005 texane
+// Last update Tue Nov 22 08:27:40 2005 texane
 //
 
 
@@ -45,13 +45,11 @@ namespace http
     ~session();
 
     // Access the client dedicated connection handle.
-    sysapi::socket_in::handle_t& hsock_con()
-    { return hsock_con_; }
+    sysapi::socket_in::handle_t& hsock_con()    { return hsock_con_; }
 
     // Access the server dedicated connection handle,
     // bound on the local port.
-    sysapi::socket_in::handle_t& hsock_srv()
-    { return hsock_srv_; }
+    sysapi::socket_in::handle_t& hsock_srv()    { return hsock_srv_; }
 
     // {In, out}put (client's request, server's response) data related accessors
     std::list<dataman::buffer>& hdrlines_in()	{ return hdrlines_in_; }
@@ -61,6 +59,9 @@ namespace http
     http::uri& uri()				{ return uri_; }
     http::msgdata& info_in()			{ return info_in_; }
     http::msgdata& info_out()			{ return info_out_; }
+
+    // Get/Set the connection persistency
+    bool& persistent()				{ return persistent_; }
 
     // Put here for the moment, avoiding undef sym in symbols ...
     server::service* services_;
@@ -74,16 +75,15 @@ namespace http
       // be too.
       
       // list of the current cgi scripts
+      // Are there more than one cgi running
+      // for a given session at a given time?
       struct cgi
       {
 	int retcode_;
 	sysapi::process::handle_t hproc_;
+	// struct timeval tmelapsed_;
       };
-      std::list<sysapi::process::handle_t> hprocs_;
-
-      
-      
-
+      std::list<struct cgi> listproc_;
     };
 
     // Server configuration related
@@ -94,8 +94,7 @@ namespace http
     sysapi::socket_in::handle_t hsock_srv_;
 
     // Internet socket handle for the current session connection
-    sysapi::socket_in::handle_t hsock_con_;
-    
+    sysapi::socket_in::handle_t hsock_con_;    
 
     // Client request (in) related
     http::msgdata info_in_;
@@ -109,6 +108,11 @@ namespace http
     http::msgdata info_out_;
     dataman::buffer hdrlines_out_;
     dataman::buffer content_out_;
+
+    // Informations related to http internals (?)
+    // Connection persistency.
+    bool persistent_;
+    int nrpassed_;
   };
 }
 

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Tue Nov 22 05:08:43 2005 texane
+// Last update Tue Nov 22 08:18:26 2005 texane
 //
 
 
@@ -48,7 +48,13 @@ MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core*, int&)
   // so this function needs to export a function to be called
   // at close time.
 
-  cout << "[<Default Module>] Creating new connection" << endl;
+  debug_open(MODULE)
+    << debug::setindent(4)
+    << debug::setpunct('?')
+    << "Creating new connection"
+    << debug::fmt<debug::NEWLINE>
+  debug_close()
+    ;
   
   return true;
 }
@@ -68,13 +74,18 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   {
     if (dataman::get_nextline(session.hsock_con(), &line, &err) == false)
       {
-	cerr << "\t[<Default Module>] Cannot read metadata" << endl;
+	debug_open(MODULE)
+	  << debug::setindent(4)
+	  << debug::setpunct('!')
+	  << "Cannot read metadata"
+	  << debug::fmt<debug::NEWLINE>
+	  debug_close()
+	  ;
+
 	return false;
       }
 
     dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
-    cout << buffer.to_string() << endl;
-
     session.hdrlines_in().push_front(buffer);
     free(line);
   }
@@ -86,24 +97,6 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
       session.hdrlines_in().push_back(buffer);
       free(line);
     }
-
-  // Display meta data
-  {
-    list<dataman::buffer>::iterator cur = session.hdrlines_in().begin();
-    list<dataman::buffer>::iterator end = session.hdrlines_in().end();
-    int i = 0;
-
-    cout << "\t[<Default Module>] Request metadata" << endl;
-    cout << "\t{" << endl;
-    while (cur != end)
-      {
-	cout << "\t\t[" << i << "]: ";
-	(*cur).display();
-	++i;
-	++cur;
-      }
-    cout << "\t}" << endl;
-  }
 
   return true;
 }
