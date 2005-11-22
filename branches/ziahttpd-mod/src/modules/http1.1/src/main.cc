@@ -63,10 +63,14 @@ MOD_EXPORT(HK_PARSE_RQST_METADATA) (http::session& session, server::core* core, 
 	std::list<dataman::buffer>& hdrlines = session.hdrlines_in();
 	std::list<dataman::buffer>::iterator ite;
 
-	for(ite = hdrlines.begin(); ite != hdrlines.end(); ite++)
+	ite = hdrlines.begin();
+	if (!session.info_in().parse_rqstline_statusline(*ite, session.uri()))
+		session.uri().status() = 400;
+	ite++;
+	for( ; ite != hdrlines.end(); ite++)
 	{
 		cout << *ite->c_str() << endl;
-		if (!session.info_in().parse_rqstline(*ite, session.uri()))
+		if (!session.info_in().parse_rqstline_headerline(*ite, session.uri()))
 			session.uri().status() = 400;
 	}
 	cout << "version : " << session.info_in().version_string() << endl;

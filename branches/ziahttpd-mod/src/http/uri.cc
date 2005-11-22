@@ -28,6 +28,13 @@ http::uri::uri(session& s)
 
 }
 
+void	http::uri::reset()
+{
+	status_ = 200;
+	strstatus_ = "";
+	localname_ = "";
+	widename_ = "";
+}
 
 int&	http::uri::status()
 {

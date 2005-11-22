@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="exemple"
+	Name="nmtrans"
 	ProjectGUID="{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}"
 	RootNamespace="zia-httpd"
 	Keyword="Win32Proj">
@@ -37,7 +37,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="user32.lib kernel32.lib gdi32.lib WS2_32.lib -dll"
-				OutputFile="$(OutDir)/zia-httpd.exe"
+				OutputFile="$(OutDir)/../../$(ProjectName).lo"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
 				AssemblyDebug="1"
@@ -126,6 +126,25 @@
 			<File
 				RelativePath="..\src\main.cc">
 			</File>
+			<Filter
+				Name="extern"
+				Filter="">
+				<File
+					RelativePath="..\..\..\dataman\buffer.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\sysapi\win32\file.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\http\msgdata.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\dataman\stringmanager.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\http\uri.cc">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"

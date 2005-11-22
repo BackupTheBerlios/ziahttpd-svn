@@ -32,7 +32,8 @@ namespace http
     bool parse_rqstline(dataman::buffer&, uri&);
     bool build_respline(msgdata& rqst, const uri&);
 	bool stringify_respline(dataman::buffer& metada,  http::uri&);
-
+	bool parse_rqstline_statusline(dataman::buffer& buf, uri&);
+	bool parse_rqstline_headerline(dataman::buffer& buf, uri&);
 	std::string& method_string()	{ return method_; };
 	std::string& version_string()	{ return version_; };
 	std::string& uri_string()		{ return uri_; };
@@ -46,8 +47,7 @@ namespace http
 	  std::map<std::string, std::string>		hdrlines_;
 	  std::string								query_;
 
-	  bool parse_rqstline_statusline(dataman::buffer& buf, uri&);
-	  bool parse_rqstline_headerline(dataman::buffer& buf, uri&);
+
 	  bool parse_uri(std::string &uri);
   };
 }

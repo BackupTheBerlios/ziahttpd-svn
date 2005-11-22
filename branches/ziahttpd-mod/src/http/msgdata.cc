@@ -40,8 +40,10 @@ string&	http::msgdata::operator[](const string& key)
 
 string&	http::msgdata::operator=(const string& val)
 {
-	string t(val);
-	return (t);
+	string t = val;
+
+//	return (t);
+	return ((string&)val);
 }
 
 bool	http::msgdata::parse_rqstline(buffer& buf, uri& uri)
