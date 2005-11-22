@@ -1,4 +1,5 @@
 Par ordre de priorite:
+- Corriger le seg quand il n'y a pas de document root
 - Definir les option de la ligne de commande pour coder ensuite son traitement
 
 - Faire la fonction "ConfManager::CheckValue(string sSearch, int iVarType)"

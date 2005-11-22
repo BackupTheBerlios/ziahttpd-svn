@@ -536,6 +536,6 @@ int	ConfManager::Reload(string sConfFile)
   else
     _LoadedFile = sConfFile;
   Load(sConfFile);
-  RemoveAndAddVar();
+//  RemoveAndAddVar();
   return true;
 }
