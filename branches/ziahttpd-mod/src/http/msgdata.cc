@@ -46,24 +46,6 @@ string&	http::msgdata::operator=(const string& val)
 	return ((string&)val);
 }
 
-bool	http::msgdata::parse_rqstline(buffer& buf, uri& uri)
-{
-	static	bool	status_line = true;
-
-	if (!status_line)
-	{
-		status_line = false;
-		return (parse_rqstline_statusline(buf, uri));
-	}
-	else
-	{
-		status_line = false;
-		return (parse_rqstline_headerline(buf, uri));
-	}
-	return false;
-}
-
-
 bool	http::msgdata::build_respline(msgdata& rqst, const uri&)
 {
 
@@ -76,7 +58,7 @@ string&	http::msgdata::query_string()
   return (query_);
 }
 
-bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
+bool	http::msgdata::parse_rqstline_headerline(buffer& buf, uri& uri)
 {
 	char *str;
 	char *tmp;
@@ -100,7 +82,7 @@ bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 	return (true);
 }
 
-bool	http::msgdata::parse_rqstline_headerline(buffer& buf, uri& uri)
+bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 {
 	stringmanager::string			p;
 	char							*str;

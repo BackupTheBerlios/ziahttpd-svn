@@ -29,7 +29,6 @@ namespace http
 
     std::string& operator[](const std::string&);
 	std::string& operator=(const std::string&);
-    bool parse_rqstline(dataman::buffer&, uri&);
     bool build_respline(msgdata& rqst, const uri&);
 	bool stringify_respline(dataman::buffer& metada,  http::uri&);
 	bool parse_rqstline_statusline(dataman::buffer& buf, uri&);

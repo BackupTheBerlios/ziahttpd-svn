@@ -33,17 +33,17 @@ MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
   cout << "\t[ * ] in the name translation module" << endl;
   cout << "\t[ * ] altering uri, wide name is now: " << session.uri().widename() << endl;
 
-  if (sysapi::file::is_directory(session.uri().localname().c_str()))
+  if (sysapi::file::is_directory(session.uri().localname().c_str())
+	  && session.uri().localname()[session.uri().localname().size() - 1] != '/')
     {
       // This is a directory, add backslash to the end of name
-      if (session.uri().localname()[session.uri().localname().size() - 1] != '/')
-	{
 	  session.uri().widename() += '/';
 	  session.uri().status() = 301;
-	}
+	  return true;
     }
-
-  session.uri().localname() = "cgi-get-windows.exe";
+	session.uri().localname() = "../root/www" + session.uri().widename();
+	std::cout << "localfile :" << session.uri().localname() << std::endl;
+//	session.uri().localname() = "cgi-get-windows.exe";
   
   return true;
 }

@@ -37,7 +37,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="user32.lib kernel32.lib gdi32.lib WS2_32.lib"
-				OutputFile="$(OutDir)/zia-httpd.exe"
+				OutputFile="$(OutDir)/../../../src/zia-httpd.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
 				AssemblyDebug="1"

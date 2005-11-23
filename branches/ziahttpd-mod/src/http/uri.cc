@@ -60,7 +60,7 @@ string&	http::uri::widename()
 }
 
 
-string&	http::uri::extension()
+const string&	http::uri::extension()
 {
-  return extension_;
+	return (widename_);
 }

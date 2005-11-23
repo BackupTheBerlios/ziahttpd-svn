@@ -33,7 +33,7 @@ namespace http
 
     std::string& localname();
     std::string& widename();
-    std::string& extension();
+    const std::string& extension();
 	void		reset();
 
   private:
@@ -43,7 +43,7 @@ namespace http
 
     std::string localname_;
     std::string widename_;
-    std::string extension_;
+  
   };
 }
 
