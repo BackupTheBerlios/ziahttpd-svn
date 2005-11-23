@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Wed Nov 23 22:59:28 2005 texane
+// Last update Wed Nov 23 23:30:14 2005 texane
 //
 
 
@@ -40,9 +40,18 @@ namespace dataman
       } error_t;
 
     // Interface a concrete resource has to implement
+
+    // -
+    // Callback of the form
+    // res->open();
+    // while res->feed();
+    // while res->fetch();
+    // res->close();
+
     virtual bool open(error_t&) = 0;
     virtual bool fetch(buffer&, unsigned int, error_t&) = 0;
     virtual bool fetch(buffer&, error_t&) = 0;
+    // virtual bool feed(buffer&, error_t&) = 0;
     virtual bool close(error_t&) = 0;
 
     // Factory design pattern, by function overloading
