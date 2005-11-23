@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Wed Nov 23 16:16:51 2005 texane
+// Last update Wed Nov 23 20:05:13 2005 texane
 //
 
 
@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include <dataman/buffer.hh>
+#include <sysapi/sysapi.hh>
 
 
 namespace dataman
@@ -34,6 +35,7 @@ namespace dataman
 	PERMDENIED,
 	SYSLIMIT,
 	NOTOPENED,
+	ALREADYOPENED,
 	INUSE
       } error_t;
 
@@ -71,6 +73,10 @@ namespace dataman
 
 
   private:
+    bool opened_;
+    std::string filename_;
+    sysapi::file::handle_t hfile_;
+    
   };
 }
 
