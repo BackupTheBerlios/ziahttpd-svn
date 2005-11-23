@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Wed Nov 23 22:23:09 2005 texane
+// Last update Wed Nov 23 22:40:26 2005 texane
 //
 
 
@@ -92,11 +92,10 @@ bool	server::core::reload_conf()
 
   while (cur != end)
     {
+      // Normalize the module name
+      sysapi::file::normalize_name(*cur);
       if (modman_.load_at_beginning(*cur) == false)
-	{
-	  cerr << "module name: " << *cur << endl;
-	  sysapi::error::stringify((*cur).c_str());
-	}
+	sysapi::error::stringify("Cannot load module");
       ++cur;
     }
   }
