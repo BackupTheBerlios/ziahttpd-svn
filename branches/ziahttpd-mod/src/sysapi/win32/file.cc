@@ -5,13 +5,17 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Wed Nov 23 21:54:10 2005 texane
+// Last update Wed Nov 23 22:34:01 2005 texane
 //
 
 
 #include <sysapi/win32.hh>
 #include <windows.h>
 #include <iostream>
+#include <string>
+
+
+using std::string;
 
 
 // @see win32.hh for the namespace declaration
@@ -278,4 +282,13 @@ bool	win32::file::is_executable(const char* filename)
 bool	win32::file::size(const char* filename, unsigned long* sz)
 {
   return file_query_about(filename, GET_SIZE, sz);
+}
+
+bool	win32::file::normalize_name(string& name)
+{
+  for (unsigned int i = 0; i < name.size(); ++i)
+    if (name[i] == '/')
+      name[i] = win32::file::delim;
+
+  return true;
 }

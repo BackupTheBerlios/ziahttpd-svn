@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Sun Nov 20 18:07:59 2005 Bigand Xavier
+// Last update Wed Nov 23 22:18:16 2005 texane
 */
 
 #ifndef __ConfManager_H__
@@ -21,7 +21,7 @@
 
 using namespace	std;
 
-#define DEFAULT_FILE		"C:/Documents and Settings/Flamaros/Mes documents/dev/Zia/branches/ziahttpd-mod/build/vcproj/conf/zia.conf"
+#define DEFAULT_FILE		"conf/zia.conf"
 #define NB_CONTAINER		6
 #define NB_RECOGNIZED_VAR	2
 #define	SINGLE_VALUE		0

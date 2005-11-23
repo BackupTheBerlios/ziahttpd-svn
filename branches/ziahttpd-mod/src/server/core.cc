@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Wed Nov 23 21:26:21 2005 texane
+// Last update Wed Nov 23 22:23:09 2005 texane
 //
 
 
@@ -83,45 +83,23 @@ bool	server::core::reload_conf()
   // Currently only bootstrap with hardcoded modules
   // in the above array.
 
-//   vector<string> modules;
+  // Load the module list
+  {
+  vector<string> modules;
+  modules = conf_.GetListVector("modules");
+  vector<string>::iterator cur = modules.begin();
+  vector<string>::iterator end = modules.end();
 
-//   modules = conf_.GetListVector("modules");
-
-//   vector<string>::iterator cur = modules.begin();
-//   vector<string>::iterator end = modules.end();
-
-//   while (cur != end)
-//     {
-//       cout << "loading modules: " << *cur << endl;
-//       cout << endl;
-//     }
-
-//   getchar();
-
-  const char* modnams_[] =
+  while (cur != end)
     {
-# if defined (_WIN32)
-      "modules\\resource\\resource.lo",
-      "modules\\nmtrans\\nmtrans.lo",
-      "modules\\http1.1\\http1.1.lo",
-      //"modules\\cgi\\cgi.lo", 
-      "modules\\net\\net.lo", 
-#else
-      "modules/ressource/ressource.lo",
-      "modules/net/net.lo",
-      "modules/http1.1/http1.1.lo",
-      // "modules/cgi/cgi.lo",
-      "modules/net/net.lo",
-      "modules/nmtrans/nmtrans.lo"
-# endif // _WIN32
-    };
-
-  for (int i = 0; i < sizeof(modnams_) / sizeof(modnams_[0]); ++i)
-    if (modman_.load_at_beginning(modnams_[i]) == false)
-      {
-	cerr << "module name: " << modnams_[i] << endl;
-	sysapi::error::stringify(modnams_[i]);
-      }
+      if (modman_.load_at_beginning(*cur) == false)
+	{
+	  cerr << "module name: " << *cur << endl;
+	  sysapi::error::stringify((*cur).c_str());
+	}
+      ++cur;
+    }
+  }
 
   return true;
 }

@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Sun Nov 20 18:07:45 2005 Bigand Xavier
+// Last update Wed Nov 23 22:17:51 2005 texane
 //
 
 #include "ConfManager.hh"
@@ -55,6 +55,8 @@ void	ConfManager::InitFctPtr()
 int	ConfManager::Load(string sConfFile)
 {
   TiXmlDocument	*_pConfFile;
+
+  cout << "loading conf file " << sConfFile << endl;
 
   _svListInclude.push_back(sConfFile);
   _pConfFile = new TiXmlDocument(sConfFile.c_str());

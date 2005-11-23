@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Wed Nov 23 22:07:11 2005 texane
+// Last update Wed Nov 23 22:31:21 2005 texane
 //
 
 
@@ -77,6 +77,9 @@ namespace posix
     bool	is_readable(const char*);
     bool	is_writtable(const char*);
     bool	is_executable(const char*);
+
+    // Normalize the file name, '/' -> '/'
+    bool	normalize_name(std::string&);
   }
 
 

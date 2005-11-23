@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Wed Nov 23 22:07:28 2005 texane
+// Last update Wed Nov 23 22:31:58 2005 texane
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -66,6 +66,9 @@ namespace win32
     bool	is_readable(const char*);
     bool	is_writtable(const char*);
     bool	is_executable(const char*);
+
+    // Normalize the file name, '/' -> '\'
+    bool	normalize_name(std::string&);
   }
 
 

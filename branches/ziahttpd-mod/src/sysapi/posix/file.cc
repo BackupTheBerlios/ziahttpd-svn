@@ -5,11 +5,15 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:10:19 2005 
-// Last update Sun Nov 13 15:00:28 2005 
+// Last update Wed Nov 23 22:34:17 2005 texane
 //
 
 
+#include <string>
 #include <sysapi/posix.hh>
+
+
+using std::string;
 
 
 bool	posix::file::open(handle_t* hdl, const char* filename, mode_t mode, int* err)
@@ -207,4 +211,13 @@ bool	posix::file::is_executable(const char* filename)
 bool	posix::file::size(const char* filename, unsigned long* sz)
 {
   return file_query_about(filename, SIZE, sz);
+}
+
+bool	posix::file::normalize_name(string& name)
+{
+  for (unsigned int i = 0; i < name.size(); ++i)
+    if (name[i] == '/')
+      name[i] = posix::file::delim;
+
+  return true;
 }
