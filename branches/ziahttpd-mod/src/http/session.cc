@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:46:45 2005 
-// Last update Wed Nov 23 14:26:54 2005 texane
+// Last update Wed Nov 23 21:35:11 2005 texane
 //
 
 
@@ -21,6 +21,7 @@ http::session::session(dataman::conf& conf) : conf_(conf)
 {
   services_ = server::core::services_;
   persistent_ = true;
+  resource_ = 0;
 }
 
 

@@ -5,10 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Wed Nov 23 20:52:49 2005 texane
+// Last update Wed Nov 23 21:26:21 2005 texane
 //
 
 
+#include <vector>
 #include <string>
 #include <iostream>
 #include <server/core.hh>
@@ -23,6 +24,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
+using std::vector;
 
 
 // Singleton-like behaviour
@@ -81,21 +83,36 @@ bool	server::core::reload_conf()
   // Currently only bootstrap with hardcoded modules
   // in the above array.
 
+//   vector<string> modules;
+
+//   modules = conf_.GetListVector("modules");
+
+//   vector<string>::iterator cur = modules.begin();
+//   vector<string>::iterator end = modules.end();
+
+//   while (cur != end)
+//     {
+//       cout << "loading modules: " << *cur << endl;
+//       cout << endl;
+//     }
+
+//   getchar();
+
   const char* modnams_[] =
     {
 # if defined (_WIN32)
-   "modules\\resource\\resource.lo",
-	"modules\\nmtrans\\nmtrans.lo",
-	"modules\\http1.1\\http1.1.lo",
-	 //"modules\\cgi\\cgi.lo", 
-	"modules\\net\\net.lo", 
+      "modules\\resource\\resource.lo",
+      "modules\\nmtrans\\nmtrans.lo",
+      "modules\\http1.1\\http1.1.lo",
+      //"modules\\cgi\\cgi.lo", 
+      "modules\\net\\net.lo", 
 #else
-       "modules/ressource/ressource.lo",
-       "modules/net/net.lo",
-       "modules/http1.1/http1.1.lo",
-//       "modules/cgi/cgi.lo",
-		"modules/net/net.lo",
-	   "modules/nmtrans/nmtrans.lo"
+      "modules/ressource/ressource.lo",
+      "modules/net/net.lo",
+      "modules/http1.1/http1.1.lo",
+      // "modules/cgi/cgi.lo",
+      "modules/net/net.lo",
+      "modules/nmtrans/nmtrans.lo"
 # endif // _WIN32
     };
 

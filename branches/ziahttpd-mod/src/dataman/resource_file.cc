@@ -5,16 +5,19 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Wed Nov 23 20:25:21 2005 texane
+// Last update Wed Nov 23 22:02:21 2005 texane
 //
 
 
 #include <string>
+#include <iostream>
 #include <sysapi/sysapi.hh>
 #include <dataman/buffer.hh>
 #include <dataman/resource.hh>
 
 
+using std::cout;
+using std::endl;
 using std::string;
 using dataman::buffer;
 using dataman::resource::error_t;
@@ -41,9 +44,19 @@ bool	dataman::file::open(error_t& err)
       return false;
     }
 
-  ret = sysapi::file::open(&hfile_, filename_.c_str(), sysapi::file::RDONLY);
+  if (sysapi::file::size("..\\root\\www\\index.html", &sz_) == false)
+    {
+      sysapi::error::stringify("Cannot open the file");
+      return false;
+    }
+
+  ret = sysapi::file::open(&hfile_, "..\\root\\www\\index.html", sysapi::file::RDONLY);
+  //   ret = sysapi::file::open(&hfile_, filename_.c_str(), sysapi::file::RDONLY);
   if (ret == false)
-    return false;
+    {
+      std::cout << "OIPENLKDSFJKLFJ" <<  std::endl;
+      return false;
+    }
 
   opened_ = true;
 
@@ -65,6 +78,7 @@ bool	dataman::file::fetch(buffer& buf, unsigned int nbytes, error_t& err)
 
   wrk = new unsigned char[nbytes];
   ret = sysapi::file::read(hfile_, wrk, nbytes, reinterpret_cast<sysapi::file::size_t*>(&nread));
+
   if (ret == true)
     buf = buffer(wrk, nread);
 
@@ -76,18 +90,13 @@ bool	dataman::file::fetch(buffer& buf, unsigned int nbytes, error_t& err)
 
 bool	dataman::file::fetch(buffer& buf, error_t& err)
 {
-  unsigned long fsz;
-
   if (opened_ == false)
     {
       err = NOTOPENED;
       return false;
     }
 
-  if (sysapi::file::size(filename_.c_str(), &fsz) == false)
-    return false;
-
-  return fetch(buf, fsz, err);
+  return fetch(buf, sz_, err);
 }
 
 

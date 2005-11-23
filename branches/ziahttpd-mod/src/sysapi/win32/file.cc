@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 12:51:47 2005 texane
-// Last update Sun Nov 13 15:01:26 2005 
+// Last update Wed Nov 23 21:54:10 2005 texane
 //
 
 
@@ -197,7 +197,7 @@ static bool normalfile_query_about(const char* filename, enum file_query q, unsi
 
     case GET_SIZE:
       *aux = (unsigned long)info.nFileSizeLow;
-	ret = true;
+      ret = true;
       break;
 
     case IS_READABLE:

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Wed Nov 23 20:59:22 2005 texane
+// Last update Wed Nov 23 21:57:55 2005 texane
 //
 
 
@@ -76,6 +76,7 @@ namespace dataman
     bool opened_;
     std::string filename_;
     sysapi::file::handle_t hfile_;
+    sysapi::file::size_t sz_;
     
   };
 }

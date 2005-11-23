@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:58:22 2005 texane
-// Last update Wed Nov 23 16:09:11 2005 texane
+// Last update Wed Nov 23 21:34:57 2005 texane
 //
 
 
@@ -25,6 +25,9 @@ using dataman::resource;
 // This file implements resource
 // factory by the factory method
 // design pattern
+
+
+#include <iostream>
 
 
 resource* dataman::resource::factory(const string& filename)
