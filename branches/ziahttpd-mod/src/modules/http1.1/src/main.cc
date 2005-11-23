@@ -23,7 +23,6 @@ bool	error_code_string(int status, std::string &dest);
 
 bool	response_header_date(string& dest)
 {
-	//	struct tm				*newtime;
 	char					*datestr;
 	stringmanager::string	p;
 	std::vector<std::string> v;
@@ -42,21 +41,11 @@ bool	response_header_date(string& dest)
 
 
 // List of exported functions
-MOD_EXPORT( HK_CREATE_CONNECTION )(http::session&, server::core*, int&);
-
+MOD_EXPORT( HK_ALTER_RESP_METADATA )(http::session&, server::core*, int&);
+MOD_EXPORT( HK_PARSE_RQST_METADATA )(http::session& session, server::core* core, int& status);
 
 // Exported function definitions
 
-
-MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core* core, int&)
-{
-  cout << "\t[ * ] Administration module called" << endl;
-  if (core)
-    session.services_->echo("MESSAGE FROM ADMINISTRATION MODULE");
-  cout << endl;
-
-  return true;
-}
 
 MOD_EXPORT(HK_PARSE_RQST_METADATA) (http::session& session, server::core* core, int& status)
 {
