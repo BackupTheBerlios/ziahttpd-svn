@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Wed Nov 23 10:28:39 2005 texane
+// Last update Wed Nov 23 16:03:42 2005 texane
 //
 
 
@@ -13,9 +13,10 @@
 # define SERVER_SERVICE_HH
 
 
+#include <string>
+#include <vector>
 #include <http/session.hh>
 #include <dataman/buffer.hh>
-#include <string>
 
 
 namespace server
@@ -95,6 +96,14 @@ namespace server
     typedef bool (*callback_t)(http::session*, iovec_t&);
     virtual bool register_callback(http::session&, eventid_t, const callback_t&);
     virtual bool perform_io(http::session&, eventid_t);
+
+
+    // - Resource creation related service
+    virtual dataman::resource* create_resource(const std::string&);
+    virtual dataman::resource* create_resource(const std::vector<const std::string>&,
+					       const std::vector<const std::string>&,
+					       const dataman::buffer&);
+    virtual dataman::resource* create_resource(int);
 
     // ?
     // - Conf related operations

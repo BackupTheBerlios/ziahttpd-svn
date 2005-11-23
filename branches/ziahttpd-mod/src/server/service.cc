@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Wed Nov 23 12:09:03 2005 texane
+// Last update Wed Nov 23 16:17:52 2005 texane
 //
 
 
@@ -17,6 +17,7 @@
 #include <server/service.hh>
 #include <dataman/buffer.hh>
 #include <dataman/conf.hh>
+#include <dataman/resource.hh>
 
 
 using std::string;
@@ -126,6 +127,28 @@ bool	server::service::perform_io(http::session& session, server::service::eventi
   // This is temporary, since the iomanager will come soon.
   return ioslots_[0].callbacks_[evid](ioslots_[0].session_, ioslots_[0].iov_);
 }
+
+
+
+// Resource creation service
+
+dataman::resource* server::service::create_resource(const std::string& filename)
+{
+  return dataman::resource::factory(filename);
+}
+
+dataman::resource* server::service::create_resource(const std::vector<const std::string>& av,
+						    const std::vector<const std::string>& env,
+						    const dataman::buffer& buf_stdin)
+{
+  return dataman::resource::factory(av, env, buf_stdin);
+}
+
+dataman::resource* server::service::create_resource(int stcode)
+{
+  return dataman::resource::factory(stcode);
+}
+
 
 
 // Configuration related operations

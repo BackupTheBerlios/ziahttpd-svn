@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Sun Nov 20 19:16:59 2005 texane
+## Last update Wed Nov 23 13:58:14 2005 texane
 ##
 
 # ! Always include this file
@@ -32,6 +32,10 @@ srcs	= main.cc \
 	  dataman$(SLASH)tinyxml.cc \
 	  dataman$(SLASH)tinyxmlerror.cc \
 	  dataman$(SLASH)tinyxmlparser.cc \
+	  dataman$(SLASH)resource.cc \
+	  dataman$(SLASH)resource_cgi.cc \
+	  dataman$(SLASH)resource_file.cc \
+	  dataman$(SLASH)resource_report.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)mutex.cc \
