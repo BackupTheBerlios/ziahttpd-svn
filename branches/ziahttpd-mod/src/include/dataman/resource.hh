@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Wed Nov 23 20:05:13 2005 texane
+// Last update Wed Nov 23 20:59:22 2005 texane
 //
 
 
@@ -101,6 +101,10 @@ namespace dataman
 
 
   private:
+    unsigned int stcode_;
+    buffer form_;
+    bool formed_;
+
   };
 }
 
@@ -125,6 +129,10 @@ namespace dataman
 
 
   private:
+
+    // Status code
+    unsigned int stcode_;
+    bool formed_;
   };
 }
 

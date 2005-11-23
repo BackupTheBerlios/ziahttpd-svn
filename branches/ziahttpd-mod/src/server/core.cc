@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Wed Nov 23 12:07:47 2005 texane
+// Last update Wed Nov 23 20:52:49 2005 texane
 //
 
 
@@ -85,15 +85,15 @@ bool	server::core::reload_conf()
     {
 # if defined (_WIN32)
        "modules\\ressource\\ressource.lo",
-		"modules\\net\\net.lo",
-      "modules\\http1.1\\http1.1.lo",
+       "modules\\net\\net.lo",
+       "modules\\http1.1\\http1.1.lo",
 //       "modules\\cgi\\cgi.lo",
 
 	   "modules\\nmtrans\\nmtrans.lo"
 #else
        "modules/ressource/ressource.lo",
-		"modules/net/net.lo",
-      "modules/http1.1/http1.1.lo",
+       "modules/net/net.lo",
+       "modules/http1.1/http1.1.lo",
 //       "modules/cgi/cgi.lo",
 
 	   "modules/nmtrans/nmtrans.lo"
