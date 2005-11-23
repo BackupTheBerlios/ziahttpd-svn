@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Tue Nov 22 11:00:23 2005 texane
+// Last update Wed Nov 23 11:17:32 2005 texane
 //
 
 
@@ -78,12 +78,24 @@ bool	server::service::stat_module(const security_token_t& token,
 // For the moment, callbacks handling is implemented
 // by an array of callbacks
 
-static server::service::callback_t callbacks_[4] = {0, 0, 0, 0};
+// Currently, don't use iomanager to store
+// informations... use a little array, waiting
+// for the iomanager to be done.
+// For the moment, only handle on request at a time,
+// so let be only one slot in the ioslots_.
+
+#define NIOSLOTS	1
+static struct ioslot
+{
+  server::service::callback_t callbacks_[4];
+  server::service::iovec_t iov_;
+  http::session* session_;
+} ioslots_[NIOSLOTS];
 
 
 // Callback registering services
 
-bool	server::service::register_callback(sysapi::socket_in::handle_t& hsock,
+bool	server::service::register_callback(http::session& session,
 					   server::service::eventid_t evid,
 					   const server::service::callback_t& cb)
 {
@@ -92,28 +104,27 @@ bool	server::service::register_callback(sysapi::socket_in::handle_t& hsock,
   // This function erase the old callback, if any,
   // and always returns true.
 
-  callbacks_[evid] = cb;
+  ioslots_[0].callbacks_[evid] = cb;
+  ioslots_[0].session_ = &session;
   return true;
 }
 
 
 // Io operations
 
-bool	server::service::perform_io(sysapi::socket_in::handle_t& hsock,
-				    server::service::eventid_t evid,
-				    server::service::iovec_t& iov)
+bool	server::service::perform_io(http::session& session, server::service::eventid_t evid)
 {
   // Perform io operation according by calling the
   // callback registered for evid event.
   // Return false if no callbac is registered.
 
-  if (callbacks_[evid] == 0)
+  if (ioslots_[0].callbacks_[evid] == 0)
     return false;
 
   // !
   // Currently, no dereferd called is done, blocking mode.
   // This is temporary, since the iomanager will come soon.
-  return callbacks_[evid](hsock, iov);
+  return ioslots_[0].callbacks_[evid](ioslots_[0].session_, ioslots_[0].iov_);
 }
 
 

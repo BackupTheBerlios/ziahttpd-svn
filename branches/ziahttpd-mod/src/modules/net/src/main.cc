@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Wed Nov 23 09:41:49 2005 texane
+// Last update Wed Nov 23 11:05:43 2005 texane
 //
 
 
@@ -39,12 +39,12 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session&, server::core*, int&);
 
 
 // Io callbacks, exported from callback.o
-extern bool read_httpheaders(sysapi::socket_in::handle_t&, server::service::iovec_t&);
-extern bool read_httpbody(sysapi::socket_in::handle_t&, server::service::iovec_t&);
-extern bool read_cgistdout(sysapi::socket_in::handle_t&, server::service::iovec_t&);
-extern bool write_httpresponse(sysapi::socket_in::handle_t&, server::service::iovec_t&);
-extern bool write_cgistdin(sysapi::socket_in::handle_t&, server::service::iovec_t&);
-extern bool close_httpconnection(sysapi::socket_in::handle_t&, server::service::iovec_t&);
+extern bool read_httpheaders(http::session*, server::service::iovec_t&);
+extern bool read_httpbody(http::session*, server::service::iovec_t&);
+extern bool read_cgistdout(http::session*, server::service::iovec_t&);
+extern bool write_httpresponse(http::session*, server::service::iovec_t&);
+extern bool write_cgistdin(http::session*, server::service::iovec_t&);
+extern bool close_httpconnection(http::session*, server::service::iovec_t&);
 
 
 // Exported function definitions
@@ -68,13 +68,11 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   // For zia, meta data default reading function
   // reads http compliant lines from the network.
 
-  server::service::iovec_t iov;
-
   // Register request data reading callback
-  if (session.services_->register_callback(session.hsock_con(), server::service::EVREAD, read_httpheaders) == false)
+  if (session.services_->register_callback(session, server::service::EVREAD, read_httpheaders) == false)
     return false;
   
-  return session.services_->perform_io(session.hsock_con(), server::service::EVREAD, iov);
+  return session.services_->perform_io(session, server::service::EVREAD);
 }
 
 
@@ -85,15 +83,13 @@ MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&)
   // For zia, data default reading function
   // reads http compliant lines from the network.
 
-  server::service::iovec_t iov;
-
   // Register the callback, and performs the
   // read call.
 
-  if (session.services_->register_callback(session.hsock_con(), server::service::EVREAD, read_httpbody) == false)
+  if (session.services_->register_callback(session, server::service::EVREAD, read_httpbody) == false)
     return false;
 
-  return session.services_->perform_io(session.hsock_con(), server::service::EVREAD, iov);
+  return session.services_->perform_io(session, server::service::EVREAD);
 }
 
 
@@ -101,7 +97,7 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
 {
   // Register a new callback to be
   // called at send time
-  if (session.services_->register_callback(session.hsock_con(), server::service::EVWRITE, write_httpresponse) == false)
+  if (session.services_->register_callback(session, server::service::EVWRITE, write_httpresponse) == false)
     return false;
 
   // Cooking lesson:
@@ -112,7 +108,7 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
     server::service::iovec_t iov;
     iov.buf_ = session.hdrlines_out();
     iov.buf_ += session.content_out();
-    session.services_->perform_io(session.hsock_con(), server::service::EVWRITE, iov);
+    session.services_->perform_io(session, server::service::EVWRITE);
   }
 
   return true;
@@ -132,8 +128,8 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session& session, server::core*, int&)
   server::service::iovec_t iov;
 
   // Register a new callback for connection closing
-  if (session.services_->register_callback(session.hsock_con(), server::service::EVCLOSE, close_httpconnection) == false)
+  if (session.services_->register_callback(session, server::service::EVCLOSE, close_httpconnection) == false)
     return false;
 
-  return session.services_->perform_io(session.hsock_con(), server::service::EVCLOSE, iov);
+  return session.services_->perform_io(session, server::service::EVCLOSE);
 }
