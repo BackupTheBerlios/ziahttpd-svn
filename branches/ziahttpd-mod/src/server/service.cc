@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Wed Nov 23 16:17:52 2005 texane
+// Last update Wed Nov 23 16:41:46 2005 texane
 //
 
 
@@ -132,28 +132,44 @@ bool	server::service::perform_io(http::session& session, server::service::eventi
 
 // Resource creation service
 
-dataman::resource* server::service::create_resource(const std::string& filename)
+bool	server::service::create_resource(session& session,
+					 const string& filename)
 {
-  return dataman::resource::factory(filename);
+  if (session.resource_ != 0)
+    return false;
+
+  session.resource_ = dataman::resource::factory(filename);
+  return true;
 }
 
-dataman::resource* server::service::create_resource(const std::vector<const std::string>& av,
-						    const std::vector<const std::string>& env,
-						    const dataman::buffer& buf_stdin)
+bool	server::service::create_resource(session& session,
+					 const std::vector<const std::string>& av,
+					 const std::vector<const std::string>& env,
+					 const dataman::buffer& buf_stdin)
 {
-  return dataman::resource::factory(av, env, buf_stdin);
+  if (session.resource_ != 0)
+    return false;
+
+  session.resource_ = dataman::resource::factory(av, env, buf_stdin);
+  return true;
 }
 
-dataman::resource* server::service::create_resource(int stcode)
+bool	server::service::create_resource(session& session,
+					 unsigned int stcode)
 {
-  return dataman::resource::factory(stcode);
+  if (session.resource_ != 0)
+    return false;
+
+  session.resource_ = dataman::resource::factory(stcode);
+  return true;
 }
 
 
 
 // Configuration related operations
 
-string		server::service::query_conf(session& session, const string& key)
+string		server::service::query_conf(session& session,
+					    const string& key)
 {
   // Temporary function
 //   return session.conf().GetSimpleString(key);

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Wed Nov 23 15:55:14 2005 texane
+// Last update Wed Nov 23 16:38:36 2005 texane
 //
 
 
@@ -42,6 +42,7 @@ namespace http
     // in order for them to modify the request processing flow.
 
   public:
+
     session(dataman::conf&);
     ~session();
 
@@ -74,7 +75,9 @@ namespace http
     // Put here for the moment, avoiding undef sym in symbols ...
     server::service* services_;
 
+
   private:
+    friend class server::service;
 
     // resource pointed to by the client
     dataman::resource* resource_;
