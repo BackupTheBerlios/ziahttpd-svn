@@ -146,6 +146,18 @@
 					RelativePath="..\..\src\dataman\inet_helper.cc">
 				</File>
 				<File
+					RelativePath="..\..\src\dataman\resource.cc">
+				</File>
+				<File
+					RelativePath="..\..\src\dataman\resource_cgi.cc">
+				</File>
+				<File
+					RelativePath="..\..\src\dataman\resource_file.cc">
+				</File>
+				<File
+					RelativePath="..\..\src\dataman\resource_report.cc">
+				</File>
+				<File
 					RelativePath="..\..\src\dataman\stringmanager.cc">
 				</File>
 				<File
@@ -247,6 +259,9 @@
 				</File>
 				<File
 					RelativePath="..\..\src\include\dataman\inet_helper.hh">
+				</File>
+				<File
+					RelativePath="..\..\src\include\dataman\resource.hh">
 				</File>
 				<File
 					RelativePath="..\..\src\include\dataman\stringmanager.hh">
