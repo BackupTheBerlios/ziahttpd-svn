@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:31 2005 texane
-// Last update Wed Nov 23 23:03:06 2005 texane
+// Last update Wed Nov 23 23:14:06 2005 texane
 //
 
 
@@ -46,6 +46,7 @@ bool	dataman::report::open(error_t& err)
       buf_ = "<html><body><h1>404 Not Found</h1></body></html>";
       break;
     default:
+      buf_ = "<html><body><h1>Default Report Page</h1></body></html>";
       break;
     }
 
@@ -54,10 +55,21 @@ bool	dataman::report::open(error_t& err)
 }
 
 
-bool	dataman::report::fetch(buffer& buf, unsigned int, error_t&)
+bool	dataman::report::fetch(buffer& buf, unsigned int nbytes, error_t&)
 {
-  buf = buf_;
-  return false;
+  string substr;
+
+  // Normalize the size
+  if (buf_.size() < nbytes)
+    nbytes = buf_.size();
+
+  // Take the substring and remove
+  // nbytes from the buffer
+  substr.append(buf_, 0, nbytes);
+  buf_.erase(0, nbytes);
+  buf = substr;
+
+  return true;
 }
 
 
