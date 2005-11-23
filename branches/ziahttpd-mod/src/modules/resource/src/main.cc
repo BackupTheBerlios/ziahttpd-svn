@@ -47,6 +47,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	info_t info;
 	dataman::resource::error_t err;
 	char	size[20];
+	bool	err_code = false;
 
 	if ((session.uri().localname()[session.uri().localname().size() - 1] == '/')
 	&& (!have_directoryindex(session)))
@@ -55,14 +56,29 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		return (true);
 	}
 	check_typemine(session.uri(), info);
-	session.uri().normalize();
-	printf("NORMILIZE : %s\n", session.uri().localname().c_str());
 	session.info_out()["content-type"] = info.content_type;
 	if (info.type == ISFILE)
 	{
-		session.services_->create_resource(session, session.uri().localname());
+		if (!sysapi::file::is_readable(session.uri().localname().c_str()))
+		{
+			session.uri().status() = 401;
+			err_code = true;
+		}
+		if (!sysapi::file::exists(session.uri().localname().c_str()))
+		{
+			session.uri().status() = 404;
+			err_code = true;
+		}
+
+		if (!err_code)
+			session.services_->create_resource(session, session.uri().localname());
+		else
+			session.services_->create_resource(session, session.uri().status());
 		if (!session.resource()->open(err))
+		{
+			//status code internal error
 			printf("dans ton cul\n");
+		}
 		session.resource()->fetch(session.content_out(), err);
 		session.resource()->close(err);
 	}

@@ -34,6 +34,7 @@ void	http::uri::reset()
 	strstatus_ = "";
 	localname_ = "";
 	widename_ = "";
+	extension_ = "";
 }
 
 int&	http::uri::status()
