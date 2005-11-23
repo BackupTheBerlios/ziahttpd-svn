@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Wed Nov 23 11:17:32 2005 texane
+// Last update Wed Nov 23 12:09:03 2005 texane
 //
 
 
@@ -133,5 +133,6 @@ bool	server::service::perform_io(http::session& session, server::service::eventi
 string		server::service::query_conf(session& session, const string& key)
 {
   // Temporary function
-  return session.conf().GetSimpleString(key);
+//   return session.conf().GetSimpleString(key);
+  return "666";
 }

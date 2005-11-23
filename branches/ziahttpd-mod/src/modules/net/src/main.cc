@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Wed Nov 23 11:44:22 2005 texane
+// Last update Wed Nov 23 12:05:23 2005 texane
 //
 
 
@@ -63,8 +63,12 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   // Register request data reading callback
   if (session.services_->register_callback(session, server::service::EVREAD, read_httpheaders) == false)
     return false;
+
+  cout << "Getting metadata" << endl;
   
-  return session.services_->perform_io(session, server::service::EVREAD);
+  session.services_->perform_io(session, server::service::EVREAD);
+
+  return true;
 }
 
 
@@ -81,7 +85,11 @@ MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&)
   if (session.services_->register_callback(session, server::service::EVREAD, read_httpbody) == false)
     return false;
 
-  return session.services_->perform_io(session, server::service::EVREAD);
+  cout << "Getting data" << endl;
+
+  session.services_->perform_io(session, server::service::EVREAD);
+
+  return true;
 }
 
 
@@ -92,16 +100,9 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
   if (session.services_->register_callback(session, server::service::EVWRITE, write_httpresponse) == false)
     return false;
 
-  // Cooking lesson:
-  // Build the response buffer
-  // wrap it into an iovec
-  // and call the write service
-  {
-    server::service::iovec_t iov;
-    iov.buf_ = session.hdrlines_out();
-    iov.buf_ += session.content_out();
-    session.services_->perform_io(session, server::service::EVWRITE);
-  }
+  cout << "Sending response" << endl;
+
+  session.services_->perform_io(session, server::service::EVWRITE);
 
   return true;
 }
@@ -117,11 +118,14 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session& session, server::core*, int&)
 
   // ?
   // For the close connection hook, does error code matter
-  server::service::iovec_t iov;
+
+  cout << "closing connection" << endl;
 
   // Register a new callback for connection closing
   if (session.services_->register_callback(session, server::service::EVCLOSE, close_httpconnection) == false)
     return false;
 
-  return session.services_->perform_io(session, server::service::EVCLOSE);
+  session.services_->perform_io(session, server::service::EVCLOSE);
+
+  return true;
 }
