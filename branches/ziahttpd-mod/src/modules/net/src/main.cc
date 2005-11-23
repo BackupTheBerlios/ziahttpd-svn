@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Wed Nov 23 11:05:43 2005 texane
+// Last update Wed Nov 23 11:44:22 2005 texane
 //
 
 
@@ -16,11 +16,12 @@
 // made a this-like module.
 
 
-#include <zia.hh>
 #include <list>
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <zia.hh>
+#include <callback.hh>
 
 
 using std::cout;
@@ -36,15 +37,6 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session&, server::core*, int&);
 MOD_EXPORT( HK_GET_RQST_DATA )(http::session&, server::core*, int&);
 MOD_EXPORT( HK_SEND_RESPONSE)(http::session&, server::core*, int&);
 MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session&, server::core*, int&);
-
-
-// Io callbacks, exported from callback.o
-extern bool read_httpheaders(http::session*, server::service::iovec_t&);
-extern bool read_httpbody(http::session*, server::service::iovec_t&);
-extern bool read_cgistdout(http::session*, server::service::iovec_t&);
-extern bool write_httpresponse(http::session*, server::service::iovec_t&);
-extern bool write_cgistdin(http::session*, server::service::iovec_t&);
-extern bool close_httpconnection(http::session*, server::service::iovec_t&);
 
 
 // Exported function definitions

@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Tue Nov 22 20:24:05 2005 texane
+## Last update Wed Nov 23 11:47:41 2005 texane
 ##
 
 # ! Always include this file
@@ -27,6 +27,9 @@ trash	= $(srcs:.cc=.cc~) \
 	  Makefile~
 
 # Override default variables here
+
+CCPATHS	= $(CCPATHS) \
+	  -Isrc$(SLASH)include
 
 # Give your own rules here
 all	: $(name)

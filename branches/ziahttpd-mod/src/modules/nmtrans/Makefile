@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Mon Nov 21 16:20:47 2005 texane
+## Last update Wed Nov 23 11:54:19 2005 texane
 ##
 
 # ! Always include this file
@@ -17,7 +17,6 @@ name	= nmtrans.lo
 srcs	= src$(SLASH)main.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)buffer.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)http$(SLASH)uri.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)http$(SLASH)error_code.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)stringmanager.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)http$(SLASH)msgdata.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)cstring_helper.cc \

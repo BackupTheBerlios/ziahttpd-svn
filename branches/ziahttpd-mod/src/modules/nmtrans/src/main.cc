@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Tue Nov 22 21:25:11 2005 texane
+// Last update Wed Nov 23 11:57:50 2005 texane
 //
 
 
@@ -30,20 +30,20 @@ MOD_EXPORT( HK_BUILD_RESP_METADATA )(http::session&, server::core*, int&);
 
 MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
 {
-  cout << "\t[ * ] in the name translation module" << endl;
-  cout << "\t[ * ] altering uri, wide name is now: " << session.uri().widename() << endl;
+  session.uri().localname() = "../root/www" + session.uri().widename();
+
+  cout << "localname is " << std::hex << session.uri().localname() << endl;
 
   if (sysapi::file::is_directory(session.uri().localname().c_str())
-	  && session.uri().localname()[session.uri().localname().size() - 1] != '/')
+      && session.uri().localname()[session.uri().localname().size() - 1] != '/')
     {
       // This is a directory, add backslash to the end of name
-	  session.uri().widename() += '/';
-	  session.uri().status() = 301;
-	  return true;
+      session.uri().widename() += '/';
+      session.uri().status() = 301;
+      return true;
     }
-	session.uri().localname() = "../root/www" + session.uri().widename();
-	std::cout << "localfile :" << session.uri().localname() << std::endl;
-//	session.uri().localname() = "cgi-get-windows.exe";
+
+  std::cout << "localfile :" << session.uri().localname() << std::endl;
   
   return true;
 }
