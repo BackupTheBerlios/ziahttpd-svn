@@ -5,7 +5,7 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Sun Nov 13 18:09:24 2005 
+// Last update Tue Nov 22 10:36:27 2005 texane
 */
 
 #ifndef __ConfManager_H__
@@ -21,6 +21,7 @@
 #include <dataman/tinyxml.hh>
 
 using namespace	std;
+
 
 #define DEFAULT_FILE		"./conf/zia.conf"
 #define NB_CONTAINER		6

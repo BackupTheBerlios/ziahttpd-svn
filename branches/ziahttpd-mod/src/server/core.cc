@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Tue Nov 22 08:15:11 2005 texane
+// Last update Wed Nov 23 09:49:57 2005 texane
 //
 
 
@@ -86,12 +86,12 @@ bool	server::core::reload_conf()
 # if defined (_WIN32)
       "modules\\net\\net.lo",
       "modules\\http1.1\\http1.1.lo",
-      "modules\\cgi\\cgi.lo",
+//       "modules\\cgi\\cgi.lo",
       "modules\\nmtrans\\nmtrans.lo"
 #else
       "modules/net/net.lo",
       "modules/http1.1/http1.1.lo",
-      "modules/cgi/cgi.lo",
+//       "modules/cgi/cgi.lo",
       "modules/nmtrans/nmtrans.lo"
 # endif // _WIN32
     };
@@ -157,12 +157,12 @@ sysapi::thread::retcode_t	server::core::process_request(sysapi::thread::param_t 
 {
   http::session* session = reinterpret_cast<http::session*>(param);
 
-  cout << "[?] Entering processing function" << endl;
-
   try
     {
       while (session->persistent() == true)
 	{
+	  cout << "[*] entering processing stages" << endl;
+
 	  // - Request reception part
 	  modman::instance()->call_hooks(core::instance(), modman::CREATE_CON, session);
 	  modman::instance()->call_hooks(core::instance(), modman::READ_RQST_METADATA, session);
@@ -177,6 +177,8 @@ sysapi::thread::retcode_t	server::core::process_request(sysapi::thread::param_t 
 	  modman::instance()->call_hooks(core::instance(), modman::ALTER_RESP_METADATA, session);
 	  modman::instance()->call_hooks(core::instance(), modman::SEND_RESP, session);
 	  modman::instance()->call_hooks(core::instance(), modman::RELEASE_CON, session);
+
+	  getchar();
 	}
 
     }
@@ -189,8 +191,6 @@ sysapi::thread::retcode_t	server::core::process_request(sysapi::thread::param_t 
     {
       cerr << "<not-a-zia> exception caugth" << endl;
     }
-
-  cout << "[?] Returning from processing function" << endl;
 
   return 0;
 }

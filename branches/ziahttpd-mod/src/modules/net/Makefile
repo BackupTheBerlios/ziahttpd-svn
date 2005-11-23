@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Sun Nov 20 19:17:29 2005 texane
+## Last update Tue Nov 22 20:24:05 2005 texane
 ##
 
 # ! Always include this file
@@ -15,6 +15,7 @@
 # Give your own variables here
 name	= net.lo
 srcs	= src$(SLASH)main.cc \
+	  src$(SLASH)callback.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)buffer.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)cstring_helper.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)inet_helper.cc \

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Tue Nov 22 08:18:26 2005 texane
+// Last update Wed Nov 23 09:41:49 2005 texane
 //
 
 
@@ -38,6 +38,15 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session&, server::core*, int&);
 MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session&, server::core*, int&);
 
 
+// Io callbacks, exported from callback.o
+extern bool read_httpheaders(sysapi::socket_in::handle_t&, server::service::iovec_t&);
+extern bool read_httpbody(sysapi::socket_in::handle_t&, server::service::iovec_t&);
+extern bool read_cgistdout(sysapi::socket_in::handle_t&, server::service::iovec_t&);
+extern bool write_httpresponse(sysapi::socket_in::handle_t&, server::service::iovec_t&);
+extern bool write_cgistdin(sysapi::socket_in::handle_t&, server::service::iovec_t&);
+extern bool close_httpconnection(sysapi::socket_in::handle_t&, server::service::iovec_t&);
+
+
 // Exported function definitions
 
 MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core*, int&)
@@ -48,14 +57,6 @@ MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core*, int&)
   // so this function needs to export a function to be called
   // at close time.
 
-  debug_open(MODULE)
-    << debug::setindent(4)
-    << debug::setpunct('?')
-    << "Creating new connection"
-    << debug::fmt<debug::NEWLINE>
-  debug_close()
-    ;
-  
   return true;
 }
 
@@ -67,38 +68,13 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   // For zia, meta data default reading function
   // reads http compliant lines from the network.
 
-  sysapi::socket_in::error_t err;
-  char* line;
+  server::service::iovec_t iov;
 
-  // Get the status line
-  {
-    if (dataman::get_nextline(session.hsock_con(), &line, &err) == false)
-      {
-	debug_open(MODULE)
-	  << debug::setindent(4)
-	  << debug::setpunct('!')
-	  << "Cannot read metadata"
-	  << debug::fmt<debug::NEWLINE>
-	  debug_close()
-	  ;
-
-	return false;
-      }
-
-    dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
-    session.hdrlines_in().push_front(buffer);
-    free(line);
-  }
-
-  // Read headerlines
-  while (dataman::get_nextline(session.hsock_con(), &line, &err) && strlen(line))
-    {
-      dataman::buffer buffer(reinterpret_cast<unsigned char*>(line), strlen(line));
-      session.hdrlines_in().push_back(buffer);
-      free(line);
-    }
-
-  return true;
+  // Register request data reading callback
+  if (session.services_->register_callback(session.hsock_con(), server::service::EVREAD, read_httpheaders) == false)
+    return false;
+  
+  return session.services_->perform_io(session.hsock_con(), server::service::EVREAD, iov);
 }
 
 
@@ -109,66 +85,37 @@ MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&)
   // For zia, data default reading function
   // reads http compliant lines from the network.
 
-  unsigned char* content;
-  sysapi::socket_in::size_t ncontent;
+  server::service::iovec_t iov;
 
-  debug_open(MODULE)
-    << debug::setindent(4)
-    << debug::setpunct('?')
-    << "Requesting MetaData, Size: " << session.content_in().size() << debug::fmt<debug::NEWLINE>
-  debug_close()
-    ;
-  
-  if (session.content_in().size() == 0)
-    return true;
+  // Register the callback, and performs the
+  // read call.
 
-  // Read request body
-  {
-    content = new unsigned char[session.content_in().size()];
-    if (sysapi::socket_in::recv(session.hsock_con(), content, session.content_in().size(), &ncontent) == false)
-      {
-	debug_open(MODULE)
-	  << debug::setindent(4)
-	  << debug::setpunct('!')
-	  << "Cannot read content"
-	debug_close()
-	  ;
-	return false;
-      }
-  }
-  
-  // Fill in the content buffer
-  {
-    dataman::buffer buffer(content, ncontent);
-    session.content_in() = buffer;
-    delete[] content;
-  }
+  if (session.services_->register_callback(session.hsock_con(), server::service::EVREAD, read_httpbody) == false)
+    return false;
 
-  return true;
+  return session.services_->perform_io(session.hsock_con(), server::service::EVREAD, iov);
 }
 
 
 MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
 {
-  // Display meta data
-  {
-    int i = 0;
+  // Register a new callback to be
+  // called at send time
+  if (session.services_->register_callback(session.hsock_con(), server::service::EVWRITE, write_httpresponse) == false)
+    return false;
 
-    cout << "\t[<Default Module>] Response metadata" << endl;
-    cout << "\t{" << endl;
-    cout << "\t}" << endl;
+  // Cooking lesson:
+  // Build the response buffer
+  // wrap it into an iovec
+  // and call the write service
+  {
+    server::service::iovec_t iov;
+    iov.buf_ = session.hdrlines_out();
+    iov.buf_ += session.content_out();
+    session.services_->perform_io(session.hsock_con(), server::service::EVWRITE, iov);
   }
 
-  // Send the response
-  if (sysapi::socket_in::send(session.hsock_con(), (unsigned char*)session.hdrlines_out(), session.hdrlines_out().size()) == true &&
-      sysapi::socket_in::send(session.hsock_con(), (unsigned char*)session.content_out(), session.content_out().size()) == true)
-    {
-      cout << "\t[ * ] From net module: Sending Success" << endl;
-      return true;
-    }
-
-  cout << "\t[ * ] From net module: Sending Failure" << endl;
-  return false;
+  return true;
 }
 
 
@@ -179,9 +126,14 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session& session, server::core*, int&)
   // Our basic iomanager is based on io multiplexing,
   // so this function needs to export a function to be called
   // at close time.
-    
-  cout << "\t[<Default Module>] Releasing connection" << endl;
-  sysapi::socket_in::terminate_connection(session.hsock_con());
 
-  return true;
+  // ?
+  // For the close connection hook, does error code matter
+  server::service::iovec_t iov;
+
+  // Register a new callback for connection closing
+  if (session.services_->register_callback(session.hsock_con(), server::service::EVCLOSE, close_httpconnection) == false)
+    return false;
+
+  return session.services_->perform_io(session.hsock_con(), server::service::EVCLOSE, iov);
 }

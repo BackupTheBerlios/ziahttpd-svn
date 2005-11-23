@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Tue Nov 22 18:56:04 2005 texane
+// Last update Tue Nov 22 10:16:08 2005 texane
 //
 
 
@@ -13,6 +13,7 @@
 # define SERVER_SERVICE_HH
 
 
+#include <dataman/buffer.hh>
 #include <string>
 
 
@@ -91,11 +92,12 @@ namespace server
     // Io related operations.
     // ? (if someone out there knows how to have virtual templated methods...)
     typedef bool (*callback_t)(sysapi::socket_in::handle_t&, iovec_t&);
-    virtual bool register_callback(sysapi::socket_in::handle_t&, eventid_t, callback_t&);
+    virtual bool register_callback(sysapi::socket_in::handle_t&, eventid_t, const callback_t&);
     virtual bool perform_io(sysapi::socket_in::handle_t&, eventid_t, iovec_t&);
 
-    // - Conf related operations
     // ?
+    // - Conf related operations
+    virtual std::string	query_conf(http::session&, const std::string&);
     
   };
 }

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Tue Nov 22 08:27:40 2005 texane
+// Last update Tue Nov 22 10:05:55 2005 texane
 //
 
 
@@ -62,6 +62,9 @@ namespace http
 
     // Get/Set the connection persistency
     bool& persistent()				{ return persistent_; }
+
+    // Configuration
+    dataman::conf& conf()			{ return conf_; }
 
     // Put here for the moment, avoiding undef sym in symbols ...
     server::service* services_;

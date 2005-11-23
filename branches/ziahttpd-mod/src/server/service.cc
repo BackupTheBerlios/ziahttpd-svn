@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Tue Nov 22 18:34:27 2005 texane
+// Last update Tue Nov 22 11:00:23 2005 texane
 //
 
 
@@ -16,6 +16,7 @@
 #include <server/modman.hh>
 #include <server/service.hh>
 #include <dataman/buffer.hh>
+#include <dataman/conf.hh>
 
 
 using std::string;
@@ -74,23 +75,25 @@ bool	server::service::stat_module(const security_token_t& token,
 // Pass the whole session to callback'ed functions
 // so that they can store module-related error codes
 
+// For the moment, callbacks handling is implemented
+// by an array of callbacks
+
+static server::service::callback_t callbacks_[4] = {0, 0, 0, 0};
+
+
 // Callback registering services
 
 bool	server::service::register_callback(sysapi::socket_in::handle_t& hsock,
 					   server::service::eventid_t evid,
-					   server::service::callback_t& cb)
+					   const server::service::callback_t& cb)
 {
   // @see service.hh for a list callbacks
   // supported by the server.
-  
-//   if (callbacks_[reinterpret_cast<unsigned int>(evid)] == 0)
-//     {
-//       return true;
-//     }
+  // This function erase the old callback, if any,
+  // and always returns true.
 
-//   callbacks_[reinterpret_cast<unsigned int>(evid)].cb_ = cb;
-
-  return false;
+  callbacks_[evid] = cb;
+  return true;
 }
 
 
@@ -100,13 +103,24 @@ bool	server::service::perform_io(sysapi::socket_in::handle_t& hsock,
 				    server::service::eventid_t evid,
 				    server::service::iovec_t& iov)
 {
-  // Perform operation related to
-  // io (read, write, timeout, close)
+  // Perform io operation according by calling the
+  // callback registered for evid event.
+  // Return false if no callbac is registered.
 
-//   if (callbacks_[reinterpret_cast<unsigned int>(evid)] == 0)
-//     {
-//       return false;
-//     }
-  
-  return true;
+  if (callbacks_[evid] == 0)
+    return false;
+
+  // !
+  // Currently, no dereferd called is done, blocking mode.
+  // This is temporary, since the iomanager will come soon.
+  return callbacks_[evid](hsock, iov);
+}
+
+
+// Configuration related operations
+
+string		server::service::query_conf(session& session, const string& key)
+{
+  // Temporary function
+  return session.conf().GetSimpleString(key);
 }

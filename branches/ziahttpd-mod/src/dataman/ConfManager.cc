@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Sun Nov 13 18:12:19 2005 
+// Last update Tue Nov 22 11:09:56 2005 texane
 //
 
 
@@ -441,6 +441,11 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
 
 ConfManager::ConfManager()
 {
+  string conf_file(DEFAULT_FILE);
+  init_fct_ptr();
+  Reload(conf_file.c_str());
+  std::cout<< "FROM HERE:" << GetSimpleString("port") << std::endl;
+  std::cout<< "FROM HERE:" << GetSimpleString("timeout") << std::endl;
 }
 
 
