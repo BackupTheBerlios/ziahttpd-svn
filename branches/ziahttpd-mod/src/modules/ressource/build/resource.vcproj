@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="ressource"
+	Name="resource"
 	ProjectGUID="{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}"
 	RootNamespace="zia-httpd"
 	Keyword="Win32Proj">
@@ -137,6 +137,18 @@
 				</File>
 				<File
 					RelativePath="..\..\..\http\msgdata.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\dataman\resource.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\dataman\resource_cgi.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\dataman\resource_file.cc">
+				</File>
+				<File
+					RelativePath="..\..\..\dataman\resource_report.cc">
 				</File>
 				<File
 					RelativePath="..\..\..\dataman\stringmanager.cc">

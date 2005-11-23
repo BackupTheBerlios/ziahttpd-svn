@@ -45,7 +45,9 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core*, int&);
 MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int&)
 {
 	info_t info;
-if ((session.uri().localname()[session.uri().localname().size() - 1] == '/')
+	dataman::resource::error_t err;
+
+	if ((session.uri().localname()[session.uri().localname().size() - 1] == '/')
 	&& (!have_directoryindex(session)))
 	{
 	//	create ressouce cgi for directory listing
@@ -54,6 +56,14 @@ if ((session.uri().localname()[session.uri().localname().size() - 1] == '/')
 	printf("type mine\n");
 	check_typemine(session.uri(), info);
 	session.info_out()["content-type"] = info.content_type;
+	if (info.type == ISFILE)
+	{
+		session.services_->create_resource(session, session.uri().localname());
+		session.resource()->open(err);
+		session.resource()->fetch();
+
+		
+	}
 	return true;
 }
 
