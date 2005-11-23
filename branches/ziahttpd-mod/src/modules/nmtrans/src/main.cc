@@ -42,7 +42,12 @@ MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
     }
 	if (session.uri().localname()[session.uri().localname().size() - 1] == '/')
 	{
-		// the end if the www
+		// if the wwwname finish by a /, check Directory index
+//		if (!directoryindex(session))
+//		{
+			//call directory listing cgi
+//		}
+
 	}
 	std::cout << "localfile :" << session.uri().localname() << std::endl;
 //	session.uri().localname() = "cgi-get-windows.exe";
@@ -59,3 +64,8 @@ MOD_EXPORT( HK_BUILD_RESP_METADATA )(http::session& session, server::core* core,
     }
   return true;
 }
+
+//bool	directoryindex(http::session& session)
+//{
+//	return (true);
+//}

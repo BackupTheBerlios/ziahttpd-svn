@@ -58,7 +58,7 @@ MOD_EXPORT(HK_PARSE_RQST_METADATA) (http::session& session, server::core* core, 
 	ite++;
 	for( ; ite != hdrlines.end(); ite++)
 	{
-		cout << *ite->c_str() << endl;
+//		cout << (*ite).c_str() << endl;
 		if (!session.info_in().parse_rqstline_headerline(*ite, session.uri()))
 			session.uri().status() = 400;
 	}

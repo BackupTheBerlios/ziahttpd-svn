@@ -109,6 +109,7 @@ bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 	if (strncmp(version_.c_str(), "http/", 5))
 	{
 		version_ = "http/1.1";
+		free(str);
 		return (false);
 	}
 	free(str);
