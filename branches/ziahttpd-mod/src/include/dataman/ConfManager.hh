@@ -5,26 +5,25 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Tue Nov 22 10:36:27 2005 texane
+// Last update Sun Nov 20 18:07:59 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
 #define __ConfManager_H__
-
-#define TIXML_USE_STL // Force lib TinyXML to use STL
 
 #include <iostream>
 #include <map>
 #include <vector>
 #include <cctype>	// for using std::tolwer and std::toupper
 #include <algorithm>	// for using std::transform (convert string case)
-#include <dataman/tinyxml.hh>
+
+#include "tinyxml.hh"
 
 using namespace	std;
 
-
-#define DEFAULT_FILE		"./conf/zia.conf"
+#define DEFAULT_FILE		"C:/Documents and Settings/Flamaros/Mes documents/dev/Zia/branches/ziahttpd-mod/build/vcproj/conf/zia.conf"
 #define NB_CONTAINER		6
+#define NB_RECOGNIZED_VAR	2
 #define	SINGLE_VALUE		0
 #define	LIST_VALUE		1
 #define	EXPR_VALUE		2
@@ -35,6 +34,10 @@ using namespace	std;
 #define OP_UNDEFINED		-1
 #define OP_OR			0
 #define	OP_AND			1
+#define T_INTEGER		0
+#define T_FLOAT			1
+#define T_DOUBLE		2
+#define T_STRING		3
 
 /// An useful typedef
 typedef	vector<string>		tStringVector;
@@ -47,22 +50,34 @@ class	ConfManager
     string	sContainer;
     TiXmlNode	*(ConfManager::*fct)(TiXmlNode *pCurrentContainer);
   };
+
+  struct		VarInformation
+  {
+    string		sID;
+    int			iVarType;	// set for know if it's a "List" or a "Var" (understand vector<string> or string)
+    char		cReelType;	// it's a flag type
+    string		sValue;
+    tStringVector	svValue;
+  };
+
   tStringVector	_svListInclude;	// protect against multiple inclusion
 
-  void		init_fct_ptr();	// in progress
+  void		InitRecognizedVar(); // in progress
+  void		InitFctPtr();	// OK
   string	MyAttribute(TiXmlElement *pElement, string sAttribute);	// waiting for correcte NULL return and case insensitive version
   bool		InsensitiveCmp(string sValue1, string sValue2);	// OK, but can optimize with stricmp()?
   int		Load(string sConfFile);	// OK
   void		GetValues(TiXmlNode *pCurrentContainer, string &sValue, tStringVector &svValue); // OK, but juste add "expression var", "header var" and "List value"
-  string	Eval_Expression(TiXmlNode *pCurrentContainer, bool *pbRes);	// OK, but juste add "<", ">", "<=" and ">=" comparator
+  string	EvalExpression(TiXmlNode *pCurrentContainer, bool *pbRes);	// OK, but juste add "<", ">", "<=" and ">=" comparator
 
 
 
  protected:
   string			_LoadedFile;	// sav conf file path for reload
-  map<string, string>		_mSimpleData;
-  map<string, tStringVector>	_mListData;
-  ManageContainer		_Container[NB_CONTAINER];
+  map<string, string>		*_mSimpleData;
+  map<string, tStringVector>	*_mListData;
+  ManageContainer		*_Container;
+  VarInformation		*_RecognizedVar;
 
   TiXmlNode	*ManageRequiere(TiXmlNode *pCurrentContainer);	// in progress
   TiXmlNode	*ManageInclude(TiXmlNode *pCurrentContainer);	// OK
@@ -72,18 +87,17 @@ class	ConfManager
   TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool *pbRes);	// OK, must test it, and some features depend to Eval_Expression()
   TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
   void		DumpToMemory(TiXmlNode *pParent);		// OK
-
-
+  void		RemoveAndAddVar();				// in progrees
+  void		CheckValue(string sSearch, int iVarType);	// in progress
 
  public:
-  ConfManager();
-  ConfManager(char **av, const char &ConfFile = DEFAULT_FILE[0]);	// OK
+  ConfManager(int ac = 0, char **av = NULL, const char &ConfFile = DEFAULT_FILE[0]);	// OK
   ~ConfManager();							// OK
 
-  string	&GetSimpleString(string sVar) {return _mSimpleData[sVar];};	// OK
-  tStringVector	&GetListVector(string sVar) {return _mListData[sVar];};		// OK
-  int		SetSimpleString(string sVar, string sValue) {_mSimpleData[sVar] = sValue; return true;};	// OK
-  int		SetListVector(string sVar, tStringVector Value) {_mListData[sVar] = Value; return true;};	// OK
+  string	&GetSimpleString(string sVar) {return (*_mSimpleData)[sVar];};	// OK
+  tStringVector	&GetListVector(string sVar) {return (*_mListData)[sVar];};		// OK
+  int		SetSimpleString(string sVar, string sValue) {(*_mSimpleData)[sVar] = sValue; return true;};	// OK
+  int		SetListVector(string sVar, tStringVector Value) {(*_mListData)[sVar] = Value; return true;};	// OK
   int		Clear();			// OK
   int		Reload(string sConfFile = "");	// OK
 };
@@ -102,6 +116,12 @@ class	ConfManager
 /// or since its own resources to have the configuration by default.
 /// After the loading starting from a file it supplements the missing data or
 /// on the contrary removes those which are not recognized by the server.
+
+
+
+//
+// Private members
+//
 
 
 
@@ -151,6 +171,12 @@ class	ConfManager
 /// At this time, she can only do an "equal" or "diff" comparaison.
 /// In futher she must convert 'string' in 'double' for the others comparaison
 /// operator.
+
+
+
+//
+// Protected members
+//
 
 
 
@@ -214,6 +240,26 @@ class	ConfManager
 ///
 /// This function analyses the file and save variables in memory, she is also
 /// call for excute "Do" block for a "Loop" or a "Eval".
+
+/// \fn void ConfManager::RemoveAndAddVar()
+/// \brief this function remove unreconized variable
+///
+/// This function seeks the recognized variables, checks them and records them.
+/// If the variable does not exist (absent from file of configuration) it will
+/// use the variable by defect.
+/// The not recognized variables will not be recorded.
+
+/// \fn void ConfManager::CheckValue(string sSearch, int iVarType)
+/// \brief this function is called by "RemoveAndAddVar()"
+///
+/// This function set value wich correspond at the key sSearch at the default
+/// value if the variable is not correct.
+
+
+
+//
+// Public members
+//
 
 
 
