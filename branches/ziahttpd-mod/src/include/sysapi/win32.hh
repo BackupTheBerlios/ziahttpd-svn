@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Mon Nov 21 18:34:52 2005 texane
+// Last update Wed Nov 23 22:07:28 2005 texane
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -20,11 +20,15 @@
 #include <windows.h>
 #include <process.h>
 
+
 namespace win32
 {
   // @see sysapi/win32/file.cc
   namespace file
   {
+    // File path component delimitor
+    static const char delim = '\\';
+
     // Openning modes
     typedef enum
       {

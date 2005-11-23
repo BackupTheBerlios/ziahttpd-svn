@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Mon Nov 14 00:12:53 2005 
+// Last update Wed Nov 23 22:07:11 2005 texane
 //
 
 
@@ -37,6 +37,9 @@ namespace posix
   // @see sysapi/posix/file.cc
   namespace file
   {
+    // File name delimitor
+    static const char delim = '/';
+
     // Openning modes
     typedef enum
       {

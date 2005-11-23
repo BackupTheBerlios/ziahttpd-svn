@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Wed Nov 23 22:02:21 2005 texane
+// Last update Wed Nov 23 22:09:28 2005 texane
 //
 
 
@@ -44,14 +44,13 @@ bool	dataman::file::open(error_t& err)
       return false;
     }
 
-  if (sysapi::file::size("..\\root\\www\\index.html", &sz_) == false)
+  if (sysapi::file::size(filename_.c_str(), &sz_) == false)
     {
       sysapi::error::stringify("Cannot open the file");
       return false;
     }
 
-  ret = sysapi::file::open(&hfile_, "..\\root\\www\\index.html", sysapi::file::RDONLY);
-  //   ret = sysapi::file::open(&hfile_, filename_.c_str(), sysapi::file::RDONLY);
+  ret = sysapi::file::open(&hfile_, filename_.c_str(), sysapi::file::RDONLY);
   if (ret == false)
     {
       std::cout << "OIPENLKDSFJKLFJ" <<  std::endl;
