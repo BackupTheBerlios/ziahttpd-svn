@@ -82,3 +82,17 @@ bool	http::uri::build_extension()
 	extension_ = ++tmp;
 	return (false);
 }
+
+bool	http::uri::normalize()
+{
+	char	*str;
+
+	str = (char *)localname_.c_str();
+	while (*str)
+	{
+		if (*str == '/')
+			*str = sysapi::file::delim;
+		str++;
+	}
+	return (true);
+}

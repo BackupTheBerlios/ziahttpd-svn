@@ -133,6 +133,9 @@
 					RelativePath="..\..\..\dataman\buffer.cc">
 				</File>
 				<File
+					RelativePath="..\..\..\sysapi\win32\error.cc">
+				</File>
+				<File
 					RelativePath="..\..\..\sysapi\win32\file.cc">
 				</File>
 				<File

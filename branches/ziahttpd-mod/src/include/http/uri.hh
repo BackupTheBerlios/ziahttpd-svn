@@ -35,7 +35,9 @@ namespace http
     std::string&		widename();
     const std::string&	extension();
 	bool				build_extension();
+	bool				normalize();
 	void				reset();
+	
 
   private:
 

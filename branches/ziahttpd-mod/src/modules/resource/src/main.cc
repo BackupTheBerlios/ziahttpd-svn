@@ -46,6 +46,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 {
 	info_t info;
 	dataman::resource::error_t err;
+	char	size[20];
 
 	if ((session.uri().localname()[session.uri().localname().size() - 1] == '/')
 	&& (!have_directoryindex(session)))
@@ -53,23 +54,21 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	//	create ressouce cgi for directory listing
 		return (true);
 	}
-	printf("type mine\n");
 	check_typemine(session.uri(), info);
+	session.uri().normalize();
+	printf("NORMILIZE : %s\n", session.uri().localname().c_str());
 	session.info_out()["content-type"] = info.content_type;
-	printf("fd1\n");
 	if (info.type == ISFILE)
 	{
-	printf("fd2\n");
 		session.services_->create_resource(session, session.uri().localname());
-			printf("fd2-\n");
 		if (!session.resource()->open(err))
 			printf("dans ton cul\n");
-			printf("fd3\n");
 		session.resource()->fetch(session.content_out(), err);
-			printf("fd4\n");
 		session.resource()->close(err);
-		
 	}
+	//get the size of the buffer for add the content length entry to the response header
+	sprintf(size, "%d", session.content_out().size());
+	session.info_out()["content-length"] = size;
 	return true;
 }
 
