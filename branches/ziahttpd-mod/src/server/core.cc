@@ -84,18 +84,17 @@ bool	server::core::reload_conf()
   const char* modnams_[] =
     {
 # if defined (_WIN32)
-       "modules\\ressource\\ressource.lo",
-       "modules\\net\\net.lo",
-       "modules\\http1.1\\http1.1.lo",
-//       "modules\\cgi\\cgi.lo",
-
-	   "modules\\nmtrans\\nmtrans.lo"
+   "modules\\resource\\resource.lo",
+	"modules\\nmtrans\\nmtrans.lo",
+	"modules\\http1.1\\http1.1.lo",
+	 //"modules\\cgi\\cgi.lo", 
+	"modules\\net\\net.lo", 
 #else
        "modules/ressource/ressource.lo",
        "modules/net/net.lo",
        "modules/http1.1/http1.1.lo",
 //       "modules/cgi/cgi.lo",
-
+		"modules/net/net.lo",
 	   "modules/nmtrans/nmtrans.lo"
 # endif // _WIN32
     };

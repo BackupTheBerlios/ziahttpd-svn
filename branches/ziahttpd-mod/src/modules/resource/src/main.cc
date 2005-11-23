@@ -56,12 +56,18 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	printf("type mine\n");
 	check_typemine(session.uri(), info);
 	session.info_out()["content-type"] = info.content_type;
+	printf("fd1\n");
 	if (info.type == ISFILE)
 	{
+	printf("fd2\n");
 		session.services_->create_resource(session, session.uri().localname());
-		session.resource()->open(err);
-		session.resource()->fetch();
-
+			printf("fd2-\n");
+		if (!session.resource()->open(err))
+			printf("dans ton cul\n");
+			printf("fd3\n");
+		session.resource()->fetch(session.content_out(), err);
+			printf("fd4\n");
+		session.resource()->close(err);
 		
 	}
 	return true;
@@ -109,7 +115,7 @@ bool check_typemine(http::uri &uri, info_t &info)
 	uri.build_extension();
 	for (int i = 0; LALA[i].str; i++)
 	{
-			printf("type mine %s\n", LALA[i].str);
+		printf("type mine %s\n", LALA[i].str);
 		if (uri.extension() == LALA[i].type)
 		{
 			if (LALA[i].cgi)
@@ -125,5 +131,6 @@ bool check_typemine(http::uri &uri, info_t &info)
 	}
 	info.content_type = "text/html";
 	info.type = ISFILE;
+	printf ("END TPE MINE\n");
 	return (false);
 }
