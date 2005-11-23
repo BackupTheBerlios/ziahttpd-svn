@@ -31,10 +31,11 @@ namespace http
     int& status();
     std::string& strstatus();
 
-    std::string& localname();
-    std::string& widename();
-    const std::string& extension();
-	void		reset();
+    std::string&		localname();
+    std::string&		widename();
+    const std::string&	extension();
+	bool				build_extension();
+	void				reset();
 
   private:
 
@@ -43,6 +44,7 @@ namespace http
 
     std::string localname_;
     std::string widename_;
+	std::string extension_;
   
   };
 }

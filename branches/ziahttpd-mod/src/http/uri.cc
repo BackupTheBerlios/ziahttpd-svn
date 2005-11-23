@@ -50,6 +50,7 @@ string&	http::uri::strstatus()
 
 string&	http::uri::localname()
 {
+
   return localname_;
 }
 
@@ -62,5 +63,22 @@ string&	http::uri::widename()
 
 const string&	http::uri::extension()
 {
-	return (widename_);
+	return (extension_);
+}
+
+bool	http::uri::build_extension()
+{
+	char	*str;
+	char	*tmp;
+
+	str = (char *)localname_.c_str();
+	tmp = (char *)localname_.c_str() + localname_.size() - 1;
+	while (*tmp != '/')
+	{
+		if (*tmp == '.')
+			break ;
+		tmp--;
+	}
+	extension_ = ++tmp;
+	return (false);
 }

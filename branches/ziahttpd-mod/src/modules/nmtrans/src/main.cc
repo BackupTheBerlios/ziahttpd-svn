@@ -24,7 +24,7 @@ using std::string;
 
 MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session&, server::core*, int&);
 MOD_EXPORT( HK_BUILD_RESP_METADATA )(http::session&, server::core*, int&);
-
+//bool	directoryindex(http::session& session);
 
 // Exported function definitions
 
@@ -38,17 +38,22 @@ MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
       // This is a directory, add backslash to the end of name
       session.uri().widename() += '/';
       session.uri().status() = 301;
-      return true;
     }
-	if (session.uri().localname()[session.uri().localname().size() - 1] == '/')
-	{
-		// if the wwwname finish by a /, check Directory index
-//		if (!directoryindex(session))
-//		{
-			//call directory listing cgi
-//		}
 
-	}
+
+	// translate name
+
+
+
+	//if (session.uri().localname()[session.uri().localname().size() - 1] == '/')
+	//{
+	//	// if the wwwname finish by a /, check Directory index
+	//	if (!directoryindex(session))
+	//	{
+	//		//call directory listing cgi
+	//	}
+
+	//}
 	std::cout << "localfile :" << session.uri().localname() << std::endl;
 //	session.uri().localname() = "cgi-get-windows.exe";
 
@@ -67,5 +72,6 @@ MOD_EXPORT( HK_BUILD_RESP_METADATA )(http::session& session, server::core* core,
 
 //bool	directoryindex(http::session& session)
 //{
+//	char	*dir[] = {"", "", 0};
 //	return (true);
 //}
