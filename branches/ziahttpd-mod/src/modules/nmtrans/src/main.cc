@@ -32,8 +32,6 @@ MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
 {
   session.uri().localname() = "../root/www" + session.uri().widename();
 
-  cout << "localname is " << std::hex << session.uri().localname() << endl;
-
   if (sysapi::file::is_directory(session.uri().localname().c_str())
       && session.uri().localname()[session.uri().localname().size() - 1] != '/')
     {
@@ -42,9 +40,13 @@ MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
       session.uri().status() = 301;
       return true;
     }
+	if (session.uri().localname()[session.uri().localname().size() - 1] == '/')
+	{
+		// the end if the www
+	}
+	std::cout << "localfile :" << session.uri().localname() << std::endl;
+//	session.uri().localname() = "cgi-get-windows.exe";
 
-  std::cout << "localfile :" << session.uri().localname() << std::endl;
-  
   return true;
 }
 
