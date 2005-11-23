@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:31 2005 texane
-// Last update Wed Nov 23 21:00:46 2005 texane
+// Last update Wed Nov 23 23:03:06 2005 texane
 //
 
 
@@ -25,6 +25,10 @@ dataman::report::report(unsigned int stcode)
 }
 
 
+dataman::report::~report()
+{}
+
+
 bool	dataman::report::open(error_t& err)
 {
   // !
@@ -39,6 +43,7 @@ bool	dataman::report::open(error_t& err)
   switch (stcode_)
     {
     case 404:
+      buf_ = "<html><body><h1>404 Not Found</h1></body></html>";
       break;
     default:
       break;
@@ -49,15 +54,17 @@ bool	dataman::report::open(error_t& err)
 }
 
 
-bool	dataman::report::fetch(buffer&, unsigned int, error_t&)
+bool	dataman::report::fetch(buffer& buf, unsigned int, error_t&)
 {
+  buf = buf_;
   return false;
 }
 
 
-bool	dataman::report::fetch(buffer&, error_t&)
+bool	dataman::report::fetch(buffer& buf, error_t&)
 {
-  return false;
+  buf = buf_;
+  return true;
 }
 
 

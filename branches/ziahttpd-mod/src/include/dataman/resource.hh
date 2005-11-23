@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Wed Nov 23 21:57:55 2005 texane
+// Last update Wed Nov 23 22:59:28 2005 texane
 //
 
 
@@ -71,6 +71,10 @@ namespace dataman
     bool fetch(buffer&, error_t&);
     bool close(error_t&);
 
+    // Destructor, close handle if
+    // not close.
+    virtual ~file();
+
 
   private:
     bool opened_;
@@ -100,6 +104,8 @@ namespace dataman
     bool fetch(buffer&, error_t&);
     bool close(error_t&);
 
+    // Destructor, release the process
+    virtual ~cgi();
 
   private:
     unsigned int stcode_;
@@ -128,12 +134,14 @@ namespace dataman
     bool fetch(buffer&, error_t&);
     bool close(error_t&);
 
+    virtual ~report();
 
   private:
 
     // Status code
     unsigned int stcode_;
     bool formed_;
+    std::string buf_;
   };
 }
 

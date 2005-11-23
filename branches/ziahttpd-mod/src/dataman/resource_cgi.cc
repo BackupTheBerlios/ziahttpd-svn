@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Wed Nov 23 16:09:38 2005 texane
+// Last update Wed Nov 23 22:50:28 2005 texane
 //
 
 
@@ -24,9 +24,11 @@ using dataman::buffer;
 dataman::cgi::cgi(const vector<const string>&,
 		  const vector<const string>&,
 		  const buffer&)
-{
-  
-}
+{}
+
+
+dataman::cgi::~cgi()
+{}
 
 
 bool	dataman::cgi::open(error_t&)

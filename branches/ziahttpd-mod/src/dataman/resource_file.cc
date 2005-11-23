@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Wed Nov 23 22:09:28 2005 texane
+// Last update Wed Nov 23 22:52:40 2005 texane
 //
 
 
@@ -31,6 +31,13 @@ dataman::file::file(const string& filename)
 
   opened_ = false;
   filename_ = filename;
+}
+
+
+dataman::file::~file()
+{
+  if (opened_ == true)
+    sysapi::file::close(hfile_);
 }
 
 
