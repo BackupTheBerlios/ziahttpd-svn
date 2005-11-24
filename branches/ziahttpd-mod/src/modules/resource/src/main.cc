@@ -57,6 +57,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	}
 	check_typemine(session.uri(), info);
 	session.info_out()["content-type"] = info.content_type;
+
 	if (info.type == ISFILE)
 	{
 		if (!sysapi::file::is_readable(session.uri().localname().c_str()))
@@ -74,7 +75,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 			session.services_->create_resource(session, session.uri().localname());
 		else
 			session.services_->create_resource(session, session.uri().status());
-		if (!session.resource()->open(err))
+		if (!session.resource()->open(err, dataman::resource::O_FETCHONLY))
 		{
 			//status code internal error
 			printf("dans ton cul\n");
@@ -90,17 +91,19 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 
 bool	have_directoryindex(http::session& session)
 {
-	string	str[] = {"index.html", "index.htm", ""};
 	string	tmp;
+	std::vector<std::string>::iterator iter;
+	std::vector<std::string>& vectmp = session.services_->query_conf_complex(session, "directoryindex");
 
-	for (int i = 0; !str[i].empty(); i++)
+	for(iter = vectmp.begin();
+		iter != vectmp.end(); iter++)
 	{
-		tmp = session.uri().localname() + str[i];
+		tmp = session.uri().localname() + *iter;
 		printf("index : %s\n",tmp.c_str());
 		if (sysapi::file::is_readable(tmp.c_str()))
 		{
 			session.uri().localname() = tmp;
-			session.uri().widename() = session.uri().widename() + str[i];
+			session.uri().widename() = session.uri().widename() + *iter;
 			printf("directory index found : %s\n", session.uri().localname().c_str());
 			return (true);
 		}
@@ -146,6 +149,5 @@ bool check_typemine(http::uri &uri, info_t &info)
 	}
 	info.content_type = "text/html";
 	info.type = ISFILE;
-	printf ("END TPE MINE\n");
 	return (false);
 }

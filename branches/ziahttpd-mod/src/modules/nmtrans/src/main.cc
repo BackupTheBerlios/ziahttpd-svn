@@ -30,9 +30,8 @@ MOD_EXPORT( HK_BUILD_RESP_METADATA )(http::session&, server::core*, int&);
 
 MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
 {
-  //std::cout << "doc root : " << session.conf().GetSimpleString("documentroot") << std::endl;
-  session.uri().localname() = session.conf().GetSimpleString("documentroot") + session.uri().widename();
-session.uri().localname() = "../root/www/" + session.uri().widename();
+//  std::cout << "doc root : " << session.services_->query_conf(session, "documentroot") << std::endl;
+  session.uri().localname() = session.services_->query_conf_simple(session, "documentroot") + session.uri().widename();
   if (sysapi::file::is_directory(session.uri().localname().c_str())
       && session.uri().localname()[session.uri().localname().size() - 1] != '/')
     {
@@ -41,22 +40,7 @@ session.uri().localname() = "../root/www/" + session.uri().widename();
       session.uri().status() = 301;
     }
 
-
-	// translate name
-
-
-
-	//if (session.uri().localname()[session.uri().localname().size() - 1] == '/')
-	//{
-	//	// if the wwwname finish by a /, check Directory index
-	//	if (!directoryindex(session))
-	//	{
-	//		//call directory listing cgi
-	//	}
-
-	//}
 	std::cout << "localfile :" << session.uri().localname() << std::endl;
-//	session.uri().localname() = "cgi-get-windows.exe";
 
   return true;
 }
@@ -70,9 +54,3 @@ MOD_EXPORT( HK_BUILD_RESP_METADATA )(http::session& session, server::core* core,
     }
   return true;
 }
-
-//bool	directoryindex(http::session& session)
-//{
-//	char	*dir[] = {"", "", 0};
-//	return (true);
-//}
