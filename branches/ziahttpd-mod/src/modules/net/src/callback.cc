@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Thu Nov 24 13:10:20 2005 texane
+// Last update Thu Nov 24 14:16:20 2005 texane
 //
 
 
@@ -33,28 +33,29 @@ bool read_httpheaders(http::session* session, server::service::iovec_t& iov)
 
   // Get the status line
   {
+    cout << "GETTING STATUS LINE" << endl;
     if (dataman::get_nextline(session->hsock_con(), &line, &err) == false)
       {
+	cout << "Cannot get status line" << endl;
 	return false;
       }
+    cout << "GOT STATUS LINE" << endl;
 
     dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
     session->hdrlines_in().push_front(buffer);
     free(line);
   }
 
+  cout << "GOT STATUS LINE" << endl;
+
   // Read headerlines
   while (dataman::get_nextline(session->hsock_con(), &line, &err) && strlen(line))
     {
+      cout << "GOT HDR LINE" << endl;
       dataman::buffer buffer(reinterpret_cast<unsigned char*>(line), strlen(line));
       session->hdrlines_in().push_back(buffer);
       free(line);
     }
-
-  // Request the server to register new callback
-  session->services_->register_callback(*session, server::service::EVREAD, read_httpbody);
-  // Perform the io
-  session->services_->perform_io(*session, server::service::EVREAD);
 
   return true;
 }
@@ -64,17 +65,19 @@ bool read_httpbody(http::session* session, server::service::iovec_t& iov)
 {
   unsigned char* content;
   sysapi::socket_in::size_t ncontent;
+  sysapi::socket_in::size_t nrecv;
+  sysapi::socket_in::error_t err;
 
   // There is nothing to read from
   if (session->content_in().size() == 0)
-    return true;
+    {
+      cout << "NOTHING TO DO IN THE READBODY" << endl;
+      return true;
+    }
 
   // Read the content
-  content = new unsigned char[session->content_in().size()];
-  if (sysapi::socket_in::recv(session->hsock_con(), content, session->content_in().size(), &ncontent) == false)
-    {
-      return false;
-    }
+  if (dataman::get_nextblock(session->hsock_con(), &content, session->content_in().size(), &nrecv, &err) == false)
+    return false;
 
   // Fill in the content buffer
   {

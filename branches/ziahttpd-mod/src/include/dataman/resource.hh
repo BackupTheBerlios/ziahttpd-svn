@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Thu Nov 24 13:45:48 2005 texane
+// Last update Thu Nov 24 13:53:22 2005 texane
 //
 
 
@@ -27,7 +27,10 @@ namespace dataman
     // Resource is an interface
 
   public:
-    // Possible open mode
+    // Possible open modes.
+    // This is necessary to handle access to resources.
+    // For instance, we can have a process whose the stdin
+    // has to be feed with the body of an http request.
     typedef enum
       {
 	
@@ -67,7 +70,7 @@ namespace dataman
     // Open the resource
     virtual bool open(error_t&) = 0;
     // Feed in the resource (think about put with body...)
-//     virtual bool feed(buffer&, error_t&) = 0;
+    // virtual bool feed(buffer&, error_t&) = 0;
     // Fetch from resource
     virtual bool fetch(buffer&, unsigned int, error_t&) = 0;
     virtual bool fetch(buffer&, error_t&) = 0;

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Thu Nov 24 13:51:28 2005 texane
+// Last update Thu Nov 24 14:19:24 2005 texane
 //
 
 
@@ -64,6 +64,7 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   if (session.services_->register_callback(session, server::service::EVREAD, read_httpheaders) == false)
     return false;
 
+  cout << "METADATA ENTER" << endl;
   session.services_->perform_io(session, server::service::EVREAD);
 
   return true;
@@ -118,7 +119,7 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session& session, server::core*, int&)
   // For the close connection hook, does error code matter
 
   if (session.persistent() == true)
-    return false;
+    return true;
 
   cout << "closing connection" << endl;
 

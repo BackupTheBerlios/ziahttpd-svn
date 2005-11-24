@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:46:45 2005 
-// Last update Thu Nov 24 13:01:17 2005 texane
+// Last update Thu Nov 24 13:57:35 2005 texane
 //
 
 
@@ -49,18 +49,17 @@ bool	http::session::reset()
   persistent_ = true;
 
   // Clear in information
-  // ! info_in_.clear();
+  info_in_.reset();
   content_in_.clear();
   hdrlines_in_.clear();
 
   // Clear out informations
-  // ! info_out_.clear();
+  info_out_.reset();
   hdrlines_out_.clear();
   content_out_.clear();
 
   // Clear the uri
   // ? Ask mat to alias the uri.reset -> uri.clear
-  // uri_.clear();
   uri_.reset();
 
   // Increment the pass count
