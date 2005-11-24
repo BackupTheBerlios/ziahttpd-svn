@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Wed Nov 23 23:30:14 2005 texane
+// Last update Thu Nov 24 13:45:48 2005 texane
 //
 
 
@@ -27,10 +27,17 @@ namespace dataman
     // Resource is an interface
 
   public:
+    // Possible open mode
+    typedef enum
+      {
+	
+      } openmode_t;
+
     // Possible resource access failure
     typedef enum
       {
-	EOFRES = 0,
+	EOFETCHING = 0,
+	EOFEEDING,
 	NOTFOUND,
 	PERMDENIED,
 	SYSLIMIT,
@@ -41,17 +48,30 @@ namespace dataman
 
     // Interface a concrete resource has to implement
 
-    // -
-    // Callback of the form
-    // res->open();
-    // while res->feed();
-    // while res->fetch();
-    // res->close();
+    // - Resource interface
+    // In order to manipulate resource more generically,
+    // and to allow optimizing resource usages,
+    // zia core server uses the resource interface.
+    // Typically, a cookbook to use a resource is as follow
+    // 1. Create a new resource through the resource factory
+    // 2. Open the resource when needed
+    // 3. Feed the resource until it returns false
+    //	  with the error code == EOFEEDING
+    // 4. Fetch your buffer with the content produces
+    //	  by the resource, until it return false with the
+    //    error EOFECHING
+    // 5. Close the resource.
+    // This way, you can use process, file, buffer in the
+    // same way.
 
+    // Open the resource
     virtual bool open(error_t&) = 0;
+    // Feed in the resource (think about put with body...)
+//     virtual bool feed(buffer&, error_t&) = 0;
+    // Fetch from resource
     virtual bool fetch(buffer&, unsigned int, error_t&) = 0;
     virtual bool fetch(buffer&, error_t&) = 0;
-    // virtual bool feed(buffer&, error_t&) = 0;
+    // Release resource internals
     virtual bool close(error_t&) = 0;
 
     // Factory design pattern, by function overloading

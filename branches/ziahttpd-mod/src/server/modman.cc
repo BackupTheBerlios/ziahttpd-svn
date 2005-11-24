@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:34:44 2005 
-// Last update Thu Nov 24 13:15:52 2005 texane
+// Last update Thu Nov 24 13:47:01 2005 texane
 //
 
 
@@ -210,7 +210,10 @@ bool	server::modman::call_hooks(core* core, stageid_t id, http::session* session
   while (cur != end)
     {
       if ((*cur)->*hook)
-	((*cur)->*hook)(*session, (*cur)->priviledged_ ? core : 0, reason);
+	{
+	  cerr << "[HOOK]: " << (*cur)->name_ << endl;
+	  ((*cur)->*hook)(*session, (*cur)->priviledged_ ? core : 0, reason);
+	}
       ++cur;
     }
 
