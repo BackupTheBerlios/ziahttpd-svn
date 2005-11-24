@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Wed Nov 23 16:42:56 2005 texane
+// Last update Thu Nov 24 15:34:19 2005 texane
 //
 
 
@@ -107,7 +107,8 @@ namespace server
 
     // ?
     // - Conf related operations
-    virtual std::string	query_conf(http::session&, const std::string&);
+    virtual std::string& query_conf_simple(http::session&, const std::string&);
+    virtual std::vector<std::string>& query_conf_complex(http::session&, const std::string&);
     
   };
 }

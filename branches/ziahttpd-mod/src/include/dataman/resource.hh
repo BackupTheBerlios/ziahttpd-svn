@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Thu Nov 24 13:53:22 2005 texane
+// Last update Thu Nov 24 15:40:27 2005 texane
 //
 
 
@@ -70,7 +70,7 @@ namespace dataman
     // Open the resource
     virtual bool open(error_t&) = 0;
     // Feed in the resource (think about put with body...)
-    // virtual bool feed(buffer&, error_t&) = 0;
+//     virtual bool feed(buffer&, error_t&) = 0;
     // Fetch from resource
     virtual bool fetch(buffer&, unsigned int, error_t&) = 0;
     virtual bool fetch(buffer&, error_t&) = 0;
@@ -101,6 +101,7 @@ namespace dataman
     bool open(error_t&);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
+    bool feed(buffer&, error_t);
     bool close(error_t&);
 
     // Destructor, close handle if
@@ -134,6 +135,7 @@ namespace dataman
     bool open(error_t&);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
+    bool feed(buffer&, error_t);
     bool close(error_t&);
 
     // Destructor, release the process
@@ -164,6 +166,7 @@ namespace dataman
     bool open(error_t&);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
+    bool feed(buffer&, error_t);
     bool close(error_t&);
 
     virtual ~report();

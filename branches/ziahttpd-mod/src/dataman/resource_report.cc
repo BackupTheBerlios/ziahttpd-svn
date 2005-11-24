@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:31 2005 texane
-// Last update Wed Nov 23 23:14:06 2005 texane
+// Last update Thu Nov 24 15:41:20 2005 texane
 //
 
 
@@ -78,6 +78,12 @@ bool	dataman::report::fetch(buffer& buf, error_t&)
   buf = buf_;
   return true;
 }
+
+
+// bool	dataman::report::feed(buffer&, error_t&)
+// {
+//   return true;
+// }
 
 
 bool	dataman::report::close(error_t&)

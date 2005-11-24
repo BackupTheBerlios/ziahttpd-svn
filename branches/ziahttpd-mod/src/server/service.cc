@@ -5,11 +5,12 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Wed Nov 23 21:29:35 2005 texane
+// Last update Thu Nov 24 15:39:04 2005 texane
 //
 
 
 #include <string>
+#include <vector>
 #include <iostream>
 #include <server/core.hh>
 #include <http/session.hh>
@@ -21,6 +22,7 @@
 
 
 using std::string;
+using std::vector;
 using std::cout;
 using std::endl;
 using http::session;
@@ -168,9 +170,15 @@ bool	server::service::create_resource(session& session,
 
 // Configuration related operations
 
-string		server::service::query_conf(session& session,
-					    const string& key)
+string&		server::service::query_conf_simple(session& session,
+						   const string& key)
 {
-  // Temporary function
   return session.conf().GetSimpleString(key);
+}
+
+
+vector<string>&	server::service::query_conf_complex(session& session,
+						    const string& key)
+{
+  return session.conf().GetListVector(key);
 }
