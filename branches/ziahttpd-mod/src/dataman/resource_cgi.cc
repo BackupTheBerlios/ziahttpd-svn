@@ -5,17 +5,21 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Thu Nov 24 18:44:40 2005 texane
+// Last update Thu Nov 24 19:58:49 2005 texane
 //
 
 
 #include <vector>
 #include <string>
+#include <cstring>
+#include <iostream>
 #include <sysapi/sysapi.hh>
 #include <dataman/buffer.hh>
 #include <dataman/resource.hh>
 
 
+using std::cout;
+using std::endl;
 using std::vector;
 using std::string;
 using dataman::buffer;
@@ -25,6 +29,27 @@ dataman::cgi::cgi(const vector<const string>& av,
 		  const vector<const string>& env)
 {
   reset();
+
+  // Copy av
+  av_ = new char*[av.size() + 1];
+  av_[av.size()] = 0;
+  ac_ = av.size();
+  for (unsigned int i = 0; i < av.size(); ++i)
+    {
+      av_[i] = new char[av[i].size() + 1];
+      strcpy(av_[i], av[i].c_str());
+    }
+
+  cout << "number of resource: " << ac_ << endl;
+
+  // Copy environ block
+  env_ = new char*[env.size() + 1];
+  env_[env.size()] = 0;
+  for (unsigned int i = 0; i < env.size(); ++i)
+    {
+      env_[i] = new char[env[i].size() + 1];
+      strcpy(env_[i], env[i].c_str());
+    }
 }
 
 
@@ -87,19 +112,26 @@ bool	dataman::cgi::fetch(buffer& buf, unsigned int nbytes, error_t& err)
   bool ret;
   sysapi::file::size_t nread;
   sysapi::process::state_t st;
+  unsigned char* wrk;
 
   // Thus, fetching is true
   feeding_ = false;
 
+  wrk = new unsigned char[nbytes];
   ret = sysapi::file::read(hout_,
-			   (unsigned char*)buf,
+			   wrk,
 			   nbytes,
 			   &nread);
   if (ret == false)
     {
+      delete wrk;
       err = OPFAILED;
       return false;
     }
+
+  // Set the size we have just read
+  buf = buffer(wrk, nread);
+  delete wrk;
 
   // Is the process done, dont' block if not
   ret = sysapi::process::wait_single(hproc_, &st, sysapi::process::DONTWAIT);

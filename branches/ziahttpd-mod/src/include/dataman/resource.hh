@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Thu Nov 24 18:43:05 2005 texane
+// Last update Thu Nov 24 19:47:16 2005 texane
 //
 
 
@@ -153,7 +153,7 @@ namespace dataman
 
     // Resource for the process
     // to be created
-    int ac_;
+    unsigned int ac_;
     char** av_;
     char** env_;
 

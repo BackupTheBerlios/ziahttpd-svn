@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Thu Nov 24 15:07:59 2005 texane
+// Last update Thu Nov 24 19:00:31 2005 texane
 //
 
 
@@ -33,25 +33,20 @@ bool read_httpheaders(http::session* session, server::service::iovec_t& iov)
 
   // Get the status line
   {
-    cout << "GETTING STATUS LINE" << endl;
     if (dataman::get_nextline(session->hsock_con(), &line, &err) == false)
       {
 	cout << "Cannot get status line" << endl;
 	return false;
       }
-    cout << "GOT STATUS LINE" << endl;
 
     dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
     session->hdrlines_in().push_front(buffer);
     free(line);
   }
 
-  cout << "GOT STATUS LINE" << endl;
-
   // Read headerlines
   while (dataman::get_nextline(session->hsock_con(), &line, &err) && strlen(line))
     {
-      cout << "GOT HDR LINE" << endl;
       dataman::buffer buffer(reinterpret_cast<unsigned char*>(line), strlen(line));
       session->hdrlines_in().push_back(buffer);
       free(line);
@@ -70,10 +65,7 @@ bool read_httpbody(http::session* session, server::service::iovec_t& iov)
 
   // There is nothing to read from
   if (session->content_in().size() == 0)
-    {
-      cout << "NOTHING TO DO IN THE READBODY" << endl;
-      return true;
-    }
+    return true;
 
   // Read the content
   if (dataman::get_nextblock(session->hsock_con(), &content, session->content_in().size(), &nrecv, &err) == false)
@@ -110,9 +102,6 @@ bool write_httpresponse(http::session* session, server::service::iovec_t&)
   // and call the write service
   buf += session->hdrlines_out();
   buf += session->content_out();
-
-  cout << "body: " << (unsigned)session->content_out().size() << endl;
-  cout << "sending over " << buf.size() << " bytes" << endl;
 
   if (sysapi::socket_in::send(session->hsock_con(), (unsigned char*)buf, buf.size(), &nrsent) == false)
     {
