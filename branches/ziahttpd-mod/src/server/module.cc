@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 22:45:49 2005 
-// Last update Mon Nov 14 13:21:56 2005 
+// Last update Thu Nov 24 13:14:39 2005 texane
 //
 
 
@@ -31,6 +31,7 @@ server::module::module(const string& name, bool priviledged, bool active)
 
   priviledged_ = priviledged;
   running_ = active;
+  name_ = name;
 
   if (sysapi::shared_object::open(hobj_, name, err) == false)
     {

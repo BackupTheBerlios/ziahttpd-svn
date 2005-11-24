@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Wed Nov 23 12:05:23 2005 texane
+// Last update Thu Nov 24 13:10:54 2005 texane
 //
 
 
@@ -64,8 +64,6 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   if (session.services_->register_callback(session, server::service::EVREAD, read_httpheaders) == false)
     return false;
 
-  cout << "Getting metadata" << endl;
-  
   session.services_->perform_io(session, server::service::EVREAD);
 
   return true;
@@ -82,10 +80,10 @@ MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&)
   // Register the callback, and performs the
   // read call.
 
+  cout << "READ DATA" << endl;
+
   if (session.services_->register_callback(session, server::service::EVREAD, read_httpbody) == false)
     return false;
-
-  cout << "Getting data" << endl;
 
   session.services_->perform_io(session, server::service::EVREAD);
 

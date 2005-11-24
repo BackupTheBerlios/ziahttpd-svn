@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Wed Nov 23 22:40:26 2005 texane
+// Last update Thu Nov 24 12:50:12 2005 texane
 //
 
 
@@ -160,6 +160,9 @@ sysapi::thread::retcode_t	server::core::process_request(sysapi::thread::param_t 
 	{
 	  cout << "[*] entering processing stages" << endl;
 
+	  // Reset the session internals
+	  session->reset();
+
 	  // - Request reception part
 	  modman::instance()->call_hooks(core::instance(), modman::CREATE_CON, session);
 	  modman::instance()->call_hooks(core::instance(), modman::READ_RQST_METADATA, session);
@@ -174,8 +177,6 @@ sysapi::thread::retcode_t	server::core::process_request(sysapi::thread::param_t 
 	  modman::instance()->call_hooks(core::instance(), modman::ALTER_RESP_METADATA, session);
 	  modman::instance()->call_hooks(core::instance(), modman::SEND_RESP, session);
 	  modman::instance()->call_hooks(core::instance(), modman::RELEASE_CON, session);
-
-	  getchar();
 	}
 
     }

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Oct 26 15:24:49 2005 
-// Last update Sun Nov 20 15:08:08 2005 texane
+// Last update Thu Nov 24 13:22:52 2005 texane
 //
 
 
@@ -37,8 +37,28 @@ namespace server
     {
       // Base class for error handling
     public:
+      base(const char* filename = 0,
+	   const char* funcname = 0,
+	   unsigned int nrline = 0)
+      {
+	filename_ = "<FILENAME NOT KNOWN>";
+	funcname_ = "<FUNCNAME NOT KNOWN>";
+
+	if (filename)
+	  filename_ = filename;
+	if (funcname_)
+	  funcname_ = funcname;
+	nrline_ = nrline;
+      }
+
       bool	report()
       {
+	std::cerr << "("
+		  << filename_ << ","
+		  << funcname_ << ","
+		  << nrline_
+		  << ")"
+		  << std::endl;
 	std::cerr << "Unknown error occured (<zia-base-exception>)" << std::endl;
 	return false;
       }
@@ -49,6 +69,12 @@ namespace server
 	exit(-1);
 	return false;
       }
+
+
+    private:
+      const char* funcname_;
+      const char* filename_;
+      int nrline_;
     };
   }
 }

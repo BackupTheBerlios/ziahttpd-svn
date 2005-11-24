@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 19:56:39 2005 texane
-// Last update Mon Nov 21 23:17:49 2005 texane
+// Last update Thu Nov 24 12:59:11 2005 texane
 //
 
 
@@ -43,6 +43,7 @@ namespace dataman
     unsigned char* dup() const;
 
     void reset();
+    void clear();
 
     buffer operator+(const buffer&);
     buffer& operator+=(const buffer&);

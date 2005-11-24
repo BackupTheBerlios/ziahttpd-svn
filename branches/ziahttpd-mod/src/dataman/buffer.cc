@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Mon Nov 21 23:29:43 2005 texane
+// Last update Thu Nov 24 13:00:07 2005 texane
 //
 
 
@@ -120,6 +120,13 @@ dataman::buffer::buffer(sysapi::file::handle_t& hfile)
 dataman::buffer::~buffer()
 {
   reset();
+}
+
+
+void	dataman::buffer::clear()
+{
+  // Clear the buffer, reset synonym
+  return reset();
 }
 
 

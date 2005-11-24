@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Wed Nov 23 16:38:36 2005 texane
+// Last update Thu Nov 24 12:50:58 2005 texane
 //
 
 
@@ -45,6 +45,9 @@ namespace http
 
     session(dataman::conf&);
     ~session();
+
+    // Reset the session
+    bool reset();
 
     // Access the client dedicated connection handle.
     sysapi::socket_in::handle_t& hsock_con()    { return hsock_con_; }
