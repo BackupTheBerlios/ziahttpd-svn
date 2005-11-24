@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:31 2005 texane
-// Last update Thu Nov 24 16:08:45 2005 texane
+// Last update Thu Nov 24 21:27:34 2005 texane
 //
 
 
@@ -29,12 +29,12 @@ dataman::report::~report()
 {}
 
 
-bool	dataman::report::open(error_t& err, openmode_t mode)
+bool	dataman::report::open(openmode_t omode, error_t& err)
 {
   // !
   // Generate a more elaborated function
 
-  if (mode != O_FETCHONLY)
+  if (omode != O_FETCHONLY)
     {
       // This kind of resource cannot be
       // opened in a wriable mode.

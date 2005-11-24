@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Mon Nov 14 16:19:53 2005 
+// Last update Thu Nov 24 19:55:53 2005 texane
 //
 
 
@@ -14,11 +14,16 @@
 #include <iostream>
 #include <vector>
 #include <dataman/stringmanager.hh>
+#include <dataman/buffer.hh>
+#include <dataman/resource.hh>
 
 using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
+using std::vector;
+using dataman::buffer;
+using dataman::resource;
 
 
 
@@ -83,6 +88,26 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		session.resource()->fetch(session.content_out(), err);
 		session.resource()->close(err);
 	}
+	else if (info.type == ISCGI)
+	  {
+	    resource::error_t err;
+	    vector<const string> av;
+	    vector<const string> env;
+	    av.push_back("../root/www/cgi-get-windows.exe");
+	    session.services_->create_resource(session,
+					       (const vector<const string>)av,
+					       (const vector<const string>)env);
+	    if (!session.resource()->open(err, dataman::resource::O_FETCHONLY))
+	      {
+		cout << "Cannot open resource" << endl;
+	      }
+	    else
+	      {
+		session.resource()->fetch(session.content_out(), 1000, err);
+		session.resource()->close(err);
+	      }
+
+	  }
 	//get the size of the buffer for add the content length entry to the response header
 	sprintf(size, "%d", session.content_out().size());
 	session.info_out()["content-length"] = size;
@@ -127,7 +152,8 @@ bool check_typemine(http::uri &uri, info_t &info)
 		{"text/html", "htm", false, ""},
 		{"image/gif", "gif", false, ""},
 		{"image/png", "png", false, ""},
-		{"text/html", "exe", true, "/usr/bin/php -i"},
+// 		{"text/html", "exe", true, "/usr/bin/php -i"},
+ 		{"text/html", "exe", true, "../root/www/dir_list_windows.exe"},
 		{0, 0, 0, 0}
 	};
 	uri.build_extension();
@@ -140,6 +166,7 @@ bool check_typemine(http::uri &uri, info_t &info)
 			{
 				info.type = ISCGI;
 				p.split(LALA[i].path, " ", info.binary);
+				break;
 			}
 			else
 				info.type = ISFILE;
@@ -148,6 +175,7 @@ bool check_typemine(http::uri &uri, info_t &info)
 		}
 	}
 	info.content_type = "text/html";
-	info.type = ISFILE;
+// 	info.type = ISFILE;
+	info.type = ISCGI;
 	return (false);
 }

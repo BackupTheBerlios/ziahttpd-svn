@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Thu Nov 24 19:47:16 2005 texane
+// Last update Thu Nov 24 21:25:54 2005 texane
 //
 
 
@@ -72,7 +72,7 @@ namespace dataman
     // same way.
 
     // Open the resource
-    virtual bool open(error_t&, openmode_t) = 0;
+    virtual bool open(openmode_t, error_t&) = 0;
     // Feed in the resource (think about put with body...)
     virtual bool feed(buffer&, error_t&) = 0;
     // Fetch from resource
@@ -101,7 +101,7 @@ namespace dataman
     file(const std::string&);
 
     // Implement the resource interface
-    bool open(error_t&, openmode_t);
+    bool open(openmode_t, error_t&);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
     bool feed(buffer&, error_t&);
@@ -135,7 +135,7 @@ namespace dataman
 	const std::vector<const std::string>&);
 
     // Implement the resource interface
-    bool open(error_t&, openmode_t);
+    bool open(openmode_t, error_t&);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
     bool feed(buffer&, error_t&);
@@ -185,7 +185,7 @@ namespace dataman
     report(unsigned int);
 
     // Implement the resource interface
-    bool open(error_t&, openmode_t);
+    bool open(openmode_t, error_t&);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
     bool feed(buffer&, error_t&);
