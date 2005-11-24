@@ -65,7 +65,7 @@ MOD_EXPORT(HK_PARSE_RQST_METADATA) (http::session& session, server::core* core, 
 	cout << "version : " << session.info_in().version_string() << endl;
 	cout << "uri : " << session.info_in().uri_string() << endl;
 	cout << "method : " << session.info_in().method_string() << endl;
-	cout << "quey : " << session.info_in().query_string() << endl;
+	cout << "query : " << session.info_in().query_string() << endl;
 	session.info_out() = session.info_in();
 	session.uri().widename() = session.info_in().uri_string();
 	return (true);

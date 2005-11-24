@@ -114,10 +114,10 @@ bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 		return (false);
 	// http version
 	version_ = vec[2];
-	p.normalize(version_);
-	if (strncmp(version_.c_str(), "http/", 5))
+	//p.normalize(version_);
+	if (strncmp(version_.c_str(), "HTTP/", 5))
 	{
-		version_ = "http/1.1";
+		version_ = "HTTP/1.1";
 		free(str);
 		return (false);
 	}
