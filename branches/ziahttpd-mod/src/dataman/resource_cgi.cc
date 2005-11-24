@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Thu Nov 24 15:41:05 2005 texane
+// Last update Thu Nov 24 16:06:33 2005 texane
 //
 
 
@@ -31,8 +31,9 @@ dataman::cgi::~cgi()
 {}
 
 
-bool	dataman::cgi::open(error_t&)
+bool	dataman::cgi::open(error_t&, openmode_t omode)
 {
+  omode_ = omode;
   return false;
 }
 
@@ -49,10 +50,10 @@ bool	dataman::cgi::fetch(buffer&, error_t&)
 }
 
 
-// bool	dataman::cgi::feed(buffer&, error_t&)
-// {
-//   return false;
-// }
+bool	dataman::cgi::feed(buffer&, error_t&)
+{
+  return false;
+}
 
 
 bool	dataman::cgi::close(error_t&)

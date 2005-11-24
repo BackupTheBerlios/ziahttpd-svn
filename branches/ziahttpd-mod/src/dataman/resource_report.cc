@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:31 2005 texane
-// Last update Thu Nov 24 15:41:20 2005 texane
+// Last update Thu Nov 24 16:08:45 2005 texane
 //
 
 
@@ -29,10 +29,18 @@ dataman::report::~report()
 {}
 
 
-bool	dataman::report::open(error_t& err)
+bool	dataman::report::open(error_t& err, openmode_t mode)
 {
   // !
   // Generate a more elaborated function
+
+  if (mode != O_FETCHONLY)
+    {
+      // This kind of resource cannot be
+      // opened in a wriable mode.
+      err = OPNOTSUP;
+      return false;
+    }
 
   if (formed_ == true)
     {
@@ -80,13 +88,22 @@ bool	dataman::report::fetch(buffer& buf, error_t&)
 }
 
 
-// bool	dataman::report::feed(buffer&, error_t&)
-// {
-//   return true;
-// }
+bool	dataman::report::feed(buffer&, error_t& err)
+{
+  // This kind of resource cannot
+  // be fed; This is an in memory
+  // buffer, generated only by the
+  // core server.
+
+  err = OPNOTSUP;
+  return false;
+}
 
 
 bool	dataman::report::close(error_t&)
 {
-  return false;
+  // release the allocated memory
+  // for the buffer (for the moment,
+  // there is no memory, store in .data)
+  return true;
 }

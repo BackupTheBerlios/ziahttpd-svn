@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Thu Nov 24 15:41:11 2005 texane
+// Last update Thu Nov 24 16:12:51 2005 texane
 //
 
 
@@ -41,15 +41,33 @@ dataman::file::~file()
 }
 
 
-bool	dataman::file::open(error_t& err)
+bool	dataman::file::open(error_t& err, openmode_t omode)
 {
   bool ret;
 
   if (opened_ == true)
     {
+      // The file has already been opened
       err = ALREADYOPENED;
       return false;
     }
+
+  if (omode == O_FETCHONLY)
+    {
+      // Fetching only resource (cgi without post...)
+    }
+  else if (omode == O_FEEDONLY)
+    {
+      // Feeding only resource (put body in file...)
+    }
+  else
+    {
+      // Cannot open a file in both feed and fetch mode
+      err = OPNOTSUP;
+      return false;
+    }
+
+  omode_ = omode;
 
   if (sysapi::file::size(filename_.c_str(), &sz_) == false)
     {
@@ -82,6 +100,12 @@ bool	dataman::file::fetch(buffer& buf, unsigned int nbytes, error_t& err)
       return false;
     }
 
+  if (omode_ == O_FEEDONLY)
+    {
+      err = OPNOTSUP;
+      return false;
+    }
+
   wrk = new unsigned char[nbytes];
   ret = sysapi::file::read(hfile_, wrk, nbytes, reinterpret_cast<sysapi::file::size_t*>(&nread));
 
@@ -106,10 +130,10 @@ bool	dataman::file::fetch(buffer& buf, error_t& err)
 }
 
 
-// bool	dataman::file::feed(buffer&, error_t&)
-// {
-//   return true;
-// }
+bool	dataman::file::feed(buffer&, error_t&)
+{
+  return true;
+}
 
 
 bool	dataman::file::close(error_t& err)

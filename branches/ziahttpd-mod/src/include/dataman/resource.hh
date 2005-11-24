@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Thu Nov 24 15:40:27 2005 texane
+// Last update Thu Nov 24 16:11:30 2005 texane
 //
 
 
@@ -33,7 +33,9 @@ namespace dataman
     // has to be feed with the body of an http request.
     typedef enum
       {
-	
+	O_FEEDONLY = 0,	// allow feeding operations on resource
+	O_FETCHONLY,	// allow fetching operation on resource
+	O_FEEDANDFETCH	// allow both
       } openmode_t;
 
     // Possible resource access failure
@@ -45,6 +47,7 @@ namespace dataman
 	PERMDENIED,
 	SYSLIMIT,
 	NOTOPENED,
+	OPNOTSUP,
 	ALREADYOPENED,
 	INUSE
       } error_t;
@@ -68,9 +71,9 @@ namespace dataman
     // same way.
 
     // Open the resource
-    virtual bool open(error_t&) = 0;
+    virtual bool open(error_t&, openmode_t) = 0;
     // Feed in the resource (think about put with body...)
-//     virtual bool feed(buffer&, error_t&) = 0;
+    virtual bool feed(buffer&, error_t&) = 0;
     // Fetch from resource
     virtual bool fetch(buffer&, unsigned int, error_t&) = 0;
     virtual bool fetch(buffer&, error_t&) = 0;
@@ -98,10 +101,10 @@ namespace dataman
     file(const std::string&);
 
     // Implement the resource interface
-    bool open(error_t&);
+    bool open(error_t&, openmode_t);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
-    bool feed(buffer&, error_t);
+    bool feed(buffer&, error_t&);
     bool close(error_t&);
 
     // Destructor, close handle if
@@ -110,6 +113,7 @@ namespace dataman
 
 
   private:
+    openmode_t omode_;
     bool opened_;
     std::string filename_;
     sysapi::file::handle_t hfile_;
@@ -132,16 +136,17 @@ namespace dataman
 	const dataman::buffer&);
 
     // Implement the resource interface
-    bool open(error_t&);
+    bool open(error_t&, openmode_t);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
-    bool feed(buffer&, error_t);
+    bool feed(buffer&, error_t&);
     bool close(error_t&);
 
     // Destructor, release the process
     virtual ~cgi();
 
   private:
+    openmode_t omode_;
     unsigned int stcode_;
     buffer form_;
     bool formed_;
@@ -163,10 +168,10 @@ namespace dataman
     report(unsigned int);
 
     // Implement the resource interface
-    bool open(error_t&);
+    bool open(error_t&, openmode_t);
     bool fetch(buffer&, unsigned int, error_t&);
     bool fetch(buffer&, error_t&);
-    bool feed(buffer&, error_t);
+    bool feed(buffer&, error_t&);
     bool close(error_t&);
 
     virtual ~report();
