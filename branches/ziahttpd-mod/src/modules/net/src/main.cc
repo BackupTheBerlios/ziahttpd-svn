@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Thu Nov 24 13:10:54 2005 texane
+// Last update Thu Nov 24 13:51:28 2005 texane
 //
 
 
@@ -116,6 +116,9 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session& session, server::core*, int&)
 
   // ?
   // For the close connection hook, does error code matter
+
+  if (session.persistent() == true)
+    return false;
 
   cout << "closing connection" << endl;
 
