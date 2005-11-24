@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Mon Nov 21 16:20:45 2005 texane
+## Last update Thu Nov 24 15:02:55 2005 texane
 ##
 
 # ! Always include this file
@@ -21,7 +21,6 @@ srcs	= src$(SLASH)main.cc	\
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)stringmanager.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)http$(SLASH)msgdata.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)cstring_helper.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)inet_helper.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)socket_in.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc
 

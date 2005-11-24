@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Thu Nov 24 14:16:20 2005 texane
+// Last update Thu Nov 24 15:07:59 2005 texane
 //
 
 
@@ -101,6 +101,7 @@ bool write_httpresponse(http::session* session, server::service::iovec_t&)
   // ?
   // Send the whole http request on the wire
 
+  sysapi::socket_in::size_t nrsent;
   dataman::buffer buf;
 
   // Cooking lesson:
@@ -110,10 +111,18 @@ bool write_httpresponse(http::session* session, server::service::iovec_t&)
   buf += session->hdrlines_out();
   buf += session->content_out();
 
+  cout << "body: " << (unsigned)session->content_out().size() << endl;
   cout << "sending over " << buf.size() << " bytes" << endl;
 
-  if (sysapi::socket_in::send(session->hsock_con(), (unsigned char*)buf, buf.size()) == false)
+  if (sysapi::socket_in::send(session->hsock_con(), (unsigned char*)buf, buf.size(), &nrsent) == false)
     {
+      cout << ":Sending has failed!" << endl;
+      return false;
+    }
+
+  if (nrsent != buf.size())
+    {
+      cout << ":Cannot Send the whole buffer, this is a simple buffer to fix" << endl;
       return false;
     }
 

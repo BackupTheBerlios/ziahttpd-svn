@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Thu Nov 24 14:19:24 2005 texane
+// Last update Thu Nov 24 14:52:07 2005 texane
 //
 
 
@@ -98,8 +98,6 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
   // called at send time
   if (session.services_->register_callback(session, server::service::EVWRITE, write_httpresponse) == false)
     return false;
-
-  cout << "Sending response" << endl;
 
   session.services_->perform_io(session, server::service::EVWRITE);
 
