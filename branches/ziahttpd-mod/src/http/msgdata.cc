@@ -53,6 +53,7 @@ bool	http::msgdata::reset()
 	version_ = "";
 	query_ = "";
 	hdrlines_.clear();
+	return (true);
 }
 
 bool	http::msgdata::build_respline(msgdata& rqst, const uri&)
