@@ -46,6 +46,15 @@ string&	http::msgdata::operator=(const string& val)
 	return ((string&)val);
 }
 
+bool	http::msgdata::reset()
+{
+	method_ = "";
+	uri_ = "";
+	version_ = "";
+	query_ = "";
+	hdrlines_.clear();
+}
+
 bool	http::msgdata::build_respline(msgdata& rqst, const uri&)
 {
 

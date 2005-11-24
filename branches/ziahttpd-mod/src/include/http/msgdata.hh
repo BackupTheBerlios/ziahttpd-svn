@@ -37,6 +37,7 @@ namespace http
 	std::string& version_string()	{ return version_; };
 	std::string& uri_string()		{ return uri_; };
 	std::string& query_string();
+	bool		 reset();
 
 	msgdata& operator=(msgdata&);
   private:
