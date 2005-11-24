@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Wed Nov 23 22:31:58 2005 texane
+// Last update Thu Nov 24 18:47:22 2005 texane
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -47,7 +47,7 @@ namespace win32
 
     typedef HANDLE handle_t;
     typedef DWORD offset_t;
-    typedef DWORD size_t;
+    typedef unsigned long size_t;
 
     // Function prototypes
     bool	open(handle_t*, const char*, mode_t, int* = static_cast<int*>(0));

@@ -1,11 +1,11 @@
-//
+ //
 // resource_cgi.cc for  in 
 // 
 // Made by texane
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Thu Nov 24 16:06:33 2005 texane
+// Last update Thu Nov 24 18:44:40 2005 texane
 //
 
 
@@ -21,42 +21,208 @@ using std::string;
 using dataman::buffer;
 
 
-dataman::cgi::cgi(const vector<const string>&,
-		  const vector<const string>&,
-		  const buffer&)
-{}
+dataman::cgi::cgi(const vector<const string>& av,
+		  const vector<const string>& env)
+{
+  reset();
+}
 
 
 dataman::cgi::~cgi()
-{}
-
-
-bool	dataman::cgi::open(error_t&, openmode_t omode)
 {
+  release();
+}
+
+
+bool	dataman::cgi::open(error_t& err, openmode_t omode)
+{
+  bool ret;
+
+  if (allocated_ == true)
+    {
+      err = ALREADYOPENED;
+      return false;
+    }
+
+  if (omode == O_FEEDONLY)
+    {
+      err = OPNOTSUP;
+      return false;
+    }
+  else if (omode == O_FETCHONLY)
+    {
+      // The process is to be output only redirected
+      feeding_ = true;
+      ret = sysapi::process::create_outredir_and_loadexec(&hproc_,
+							  &hout_,
+							  ac_,
+							  const_cast<const char**>(av_),
+							  const_cast<const char**>(env_));
+    }
+  else
+    {
+      // The process is to be in/out redirected
+      ret = sysapi::process::create_inoutredir_and_loadexec(&hproc_,
+							    &hout_,
+							    &hin_,
+							    ac_,
+							    const_cast<const char**>(av_),
+							    const_cast<const char**>(env_));
+    }
+
+  if (ret == true)
+    {
+      allocated_ = true;
+      // delete resource from process (?)
+    }
+
   omode_ = omode;
+
+  return ret;
+}
+
+
+bool	dataman::cgi::fetch(buffer& buf, unsigned int nbytes, error_t& err)
+{
+  bool ret;
+  sysapi::file::size_t nread;
+  sysapi::process::state_t st;
+
+  // Thus, fetching is true
+  feeding_ = false;
+
+  ret = sysapi::file::read(hout_,
+			   (unsigned char*)buf,
+			   nbytes,
+			   &nread);
+  if (ret == false)
+    {
+      err = OPFAILED;
+      return false;
+    }
+
+  // Is the process done, dont' block if not
+  ret = sysapi::process::wait_single(hproc_, &st, sysapi::process::DONTWAIT);
+
+  // (!) Here should check the status
+  // code of the process
+
+  // The process is not done, not an error
+  if (ret == false)
+    return true;
+
+  // Here the proces sis now done,
+  // so release associated resources
+  release();
+  reset();
+
+  return true;
+}
+
+
+bool	dataman::cgi::fetch(buffer&, error_t& err)
+{
+  // We havn't the size of cgi process
+  // produced output, so this request
+  // is invalid.
+
+  err = OPNOTSUP;
   return false;
 }
 
 
-bool	dataman::cgi::fetch(buffer&, unsigned int, error_t&)
+bool	dataman::cgi::feed(buffer& buf, error_t& err)
 {
-  return false;
+  bool ret;
+  sysapi::file::size_t nrfed;
+
+  if (allocated_ == false)
+    {
+      err = NOTOPENED;
+      return false;
+    }
+
+  if (omode_ == O_FETCHONLY || feeding_ == false)
+    {
+      err = OPNOTSUP;
+      return false;
+    }
+
+  // Actually feed the buffer
+  ret = sysapi::file::write(hin_,
+			    (unsigned char*)buf,
+			    buf.size(),
+			    &nrfed);
+  if (ret == false)
+    {
+      err = OPFAILED;
+      return false;
+    }
+
+  return true;
 }
 
 
-bool	dataman::cgi::fetch(buffer&, error_t&)
+bool	dataman::cgi::close(error_t& err)
 {
-  return false;
+  // Release memory allocated resources
+
+  if (allocated_ == false)
+    {
+      err = NOTOPENED;
+      return false;
+    }
+
+  release();
+  reset();
+
+  return true;
 }
 
 
-bool	dataman::cgi::feed(buffer&, error_t&)
+void	dataman::cgi::reset()
 {
-  return false;
+  // Reset the cgi related data.
+  // By default, input is used,
+  // so the process is to be created
+  // in and output redirected.
+
+  // Default execution environment
+  av_ = 0;
+  env_ = 0;
+  ac_ = 0;
+  
+  // Default creation flag
+  allocated_ = false;
+  feeding_ = true;
+  hin_inuse_ = false;  
 }
 
 
-bool	dataman::cgi::close(error_t&)
+bool	dataman::cgi::release()
 {
-  return false;
+  if (allocated_ == false)
+    return false;
+
+  if (av_)
+    {
+      for (int i = 0; av_[i]; ++i)
+	delete av_[i];
+      delete[] av_;
+      ac_ = 0;
+    }
+
+  if (env_)
+    {
+      for (int i = 0; env_[i]; ++i)
+	delete env_[i];
+      delete[] env_;
+    }
+
+  if (hin_inuse_ == true)
+    sysapi::file::close(hin_);
+  sysapi::file::close(hout_);
+  sysapi::process::release(hproc_);
+
+  reset();
 }

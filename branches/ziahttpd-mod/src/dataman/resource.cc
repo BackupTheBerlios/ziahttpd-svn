@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:58:22 2005 texane
-// Last update Wed Nov 23 21:34:57 2005 texane
+// Last update Thu Nov 24 16:56:15 2005 texane
 //
 
 
@@ -37,10 +37,9 @@ resource* dataman::resource::factory(const string& filename)
 
 
 resource* dataman::resource::factory(const std::vector<const std::string>& av,
-				     const std::vector<const std::string>& env,
-				     const dataman::buffer& buf_in)
+				     const std::vector<const std::string>& env)
 {
-  return new cgi(av, env, buf_in);
+  return new cgi(av, env);
 }
 
 

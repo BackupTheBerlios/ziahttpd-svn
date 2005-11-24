@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Thu Nov 24 15:12:54 2005 texane
+## Last update Thu Nov 24 18:51:37 2005 texane
 ##
 
 # ! Always include this file
@@ -15,10 +15,6 @@
 # Give your own variables here
 name	= resource.lo
 srcs	= src$(SLASH)main.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)resource.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)resource_cgi.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)resource_file.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)resource_report.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)buffer.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)http$(SLASH)uri.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)stringmanager.cc \

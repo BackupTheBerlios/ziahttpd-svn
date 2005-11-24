@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Thu Nov 24 16:11:30 2005 texane
+// Last update Thu Nov 24 18:43:05 2005 texane
 //
 
 
@@ -48,6 +48,7 @@ namespace dataman
 	SYSLIMIT,
 	NOTOPENED,
 	OPNOTSUP,
+	OPFAILED,
 	ALREADYOPENED,
 	INUSE
       } error_t;
@@ -81,11 +82,10 @@ namespace dataman
     virtual bool close(error_t&) = 0;
 
     // Factory design pattern, by function overloading
-    static resource* factory(const std::string& filename);
+    static resource* factory(const std::string&);
     static resource* factory(const std::vector<const std::string>&,
-			     const std::vector<const std::string>&,
-			     const dataman::buffer&);
-    static resource* factory(unsigned int stcode);
+			     const std::vector<const std::string>&);
+    static resource* factory(unsigned int);
   };
 }
 
@@ -132,8 +132,7 @@ namespace dataman
   {
   public:
     cgi(const std::vector<const std::string>&,
-	const std::vector<const std::string>&,
-	const dataman::buffer&);
+	const std::vector<const std::string>&);
 
     // Implement the resource interface
     bool open(error_t&, openmode_t);
@@ -146,11 +145,29 @@ namespace dataman
     virtual ~cgi();
 
   private:
-    openmode_t omode_;
-    unsigned int stcode_;
-    buffer form_;
-    bool formed_;
 
+    // Process creation and status flags
+    openmode_t omode_;
+    bool allocated_;
+    bool feeding_;
+
+    // Resource for the process
+    // to be created
+    int ac_;
+    char** av_;
+    char** env_;
+
+    // Hanlde of the process
+    sysapi::process::handle_t hproc_;
+    // For feeding
+    bool hin_inuse_;
+    sysapi::file::handle_t hin_;
+    // For fetching
+    sysapi::file::handle_t hout_;
+
+    // Internal management methods
+    void reset();
+    bool release();
   };
 }
 

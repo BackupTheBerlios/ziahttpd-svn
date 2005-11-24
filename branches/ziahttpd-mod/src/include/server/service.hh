@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Thu Nov 24 15:34:19 2005 texane
+// Last update Thu Nov 24 17:05:55 2005 texane
 //
 
 
@@ -101,8 +101,7 @@ namespace server
     // - Resource creation related service
     virtual bool create_resource(http::session&, const std::string&);
     virtual bool create_resource(http::session&, const std::vector<const std::string>&,
-				 const std::vector<const std::string>&,
-				 const dataman::buffer&);
+				 const std::vector<const std::string>&);
     virtual bool create_resource(http::session&, unsigned int);
 
     // ?

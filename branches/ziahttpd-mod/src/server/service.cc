@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Thu Nov 24 15:39:04 2005 texane
+// Last update Thu Nov 24 17:05:18 2005 texane
 //
 
 
@@ -146,13 +146,12 @@ bool	server::service::create_resource(session& session,
 
 bool	server::service::create_resource(session& session,
 					 const std::vector<const std::string>& av,
-					 const std::vector<const std::string>& env,
-					 const dataman::buffer& buf_stdin)
+					 const std::vector<const std::string>& env)
 {
   if (session.resource_ != 0)
     return false;
 
-  session.resource_ = dataman::resource::factory(av, env, buf_stdin);
+  session.resource_ = dataman::resource::factory(av, env);
   return true;
 }
 
