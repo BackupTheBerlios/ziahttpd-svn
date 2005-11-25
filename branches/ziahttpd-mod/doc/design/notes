@@ -1,0 +1,141 @@
+The Zia api specification draft, first version (0.0)
+
+
+[*] Abstract
+	Modularity, reusability and genericity are
+	the main issues software enginneering has to
+	deal with since the end of the 80s.
+	New tools have  been done in order to solve
+	so called software design problems: new paradigms
+	(Object Orientation) implemented by new programing
+	langages(C++), new programing models(modules...).
+	The goal of the Zia project is basically to provide
+	a http-1.1-rfc compliant server that responds to
+	the above software problems by providing its own
+	api to let people plug their own modules to the core
+	of the server. The core server is designed in an
+	object oriented way, and implemented in the C++
+	langage to allow components reusability.
+
+[*] Introduction
+	In this draft, we present the api along with
+	the design and implementation choices that have
+	lead to it. Some part of the design may seem
+	wire at first, but compromises between performance
+	simplicity and design had to be done.
+	One thing to understand is that the api has been
+	conceived by people, for other people to implement
+	it in their already existing server; Maybe this
+	is the main guideline for keepingg our API simple,
+	but to allow sufficient flexibility to make it
+	useful.
+
+[*] The problem
+	One could ask, regarding the design of a zia httpd
+	server, why a http server has to support a module
+	feature. After all, doesn't a http server only serves
+	http clients given the http rfc?]
+	That's true, but lets think about that: What if a new
+	web service want to take advantages from the http protocole
+	to convey informations, but has to extend it in order to
+	pass web-service-specific informations between clients and
+	the web service server? Have developpers to recode a new
+	http server(or hack the source of an existing one),
+	just to support few modifiications?
+	Modules are amongst the best solution to solve this problem:
+	They provide a way for devloppers to use already existing
+	and running code without having to manipulate that existing
+	code(or do a new one).
+	For instance, adding the support for a new protocol is done
+	by adding the module understanding it; Adding a new way
+	to access resources in sql tables instead of the disk (thus
+	supporting new resource naming schemes) can be done by adding
+	a new name translation module.
+	The problem is now to define a boundary between server and
+	module's roles.
+
+[*] Server role
+	Basically, the role of the server(from our point of view)
+	is to server a resource requested by a client.
+	The first thing a client has to do is to connect to the server.
+	At server side, a session is associated to the newly created connection.
+	The client then wants to access a given resource that the server
+	know about.
+	After the server has sent the resource, the session ends.
+	Two basic data blocks are involved in the server-client dialogue.
+		. Metadata, that describe the resource, and the current session
+		. Data content
+	For instance, http1.1 have status line and header lines
+	as metadata to describe the resource along with the state of the session
+	(persistency, content-type...)
+	From a server standpoint, processing a request is thus done
+	by making it passing through a processing pipeline(11 stages):
+		. connection creation
+		. meta data reception
+		. meta data reception
+		. meta data reception
+		. meta data reception
+		. meta data reception
+		. meta data reception
+		. connection releasing
+	At the end of the pipeline, the session has ended.
+	The server has thus to provide support for:
+		. Network io
+			Callback models, modules have
+			to register callbacks to be called
+			when the server guesses its time to
+			perform io operation(think in non blocking
+			mode)
+			
+		. Module support
+			
+
+[*] Module role
+	Given the above pipeline stages, it's now easy to
+	see how modules interact with the server: For every
+	stage it wants to serve, the module export a function.
+	Dependency handling is handled by the server, so is
+	not part of the specification.
+	Modules are free to interact wherever they desire, but
+	have to use server's services in order to perform some
+	kind of operations(io ones for instance)
+
+[*] Data types
+
+
+[*] Pitfalls to avoid
+	Letting other people plug their own code into
+	a running one (this is a cooperative mode) doesn't
+	mean it has to allow all kind of information
+	
+	
+
+[*] Request pipelining and processing stages
+
+
+[*] The "Next Processing Stage function" problem
+	Some modules can perform potentially blocking
+	operation, mostly the input/ouput ones.
+	For those ones, the server should not wait
+	for them to go to next processing stage.
+	This is the callbacks of those modules that will
+	tell wether or not to go to the next stage.
+	The next_processing_stage is thus a server
+	service, that will be called by the module callback
+	to explicitly tell the server to go to the next
+	stage.
+
+
+[*] Implementation details
+	Services are implemented by virtual member functions
+
+
+[*] API non specific informations
+	Informations included here are not part of the
+	ZiaAPI specification, and are provided only as
+	a set of hints for developpers implementing it.
+
+	[+] Implementing io operations
+	[+] Gold rule: nerver use the while keyword in a io operatoin.
+	    ... unless you know what you are doing, but it generally
+		means you are performing a blocking operation.
