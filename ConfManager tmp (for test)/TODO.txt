@@ -1,6 +1,8 @@
 Par ordre de priorite:
-- Corriger le seg quand il n'y a pas de document root
 - Definir les option de la ligne de commande pour coder ensuite son traitement
+  (option -f (fichier de conf) et -p (port))
+- gerer les imbriquation directement au niveau de l'enregistrement (arbre
+  comme celui de la tinyXML)
 
 - Faire la fonction "ConfManager::CheckValue(string sSearch, int iVarType)"
 
