@@ -121,6 +121,7 @@ bool	check_status_code(http::session& session, info_t& info)
 			}
 		}
 	}
+	return (true);
 }
 
 bool	fill_info(http::session& session, info_t& info)
@@ -134,6 +135,10 @@ bool	fill_info(http::session& session, info_t& info)
 						session.services_->query_conf_simple(session, "cgiroot")
 						+ session.services_->query_conf_simple(session, "cgidirlist"),
 						info))
+			{
+				info.binary.push_back(session.services_->query_conf_simple(session, "cgiroot") + session.services_->query_conf_simple(session, "cgidirlist"));
+				info.binary.push_back(session.uri().localname());
+			}
 			return (true);
 		}
 	}
@@ -171,10 +176,9 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 
 	if (info.type == ISCGI)
 	  {
-	    //resource::error_t err;
-	    //vector<const string> av;
+  	    cout << "c'est CGI" << endl;
 	    vector<const string> env;
-	   // av.push_back("../root/www/cgi-get-windows.exe");
+		cout << info.binary[0] << " : " << info.binary[1] << endl;
 	    session.services_->create_resource(session,
 					       (const vector<const string>)info.binary,
 					       (const vector<const string>)env);
@@ -184,7 +188,10 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		  //status code internal error
 		  printf("status code internal error\n");
 	  }
-	  session.resource()->fetch(session.content_out(), err);
+	  if (!session.resource()->fetch(session.content_out(), err))
+		  cout << "FETCH TROUBLE" << endl;
+	  else
+		  cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
 	  session.resource()->close(err);
 	  //get the size of the buffer for add the content length entry to the response header
 	sprintf(size, "%d", session.content_out().size());
@@ -230,7 +237,7 @@ bool check_typemine(http::uri &uri, info_t &info)
 		{"text/html", "htm", false, ""},
 		{"image/gif", "gif", false, ""},
 		{"image/png", "png", false, ""},
- 		{"text/html", "exe", true, "../root/www/dir_list_windows.exe"},
+ 		{"text/html", "exe", true, ""},
 		{0, 0, 0, 0}
 	};
 	uri.build_extension();
