@@ -75,7 +75,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-D &quot;_WIN32&quot; -D &quot;_CONSOLE&quot; -D &quot;_MT&quot; -D &quot;_SYSAPI&quot;=2  -Wp64 -EHsc"
-				AdditionalIncludeDirectories="..\..\..\include"
+				AdditionalIncludeDirectories="&quot;..\..\..\include&quot;;&quot;..\..\..\include\dataman&quot;; &quot;..\src\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"

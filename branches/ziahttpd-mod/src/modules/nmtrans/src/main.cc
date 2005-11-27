@@ -31,7 +31,9 @@ MOD_EXPORT( HK_BUILD_RESP_METADATA )(http::session&, server::core*, int&);
 MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
 {
 //  std::cout << "doc root : " << session.services_->query_conf(session, "documentroot") << std::endl;
+	//alias name ???
   session.uri().localname() = session.services_->query_conf_simple(session, "documentroot") + session.uri().widename();
+	// alias
   if (sysapi::file::is_directory(session.uri().localname().c_str())
       && session.uri().localname()[session.uri().localname().size() - 1] != '/')
     {

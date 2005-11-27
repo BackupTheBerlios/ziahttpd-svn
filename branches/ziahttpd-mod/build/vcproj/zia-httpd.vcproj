@@ -193,6 +193,9 @@
 					RelativePath="..\..\src\server\core.cc">
 				</File>
 				<File
+					RelativePath="..\..\src\server\ioselect.cc">
+				</File>
+				<File
 					RelativePath="..\..\src\server\modman.cc">
 				</File>
 				<File
