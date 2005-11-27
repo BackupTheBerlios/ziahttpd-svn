@@ -133,7 +133,7 @@ bool	fill_info(http::session& session, info_t& info)
 		{
 			if (check_cgi(session.uri(),
 						session.services_->query_conf_simple(session, "cgiroot")
-						+ session.services_->query_conf_simple(session, "cgidirlist"),
+						+ "/" + session.services_->query_conf_simple(session, "cgidirlist"),
 						info))
 			{
 				//info.binary.push_back(session.services_->query_conf_simple(session, "cgiroot") + session.services_->query_conf_simple(session, "cgidirlist"));
