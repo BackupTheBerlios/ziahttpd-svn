@@ -5,16 +5,22 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:46:45 2005 
-// Last update Thu Nov 24 13:57:35 2005 texane
+// Last update Sun Nov 27 02:36:29 2005 texane
 //
 
 
+#include <iostream>
 #include <http/uri.hh>
 #include <http/session.hh>
 #include <http/msgdata.hh>
 #include <dataman/conf.hh>
 #include <server/core.hh>
 #include <server/service.hh>
+#include <server/modman.hh>
+
+
+using std::cout;
+using std::endl;
 
 
 http::session::session(dataman::conf& conf) : conf_(conf)
@@ -23,6 +29,9 @@ http::session::session(dataman::conf& conf) : conf_(conf)
   persistent_ = true;
   resource_ = 0;
   nrpassed_ = 0;
+  stageid_ = server::modman::CREATE_CON;
+  reset_me_= false;
+  handleio_ = false;
 }
 
 
@@ -38,6 +47,8 @@ bool	http::session::reset()
   // Keep the conf
   // Keep the services
 
+  cout << "[*] Reseting the session" << endl;
+
   // reset the resource, if any
   if (resource_)
     {
@@ -47,6 +58,10 @@ bool	http::session::reset()
 
   // In case...
   persistent_ = true;
+  reset_me_ = false;
+
+  // Set the processing stage
+  stageid_ = server::modman::CREATE_CON;
 
   // Clear in information
   info_in_.reset();
@@ -64,6 +79,7 @@ bool	http::session::reset()
 
   // Increment the pass count
   ++nrpassed_;
+  handleio_ = false;
   
   return true;
 }

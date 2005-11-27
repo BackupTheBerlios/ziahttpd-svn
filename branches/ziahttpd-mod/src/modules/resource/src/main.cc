@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Thu Nov 24 19:55:53 2005 texane
+// Last update Fri Nov 25 16:45:11 2005 texane
 //
 
 
@@ -80,7 +80,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 			session.services_->create_resource(session, session.uri().localname());
 		else
 			session.services_->create_resource(session, session.uri().status());
-		if (!session.resource()->open(err, dataman::resource::O_FETCHONLY))
+		if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
 		{
 			//status code internal error
 			printf("dans ton cul\n");
@@ -97,7 +97,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	    session.services_->create_resource(session,
 					       (const vector<const string>)av,
 					       (const vector<const string>)env);
-	    if (!session.resource()->open(err, dataman::resource::O_FETCHONLY))
+	    if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
 	      {
 		cout << "Cannot open resource" << endl;
 	      }
@@ -175,7 +175,7 @@ bool check_typemine(http::uri &uri, info_t &info)
 		}
 	}
 	info.content_type = "text/html";
-// 	info.type = ISFILE;
-	info.type = ISCGI;
+	info.type = ISFILE;
+// 	info.type = ISCGI;
 	return (false);
 }

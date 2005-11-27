@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Thu Nov 24 14:52:07 2005 texane
+// Last update Sun Nov 27 03:40:12 2005 texane
 //
 
 
@@ -39,15 +39,21 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session&, server::core*, int&);
 MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session&, server::core*, int&);
 
 
+// Services exported by the server,
+// stored here for the moment.
+server::service* services_;
+
+
 // Exported function definitions
 
 MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core*, int&)
 {
-  // ?
-  // Create connection.
-  // Our basic iomanager is based on io multiplexing,
-  // so this function needs to export a function to be called
-  // at close time.
+  // Register a new session
+  // for the newly created
+  // connection.
+
+  services_ = session.services_;
+  cout << "in the creation connection hook" << endl;
 
   return true;
 }
@@ -61,13 +67,12 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   // reads http compliant lines from the network.
 
   // Register request data reading callback
-  if (session.services_->register_callback(session, server::service::EVREAD, read_httpheaders) == false)
-    return false;
-
-  cout << "METADATA ENTER" << endl;
-  session.services_->perform_io(session, server::service::EVREAD);
-
-  return true;
+  cout << "Reading metadata" << endl;
+  session.services_->perform_io(session.hsock_con(),
+				server::service::EVREAD,
+				read_metadata);
+  
+  return false;
 }
 
 
@@ -78,16 +83,16 @@ MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&)
   // For zia, data default reading function
   // reads http compliant lines from the network.
 
-  // Register the callback, and performs the
-  // read call.
-
-  cout << "READ DATA" << endl;
-
-  if (session.services_->register_callback(session, server::service::EVREAD, read_httpbody) == false)
-    return false;
-
-  session.services_->perform_io(session, server::service::EVREAD);
-
+  // Register request data reading callback
+  cout << "Reading data" << endl;
+  if (session.content_in().size())
+    {
+      session.services_->perform_io(session.hsock_con(),
+				    server::service::EVREAD,
+				    read_data);
+      return false;
+    }
+  
   return true;
 }
 
@@ -96,10 +101,17 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
 {
   // Register a new callback to be
   // called at send time
-  if (session.services_->register_callback(session, server::service::EVWRITE, write_httpresponse) == false)
-    return false;
 
-  session.services_->perform_io(session, server::service::EVWRITE);
+  // Sending response
+  cout << "Sending the response" << endl;
+  if (session.content_out().size() ||
+      session.hdrlines_out().size())
+    {
+      session.services_->perform_io(session.hsock_con(),
+				    server::service::EVWRITE,
+				    send_response);
+      return false;
+    }
 
   return true;
 }
@@ -121,11 +133,9 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session& session, server::core*, int&)
 
   cout << "closing connection" << endl;
 
-  // Register a new callback for connection closing
-  if (session.services_->register_callback(session, server::service::EVCLOSE, close_httpconnection) == false)
-    return false;
+  session.services_->perform_io(session.hsock_con(),
+				server::service::EVCLOSE,
+				close_connection);
 
-  session.services_->perform_io(session, server::service::EVCLOSE);
-
-  return true;
+  return false;
 }

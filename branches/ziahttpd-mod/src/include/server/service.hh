@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Thu Nov 24 17:05:55 2005 texane
+// Last update Sun Nov 27 00:32:56 2005 texane
 //
 
 
@@ -17,6 +17,7 @@
 #include <vector>
 #include <http/session.hh>
 #include <dataman/buffer.hh>
+#include <server/sockioman.hh>
 
 
 namespace server
@@ -28,6 +29,9 @@ namespace server
     // available for modules.
 
   public:
+//     // - Singleton like behaviour
+//     static service* instance_;
+
     // - Log/Debug related operations
     virtual void echo(const std::string&);
 
@@ -67,21 +71,6 @@ namespace server
     // More generally, we should define a type for handle
     // operation status for core <-> module communication.
 
-    typedef struct
-    {
-      // This structure implements core <-> module
-      // io completion information passing. This
-      // is necessary since the server can derefferd
-      // the call to a read/write operation.
-
-      // buffer to read/write from/to
-      dataman::buffer	buf_;
-      // nbytes actually sent/recveived
-      unsigned int	nbytes_;
-      // Io completion error code
-      unsigned int	errcode_;
-    } iovec_t;
-
     // Register callbacks on events
     typedef enum
       {
@@ -91,24 +80,34 @@ namespace server
 	EVTIMEOUT
       } eventid_t;
 
+
+    // Retrieve a session by id (socket handle...)
+    virtual bool find_session_byid(sysapi::socket_in::handle_t&,
+				   http::session*&);
+
     // Io related operations.
     // ? (if someone out there knows how to have virtual templated methods...)
-    typedef bool (*callback_t)(http::session*, iovec_t&);
-    virtual bool register_callback(http::session&, eventid_t, const callback_t&);
-    virtual bool perform_io(http::session&, eventid_t);
+    // For read and write operations
+    virtual bool perform_io(sysapi::socket_in::handle_t&,
+			    eventid_t,
+			    sockioman::sockiohandler_t,
+			    dataman::buffer* = 0);
 
-
-    // - Resource creation related service
+    // - Resource creation related services
     virtual bool create_resource(http::session&, const std::string&);
     virtual bool create_resource(http::session&, const std::vector<const std::string>&,
 				 const std::vector<const std::string>&);
     virtual bool create_resource(http::session&, unsigned int);
 
+    
+    // - Request processing stage related services
+    virtual bool next_processing_stage(http::session&);
+
+
     // ?
     // - Conf related operations
     virtual std::string& query_conf_simple(http::session&, const std::string&);
     virtual std::vector<std::string>& query_conf_complex(http::session&, const std::string&);
-    
   };
 }
 

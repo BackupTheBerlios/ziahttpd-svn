@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Thu Nov 24 19:00:31 2005 texane
+// Last update Sun Nov 27 03:42:21 2005 texane
 //
 
 
@@ -26,75 +26,117 @@ using std::string;
 // for {in, out} put operations.
 
 
-bool read_httpheaders(http::session* session, server::service::iovec_t& iov)
+extern server::service* services_;
+
+
+bool read_metadata(sysapi::socket_in::handle_t& hsock,
+		   dataman::buffer*,
+		   sysapi::socket_in::error_t&)
 {
-  sysapi::socket_in::error_t err;
+  bool ret;
   char* line;
+  http::session* session;
+  sysapi::socket_in::error_t err;
 
-  // Get the status line
-  {
-    if (dataman::get_nextline(session->hsock_con(), &line, &err) == false)
-      {
-	cout << "Cannot get status line" << endl;
-	return false;
-      }
+  cout << "reading http status line" << endl;
 
-    dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
-    session->hdrlines_in().push_front(buffer);
-    free(line);
-  }
-
-  // Read headerlines
-  while (dataman::get_nextline(session->hsock_con(), &line, &err) && strlen(line))
+  // Read the next http line
+  ret = dataman::get_nextline(hsock, &line, &err);
+  if (ret == false)
     {
-      dataman::buffer buffer(reinterpret_cast<unsigned char*>(line), strlen(line));
+      // Unless there is a true error...
+      return false;
+    }
+  
+  // Get the session address
+  ret = services_->find_session_byid(hsock, session);
+  if (ret == false)
+    cout << "Cannot get the session, will segfault" << endl;
+
+  if (strlen(line) != 0)
+    {
+      // It is a header line
+      dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
       session->hdrlines_in().push_back(buffer);
-      free(line);
+      cout << "new line: " << buffer.c_str() << endl;
+    }
+  else
+    {
+      // We are done with the
+      // metadata reading stage
+      session->services_->next_processing_stage(*session);
+    }
+
+  free(line);
+  return true;
+}
+
+
+bool read_data(sysapi::socket_in::handle_t& hsock,
+	       dataman::buffer*,
+	       sysapi::socket_in::error_t&)
+{
+  unsigned char* content;
+  sysapi::socket_in::size_t ncontent;
+  sysapi::socket_in::size_t nrecv;
+  sysapi::socket_in::error_t err;
+  http::session* session;
+  bool ret;
+
+  // Get the session address, gore mode
+  ret = services_->find_session_byid(hsock, session);
+  if (ret == false)
+    cout << "Cannot get the session, will segfault" << endl;
+
+  // There is nothing to read from
+  if (session->content_in().size() == 0)
+    {
+      // Nothing to do
+      session->services_->next_processing_stage(*session);
+      return true;
+    }
+
+  // Read the content
+  if (dataman::get_nextblock(session->hsock_con(), &content,
+			     session->content_in().size(),
+			     &nrecv, &err) == false)
+    {
+      cout << "Wanting " << session->content_in().size() << ", got " << nrecv << endl;
+      return false;
+    }
+  else
+    {
+      // Fill in the content buffer
+      dataman::buffer buffer(content, ncontent);
+      session->content_in() = buffer;
+      delete[] content;
+      session->services_->next_processing_stage(*session);
     }
 
   return true;
 }
 
 
-bool read_httpbody(http::session* session, server::service::iovec_t& iov)
-{
-  unsigned char* content;
-  sysapi::socket_in::size_t ncontent;
-  sysapi::socket_in::size_t nrecv;
-  sysapi::socket_in::error_t err;
-
-  // There is nothing to read from
-  if (session->content_in().size() == 0)
-    return true;
-
-  // Read the content
-  if (dataman::get_nextblock(session->hsock_con(), &content, session->content_in().size(), &nrecv, &err) == false)
-    return false;
-
-  // Fill in the content buffer
-  {
-    dataman::buffer buffer(content, ncontent);
-    session->content_in() = buffer;
-    delete[] content;
-  }
-
-  return true;
-}
-
-
-bool read_cgistdout(http::session*, server::service::iovec_t&)
-{
-  return false;
-}
-
-
-bool write_httpresponse(http::session* session, server::service::iovec_t&)
+bool send_response(sysapi::socket_in::handle_t& hsock,
+		   dataman::buffer*,
+		   sysapi::socket_in::error_t&)
 {
   // ?
   // Send the whole http request on the wire
 
   sysapi::socket_in::size_t nrsent;
   dataman::buffer buf;
+  http::session* session;
+  bool ret;
+
+
+  cout << "sending the RESPONSE" << endl;
+
+  // Get the session address, gore mode
+  ret = services_->find_session_byid(hsock, session);
+  if (ret == false)
+    cout << "Cannot get the session, will segfault" << endl;
+
 
   // Cooking lesson:
   // Build the response buffer
@@ -115,17 +157,16 @@ bool write_httpresponse(http::session* session, server::service::iovec_t&)
       return false;
     }
 
+  session->hdrlines_out().reset();
+  session->content_out().reset();
+
   return true;
 }
 
 
-bool write_cgistdin(http::session*, server::service::iovec_t&)
+bool	close_connection(sysapi::socket_in::handle_t& hsock,
+			 dataman::buffer*,
+			 sysapi::socket_in::error_t&)
 {
-  return false;
-}
-
-
-bool close_httpconnection(http::session* session, server::service::iovec_t&)
-{
-  return sysapi::socket_in::terminate_connection(session->hsock_con());
+  return sysapi::socket_in::terminate_connection(hsock);
 }

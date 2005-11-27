@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 13:49:33 2005 
-// Last update Mon Nov 14 15:37:36 2005 
+// Last update Fri Nov 25 20:18:07 2005 texane
 //
 
 
@@ -19,6 +19,8 @@
 #include <server/modhelper.hh>
 #include <server/modman.hh>
 #include <server/exception.hh>
+#include <server/sockioman.hh>
+#include <server/ioselect.hh>
 
 
 #endif // ! SERVER_HH

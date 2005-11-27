@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:56:50 2005 texane
-// Last update Thu Nov 24 18:47:22 2005 texane
+// Last update Fri Nov 25 20:09:42 2005 texane
 //
 
 #ifndef SYSAPI_WIN32_HH
@@ -16,9 +16,10 @@
 // used for the win32 system api.
 
 #include <string>
-//#include <winsock2.h>
 #include <windows.h>
 #include <process.h>
+// #include <sys/types.h>
+// #include <sys/select.h>
 
 
 namespace win32

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 11 15:54:10 2005 texane
-// Last update Sun Nov 20 15:51:45 2005 texane
+// Last update Fri Nov 25 15:23:33 2005 texane
 //
 
 
@@ -15,14 +15,13 @@
 
 #include <list>
 #include <string>
-#include <http/session.hh>
-#include <server/module.hh>
 
+namespace http { class session; }
+namespace server { class module; }
+namespace server { class core; }
 
 namespace server
 {
-  // Forward declarations
-
   class modman
   {
   public:
@@ -79,15 +78,18 @@ namespace server
     // Singleton-like behaviour
     static modman* instance();
 
+    // Get the next stage id
+    static bool next_processing_stage(http::session&);
+
 
   private:
     std::list<module*> modlist_;
 
     // Singleton-like behaviour
     static modman* instance_;
-    
   };
 }
+
 
 
 //! \class server::modman

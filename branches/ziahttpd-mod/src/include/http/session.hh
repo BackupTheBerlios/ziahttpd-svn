@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Thu Nov 24 12:50:58 2005 texane
+// Last update Sat Nov 26 18:24:02 2005 texane
 //
 
 
@@ -22,13 +22,15 @@
 
 
 #include <list>
+#include <server/modman.hh>
 #include <dataman/conf.hh>
 #include <dataman/buffer.hh>
 #include <dataman/resource.hh>
 #include <http/msgdata.hh>
 #include <sysapi/sysapi.hh>
-#include <server/service.hh>
-#include <server/module.hh>
+
+
+namespace server { class service; }
 
 
 namespace http
@@ -72,6 +74,8 @@ namespace http
     // Get/Set the connection persistency
     bool& persistent()				{ return persistent_; }
 
+    bool& handleio()				{ return handleio_; }
+
     // Configuration
     dataman::conf& conf()			{ return conf_; }
 
@@ -81,6 +85,14 @@ namespace http
 
   private:
     friend class server::service;
+    friend class server::core;
+    friend class server::modman;
+
+    // Processing stage
+    server::modman::stageid_t stageid_;
+    
+    // Has the session to be reset?
+    bool reset_me_;
 
     // resource pointed to by the client
     dataman::resource* resource_;
@@ -111,6 +123,9 @@ namespace http
     // Connection persistency.
     bool persistent_;
     int nrpassed_;
+
+    // A call has been made to the io service
+    bool handleio_;
   };
 }
 

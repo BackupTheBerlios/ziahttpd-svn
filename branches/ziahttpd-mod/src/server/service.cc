@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Thu Nov 24 17:05:18 2005 texane
+// Last update Sun Nov 27 00:12:52 2005 texane
 //
 
 
@@ -87,49 +87,53 @@ bool	server::service::stat_module(const security_token_t& token,
 // For the moment, only handle on request at a time,
 // so let be only one slot in the ioslots_.
 
-#define NIOSLOTS	1
-static struct ioslot
+
+// Get a session by id
+
+bool	server::service::find_session_byid(sysapi::socket_in::handle_t& hsock,
+					   http::session*& session)
 {
-  server::service::callback_t callbacks_[4];
-  server::service::iovec_t iov_;
-  http::session* session_;
-} ioslots_[NIOSLOTS];
+  // Found session is
+  // stored in session.
 
-
-// Callback registering services
-
-bool	server::service::register_callback(http::session& session,
-					   server::service::eventid_t evid,
-					   const server::service::callback_t& cb)
-{
-  // @see service.hh for a list callbacks
-  // supported by the server.
-  // This function erase the old callback, if any,
-  // and always returns true.
-
-  ioslots_[0].callbacks_[evid] = cb;
-  ioslots_[0].session_ = &session;
-  return true;
+  return core::instance()->find_session_byhdl(hsock, session);
 }
 
 
 // Io operations
 
-bool	server::service::perform_io(http::session& session, server::service::eventid_t evid)
+bool	server::service::perform_io(sysapi::socket_in::handle_t& hsock,
+				    eventid_t evid,
+				    sockioman::sockiohandler_t handler,
+				    dataman::buffer* buffer)
 {
-  // Perform io operation according by calling the
-  // callback registered for evid event.
-  // Return false if no callbac is registered.
+  // Call the io manager to handle the
+  // request.
 
-  if (ioslots_[0].callbacks_[evid] == 0)
-    return false;
+  bool ret;
 
-  // !
-  // Currently, no dereferd called is done, blocking mode.
-  // This is temporary, since the iomanager will come soon.
-  return ioslots_[0].callbacks_[evid](ioslots_[0].session_, ioslots_[0].iov_);
+  ret = false;
+
+  if (evid == EVREAD)
+    ret = core::instance_->ioman_->read(hsock, handler, buffer);
+  else if (evid == EVWRITE)
+    ret = core::instance_->ioman_->write(hsock, handler, buffer);
+  else if (evid == EVCLOSE)
+    ret = core::instance_->ioman_->close(hsock, handler);
+  else if (evid == EVTIMEOUT)
+    ret = core::instance_->ioman_->timeout(hsock, handler);
+
+  // Mark the session as performing an io
+  http::session* session;
+  if (core::instance_->find_session_byhdl(hsock, session) == false)
+    {
+      cerr << "Session unknown" << endl;
+      return false;
+    }
+  
+  session->handleio() = true;
+  return true;
 }
-
 
 
 // Resource creation service
@@ -165,6 +169,13 @@ bool	server::service::create_resource(session& session,
   return true;
 }
 
+
+// Processing stage related
+bool	server::service::next_processing_stage(http::session& session)
+{
+  server::modman::next_processing_stage(session);
+  return true;
+}
 
 
 // Configuration related operations

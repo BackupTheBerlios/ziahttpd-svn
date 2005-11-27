@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:34:44 2005 
-// Last update Thu Nov 24 13:47:01 2005 texane
+// Last update Sun Nov 27 03:09:50 2005 texane
 //
 
 
@@ -163,10 +163,15 @@ bool	server::modman::state(const string&, int&)
 
 bool	server::modman::call_hooks(core* core, stageid_t id, http::session* session)
 {
+  // ! this method should be recoded
+  // in order to take into account
+  // the reason code { NEXT_STAGE | END_STAGE | ...}
+
   list<module*>::iterator cur = modlist_.begin();
   list<module*>::iterator end = modlist_.end();
   bool (*module::* hook)(http::session&, server::core*, int&) = &module::hk_create_con_;
   int reason;
+  bool done;
 
   // Choose the correct function to execute
   switch (id)
@@ -207,17 +212,20 @@ bool	server::modman::call_hooks(core* core, stageid_t id, http::session* session
     }
 
   // Call the hook for stage id
+  // By default, let the next stage be called
+  done = true;
   while (cur != end)
     {
       if ((*cur)->*hook)
 	{
 	  cerr << "[HOOK]: " << (*cur)->name_ << endl;
-	  ((*cur)->*hook)(*session, (*cur)->priviledged_ ? core : 0, reason);
+	  if (((*cur)->*hook)(*session, (*cur)->priviledged_ ? core : 0, reason) == false)
+	    done = false;
 	}
       ++cur;
     }
 
-  return true;
+  return done;
 }
 
 
@@ -235,4 +243,81 @@ server::module* server::modman::operator[](const string& name)
 server::modman* server::modman::instance()
 {
   return instance_;
+}
+
+
+bool	server::modman::next_processing_stage(http::session& session)
+{
+  // ? Think about connection releasing
+  // ! The session is linked with this routine,
+  // which is not ok... the reset_me_ should
+  // be set elsewhere, and this routine should
+  // only check for stageid_.
+
+  if (session.persistent_ == false)
+    {
+      session.stageid_ = RELEASE_CON;
+      return true;
+    }
+
+  switch (session.stageid_)
+    {
+    case CREATE_CON:
+      session.stageid_ = READ_RQST_METADATA;
+      break;
+
+    case READ_RQST_METADATA:
+      session.stageid_ = PARSE_RQST_METADATA;
+      break;
+
+    case PARSE_RQST_METADATA:
+      session.stageid_ = READ_RQST_DATA;
+      break;
+
+    case READ_RQST_DATA:
+      session.stageid_ = ALTER_RQST_DATA;
+      break;
+
+    case ALTER_RQST_DATA:
+      session.stageid_ = BUILD_RESP_METADATA;
+      break;
+
+    case BUILD_RESP_METADATA:
+      session.stageid_ = BUILD_RESP_DATA;
+      break;
+
+    case BUILD_RESP_DATA:
+      session.stageid_ = ALTER_RESP_DATA;
+      break;
+
+    case ALTER_RESP_DATA:
+      session.stageid_ = ALTER_RESP_METADATA;
+      break;
+
+    case ALTER_RESP_METADATA:
+      session.stageid_ = SEND_RESP;
+      break;
+
+    case SEND_RESP:
+      if (session.persistent_ == true)
+	{
+	  session.reset_me_ = true;
+	  session.stageid_ = READ_RQST_METADATA;
+	}
+      else
+	{
+	  session.stageid_ = RELEASE_CON;
+	}
+      break;
+
+    case RELEASE_CON:
+      // Handle the special case.
+      // The request connection is
+      // already created, and creation
+      // has to happen only once.
+      session.persistent_ = false;
+      break;
+    }
+
+  return true;
 }

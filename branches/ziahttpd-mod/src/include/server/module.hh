@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 11 17:04:06 2005 texane
-// Last update Mon Nov 14 13:20:56 2005 
+// Last update Fri Nov 25 14:29:05 2005 texane
 //
 
 
@@ -36,6 +36,11 @@ namespace server
 
     // Shared object related
     sysapi::shared_object::handle_t hobj_;
+
+    // Status returned by the module
+    typedef enum
+    {
+    } reason_t;
 
     // Module exported hooks
     typedef bool (*hook_t)(http::session&, server::core*, int& reason);
