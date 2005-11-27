@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Sun Nov 27 14:43:28 2005 texane
+// Last update Sun Nov 27 16:43:16 2005 texane
 //
 
 
@@ -170,6 +170,9 @@ bool	server::core::handle_default_connection(sysapi::socket_in::handle_t& hsock,
   // Get the connection socket
   sysapi::socket_in::handle_t hsock_con;
   sysapi::socket_in::accept(&hsock_con, hsock);
+
+  // Continue looking for incoming connections
+  instance_->ioman_->read(hsock, handle_default_connection, 0);
   
   // Register ioman entry for this socket
   instance_->ioman_->register_sockhdl(hsock_con);
@@ -177,7 +180,7 @@ bool	server::core::handle_default_connection(sysapi::socket_in::handle_t& hsock,
 
   // Call hook for create_connection step, that register or
   // not a hook for this one.
-  cout << "[*] new socket registered" << endl;
+  cout << "\t\t[*] new socket registered" << endl;
 
   return true;
 }
@@ -303,32 +306,25 @@ bool	server::core::process_sessions()
   list<session*>::iterator end = sessions_.end();
   http::session* session;
 
-  cout << "entering pipeline" << endl;
   while (cur != end)
     {
       session = *cur;
       session->handleio() = false;
 
-      // Make the session go through the pipeline
+      // Make the session go through the pipeline,
+      // Resetting the session if necessary
       while (session->persistent() == true &&
-	     session->reset_me_ == false &&
 	     session->handleio() == false)
 	{
-	  cout << "[>]stage: " << session->stageid_ << endl;
 	  if (modman_.call_hooks(this, session->stageid_, session) == true)
 	    modman::next_processing_stage(*session);
-	  cout << "[<]stage: " << session->stageid_ << endl;
+	  if (session->reset_me_ == true)
+	    session->reset();
 	}
-
-      // Reset the session, if necessary
-      if (session->reset_me_ == true)
-	session->reset();
 
       // go to the next session
       ++cur;
     }
-
-  cout << "exiting pipeline" << endl;
 
   return true;
 }

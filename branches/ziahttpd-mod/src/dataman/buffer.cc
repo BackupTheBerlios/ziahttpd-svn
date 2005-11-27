@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Thu Nov 24 13:00:07 2005 texane
+// Last update Sun Nov 27 15:19:11 2005 texane
 //
 
 
@@ -330,7 +330,7 @@ string	dataman::buffer::to_string(unsigned int windent,
 	       << wbrd.str();
 	}
 
-      strm << hex << (unsigned int)buf_[offset];
+      strm << hex << setw(2) << setfill('0') << (unsigned int)buf_[offset];
       prnt << to_printable(buf_[offset]);
 
       if (((offset + 1) % wstep) == 0)

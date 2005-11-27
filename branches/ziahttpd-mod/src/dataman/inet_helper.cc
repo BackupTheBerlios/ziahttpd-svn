@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:05:06 2005 
-// Last update Sun Nov 27 03:02:58 2005 texane
+// Last update Sun Nov 27 14:48:58 2005 texane
 //
 
 
@@ -27,7 +27,7 @@ using namespace dataman;
 
 
 // Block size for the recv call
-#define SZ_BLOCK	1
+#define SZ_BLOCK	256
 
 // Max connection handles
 #define NR_HDLCON	1024

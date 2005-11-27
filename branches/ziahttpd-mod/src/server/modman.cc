@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:34:44 2005 
-// Last update Sun Nov 27 03:09:50 2005 texane
+// Last update Sun Nov 27 15:33:21 2005 texane
 //
 
 
@@ -170,6 +170,7 @@ bool	server::modman::call_hooks(core* core, stageid_t id, http::session* session
   list<module*>::iterator cur = modlist_.begin();
   list<module*>::iterator end = modlist_.end();
   bool (*module::* hook)(http::session&, server::core*, int&) = &module::hk_create_con_;
+  const char* hookname;
   int reason;
   bool done;
 
@@ -178,35 +179,46 @@ bool	server::modman::call_hooks(core* core, stageid_t id, http::session* session
     {
     case CREATE_CON:
       hook = &module::hk_create_con_;
+      hookname = "create_connection";
       break;
     case READ_RQST_METADATA:
       hook = &module::hk_get_rqstmetadata_;
+      hookname = "read_request_metadata";
       break;
     case READ_RQST_DATA:
+      hookname = "read_request_data";
       hook = &module::hk_get_rqstdata_;
       break;
     case PARSE_RQST_METADATA:
+      hookname = "parse_request_metadata";
       hook = &module::hk_parse_rqstmetadata_;
       break;
     case ALTER_RQST_DATA:
+      hookname = "alter_request_data";
       hook = &module::hk_alter_rqstdata_;
       break;
     case BUILD_RESP_METADATA:
+      hookname = "build_response_metadata";
       hook = &module::hk_build_respmetadata_;
       break;
     case BUILD_RESP_DATA:
+      hookname = "build_response_data";
       hook = &module::hk_build_respdata_;
       break;
     case ALTER_RESP_DATA:
+      hookname = "alter_response_data";
       hook = &module::hk_alter_respdata_;
       break;
     case ALTER_RESP_METADATA:
+      hookname = "alter_response_metadata";
       hook = &module::hk_alter_respmetadata_;
       break;
     case SEND_RESP:
+      hookname = "send_response";
       hook = &module::hk_send_response_;
       break;
     case RELEASE_CON:
+      hookname = "release_connection";
       hook = &module::hk_release_con_;
       break;
     }
@@ -218,9 +230,12 @@ bool	server::modman::call_hooks(core* core, stageid_t id, http::session* session
     {
       if ((*cur)->*hook)
 	{
-	  cerr << "[HOOK]: " << (*cur)->name_ << endl;
+	  cerr << "\t[@" << (*cur)->name_ << "] >> " << hookname << endl;
 	  if (((*cur)->*hook)(*session, (*cur)->priviledged_ ? core : 0, reason) == false)
-	    done = false;
+	    {
+	      done = false;
+	      cout << "\t[!] Returning false, won't go to the next pipeline stage" << endl;
+	    }
 	}
       ++cur;
     }

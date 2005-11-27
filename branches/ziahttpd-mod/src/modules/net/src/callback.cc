@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Sun Nov 27 03:42:21 2005 texane
+// Last update Sun Nov 27 16:19:57 2005 texane
 //
 
 
@@ -38,37 +38,37 @@ bool read_metadata(sysapi::socket_in::handle_t& hsock,
   http::session* session;
   sysapi::socket_in::error_t err;
 
-  cout << "reading http status line" << endl;
-
-  // Read the next http line
-  ret = dataman::get_nextline(hsock, &line, &err);
-  if (ret == false)
-    {
-      // Unless there is a true error...
-      return false;
-    }
-  
   // Get the session address
   ret = services_->find_session_byid(hsock, session);
   if (ret == false)
     cout << "Cannot get the session, will segfault" << endl;
 
-  if (strlen(line) != 0)
+  //
+  cout << "\t\t[+]Reading metadata" << endl;
+
+  // Read the next http line
+  while ((ret = dataman::get_nextline(hsock, &line, &err)) == true)
     {
-      // It is a header line
-      dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
-      session->hdrlines_in().push_back(buffer);
-      cout << "new line: " << buffer.c_str() << endl;
-    }
-  else
-    {
-      // We are done with the
-      // metadata reading stage
-      session->services_->next_processing_stage(*session);
+      if (strlen(line) != 0)
+	{
+	  // It is a header line
+	  dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
+	  session->hdrlines_in().push_back(buffer);
+	  cout << "\t\t[+] new header line: " << buffer.c_str() << endl;
+	}
+      else
+	{
+	  // We are done with the
+	  // metadata reading stage
+	  session->services_->next_processing_stage(*session);
+	  free(line);
+	  return true;
+	}
+      free(line);
     }
 
-  free(line);
-  return true;
+  // It is not the header end
+  return false;
 }
 
 
@@ -101,7 +101,7 @@ bool read_data(sysapi::socket_in::handle_t& hsock,
 			     session->content_in().size(),
 			     &nrecv, &err) == false)
     {
-      cout << "Wanting " << session->content_in().size() << ", got " << nrecv << endl;
+      cout << "\t\t[+]Getnextblock, size: " << session->content_in().size() << ", got " << nrecv << endl;
       return false;
     }
   else
@@ -130,8 +130,6 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
   bool ret;
 
 
-  cout << "sending the RESPONSE" << endl;
-
   // Get the session address, gore mode
   ret = services_->find_session_byid(hsock, session);
   if (ret == false)
@@ -144,6 +142,9 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
   // and call the write service
   buf += session->hdrlines_out();
   buf += session->content_out();
+
+//   cout << "\t\t[+] Sending response" << endl;
+//   cout << buf.to_string(16) << endl;
 
   if (sysapi::socket_in::send(session->hsock_con(), (unsigned char*)buf, buf.size(), &nrsent) == false)
     {

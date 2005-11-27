@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Nov 16 11:42:46 2005 
-// Last update Sun Nov 27 03:40:12 2005 texane
+// Last update Sun Nov 27 15:07:18 2005 texane
 //
 
 
@@ -53,7 +53,7 @@ MOD_EXPORT( HK_CREATE_CONNECTION )(http::session& session, server::core*, int&)
   // connection.
 
   services_ = session.services_;
-  cout << "in the creation connection hook" << endl;
+  cout << "\t\t[+]In the creation connection hook" << endl;
 
   return true;
 }
@@ -67,7 +67,7 @@ MOD_EXPORT( HK_GET_RQST_METADATA )(http::session& session, server::core*, int&)
   // reads http compliant lines from the network.
 
   // Register request data reading callback
-  cout << "Reading metadata" << endl;
+  cout << "\t\t[+]Meta data hook" << endl;
   session.services_->perform_io(session.hsock_con(),
 				server::service::EVREAD,
 				read_metadata);
@@ -84,7 +84,7 @@ MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&)
   // reads http compliant lines from the network.
 
   // Register request data reading callback
-  cout << "Reading data" << endl;
+  cout << "\t\t[+]Reading data" << endl;
   if (session.content_in().size())
     {
       session.services_->perform_io(session.hsock_con(),
@@ -103,7 +103,7 @@ MOD_EXPORT( HK_SEND_RESPONSE)(http::session& session, server::core*, int&)
   // called at send time
 
   // Sending response
-  cout << "Sending the response" << endl;
+  cout << "\t\t[+]Sending the response" << endl;
   if (session.content_out().size() ||
       session.hdrlines_out().size())
     {
@@ -131,7 +131,7 @@ MOD_EXPORT( HK_RELEASE_CONNECTION)(http::session& session, server::core*, int&)
   if (session.persistent() == true)
     return true;
 
-  cout << "closing connection" << endl;
+  cout << "\t\t[+]closing connection" << endl;
 
   session.services_->perform_io(session.hsock_con(),
 				server::service::EVCLOSE,
