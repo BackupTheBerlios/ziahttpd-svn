@@ -79,7 +79,7 @@ bool	check_status_code(http::session& session, info_t& info)
 	};
 	//pu this in config file 
 	LALA_s	LALA[] = {
-		{404, "", "", "", "ssss"},
+		{404, "http://localhost.be", "", "301", ""},
 		{401, "", "", "", "lala c l'erreur de merde"},
 		{-1, 0, 0, 0, 0}
 	};
@@ -94,12 +94,16 @@ bool	check_status_code(http::session& session, info_t& info)
 				if (!sysapi::file::is_readable(LALA[i].file))
 				{
 					session.uri().status() = 401;
-					return (false);
+//					fo pas ce foutre dela gueule du monde
+//					admin rezo apprend a config le server
+					return (true);
 				}
 				if (!sysapi::file::exists(LALA[i].file))
 				{
 					session.uri().status() = 404;
-					return (false);
+//					fo pas ce foutre dela gueule du monde
+//					admin rezo apprend a config le server
+					return (true);
 				}
 				session.uri().localname() = LALA[i].file;
 				info.type = ISFILE;
@@ -166,15 +170,9 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 
 	session.info_out()["content-type"] = info.content_type;
 	if (info.type == ISFILE)
-	{
 		session.services_->create_resource(session, session.uri().localname());
-	}
 	if (info.type == ISRAW)
-	{
-		cout << "FDFDSSDFDFDSFSD" << endl;
 		session.services_->create_resource(session, session.uri().status());
-	}
-
 	if (info.type == ISCGI)
 	  {
   	    cout << "c'est CGI" << endl;
@@ -184,16 +182,20 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 					       (const vector<const string>)info.binary,
 					       (const vector<const string>)env);
 	  }
-	  if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
+	  if (info.type != ISNONE
+		  && info.type != UNSET)
 	  {
-		  //status code internal error
-		  printf("status code internal error\n");
+		if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
+		{
+			//status code internal error
+			printf("status code internal error\n");
+		}
+		if (!session.resource()->fetch(session.content_out(), err))
+			cout << "FETCH TROUBLE" << endl;
+		else
+			cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
+		session.resource()->close(err);
 	  }
-	  if (!session.resource()->fetch(session.content_out(), err))
-		  cout << "FETCH TROUBLE" << endl;
-	  else
-		  cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
-	  session.resource()->close(err);
 	  //get the size of the buffer for add the content length entry to the response header
 	sprintf(size, "%d", session.content_out().size());
 	session.info_out()["content-length"] = size;
@@ -249,7 +251,7 @@ bool check_typemine(http::uri &uri, info_t &info)
 		{
 			if (LALA[i].cgi)
 			{
-				check_cgi(uri, LALA[i].path, info);
+				check_cgi(uri, uri.localname(), info);
 				return (false);
 			}
 			else
