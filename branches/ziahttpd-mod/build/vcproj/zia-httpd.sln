@@ -1,0 +1,53 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zia-httpd", "zia-httpd.vcproj", "{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "http1.1", "..\..\src\modules\http1.1\build\http1.1.vcproj", "{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "net", "..\..\src\modules\net\build\net.vcproj", "{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nmtrans", "..\..\src\modules\nmtrans\build\nmtrans.vcproj", "{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "resource", "..\..\src\modules\resource\build\resource.vcproj", "{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.ActiveCfg = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.Build.0 = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.ActiveCfg = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.Build.0 = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.ActiveCfg = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.Build.0 = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.ActiveCfg = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.Build.0 = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.ActiveCfg = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.Build.0 = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.ActiveCfg = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.Build.0 = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.ActiveCfg = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.Build.0 = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.ActiveCfg = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.Build.0 = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.ActiveCfg = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Debug.Build.0 = Debug|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.ActiveCfg = Release|Win32
+		{EC0DBF03-879B-4AA8-A82B-2DE3E0A0AB40}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
