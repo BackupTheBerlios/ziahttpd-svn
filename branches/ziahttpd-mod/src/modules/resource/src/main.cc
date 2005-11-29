@@ -165,10 +165,13 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	bool	err_code = true;
 
 	info.type = UNSET;
-	fill_info(session, info);
-	check_typemine(session.uri(), info);
+	if (!session.content_out().size())
+	{
+		fill_info(session, info);
+		check_typemine(session.uri(), info);
 
-	session.info_out()["content-type"] = info.content_type;
+		session.info_out()["content-type"] = info.content_type;
+	}
 	if (info.type == ISFILE)
 		session.services_->create_resource(session, session.uri().localname());
 	if (info.type == ISRAW)
