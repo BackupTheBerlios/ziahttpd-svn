@@ -127,9 +127,6 @@
 				RelativePath="..\src\callback.cc">
 			</File>
 			<File
-				RelativePath=".\fake.cpp">
-			</File>
-			<File
 				RelativePath="..\src\main.cc">
 			</File>
 			<Filter
