@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Sat Nov 26 18:24:02 2005 texane
+// Last update Wed Nov 30 13:19:24 2005 texane
 //
 
 
@@ -73,6 +73,9 @@ namespace http
 
     // Get/Set the connection persistency
     bool& persistent()				{ return persistent_; }
+    
+    // Is the session resource content chunked?
+    bool& chunked()				{ return chunked_; }
 
     bool& handleio()				{ return handleio_; }
 
@@ -123,6 +126,7 @@ namespace http
     // Connection persistency.
     bool persistent_;
     int nrpassed_;
+    bool chunked_;
 
     // A call has been made to the io service
     bool handleio_;

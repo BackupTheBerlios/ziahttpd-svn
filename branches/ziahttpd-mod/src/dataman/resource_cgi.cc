@@ -1,11 +1,11 @@
- //
+//
 // resource_cgi.cc for  in 
 // 
 // Made by texane
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Sun Nov 27 18:06:24 2005 texane
+// Last update Wed Nov 30 13:45:59 2005 texane
 //
 
 
@@ -113,6 +113,8 @@ bool	dataman::cgi::fetch(buffer& buf, unsigned int nbytes, error_t& err)
   sysapi::file::size_t nread;
   sysapi::process::state_t st;
   unsigned char* wrk;
+  
+  err = ESUCCESS;
 
   // Thus, fetching is true
   feeding_ = false;
@@ -147,6 +149,8 @@ bool	dataman::cgi::fetch(buffer& buf, unsigned int nbytes, error_t& err)
 
   // Here the proces sis now done,
   // so release associated resources
+  err = EOFETCHING;
+
   release();
   reset();
 

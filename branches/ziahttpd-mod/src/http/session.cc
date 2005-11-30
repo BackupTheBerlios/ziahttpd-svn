@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:46:45 2005 
-// Last update Sun Nov 27 15:32:29 2005 texane
+// Last update Wed Nov 30 13:11:17 2005 texane
 //
 
 
@@ -32,6 +32,7 @@ http::session::session(dataman::conf& conf) : conf_(conf)
   stageid_ = server::modman::CREATE_CON;
   reset_me_= false;
   handleio_ = false;
+  chunked_ = false;
 }
 
 
@@ -59,6 +60,7 @@ bool	http::session::reset()
   // In case...
   persistent_ = true;
   reset_me_ = false;
+  chunked_= false;
 
   // Set the processing stage
   stageid_ = server::modman::CREATE_CON;

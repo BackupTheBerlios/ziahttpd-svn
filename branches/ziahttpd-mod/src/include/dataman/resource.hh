@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Thu Nov 24 21:25:54 2005 texane
+// Last update Wed Nov 30 13:35:49 2005 texane
 //
 
 
@@ -50,7 +50,8 @@ namespace dataman
 	OPNOTSUP,
 	OPFAILED,
 	ALREADYOPENED,
-	INUSE
+	INUSE,
+	ESUCCESS
       } error_t;
 
     // Interface a concrete resource has to implement
@@ -118,6 +119,7 @@ namespace dataman
     std::string filename_;
     sysapi::file::handle_t hfile_;
     sysapi::file::size_t sz_;
+    sysapi::file::size_t nrtoread_;
     
   };
 }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Thu Nov 24 21:27:00 2005 texane
+// Last update Wed Nov 30 13:46:36 2005 texane
 //
 
 
@@ -16,6 +16,7 @@
 #include <dataman/resource.hh>
 
 
+using std::cerr;
 using std::cout;
 using std::endl;
 using std::string;
@@ -31,6 +32,7 @@ dataman::file::file(const string& filename)
 
   opened_ = false;
   filename_ = filename;
+  nrtoread_ = 0;
 }
 
 
@@ -78,21 +80,24 @@ bool	dataman::file::open(openmode_t omode, error_t& err)
   ret = sysapi::file::open(&hfile_, filename_.c_str(), sysapi::file::RDONLY);
   if (ret == false)
     {
-      std::cout << "OIPENLKDSFJKLFJ" <<  std::endl;
+      std::cout << "open failed OIPENLKDSFJKLFJ" <<  std::endl;
       return false;
     }
 
+  nrtoread_ = sz_;
   opened_ = true;
 
   return true;
 }
 
 
-bool	dataman::file::fetch(buffer& buf, unsigned int nbytes, error_t& err)
+bool	dataman::file::fetch(buffer& buf, unsigned int nrtoread, error_t& err)
 {
   bool ret;
   unsigned char* wrk;
   unsigned int nread;
+
+  err = ESUCCESS;
 
   if (opened_ == false)
     {
@@ -106,11 +111,30 @@ bool	dataman::file::fetch(buffer& buf, unsigned int nbytes, error_t& err)
       return false;
     }
 
-  wrk = new unsigned char[nbytes];
-  ret = sysapi::file::read(hfile_, wrk, nbytes, reinterpret_cast<sysapi::file::size_t*>(&nread));
+  if (nrtoread_ == 0)
+    {
+      err =  EOFETCHING;
+      return true;
+    }
+  
+  // Normalize the buffer size to chunk's one
+  if (nrtoread > nrtoread_)
+    nrtoread = nrtoread_;
+
+  wrk = new unsigned char[nrtoread];
+  ret = sysapi::file::read(hfile_,
+			   wrk,
+			   nrtoread,
+			   reinterpret_cast<sysapi::file::size_t*>(&nread));
 
   if (ret == true)
-    buf = buffer(wrk, nread);
+    {
+      buf = buffer(wrk, nread);
+      nrtoread_ -= nread;
+    }
+
+  if (nrtoread_ ==0)
+    err = EOFETCHING;
 
   delete[] wrk;
 
@@ -132,6 +156,7 @@ bool	dataman::file::fetch(buffer& buf, error_t& err)
 
 bool	dataman::file::feed(buffer&, error_t&)
 {
+  cerr << "feeding methood not implemented fro the filereource" << endl;
   return true;
 }
 
