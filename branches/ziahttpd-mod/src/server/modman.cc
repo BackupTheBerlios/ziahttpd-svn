@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:34:44 2005 
-// Last update Sun Nov 27 15:33:21 2005 texane
+// Last update Wed Nov 30 14:00:32 2005 texane
 //
 
 
@@ -314,7 +314,13 @@ bool	server::modman::next_processing_stage(http::session& session)
       break;
 
     case SEND_RESP:
-      if (session.persistent_ == true)
+      if (session.chunked_ == true)
+	{
+	  cout << "Content is chunked, bypassing the normal processing flow" << endl;
+	  session.reset_me_ = false;
+	  session.stageid_ = BUILD_RESP_DATA;
+	}
+      else if (session.persistent_ == true)
 	{
 	  session.reset_me_ = true;
 	  session.stageid_ = READ_RQST_METADATA;
