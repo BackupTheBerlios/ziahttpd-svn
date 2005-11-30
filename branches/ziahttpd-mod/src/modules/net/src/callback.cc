@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Wed Nov 30 12:29:22 2005 texane
+// Last update Wed Nov 30 14:12:00 2005 texane
 //
 
 
@@ -140,9 +140,6 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
   // Build the response buffer
   // wrap it into an iovec
   // and call the write service
-
-  if (chuncked)
-    {
 
   buf += session->hdrlines_out();
   buf += session->content_out();
