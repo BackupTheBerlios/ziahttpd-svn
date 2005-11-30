@@ -294,7 +294,7 @@ bool check_typemine(http::uri &uri, info_t &info)
 				std::cout << "C EST UN CGI" << std::endl;
 				//sysapi::file::normalize_name(uri.localname());
 				check_cgi(uri, uri.localname(), info);
-				return (true);
+				return (false);
 			}
 			else
 			{
