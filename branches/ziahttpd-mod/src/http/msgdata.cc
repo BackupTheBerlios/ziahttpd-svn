@@ -176,7 +176,8 @@ bool	http::msgdata::stringify_respline(buffer& metadata, uri& u)
 			+ "\r\n";
 	for(iter = hdrlines_.begin(); iter != hdrlines_.end(); iter++)
 	{
-		metadata += iter->first + ": " + iter->second + "\r\n";
+		if (!iter->second.empty())
+			metadata += iter->first + ": " + iter->second + "\r\n";
 	}
 	metadata += "\r\n";
 	return (true);

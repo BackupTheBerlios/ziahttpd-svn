@@ -143,3 +143,12 @@ bool	stringmanager::string::normalize(char *str)
 			str[i] = str[i] - 'A' + 'a';
 	return (true);
 }
+
+bool	stringmanager::string::dec_to_hex(const int nb, std::string& dest)
+{
+	char	tmp[10];
+
+	sprintf(tmp, "%x", nb);
+	dest = tmp;
+	return (true);
+}

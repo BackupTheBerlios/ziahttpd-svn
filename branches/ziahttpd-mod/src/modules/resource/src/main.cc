@@ -165,40 +165,63 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	bool	err_code = true;
 
 	info.type = UNSET;
-	if (!session.content_out().size())
+	if (!session.chunked())
 	{
-		fill_info(session, info);
-		check_typemine(session.uri(), info);
-
-		session.info_out()["content-type"] = info.content_type;
-	}
-	if (info.type == ISFILE)
-		session.services_->create_resource(session, session.uri().localname());
-	if (info.type == ISRAW)
-		session.services_->create_resource(session, session.uri().status());
-	if (info.type == ISCGI)
-	  {
-  	    cout << "c'est CGI" << endl;
-	    vector<const string> env;
-		cout << info.binary[0] << " : " << info.binary[1] << endl;
-	    session.services_->create_resource(session,
-					       (const vector<const string>)info.binary,
-					       (const vector<const string>)env);
-	  }
-	  if (info.type != ISNONE
-		  && info.type != UNSET)
-	  {
-		if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
+		if (!session.content_out().size())
 		{
-			//status code internal error
-			printf("status code internal error\n");
+			fill_info(session, info);
+			check_typemine(session.uri(), info);
+
+			session.info_out()["content-type"] = info.content_type;
 		}
-		if (!session.resource()->fetch(session.content_out(), err))
+		if (info.type == ISFILE)
+			session.services_->create_resource(session, session.uri().localname());
+		if (info.type == ISRAW)
+			session.services_->create_resource(session, session.uri().status());
+		if (info.type == ISCGI)
+		{
+	  	    cout << "c'est CGI" << endl;
+			vector<const string> env;
+			cout << info.binary[0] << " : " << info.binary[1] << endl;
+			session.services_->create_resource(session,
+						       (const vector<const string>)info.binary,
+						       (const vector<const string>)env);
+		}
+		if (info.type != ISNONE
+			&& info.type != UNSET)
+		{
+			if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
+			{
+				//status code internal error
+				printf("status code internal error\n");
+			}
+		}
+	} else {
+		info.type = ISRAW;
+	}
+	if (info.type != ISNONE
+		&& info.type != UNSET)
+	{
+		if (!session.resource()->fetch(session.content_out(), 20, err))
 			cout << "FETCH TROUBLE" << endl;
 		else
+		{
 			cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
-		session.resource()->close(err);
-	  }
+			if (err == dataman::resource::ESUCCESS)
+			{
+				session.chunked() = true;
+				std::cout << "IS CHUNKED" << std::endl;
+			}
+			if (err == dataman::resource::EOFETCHING)
+			{
+				session.resource()->close(err);
+				std::cout << "END OF  CHUNKED" << std::endl;
+
+			}
+		}			
+	}
+
+
 	  //get the size of the buffer for add the content length entry to the response header
 	sprintf(size, "%d", session.content_out().size());
 	session.info_out()["content-length"] = size;
