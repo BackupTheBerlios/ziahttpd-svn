@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Thu Nov 24 21:26:41 2005 texane
+// Last update Sun Nov 27 18:06:24 2005 texane
 //
 
 
@@ -124,6 +124,8 @@ bool	dataman::cgi::fetch(buffer& buf, unsigned int nbytes, error_t& err)
 			   &nread);
   if (ret == false)
     {
+      sysapi::error::stringify("Cannot read");
+      cout << "READ FAILED" << endl;
       delete wrk;
       err = OPFAILED;
       return false;
