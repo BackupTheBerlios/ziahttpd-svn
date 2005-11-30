@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Mon Nov 14 16:19:53 2005 
+// Last update Wed Nov 30 16:21:18 2005 texane
 //
 
 
@@ -84,16 +84,24 @@ MOD_EXPORT(HK_BUILD_RESP_METADATA) (http::session& session, server::core* core, 
 
 MOD_EXPORT(HK_ALTER_RESP_METADATA) (http::session& session, server::core* core, int& status)
 {
+ if(session.last_chunk() == true) 
+   {
+     return true;
+   }
+
 	error_code_string(session.uri().status(), session.uri().strstatus());
 	if (session.chunked())
 	{
 		session.info_out()["content-length"] = "";
 		session.info_out()["Transfer-Encoding"] = "chunked";
 	}
-	session.info_out().stringify_respline(session.hdrlines_out(), session.uri());
+
+	if (!session.chunked()) 
+	  session.info_out().stringify_respline(session.hdrlines_out(), session.uri());
 	if (session.chunked())
 	{
 		session.info_out().reset();
+		  session.hdrlines_out().clear();
 	}
 	//session.hdrlines_out().display();
 	return (true);
@@ -101,19 +109,32 @@ MOD_EXPORT(HK_ALTER_RESP_METADATA) (http::session& session, server::core* core, 
 
 MOD_EXPORT(HK_ALTER_RESP_DATA) (http::session& session, server::core* core, int& status)
 {
-	if (session.chunked())
+
+ cerr<<"ENTERING THE ALTERRESPDATA"<<endl;
+
+	if (session.chunked() && session.last_chunk() == false)
 	{
 		string					hex;
 		stringmanager::string	p;
 		dataman::buffer			tmp;
+
+		  cerr <<"ENTERING CH"<<endl;
 
 		p.dec_to_hex(session.content_out().size(), hex);
 		tmp = session.content_out();
 		session.content_out() = hex + "\r\n";
 		session.content_out() += tmp;
 		cout << session.content_out().size() << "\n" << session.content_out().c_str() << endl;
-	}
-	if (session.content_out().size() == 0)
-		session.chunked() = false;
+	  }
+	else if (session.last_chunk() == true)
+	  {
+	    // Thisis thelast onetobesent
+	    cout <<".>>>>>>>>sendingthelastchunk!"<<endl;
+	    session.chunked() = false;
+	    session.hdrlines_out().clear();
+	    session.content_out() = "0";
+	    session.content_out() += "\r\n";
+	  }
+
 	return (true);
 }

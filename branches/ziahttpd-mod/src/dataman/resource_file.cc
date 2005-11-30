@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Wed Nov 30 13:46:36 2005 texane
+// Last update Wed Nov 30 14:48:00 2005 texane
 //
 
 
@@ -111,6 +111,8 @@ bool	dataman::file::fetch(buffer& buf, unsigned int nrtoread, error_t& err)
       return false;
     }
 
+  cout <<"nrtoread_ == " <<  nrtoread_ <<endl;
+
   if (nrtoread_ == 0)
     {
       err =  EOFETCHING;
@@ -131,10 +133,8 @@ bool	dataman::file::fetch(buffer& buf, unsigned int nrtoread, error_t& err)
     {
       buf = buffer(wrk, nread);
       nrtoread_ -= nread;
+      nrtoread = nread;
     }
-
-  if (nrtoread_ ==0)
-    err = EOFETCHING;
 
   delete[] wrk;
 

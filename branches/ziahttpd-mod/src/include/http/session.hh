@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Wed Nov 30 13:19:24 2005 texane
+// Last update Wed Nov 30 15:26:48 2005 texane
 //
 
 
@@ -76,6 +76,8 @@ namespace http
     
     // Is the session resource content chunked?
     bool& chunked()				{ return chunked_; }
+    bool& first_chunk()				{ return first_chunk_; }
+    bool& last_chunk()				{ return last_chunk_; }
 
     bool& handleio()				{ return handleio_; }
 
@@ -127,6 +129,8 @@ namespace http
     bool persistent_;
     int nrpassed_;
     bool chunked_;
+    bool first_chunk_;
+    bool last_chunk_;
 
     // A call has been made to the io service
     bool handleio_;

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Sun Nov 27 16:43:16 2005 texane
+// Last update Wed Nov 30 15:54:14 2005 texane
 //
 
 
@@ -321,6 +321,8 @@ bool	server::core::process_sessions()
 	  if (session->reset_me_ == true)
 	    session->reset();
 	}
+
+      cout << "outof session" << endl;
 
       // go to the next session
       ++cur;

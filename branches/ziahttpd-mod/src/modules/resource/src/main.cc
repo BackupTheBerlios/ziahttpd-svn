@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Thu Nov 24 19:55:53 2005 texane
+// Last update Wed Nov 30 15:51:55 2005 texane
 //
 
 
@@ -195,6 +195,10 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 				//status code internal error
 				printf("status code internal error\n");
 			}
+			else
+			  {
+			    session.first_chunk() = true;
+			  }
 		}
 	} else {
 		info.type = ISRAW;
@@ -212,8 +216,10 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 				session.chunked() = true;
 				std::cout << "IS CHUNKED" << std::endl;
 			}
-			if (err == dataman::resource::EOFETCHING)
+			  else if (err == dataman::resource::EOFETCHING)
 			{
+				session.chunked() = true; 
+				session.last_chunk() = true; 
 				session.resource()->close(err);
 				std::cout << "END OF  CHUNKED" << std::endl;
 
