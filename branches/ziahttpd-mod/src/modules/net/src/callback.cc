@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Wed Nov 30 14:12:00 2005 texane
+// Last update Wed Nov 30 14:29:43 2005 texane
 //
 
 
@@ -144,8 +144,8 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
   buf += session->hdrlines_out();
   buf += session->content_out();
 
-//   cout << "\t\t[+] Sending response" << endl;
-//   cout << buf.to_string(16) << endl;
+  cout << "\t\t[+] Sending response" << endl;
+  cout << buf.to_string(16) << endl;
 
   if (sysapi::socket_in::send(session->hsock_con(), (unsigned char*)buf, buf.size(), &nrsent) == false)
     {
