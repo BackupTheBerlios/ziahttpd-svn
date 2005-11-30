@@ -144,8 +144,8 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
   buf += session->hdrlines_out();
   buf += session->content_out();
 
-  cout << "\t\t[+] Sending response" << endl;
-  cout << buf.to_string(16) << endl;
+  //cout << "\t\t[+] Sending response" << endl;
+  //cout << buf.to_string(16) << endl;
 
   if (sysapi::socket_in::send(session->hsock_con(), (unsigned char*)buf, buf.size(), &nrsent) == false)
     {

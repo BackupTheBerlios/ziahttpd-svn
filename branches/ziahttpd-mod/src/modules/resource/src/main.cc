@@ -52,19 +52,24 @@ bool	check_cgi(http::uri& uri, const string& file, info_t& info)
 {
 	stringmanager::string	p;
 
+	
 	p.split(file, " ", (vector<string>&)info.binary);
+	cout << "FILE : " << info.binary[0] << endl;
 	if (!sysapi::file::exists(info.binary[0].c_str()))
 	{
+		cout << "CGI DOESN T EXIST" << endl;
 		uri.status() = 404;
 		return (false);
 	}
 	if (!sysapi::file::is_executable(info.binary[0].c_str()))
 	{
+		cout << "CGI CANN T BE EXECUTE" << endl;
 		uri.status() = 401;
 		return (false);
 	}
 	info.content_type = "text/html";
 	info.type = ISCGI;
+	cout << "LE CGI EST VALIDE" << endl;
 	return (true);
 }
 
@@ -182,7 +187,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		{
 	  	    cout << "c'est CGI" << endl;
 			vector<const string> env;
-			cout << info.binary[0] << " : " << info.binary[1] << endl;
+			//cout << info.binary[0] << " : " << info.binary[1] << endl;
 			session.services_->create_resource(session,
 						       (const vector<const string>)info.binary,
 						       (const vector<const string>)env);
@@ -190,6 +195,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		if (info.type != ISNONE
 			&& info.type != UNSET)
 		{
+			cout << "OPEN" << endl;
 			if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
 			{
 				//status code internal error
@@ -206,7 +212,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	if (info.type != ISNONE
 		&& info.type != UNSET)
 	{
-		if (!session.resource()->fetch(session.content_out(), 20, err))
+		if (!session.resource()->fetch(session.content_out(), 24, err))
 			cout << "FETCH TROUBLE" << endl;
 		else
 		{
@@ -271,8 +277,10 @@ bool check_typemine(http::uri &uri, info_t &info)
 		{"text/html", "html", false, ""},
 		{"text/html", "htm", false, ""},
 		{"image/gif", "gif", false, ""},
+		{"image/bmp", "bmp", false, ""},
 		{"image/png", "png", false, ""},
  		{"text/html", "exe", true, ""},
+ 		{"text/plain", "wmv", false, ""},
 		{0, 0, 0, 0}
 	};
 	uri.build_extension();
@@ -283,8 +291,10 @@ bool check_typemine(http::uri &uri, info_t &info)
 		{
 			if (LALA[i].cgi)
 			{
+				std::cout << "C EST UN CGI" << std::endl;
+				//sysapi::file::normalize_name(uri.localname());
 				check_cgi(uri, uri.localname(), info);
-				return (false);
+				return (true);
 			}
 			else
 			{

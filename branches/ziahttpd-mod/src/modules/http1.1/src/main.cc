@@ -76,6 +76,7 @@ MOD_EXPORT(HK_BUILD_RESP_METADATA) (http::session& session, server::core* core, 
 
 	session.info_out().build_respline(session.info_in(), session.uri());
 	session.info_out()["Serveur"] = "TrancheD Ejambon 0.1 beta version ;)";
+	session.info_out()["Connection"] = "close";
 	response_header_date(session.info_out()["Date"]);
 
 	return (true);
@@ -84,24 +85,19 @@ MOD_EXPORT(HK_BUILD_RESP_METADATA) (http::session& session, server::core* core, 
 
 MOD_EXPORT(HK_ALTER_RESP_METADATA) (http::session& session, server::core* core, int& status)
 {
- if(session.last_chunk() == true) 
-   {
-     return true;
-   }
-
 	error_code_string(session.uri().status(), session.uri().strstatus());
 	if (session.chunked())
 	{
 		session.info_out()["content-length"] = "";
 		session.info_out()["Transfer-Encoding"] = "chunked";
 	}
-
-	if (!session.chunked()) 
-	  session.info_out().stringify_respline(session.hdrlines_out(), session.uri());
-	if (session.chunked())
+	if (session.first_chunk())
 	{
+		session.info_out().stringify_respline(session.hdrlines_out(), session.uri());
 		session.info_out().reset();
-		  session.hdrlines_out().clear();
+		session.first_chunk() = false;
+	} else {
+		session.hdrlines_out().clear();
 	}
 	//session.hdrlines_out().display();
 	return (true);
@@ -124,7 +120,7 @@ MOD_EXPORT(HK_ALTER_RESP_DATA) (http::session& session, server::core* core, int&
 		tmp = session.content_out();
 		session.content_out() = hex + "\r\n";
 		session.content_out() += tmp;
-		cout << session.content_out().size() << "\n" << session.content_out().c_str() << endl;
+		//cout << session.content_out().size() << "\n" << session.content_out().c_str() << endl;
 	  }
 	else if (session.last_chunk() == true)
 	  {
