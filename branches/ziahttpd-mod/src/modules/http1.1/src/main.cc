@@ -93,7 +93,7 @@ MOD_EXPORT(HK_ALTER_RESP_METADATA) (http::session& session, server::core* core, 
 	session.info_out().stringify_respline(session.hdrlines_out(), session.uri());
 	if (session.chunked())
 	{
-		session.hdrlines_out().clear();
+		session.info_out().reset();
 	}
 	//session.hdrlines_out().display();
 	return (true);
