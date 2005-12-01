@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Thu Dec 01 13:12:24 2005 texane
+// Last update Thu Dec 01 14:06:39 2005 texane
 //
 
 
@@ -180,7 +180,7 @@ bool	server::core::handle_default_connection(sysapi::socket_in::handle_t& hsock,
 
   // Call hook for create_connection step, that register or
   // not a hook for this one.
-  cout << "\t\t[*] new socket registered" << endl;
+  cout << "\t\t[? " << std::dec << (unsigned int)hsock << "]: new socket registered: " << (unsigned int)hsock_con << endl;
 
   return true;
 }
@@ -311,7 +311,7 @@ bool	server::core::process_sessions()
       session = *cur;
       session->handleio() = false;
 
-      cout << "\t[?] Session [" << (unsigned)session->hsock_con() << "] " << endl;
+      cout << "\t[?] Session [" << std::dec << (unsigned)session->hsock_con() << "] " << endl;
 
       // Make the session go through the pipeline,
       // Resetting the session if necessary

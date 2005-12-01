@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Thu Dec 01 12:53:20 2005 texane
+// Last update Thu Dec 01 15:05:21 2005 texane
 //
 
 
@@ -116,6 +116,7 @@ MOD_EXPORT(HK_ALTER_RESP_DATA) (http::session& session, server::core* core, int&
 		tmp = session.content_out();
 		session.content_out() = hex + "\r\n";
 		session.content_out() += tmp;
+		  session.content_out() += "\r\n";
 		//cout << session.content_out().size() << "\n" << session.content_out().c_str() << endl;
 	  }
 	else if (session.last_chunk() == true)
@@ -125,6 +126,7 @@ MOD_EXPORT(HK_ALTER_RESP_DATA) (http::session& session, server::core* core, int&
 	    session.hdrlines_out().clear();
 	    session.content_out() = "0";
 	    session.content_out() += "\r\n";
+            session.content_out() += "\r\n";
 	  }
 
 	return (true);

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Thu Dec 01 13:42:50 2005 texane
+// Last update Thu Dec 01 14:08:39 2005 texane
 //
 
 
@@ -47,7 +47,7 @@ bool read_metadata(sysapi::socket_in::handle_t& hsock,
     cout << "Cannot get the session, will segfault" << endl;
 
   { // Debugging purposes
-    cout << "\t[?] Metadata Reading callback" << endl;
+    cout << "\t[?: " << std::dec << (unsigned int)session->hsock_con() << " ] Metadata Reading callback" << endl;
   }
 
   // Read the next http line
@@ -154,7 +154,7 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
     else strm << "middle)";
     strm << ", size(0x" << hex << (unsigned int)buf.size() << ")";
     cout << "\t[?] Sending response callback" << endl;
-    cout << "\t\t[+] Sender identity    : " << (unsigned int)session->hsock_con() << endl;
+    cout << "\t\t[+] Sender identity    : " << std::dec << (unsigned int)session->hsock_con() << endl;
     cout << "\t\t[+] Response attributes: " << strm.str() << endl;
     if (session->hdrlines_out().size() != 0)
       {
