@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:46:45 2005 
-// Last update Wed Nov 30 15:27:20 2005 texane
+// Last update Thu Dec 01 13:11:33 2005 texane
 //
 
 
@@ -49,8 +49,6 @@ bool	http::session::reset()
   // Keep the handle on the connection opened
   // Keep the conf
   // Keep the services
-
-  cout << "[*] Reseting the session" << endl;
 
   // reset the resource, if any
   if (resource_)

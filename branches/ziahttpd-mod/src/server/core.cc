@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Wed Nov 30 15:54:14 2005 texane
+// Last update Thu Dec 01 13:12:24 2005 texane
 //
 
 
@@ -311,6 +311,8 @@ bool	server::core::process_sessions()
       session = *cur;
       session->handleio() = false;
 
+      cout << "\t[?] Session [" << (unsigned)session->hsock_con() << "] " << endl;
+
       // Make the session go through the pipeline,
       // Resetting the session if necessary
       while (session->persistent() == true &&
@@ -318,11 +320,13 @@ bool	server::core::process_sessions()
 	{
 	  if (modman_.call_hooks(this, session->stageid_, session) == true)
 	    modman::next_processing_stage(*session);
-	  if (session->reset_me_ == true)
-	    session->reset();
-	}
 
-      cout << "outof session" << endl;
+	  if (session->reset_me_ == true)
+	    {
+	      session->reset();
+	      cout << "\t[?] Session reseted" << endl;
+	    }
+	}
 
       // go to the next session
       ++cur;

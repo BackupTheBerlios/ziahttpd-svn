@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 25 20:10:53 2005 texane
-// Last update Sun Nov 27 16:02:39 2005 texane
+// Last update Thu Dec 01 13:06:28 2005 texane
 //
 
 
@@ -203,7 +203,7 @@ bool	thrman::ioselect::prepare_events(fd_set& rdset, fd_set& wrset)
       ++i;
     }
 
-  cout << "ntoprocess: " << ntoprocess << endl;
+  cout << "\t[?] ConnectionCount: " << ntoprocess << endl;
 
   if (ntoprocess == 0)
     return false;
@@ -432,8 +432,6 @@ bool	thrman::ioselect::release_sockio(sockioman::sockio_t& sio)
       if (highest_sockio(hsock_max_) == false)
 	hsock_max_ = 0;
     }
-
-  cout << "[?] max handle is now " << hsock_max_ << endl;
 
   return true;
 }

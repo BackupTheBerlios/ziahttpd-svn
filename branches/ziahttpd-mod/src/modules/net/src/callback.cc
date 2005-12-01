@@ -5,17 +5,20 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Wed Nov 30 14:29:43 2005 texane
+// Last update Thu Dec 01 13:17:55 2005 texane
 //
 
 
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <sstream>
 #include <zia.hh>
 #include <callback.hh>
 
 
+using std::hex;
+using std::ostringstream;
 using std::string;
 
 
@@ -43,8 +46,9 @@ bool read_metadata(sysapi::socket_in::handle_t& hsock,
   if (ret == false)
     cout << "Cannot get the session, will segfault" << endl;
 
-  //
-  cout << "\t\t[+]Reading metadata" << endl;
+  { // Debugging purposes
+    cout << "\t[?] Metadata Reading callback" << endl;
+  }
 
   // Read the next http line
   while ((ret = dataman::get_nextline(hsock, &line, &err)) == true)
@@ -54,7 +58,6 @@ bool read_metadata(sysapi::socket_in::handle_t& hsock,
 	  // It is a header line
 	  dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
 	  session->hdrlines_in().push_back(buffer);
-	  cout << "\t\t[+] new header line: " << buffer.c_str() << endl;
 	}
       else
 	{
@@ -77,7 +80,6 @@ bool read_data(sysapi::socket_in::handle_t& hsock,
 	       sysapi::socket_in::error_t&)
 {
   unsigned char* content;
-  sysapi::socket_in::size_t ncontent;
   sysapi::socket_in::size_t nrecv;
   sysapi::socket_in::error_t err;
   http::session* session;
@@ -107,7 +109,7 @@ bool read_data(sysapi::socket_in::handle_t& hsock,
   else
     {
       // Fill in the content buffer
-      dataman::buffer buffer(content, ncontent);
+      dataman::buffer buffer(content, session->content_in().size());
       session->content_in() = buffer;
       delete[] content;
       session->services_->next_processing_stage(*session);
@@ -144,8 +146,25 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
   buf += session->hdrlines_out();
   buf += session->content_out();
 
-  //cout << "\t\t[+] Sending response" << endl;
-  //cout << buf.to_string(16) << endl;
+  { // Debugging purposes
+    ostringstream strm("chunked(");
+    if (session->first_chunk() == true) strm << "first)";
+    else if (session->last_chunk() == true) strm << "last)";
+    else strm << "middle)";
+    strm << ", size(0x" << hex << (unsigned int)buf.size() << ")";
+    cout << "\t[?] Sending response callback" << endl;
+    cout << "\t\t[+] Sender identity    : " << (unsigned int)session->hsock_con() << endl;
+    cout << "\t\t[+] Response attributes: " << strm.str() << endl;
+    if (session->hdrlines_out().size() != 0)
+      {
+	cout << "\t\t[+] Response header    : " << "size(0x" << hex << (unsigned int)session->hdrlines_out().size() << ")" << endl;
+	cout << session->hdrlines_out().to_string(16) << endl;
+      }
+    else
+      cout << "\t\t[+] Response header    : none" << endl;
+    cout << "\t\t[+] Response body      : " << "size(0x" << hex << (unsigned int)session->content_out().size() << ")" << endl;
+    cout << session->content_out().to_string(16) << endl;
+  }
 
   if (sysapi::socket_in::send(session->hsock_con(), (unsigned char*)buf, buf.size(), &nrsent) == false)
     {

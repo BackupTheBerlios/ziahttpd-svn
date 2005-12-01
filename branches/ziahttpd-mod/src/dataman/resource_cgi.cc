@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Wed Nov 30 13:45:59 2005 texane
+// Last update Thu Dec 01 13:03:58 2005 texane
 //
 
 
@@ -39,8 +39,6 @@ dataman::cgi::cgi(const vector<const string>& av,
       av_[i] = new char[av[i].size() + 1];
       strcpy(av_[i], av[i].c_str());
     }
-
-  cout << "number of resource: " << ac_ << endl;
 
   // Copy environ block
   env_ = new char*[env.size() + 1];

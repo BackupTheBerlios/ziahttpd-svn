@@ -5,10 +5,12 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:34:44 2005 
-// Last update Wed Nov 30 14:00:32 2005 texane
+// Last update Thu Dec 01 13:19:33 2005 texane
 //
 
 
+#include <iostream>
+#include <iomanip>
 #include <list>
 #include <string>
 #include <server/modman.hh>
@@ -17,6 +19,9 @@
 #include <sysapi/sysapi.hh>
 
 
+using std::setw;
+using std::cout;
+using std::endl;
 using std::list;
 using std::string;
 
@@ -221,6 +226,9 @@ bool	server::modman::call_hooks(core* core, stageid_t id, http::session* session
       hookname = "release_connection";
       hook = &module::hk_release_con_;
       break;
+    default:
+      hookname = "!INVALID!";
+      break;
     }
 
   // Call the hook for stage id
@@ -230,12 +238,9 @@ bool	server::modman::call_hooks(core* core, stageid_t id, http::session* session
     {
       if ((*cur)->*hook)
 	{
-	  cerr << "\t[@" << (*cur)->name_ << "] >> " << hookname << endl;
+	  std::cout << "\t\t[+] @" << (*cur)->name_ << ",  >" << hookname << endl;
 	  if (((*cur)->*hook)(*session, (*cur)->priviledged_ ? core : 0, reason) == false)
-	    {
-	      done = false;
-	      cout << "\t[!] Returning false, won't go to the next pipeline stage" << endl;
-	    }
+	    done = false;
 	}
       ++cur;
     }
@@ -316,7 +321,6 @@ bool	server::modman::next_processing_stage(http::session& session)
     case SEND_RESP:
       if (session.chunked_ == true)
 	{
-	  cout << "Content is chunked, bypassing the normal processing flow" << endl;
 	  session.reset_me_ = false;
 	  session.stageid_ = BUILD_RESP_DATA;
 	}

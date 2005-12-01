@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Wed Nov 30 15:51:55 2005 texane
+// Last update Thu Dec 01 12:49:51 2005 texane
 //
 
 
@@ -17,6 +17,7 @@
 #include <dataman/buffer.hh>
 #include <dataman/resource.hh>
 
+
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -24,6 +25,9 @@ using std::string;
 using std::vector;
 using dataman::buffer;
 using dataman::resource;
+
+
+#define CHUNKSZ  4096
 
 
 
@@ -54,22 +58,22 @@ bool	check_cgi(http::uri& uri, const string& file, info_t& info)
 
 	
 	p.split(file, " ", (vector<string>&)info.binary);
-	cout << "FILE : " << info.binary[0] << endl;
+	  // cout << "FILE : " << info.binary[0] << endl;
 	if (!sysapi::file::exists(info.binary[0].c_str()))
 	{
-		cout << "CGI DOESN T EXIST" << endl;
+	  // cout << "CGI DOESN T EXIST" << endl;
 		uri.status() = 404;
 		return (false);
 	}
 	if (!sysapi::file::is_executable(info.binary[0].c_str()))
 	{
-		cout << "CGI CANN T BE EXECUTE" << endl;
+	  // cout << "CGI CANN T BE EXECUTE" << endl;
 		uri.status() = 401;
 		return (false);
 	}
 	info.content_type = "text/html";
 	info.type = ISCGI;
-	cout << "LE CGI EST VALIDE" << endl;
+	  // cout << "LE CGI EST VALIDE" << endl;
 	return (true);
 }
 
@@ -124,7 +128,7 @@ bool	check_status_code(http::session& session, info_t& info)
 			}
 			if (*LALA[i].buffer)
 			{
-				std::cout<< "c'est du RAW " << std::endl;
+//  std::cout<< "c'est du RAW " << std::endl;
 				info.type = ISRAW;
 				return (true);
 			}
@@ -185,7 +189,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 			session.services_->create_resource(session, session.uri().status());
 		if (info.type == ISCGI)
 		{
-	  	    cout << "c'est CGI" << endl;
+		  // cout << "c'est CGI" << endl;
 			vector<const string> env;
 			//cout << info.binary[0] << " : " << info.binary[1] << endl;
 			session.services_->create_resource(session,
@@ -195,7 +199,6 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		if (info.type != ISNONE
 			&& info.type != UNSET)
 		{
-			cout << "OPEN" << endl;
 			if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
 			{
 				//status code internal error
@@ -212,22 +215,22 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	if (info.type != ISNONE
 		&& info.type != UNSET)
 	{
-		if (!session.resource()->fetch(session.content_out(), 24, err))
-			cout << "FETCH TROUBLE" << endl;
+		if (!session.resource()->fetch(session.content_out(), CHUNKSZ, err))
+		  cout << "[!]FETCH TROUBLE" << endl;
 		else
 		{
-			cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
+		  // cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
 			if (err == dataman::resource::ESUCCESS)
 			{
 				session.chunked() = true;
-				std::cout << "IS CHUNKED" << std::endl;
+				  // std::cout << "IS CHUNKED" << std::endl;
 			}
 			  else if (err == dataman::resource::EOFETCHING)
 			{
 				session.chunked() = true; 
 				session.last_chunk() = true; 
 				session.resource()->close(err);
-				std::cout << "END OF  CHUNKED" << std::endl;
+				  // std::cout << "END OF  CHUNKED" << std::endl;
 
 			}
 		}			
@@ -291,7 +294,7 @@ bool check_typemine(http::uri &uri, info_t &info)
 		{
 			if (LALA[i].cgi)
 			{
-				std::cout << "C EST UN CGI" << std::endl;
+			  // std::cout << "C EST UN CGI" << std::endl;
 				//sysapi::file::normalize_name(uri.localname());
 				check_cgi(uri, uri.localname(), info);
 				return (false);

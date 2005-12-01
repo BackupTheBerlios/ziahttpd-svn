@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Wed Nov 23 11:57:50 2005 texane
+// Last update Thu Dec 01 12:48:05 2005 texane
 //
 
 
@@ -42,7 +42,7 @@ MOD_EXPORT( HK_ALTER_RQST_DATA )(http::session& session, server::core*, int&)
       session.uri().status() = 301;
     }
 
-	std::cout << "localfile :" << session.uri().localname() << std::endl;
+  // std::cout << "localfile :" << session.uri().localname() << std::endl;
 
   return true;
 }

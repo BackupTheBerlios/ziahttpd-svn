@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Wed Nov 30 14:48:00 2005 texane
+// Last update Thu Dec 01 13:03:47 2005 texane
 //
 
 
@@ -110,8 +110,6 @@ bool	dataman::file::fetch(buffer& buf, unsigned int nrtoread, error_t& err)
       err = OPNOTSUP;
       return false;
     }
-
-  cout <<"nrtoread_ == " <<  nrtoread_ <<endl;
 
   if (nrtoread_ == 0)
     {
