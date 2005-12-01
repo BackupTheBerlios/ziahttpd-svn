@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:46:59 2005 Bigand Xavier
-// Last update Tue Nov 22 23:39:02 2005 Bigand Xavier
+// Last update Thu Dec 01 12:24:44 2005 Bigand Xavier
 //
 
 #include <iostream>
@@ -13,7 +13,7 @@
 
 int		main(int ac, char **av)
 {
-  std::string	file("./conf/2.conf");
+  std::string	file("./conf/zia.conf");
   ConfManager	Conf(ac, av, *file.c_str());
   tStringVector	var;
   int		i;

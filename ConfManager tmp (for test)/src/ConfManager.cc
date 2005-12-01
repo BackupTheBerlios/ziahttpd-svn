@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Sat Oct 22 10:25:16 2005 Bigand Xavier
-// Last update Sun Nov 20 18:07:45 2005 Bigand Xavier
+// Last update Thu Dec 01 12:26:32 2005 Bigand Xavier
 //
 
 #include "ConfManager.hh"
@@ -412,6 +412,12 @@ TiXmlNode	*ConfManager::ManageDel(TiXmlNode *pCurrentContainer)
   return pCurrentContainer->NextSibling();
 }
 
+TiXmlNode	*ConfManager::ManageUnreconized(TiXmlNode *pCurrentContainer)
+{
+  _Unreconized.AddBrother(pCurrentContainer);
+  return pCurrentContainer->NextSibling();
+}
+
 void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
 {
   if (!pCurrentContainer)
@@ -442,7 +448,8 @@ void	ConfManager::DumpToMemory(TiXmlNode *pCurrentContainer)
 	  if (!iStop)
 	    {
 	      // mettre un msg d'erreur comme quoi la balise n'est pas geree
-	      pCurrentContainer = pCurrentContainer->NextSibling();
+	      pCurrentContainer = ManageUnreconized(pCurrentContainer);
+	      // pCurrentContainer = pCurrentContainer->NextSibling();
 	    }
 	}
       else

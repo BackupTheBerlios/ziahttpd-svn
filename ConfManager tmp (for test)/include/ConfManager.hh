@@ -5,13 +5,11 @@
 ** Login   <@epita.fr>
 **
 ** Started on  Sat Oct 22 10:25:57 2005 Bigand Xavier
-// Last update Sun Nov 20 18:07:59 2005 Bigand Xavier
+// Last update Thu Dec 01 12:21:54 2005 Bigand Xavier
 */
 
 #ifndef __ConfManager_H__
 #define __ConfManager_H__
-
-#define TIXML_USE_STL // Force lib TinyXML to use STL
 
 #include <iostream>
 #include <map>
@@ -20,6 +18,7 @@
 #include <algorithm>	// for using std::transform (convert string case)
 
 #include "tinyxml.hh"
+#include "SmartTree.hh"
 
 using namespace	std;
 
@@ -80,6 +79,7 @@ class	ConfManager
   map<string, tStringVector>	*_mListData;
   ManageContainer		*_Container;
   VarInformation		*_RecognizedVar;
+  SmartTree			_Unreconized;
 
   TiXmlNode	*ManageRequiere(TiXmlNode *pCurrentContainer);	// in progress
   TiXmlNode	*ManageInclude(TiXmlNode *pCurrentContainer);	// OK
@@ -88,6 +88,7 @@ class	ConfManager
   TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer) {return ManageEval(pCurrentContainer, EVAL_SIMPLE, NULL);};	// OK
   TiXmlNode	*ManageEval(TiXmlNode *pCurrentContainer, int iFlag, bool *pbRes);	// OK, must test it, and some features depend to Eval_Expression()
   TiXmlNode	*ManageDel(TiXmlNode *pCurrentContainer);	// OK
+  TiXmlNode	*ManageUnreconized(TiXmlNode *pCurrentContainer); // in progress
   void		DumpToMemory(TiXmlNode *pParent);		// OK
   void		RemoveAndAddVar();				// in progrees
   void		CheckValue(string sSearch, int iVarType);	// in progress
