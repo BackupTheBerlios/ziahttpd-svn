@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:46:45 2005 
-// Last update Thu Dec 01 13:11:33 2005 texane
+// Last update Thu Dec 01 21:26:39 2005 texane
 //
 
 
@@ -40,6 +40,7 @@ http::session::session(dataman::conf& conf) : conf_(conf)
 
 http::session::~session()
 {
+  cout << "\t[? " << std::dec << (unsigned int)hsock_con_ << " ] Session is being destructed" << endl;
 }
 
 

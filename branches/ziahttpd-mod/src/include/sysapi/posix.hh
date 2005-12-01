@@ -5,12 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Wed Nov 23 22:31:21 2005 texane
+// Last update Thu Dec 01 16:21:56 2005 texane
 //
 
 
 #ifndef SYSAPI_POSIX_HH
 # define SYSAPI_POSIX_HH
+
+# error "recv function not implemented... remove me when done"
 
 // @see sysapi.hh
 // This file declares the namespace

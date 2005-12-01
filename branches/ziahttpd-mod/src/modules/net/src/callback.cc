@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Thu Dec 01 14:08:39 2005 texane
+// Last update Thu Dec 01 16:28:38 2005 texane
 //
 
 
@@ -34,7 +34,7 @@ extern server::service* services_;
 
 bool read_metadata(sysapi::socket_in::handle_t& hsock,
 		   dataman::buffer*,
-		   sysapi::socket_in::error_t&)
+		   sysapi::socket_in::error_t& reason)
 {
   bool ret;
   char* line;
@@ -71,14 +71,14 @@ bool read_metadata(sysapi::socket_in::handle_t& hsock,
       free(line);
     }
 
-  // It is not the header end
+  reason = err;
   return false;
 }
 
 
 bool read_data(sysapi::socket_in::handle_t& hsock,
 	       dataman::buffer*,
-	       sysapi::socket_in::error_t&)
+	       sysapi::socket_in::error_t& reason)
 {
   unsigned char* content;
   sysapi::socket_in::size_t nrecv;
@@ -104,7 +104,7 @@ bool read_data(sysapi::socket_in::handle_t& hsock,
 			     session->content_in().size(),
 			     &nrecv, &err) == false)
     {
-      cout << "\t\t[+]Getnextblock, size: " << session->content_in().size() << ", got " << nrecv << endl;
+      reason = err;
       return false;
     }
   else
@@ -190,5 +190,8 @@ bool	close_connection(sysapi::socket_in::handle_t& hsock,
 			 dataman::buffer*,
 			 sysapi::socket_in::error_t&)
 {
+  // !
+  // Here release the data used in inet_helper.cc
+  cout << "\t\t[? " << (unsigned int)hsock << "]: Closing connection" << endl;
   return sysapi::socket_in::terminate_connection(hsock);
 }

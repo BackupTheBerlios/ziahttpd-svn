@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 17:46:27 2005 texane
-// Last update Sun Nov 13 15:01:56 2005 
+// Last update Thu Dec 01 16:33:53 2005 texane
 //
 
 
@@ -184,12 +184,28 @@ bool win32::socket_in::recv(win32::socket_in::handle_t hdl,
 			    win32::socket_in::error_t* err)
 {
   int res;
+  error_t reason;
+
+  reason = SUCCESS;
 
   res = ::recv(hdl, reinterpret_cast<char*>(buf), sz, 0);
   if (res == SOCKET_ERROR)
-    return false;
-  
+    {
+      if (err) *err = ERR_UNKNOWN;
+      return false;
+    }
+
+  // The connection has been closed
+  if (res == 0)
+    reason = CONN_DISCONNECTED;
+
+  // Store the read byte count
   if (nr_read)
     *nr_read = res;
+
+  // The caller wants to know about the error
+  if (err)
+    *err = reason;
+  
   return true;
 }

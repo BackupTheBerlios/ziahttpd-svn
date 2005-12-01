@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:05:06 2005 
-// Last update Sun Nov 27 14:48:58 2005 texane
+// Last update Thu Dec 01 16:33:16 2005 texane
 //
 
 
@@ -237,6 +237,10 @@ bool	dataman::get_nextline(sysapi::socket_in::handle_t hdl_con,
   // feed the buffer until we got a new line
   while ((ret = recv(hdl_con, blk->buf_, SZ_BLOCK, &sz, err)) == true)
     {
+      if (*err == sysapi::socket_in::CONN_DISCONNECTED)
+	return false;
+
+      std::cout << "exiting the recv function" << std::endl;
       blk->sz_ = sz;
       if (getline(blk) == true)
 	{
@@ -276,6 +280,9 @@ bool	dataman::get_nextblock(sysapi::socket_in::handle_t hdl_con,
       while (--i >= 0)
 	(*buf)[i] = blk->buf_[i];
       sysapi::socket_in::recv(blk->hdl_con_, (*buf) + blk->sz_, nr_missing, &nr_recv, err);
+      if (*err == sysapi::socket_in::CONN_DISCONNECTED)
+	return false;
+
       *recvsz = blk->sz_ + nr_recv;
       blk->sz_ = 0;
     }

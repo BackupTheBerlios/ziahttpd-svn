@@ -5,12 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 25 20:10:53 2005 texane
-// Last update Thu Dec 01 13:06:28 2005 texane
+// Last update Thu Dec 01 21:26:20 2005 texane
 //
 
 
 #include <iostream>
 #include <sysapi/sysapi.hh>
+#include <server/core.hh>
 #include <server/sockioman.hh>
 #include <server/ioselect.hh>
 #include <http/session.hh>
@@ -257,7 +258,8 @@ bool	thrman::ioselect::handle_events(fd_set& rdset, fd_set& wrset)
 	  sockios_[i].onread_ = 0;
 	  if (handler(sockios_[i].hsock_,
 		      sockios_[i].rdbuf_,
-		      sockerr) == false)
+		      sockerr) == false &&
+	      sockerr == sysapi::socket_in::CONN_DISCONNECTED)
 	    closeme = true;
 	}
      
@@ -269,11 +271,19 @@ bool	thrman::ioselect::handle_events(fd_set& rdset, fd_set& wrset)
 	  sockios_[i].onwrite_ = 0;
 	  if (handler(sockios_[i].hsock_,
 		      sockios_[i].wrbuf_,
-		      sockerr) == false)
+		      sockerr) == false &&
+	      sockerr == sysapi::socket_in::CONN_DISCONNECTED)
 	    closeme = true;
 	}
 
       // The socket is a one to close
+      if (closeme)
+	{
+	  server::core::instance()->unregister_session(sockios_[i].hsock_);
+	  sysapi::socket_in::terminate_connection(sockios_[i].hsock_);
+	  unregister_sockhdl(sockios_[i].hsock_);
+	}
+
       handler = sockios_[i].onclose_;
       sockios_[i].onclose_ = 0;
       if (closeme && handler)

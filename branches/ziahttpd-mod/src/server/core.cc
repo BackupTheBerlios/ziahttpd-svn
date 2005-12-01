@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Thu Dec 01 14:06:39 2005 texane
+// Last update Thu Dec 01 21:19:17 2005 texane
 //
 
 
@@ -271,9 +271,20 @@ bool	server::core::register_session(const sysapi::socket_in::handle_t& hsock)
 }
 
 
-bool	server::core::unregister_session(const sysapi::socket_in::handle_t&)
+bool	server::core::unregister_session(const sysapi::socket_in::handle_t& hsock)
 {
-  return false;
+  http::session* session;
+
+  if (find_session_byhdl(hsock, session) == false)
+    {
+      cerr << "\t[Session manager]: Cannot find the session" << endl;
+      return false;
+    }
+
+  instance_->sessions_.remove(session);
+  delete session;
+
+  return true;
 }
 
 
