@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Thu Dec 01 13:17:55 2005 texane
+// Last update Thu Dec 01 13:42:50 2005 texane
 //
 
 
@@ -58,6 +58,7 @@ bool read_metadata(sysapi::socket_in::handle_t& hsock,
 	  // It is a header line
 	  dataman::buffer buffer(reinterpret_cast<const unsigned char*>(line), strlen(line));
 	  session->hdrlines_in().push_back(buffer);
+	  cout << "\t\t[+] hdrline: " << line << endl;
 	}
       else
 	{
