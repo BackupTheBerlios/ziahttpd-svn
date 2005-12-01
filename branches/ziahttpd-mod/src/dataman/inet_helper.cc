@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:05:06 2005 
-// Last update Thu Dec 01 16:33:16 2005 texane
+// Last update Thu Dec 01 21:46:54 2005 texane
 //
 
 
@@ -240,7 +240,6 @@ bool	dataman::get_nextline(sysapi::socket_in::handle_t hdl_con,
       if (*err == sysapi::socket_in::CONN_DISCONNECTED)
 	return false;
 
-      std::cout << "exiting the recv function" << std::endl;
       blk->sz_ = sz;
       if (getline(blk) == true)
 	{

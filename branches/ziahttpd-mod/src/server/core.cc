@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Thu Dec 01 21:19:17 2005 texane
+// Last update Thu Dec 01 21:44:02 2005 texane
 //
 
 
@@ -157,6 +157,19 @@ bool	server::core::reload_conf(const string& confname)
 //   return true;
 // }
 
+
+bool	server::core::handle_default_termination(sysapi::socket_in::handle_t& hsock,
+						 dataman::buffer*,
+						 sysapi::socket_in::error_t&)
+{
+  // ?
+  // Handle the default connection
+
+  // Remove the session from the list
+  instance_->unregister_session(hsock);
+
+  return true;
+}
 
 bool	server::core::handle_default_connection(sysapi::socket_in::handle_t& hsock,
 						dataman::buffer*,

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 25 20:10:53 2005 texane
-// Last update Thu Dec 01 21:26:20 2005 texane
+// Last update Thu Dec 01 21:45:08 2005 texane
 //
 
 
@@ -276,20 +276,16 @@ bool	thrman::ioselect::handle_events(fd_set& rdset, fd_set& wrset)
 	    closeme = true;
 	}
 
-      // The socket is a one to close
-      if (closeme)
-	{
-	  server::core::instance()->unregister_session(sockios_[i].hsock_);
-	  sysapi::socket_in::terminate_connection(sockios_[i].hsock_);
-	  unregister_sockhdl(sockios_[i].hsock_);
-	}
-
-      handler = sockios_[i].onclose_;
+      // handler = sockios_[i].onclose_;
+      handler = server::core::handle_default_termination;
       sockios_[i].onclose_ = 0;
       if (closeme && handler)
-	handler(sockios_[i].hsock_,
-		sockios_[i].rdbuf_,
-		sockerr);
+	{
+	  handler(sockios_[i].hsock_,
+		  sockios_[i].rdbuf_,
+		  sockerr);
+	  release_sockio(sockios_[i]);
+	}
 
       // There has been activities, decrement event number
       if (activio == true)

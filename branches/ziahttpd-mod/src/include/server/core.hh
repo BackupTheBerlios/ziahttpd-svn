@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 11 17:27:27 2005 texane
-// Last update Sun Nov 27 00:50:19 2005 texane
+// Last update Thu Dec 01 21:43:12 2005 texane
 //
 
 
@@ -48,6 +48,9 @@ namespace server
     static bool handle_default_connection(sysapi::socket_in::handle_t&,
 					  dataman::buffer*,
 					  sysapi::socket_in::error_t&);
+    static bool handle_default_termination(sysapi::socket_in::handle_t&,
+					   dataman::buffer*,
+					   sysapi::socket_in::error_t&);
 
     // Runtime related
     bool run();
