@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Wed Nov 30 15:26:48 2005 texane
+// Last update Thu Dec 01 22:44:50 2005 texane
 //
 
 
@@ -35,6 +35,7 @@ namespace server { class service; }
 
 namespace http
 {
+  class session_manager;
   class session
   {
     
@@ -44,6 +45,8 @@ namespace http
     // in order for them to modify the request processing flow.
 
   public:
+
+    friend class session_manager;
 
     session(dataman::conf&);
     ~session();
@@ -134,6 +137,30 @@ namespace http
 
     // A call has been made to the io service
     bool handleio_;
+  };
+}
+
+
+namespace http
+{
+  class session_manager
+  {
+    
+  public:
+    static http::session* factory(sysapi::socket_in::handle_t);
+    static bool add(http::session*);
+    static bool add(sysapi::socket_in::handle_t);
+    static bool remove(session*);
+    static bool remove(sysapi::socket_in::handle_t);
+    static bool process();
+    static bool find_byhdl(sysapi::socket_in::handle_t,
+			   session*&);
+    static bool to_string(session*);
+    static bool to_string(sysapi::socket_in::handle_t);
+
+  private:
+    static std::list<http::session*> sessions_;
+
   };
 }
 

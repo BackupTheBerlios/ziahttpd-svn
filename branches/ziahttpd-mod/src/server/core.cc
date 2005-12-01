@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Oct 11 21:28:14 2005 texane
-// Last update Thu Dec 01 21:44:02 2005 texane
+// Last update Thu Dec 01 22:33:38 2005 texane
 //
 
 
@@ -163,12 +163,8 @@ bool	server::core::handle_default_termination(sysapi::socket_in::handle_t& hsock
 						 sysapi::socket_in::error_t&)
 {
   // ?
-  // Handle the default connection
-
-  // Remove the session from the list
-  instance_->unregister_session(hsock);
-
-  return true;
+  // Handle the default termination
+  return http::session_manager::remove(hsock);
 }
 
 bool	server::core::handle_default_connection(sysapi::socket_in::handle_t& hsock,
@@ -189,7 +185,7 @@ bool	server::core::handle_default_connection(sysapi::socket_in::handle_t& hsock,
   
   // Register ioman entry for this socket
   instance_->ioman_->register_sockhdl(hsock_con);
-  instance_->register_session(hsock_con);
+  http::session_manager::add(hsock_con);
 
   // Call hook for create_connection step, that register or
   // not a hook for this one.
@@ -221,7 +217,7 @@ bool	server::core::run()
   for (;;)
     {
       ioman_->handle_io();
-      process_sessions();
+      http::session_manager::process();
     }
 
   return true;
@@ -268,93 +264,4 @@ sysapi::thread::retcode_t	server::core::process_request(sysapi::thread::param_t 
     }
 
   return 0;
-}
-
-
-// Implements session management related methods
-
-bool	server::core::register_session(const sysapi::socket_in::handle_t& hsock)
-{
-  http::session* session;
-
-  session = new http::session(server::core::instance()->conf());
-  session->hsock_con() = hsock;
-  sessions_.push_front(session);
-  return true;
-}
-
-
-bool	server::core::unregister_session(const sysapi::socket_in::handle_t& hsock)
-{
-  http::session* session;
-
-  if (find_session_byhdl(hsock, session) == false)
-    {
-      cerr << "\t[Session manager]: Cannot find the session" << endl;
-      return false;
-    }
-
-  instance_->sessions_.remove(session);
-  delete session;
-
-  return true;
-}
-
-
-bool	server::core::find_session_byhdl(const sysapi::socket_in::handle_t& hsock,
-					 http::session*& sess)
-{
-  list<session*>::iterator cur = sessions_.begin();
-  list<session*>::iterator end = sessions_.end();
-
-  while (cur != end)
-    {
-      if ((*cur)->hsock_con() == hsock)
-	{
-	  sess = *cur;
-	  return true;
-	}
-      ++cur;
-    }
-
-  return false;
-}
-
-
-bool	server::core::process_sessions()
-{
-  // Call the hook chain
-  // foreach session in the list...
-
-  list<session*>::iterator cur = sessions_.begin();
-  list<session*>::iterator end = sessions_.end();
-  http::session* session;
-
-  while (cur != end)
-    {
-      session = *cur;
-      session->handleio() = false;
-
-      cout << "\t[?] Session [" << std::dec << (unsigned)session->hsock_con() << "] " << endl;
-
-      // Make the session go through the pipeline,
-      // Resetting the session if necessary
-      while (session->persistent() == true &&
-	     session->handleio() == false)
-	{
-	  if (modman_.call_hooks(this, session->stageid_, session) == true)
-	    modman::next_processing_stage(*session);
-
-	  if (session->reset_me_ == true)
-	    {
-	      session->reset();
-	      cout << "\t[?] Session reseted" << endl;
-	    }
-	}
-
-      // go to the next session
-      ++cur;
-    }
-
-  return true;
 }

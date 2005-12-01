@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Fri Nov 25 20:13:23 2005 texane
+## Last update Thu Dec 01 22:18:42 2005 texane
 ##
 
 # ! Always include this file
@@ -22,6 +22,7 @@ srcs	= main.cc \
 	  server$(SLASH)ioselect.cc \
 	  server$(SLASH)exception.cc \
 	  http$(SLASH)session.cc \
+	  http$(SLASH)session_manager.cc \
 	  http$(SLASH)msgdata.cc \
 	  http$(SLASH)uri.cc \
 	  dataman$(SLASH)buffer.cc \

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 11 17:27:27 2005 texane
-// Last update Thu Dec 01 21:43:12 2005 texane
+// Last update Thu Dec 01 22:27:18 2005 texane
 //
 
 
@@ -30,6 +30,7 @@ namespace server
   public:
 
     friend class service;
+    friend class http::session_manager;
 
     // Initialization
     core();
@@ -63,16 +64,6 @@ namespace server
 
     // Server core exports services for modules to be able to write, read...
     static service* services_;
-
-    // Sessions releated services
-    // ? Maybe there should be a session factory,
-    // more generally a session manager.
-    bool register_session(const sysapi::socket_in::handle_t&);
-    bool unregister_session(const sysapi::socket_in::handle_t&);
-    bool find_session_byhdl(const sysapi::socket_in::handle_t&,
-			    http::session*&);
-    bool process_sessions();
-
 
   private:
 

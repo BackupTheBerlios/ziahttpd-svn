@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Sun Nov 27 00:12:52 2005 texane
+// Last update Thu Dec 01 22:35:42 2005 texane
 //
 
 
@@ -96,7 +96,7 @@ bool	server::service::find_session_byid(sysapi::socket_in::handle_t& hsock,
   // Found session is
   // stored in session.
 
-  return core::instance()->find_session_byhdl(hsock, session);
+  return http::session_manager::find_byhdl(hsock, session);
 }
 
 
@@ -125,7 +125,7 @@ bool	server::service::perform_io(sysapi::socket_in::handle_t& hsock,
 
   // Mark the session as performing an io
   http::session* session;
-  if (core::instance_->find_session_byhdl(hsock, session) == false)
+  if (http::session_manager::find_byhdl(hsock, session) == false)
     {
       cerr << "Session unknown" << endl;
       return false;
