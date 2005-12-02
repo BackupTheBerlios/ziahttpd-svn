@@ -1,0 +1,14 @@
+[x] code a session manager
+[x] Gestion des erreurs au niveau deconnections
+[ ] mettre socket non blockante, et bouger si EWOULDBLOCK
+[ ] gestion des threads
+[x] Verifier pk il y a erreur quand page not found
+[x] si la page n est pas rempli, probleme, le content_out()
+	et le hdrlines() out ne contiennent rien donc
+	le hook sur send passe et la session est resete
+[x] Gerer le bug du sending has failed, surement un broken
+	pipe lors de l ecriture, verif ioselect.cc
+[x] Reaper les process si la session est done
+[ ] implementer un process::release pour posix
+[ ] implementer un socket_in::send pour posix
+[ ] implementer un socket_in::recv pour posix

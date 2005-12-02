@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Fri Dec 02 16:06:00 2005 texane
+// Last update Fri Dec 02 16:19:24 2005 texane
 //
 
 
@@ -256,4 +256,5 @@ bool	dataman::cgi::release()
   sysapi::process::release(hproc_);
 
   reset();
+  return true;
 }
