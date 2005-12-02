@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Wed Nov 30 13:35:49 2005 texane
+// Last update Fri Dec 02 15:59:14 2005 texane
 //
 
 
@@ -81,6 +81,8 @@ namespace dataman
     virtual bool fetch(buffer&, error_t&) = 0;
     // Release resource internals
     virtual bool close(error_t&) = 0;
+
+    virtual ~resource() {}
 
     // Factory design pattern, by function overloading
     static resource* factory(const std::string&);

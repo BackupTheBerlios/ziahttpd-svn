@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Fri Dec 02 14:45:46 2005 texane
+// Last update Fri Dec 02 14:55:20 2005 texane
 //
 
 
@@ -27,7 +27,7 @@ using dataman::buffer;
 using dataman::resource;
 
 
-#define CHUNKSZ  4096
+#define CHUNKSZ  256
 
 
 
@@ -191,7 +191,6 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 						       (const vector<const string>)info.binary,
 						       (const vector<const string>)env);
 		}
-		cout << "RESSOURCE : " << info.type << endl;
 		if (info.type != ISNONE
 			&& info.type != UNSET)
 		{

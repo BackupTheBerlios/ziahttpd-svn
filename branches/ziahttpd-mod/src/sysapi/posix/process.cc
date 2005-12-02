@@ -5,11 +5,17 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:32:20 2005 
-// Last update Sun Nov 13 15:00:43 2005 
+// Last update Fri Dec 02 15:23:15 2005 texane
 //
 
 
+#include <iostream>
 #include <sysapi/posix.hh>
+
+
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
 bool	posix::process::create_and_loadexec(handle_t* child_hdl, int ac, const char** av, const char** env)
@@ -105,14 +111,16 @@ bool	posix::process::myhandle(handle_t* hdl)
 
 bool	posix::process::signal(handle_t, sigid_t)
 {
+  cerr << "[!] Signal a process is not yet impelented!" << endl;
+  
   return false;
 }
 
 
-bool	posix::process::release(handle_t)
+bool	posix::process::release(handle_t hdl)
 {
-  // always return true
-  return true;
+  // Force the process to finish
+  return signal(hdl, TERMINATE);
 }
 
 

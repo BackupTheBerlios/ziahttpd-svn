@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Fri Dec 02 11:41:11 2005 texane
+// Last update Fri Dec 02 15:43:01 2005 texane
 //
 
 
@@ -122,7 +122,7 @@ bool read_data(sysapi::socket_in::handle_t& hsock,
 
 bool send_response(sysapi::socket_in::handle_t& hsock,
 		   dataman::buffer*,
-		   sysapi::socket_in::error_t&)
+		   sysapi::socket_in::error_t& sockerr)
 {
   // ?
   // Send the whole http request on the wire
@@ -162,19 +162,23 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
 	     << "size(0x" << hex
 	     << (unsigned int)session->hdrlines_out().size()
 	     << ")" << endl;
-	cout << session->hdrlines_out().to_string(16) << endl;
+	// cout << session->hdrlines_out().to_string(16) << endl;
       }
     else
       cout << "\t\t[+] Response header    : none" << endl;
     cout << "\t\t[+] Response body      : " << "size(0x"
 	 << hex << (unsigned int)session->content_out().size()
 	 << ")" << endl;
-    cout << session->content_out().to_string(16) << endl;
+    // cout << session->content_out().to_string(16) << endl;
   }
 
-  if (sysapi::socket_in::send(session->hsock_con(), (unsigned char*)buf, buf.size(), &nrsent) == false)
+  if (sysapi::socket_in::send(session->hsock_con(),
+			      (unsigned char*)buf,
+			      buf.size(),
+			      &nrsent,
+			      &sockerr) == false)
     {
-      cout << ":Sending has failed!" << endl;
+      sysapi::error::stringify("[!] Sending has failed: ");
       return false;
     }
 

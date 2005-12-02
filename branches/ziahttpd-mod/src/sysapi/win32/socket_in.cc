@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 17:46:27 2005 texane
-// Last update Fri Dec 02 11:18:56 2005 texane
+// Last update Fri Dec 02 15:36:49 2005 texane
 //
 
 
@@ -167,10 +167,29 @@ bool win32::socket_in::send(win32::socket_in::handle_t hdl,
 			    win32::socket_in::error_t* err)
 {
   int res;
+  int wsa_error;
+  error_t reason;
+
+  reason = SUCCESS;
 
   res = ::send(hdl, reinterpret_cast<const char*>(buf), sz, 0);
   if (res == SOCKET_ERROR)
-    return false;
+    {
+      reason = ERR_UNKNOWN;
+      wsa_error = WSAGetLastError();
+      switch (wsa_error)
+	{
+	case WSAENETRESET:
+	case WSAESHUTDOWN:
+	case WSAECONNABORTED:
+	case WSAECONNRESET:
+	  reason = CONN_DISCONNECTED;
+	  break;
+	}
+      if (err)
+	*err = reason;
+      return false;
+    }
 
   if (nr_written)
     *nr_written = res;

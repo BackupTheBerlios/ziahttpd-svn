@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Fri Dec 02 14:45:03 2005 texane
+// Last update Fri Dec 02 16:06:00 2005 texane
 //
 
 
@@ -250,6 +250,9 @@ bool	dataman::cgi::release()
   if (hin_inuse_ == true)
     sysapi::file::close(hin_);
   sysapi::file::close(hout_);
+
+  // if the process is not yet done,
+  // kill it.
   sysapi::process::release(hproc_);
 
   reset();

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 18:45:02 2005 texane
-// Last update Fri Dec 02 14:41:29 2005 texane
+// Last update Fri Dec 02 15:24:08 2005 texane
 //
 
 
@@ -14,6 +14,10 @@
 #include <cstdio>
 #include <sysapi/win32.hh>
 #include <windows.h>
+
+
+using std::cout;
+using std::endl;
 
 
 // @see the win32.hh file for the namespace declaration
@@ -278,7 +282,14 @@ bool	win32::process::signal(handle_t hdl, sigid_t sig)
 
 bool	win32::process::release(handle_t hdl)
 {
-  if (CloseHandle(hdl) == FALSE)
-    return false;
+  cout << "[!] Releasing the process::" << endl;
+
+  // Ensure the process is not running
+  if (signal(hdl, TERMINATE) == true)
+    {
+      if (CloseHandle(hdl) == FALSE)
+	return false;
+    }
+
   return true;
 }
