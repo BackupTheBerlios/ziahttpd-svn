@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Wed Nov 23 11:47:41 2005 texane
+## Last update Fri Dec 02 11:09:51 2005 texane
 ##
 
 # ! Always include this file
@@ -20,7 +20,8 @@ srcs	= src$(SLASH)main.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)cstring_helper.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)dataman$(SLASH)inet_helper.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)socket_in.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc
+	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
+	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \
