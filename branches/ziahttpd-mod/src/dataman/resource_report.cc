@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:31 2005 texane
-// Last update Thu Nov 24 21:27:34 2005 texane
+// Last update Fri Dec 02 13:41:07 2005 texane
 //
 
 
@@ -33,6 +33,8 @@ bool	dataman::report::open(openmode_t omode, error_t& err)
 {
   // !
   // Generate a more elaborated function
+
+  err = ESUCCESS;
 
   if (omode != O_FETCHONLY)
     {
@@ -63,9 +65,17 @@ bool	dataman::report::open(openmode_t omode, error_t& err)
 }
 
 
-bool	dataman::report::fetch(buffer& buf, unsigned int nbytes, error_t&)
+bool	dataman::report::fetch(buffer& buf, unsigned int nbytes, error_t& err)
 {
   string substr;
+
+  err = ESUCCESS;
+
+  if (buf_.size() == 0)
+    {
+      err = EOFETCHING;
+      return true;      
+    }
 
   // Normalize the size
   if (buf_.size() < nbytes)
@@ -81,8 +91,9 @@ bool	dataman::report::fetch(buffer& buf, unsigned int nbytes, error_t&)
 }
 
 
-bool	dataman::report::fetch(buffer& buf, error_t&)
+bool	dataman::report::fetch(buffer& buf, error_t& err)
 {
+  err = ESUCCESS;
   buf = buf_;
   return true;
 }

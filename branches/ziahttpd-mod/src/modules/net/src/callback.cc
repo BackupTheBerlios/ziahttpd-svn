@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Thu Dec 01 16:28:38 2005 texane
+// Last update Fri Dec 02 11:41:11 2005 texane
 //
 
 
@@ -158,12 +158,17 @@ bool send_response(sysapi::socket_in::handle_t& hsock,
     cout << "\t\t[+] Response attributes: " << strm.str() << endl;
     if (session->hdrlines_out().size() != 0)
       {
-	cout << "\t\t[+] Response header    : " << "size(0x" << hex << (unsigned int)session->hdrlines_out().size() << ")" << endl;
+	cout << "\t\t[+] Response header    : "
+	     << "size(0x" << hex
+	     << (unsigned int)session->hdrlines_out().size()
+	     << ")" << endl;
 	cout << session->hdrlines_out().to_string(16) << endl;
       }
     else
       cout << "\t\t[+] Response header    : none" << endl;
-    cout << "\t\t[+] Response body      : " << "size(0x" << hex << (unsigned int)session->content_out().size() << ")" << endl;
+    cout << "\t\t[+] Response body      : " << "size(0x"
+	 << hex << (unsigned int)session->content_out().size()
+	 << ")" << endl;
     cout << session->content_out().to_string(16) << endl;
   }
 
