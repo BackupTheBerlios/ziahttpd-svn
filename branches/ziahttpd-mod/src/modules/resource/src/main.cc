@@ -88,7 +88,7 @@ bool	check_status_code(http::session& session, info_t& info)
 	};
 	//pu this in config file 
 	LALA_s	LALA[] = {
-		{404, "http://localhost.be", "", "301", ""},
+		{404, "http://www.barbie.com", "", "", "fd"},
 		{401, "", "", "", "lala c l'erreur de merde"},
 		{-1, 0, 0, 0, 0}
 	};
@@ -128,7 +128,7 @@ bool	check_status_code(http::session& session, info_t& info)
 			}
 			if (*LALA[i].buffer)
 			{
-//  std::cout<< "c'est du RAW " << std::endl;
+				std::cout<< "c'est du RAW " << std::endl;
 				info.type = ISRAW;
 				return (true);
 			}
@@ -160,6 +160,7 @@ bool	fill_info(http::session& session, info_t& info)
 		session.uri().status() = 401;
 	if (!sysapi::file::exists(session.uri().localname().c_str()))
 		session.uri().status() = 404;
+	cout << "STATUS CIDE" << session.uri().status() << endl;
 	while (!check_status_code(session, info))
 		;
 }
@@ -176,13 +177,9 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	info.type = UNSET;
 	if (!session.chunked())
 	{
-		if (!session.content_out().size())
-		{
-			fill_info(session, info);
-			check_typemine(session.uri(), info);
-
-			session.info_out()["content-type"] = info.content_type;
-		}
+		fill_info(session, info);
+		check_typemine(session.uri(), info);
+		session.info_out()["content-type"] = info.content_type;
 		if (info.type == ISFILE)
 			session.services_->create_resource(session, session.uri().localname());
 		if (info.type == ISRAW)
@@ -196,6 +193,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 						       (const vector<const string>)info.binary,
 						       (const vector<const string>)env);
 		}
+		cout << "RESSOURCE : " << info.type << endl;
 		if (info.type != ISNONE
 			&& info.type != UNSET)
 		{
@@ -219,19 +217,19 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		  cout << "[!]FETCH TROUBLE" << endl;
 		else
 		{
-		  // cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
+			//cout << "ERR:" << err << endl;
+		    //cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
 			if (err == dataman::resource::ESUCCESS)
 			{
 				session.chunked() = true;
-				  // std::cout << "IS CHUNKED" << std::endl;
+				//std::cout << "IS CHUNKED" << std::endl;
 			}
 			  else if (err == dataman::resource::EOFETCHING)
 			{
 				session.chunked() = true; 
 				session.last_chunk() = true; 
 				session.resource()->close(err);
-				  // std::cout << "END OF  CHUNKED" << std::endl;
-
+				//std::cout << "END OF  CHUNKED" << std::endl;
 			}
 		}			
 	}
@@ -286,6 +284,8 @@ bool check_typemine(http::uri &uri, info_t &info)
  		{"text/plain", "wmv", false, ""},
 		{0, 0, 0, 0}
 	};
+	if (info.type == ISRAW)
+		return (true);
 	uri.build_extension();
 	for (int i = 0; LALA[i].str; i++)
 	{
