@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Mon Oct 10 18:45:02 2005 texane
-// Last update Sun Nov 13 15:01:42 2005 
+// Last update Fri Dec 02 14:41:29 2005 texane
 //
 
 
@@ -241,7 +241,10 @@ bool	win32::process::myhandle(handle_t* myhdl)
 
 bool	win32::process::wait_single(handle_t hdl, state_t* st, waitopt_t wopt)
 {
-  if (WaitForSingleObject(hdl, DONTWAIT ? 0 : INFINITE) == FALSE)
+  DWORD ret;
+
+  ret = WaitForSingleObject(hdl, (wopt == DONTWAIT) ? 0 : INFINITE);
+  if (ret == WAIT_TIMEOUT)
     return false;
   return true;
 }

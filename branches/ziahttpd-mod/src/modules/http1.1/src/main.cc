@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Thu Dec 01 15:05:21 2005 texane
+// Last update Fri Dec 02 14:48:34 2005 texane
 //
 
 
@@ -126,12 +126,11 @@ MOD_EXPORT(HK_ALTER_RESP_DATA) (http::session& session, server::core* core, int&
 	if (session.last_chunk() == true)
 	  {
 	    // Thisis thelast onetobesent
-	    cout << "LAST CHUNK " << endl;
 	    session.chunked() = false;
 	    session.hdrlines_out().clear();
 	    session.content_out() = "0";
 	    session.content_out() += "\r\n";
-        session.content_out() += "\r\n";
+	    session.content_out() += "\r\n";
 	  }
 
 	return (true);

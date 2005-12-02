@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:20 2005 texane
-// Last update Fri Dec 02 14:05:29 2005 texane
+// Last update Fri Dec 02 14:45:03 2005 texane
 //
 
 
@@ -117,8 +117,17 @@ bool	dataman::cgi::fetch(buffer& buf, unsigned int nbytes, error_t& err)
   // Thus, fetching is true
   feeding_ = false;
 
+  // Test for the process to be done 
+  ret = sysapi::process::wait_single(hproc_, &st, sysapi::process::DONTWAIT);
+  if (ret == true)
+    {
+      err = EOFETCHING;
+      release();
+      reset();
+      return true;
+    }
+
   wrk = new unsigned char[nbytes];
-  cout << "reading..." << endl;
   ret = sysapi::file::read(hout_,
 			   wrk,
 			   nbytes,
@@ -126,7 +135,6 @@ bool	dataman::cgi::fetch(buffer& buf, unsigned int nbytes, error_t& err)
   if (ret == false)
     {
       sysapi::error::stringify("Cannot read");
-      cout << "READ FAILED" << endl;
       delete wrk;
       err = OPFAILED;
       return false;
@@ -135,23 +143,6 @@ bool	dataman::cgi::fetch(buffer& buf, unsigned int nbytes, error_t& err)
   // Set the size we have just read
   buf = buffer(wrk, nread);
   delete wrk;
-
-  // Is the process done, dont' block if not
-//   ret = sysapi::process::wait_single(hproc_, &st, sysapi::process::DONTWAIT);
-
-  // (!) Here should check the status
-  // code of the process
-
-  // The process is not done, not an error
-//   if (ret == false)
-//     return true;
-
-  // Here the proces sis now done,
-  // so release associated resources
-//   err = EOFETCHING;
-
-//   release();
-//   reset();
 
   return true;
 }

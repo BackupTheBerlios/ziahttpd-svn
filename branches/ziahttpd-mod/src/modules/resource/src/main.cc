@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Thu Dec 01 12:49:51 2005 texane
+// Last update Fri Dec 02 14:45:46 2005 texane
 //
 
 
@@ -128,7 +128,6 @@ bool	check_status_code(http::session& session, info_t& info)
 			}
 			if (*LALA[i].buffer)
 			{
-				std::cout<< "c'est du RAW " << std::endl;
 				info.type = ISRAW;
 				return (true);
 			}
@@ -160,7 +159,6 @@ bool	fill_info(http::session& session, info_t& info)
 		session.uri().status() = 401;
 	if (!sysapi::file::exists(session.uri().localname().c_str()))
 		session.uri().status() = 404;
-	cout << "STATUS CIDE" << session.uri().status() << endl;
 	while (!check_status_code(session, info))
 		;
 }
