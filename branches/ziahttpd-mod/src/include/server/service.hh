@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Sun Nov 27 00:32:56 2005 texane
+// Last update Sun Dec 04 17:15:13 2005 texane
 //
 
 
@@ -98,6 +98,9 @@ namespace server
     virtual bool create_resource(http::session&, const std::vector<const std::string>&,
 				 const std::vector<const std::string>&);
     virtual bool create_resource(http::session&, unsigned int);
+    virtual bool create_resource_in(http::session&,
+				    sysapi::socket_in::handle_t,
+				    sysapi::socket_in::size_t);
 
     
     // - Request processing stage related services

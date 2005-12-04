@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 14:18:57 2005 
-// Last update Thu Dec 01 22:44:50 2005 texane
+// Last update Sun Dec 04 17:11:16 2005 texane
 //
 
 
@@ -64,6 +64,7 @@ namespace http
     // Resource wanted to be accessed by the client
     // READ ONLY, call the service to CREATE
     dataman::resource* resource()		{ return resource_; }
+    dataman::resource* resource_in()		{ return resource_in_; }
 
     // {In, out}put (client's request, server's response) data related accessors
     std::list<dataman::buffer>& hdrlines_in()	{ return hdrlines_in_; }
@@ -104,6 +105,7 @@ namespace http
 
     // resource pointed to by the client
     dataman::resource* resource_;
+    dataman::resource* resource_in_;
 
     // Server configuration related
     dataman::conf& conf_;

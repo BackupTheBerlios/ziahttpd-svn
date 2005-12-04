@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Thu Dec 01 22:35:42 2005 texane
+// Last update Sun Dec 04 17:13:58 2005 texane
 //
 
 
@@ -166,6 +166,19 @@ bool	server::service::create_resource(session& session,
     return false;
 
   session.resource_ = dataman::resource::factory(stcode);
+  return true;
+}
+
+
+// In resources creation
+bool	server::service::create_resource_in(session& session,
+					    sysapi::socket_in::handle_t hsock,
+					    sysapi::socket_in::size_t szbody)
+{
+  if (session.resource_in_ != 0)
+    return false;
+
+  session.resource_in_ = dataman::resource::factory(hsock, szbody);
   return true;
 }
 

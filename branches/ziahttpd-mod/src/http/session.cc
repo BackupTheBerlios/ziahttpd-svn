@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:46:45 2005 
-// Last update Fri Dec 02 16:07:10 2005 texane
+// Last update Sun Dec 04 17:11:58 2005 texane
 //
 
 
@@ -28,6 +28,7 @@ http::session::session(dataman::conf& conf) : conf_(conf)
   services_ = server::core::services_;
   persistent_ = true;
   resource_ = 0;
+  resource_in_ = 0;
   nrpassed_ = 0;
   stageid_ = server::modman::CREATE_CON;
   reset_me_= false;
@@ -63,6 +64,12 @@ bool	http::session::reset()
     {
       delete resource_;
       resource_ = 0;
+    }
+
+  if (resource_in_)
+    {
+      delete resource_in_;
+      resource_in_ = 0;
     }
 
   // In case...
