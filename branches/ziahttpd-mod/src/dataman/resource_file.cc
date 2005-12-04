@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Thu Dec 01 13:03:47 2005 texane
+// Last update Sun Dec 04 17:24:46 2005 texane
 //
 
 
@@ -152,9 +152,28 @@ bool	dataman::file::fetch(buffer& buf, error_t& err)
 }
 
 
-bool	dataman::file::feed(buffer&, error_t&)
+bool	dataman::file::feed(buffer& buf, error_t& err)
 {
-  cerr << "feeding methood not implemented fro the filereource" << endl;
+  bool ret;
+  sysapi::file::size_t nwritten;
+
+  err = ESUCCESS;
+
+  if (omode_ == O_FETCHONLY)
+    {
+      err = OPNOTSUP;
+      return false;
+    }
+
+  ret = sysapi::file::write(hfile_, (unsigned char*)buf, buf.size(), &nwritten);
+  if (ret == false)
+    {
+      sysapi::error::stringify("Cannot write to the file: ");
+      err = OPFAILED;
+      return false;
+    }
+  
+  // buf.size() -= nwritten;
   return true;
 }
 
