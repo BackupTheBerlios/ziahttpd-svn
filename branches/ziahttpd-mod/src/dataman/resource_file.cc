@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Sun Dec 04 17:24:46 2005 texane
+// Last update Sun Dec 04 17:59:01 2005 texane
 //
 
 
@@ -54,33 +54,35 @@ bool	dataman::file::open(openmode_t omode, error_t& err)
       return false;
     }
 
+  omode_ = omode;
+
   if (omode == O_FETCHONLY)
     {
-      // Fetching only resource (cgi without post...)
+      if (sysapi::file::size(filename_.c_str(), &sz_) == false)
+	{
+	  sysapi::error::stringify("Cannot open the file");
+	  return false;
+	}
+      ret = sysapi::file::open(&hfile_, filename_.c_str(), sysapi::file::RDONLY);
+      if (ret == false)
+	{
+	  sysapi::error::stringify("Cannot open readonly file:");
+	  return false;
+	}      
     }
   else if (omode == O_FEEDONLY)
     {
-      // Feeding only resource (put body in file...)
+      ret = sysapi::file::open(&hfile_, filename_.c_str(), sysapi::file::WRONLY);
+      if (ret == false)
+	{
+	  sysapi::error::stringify("Cannot open writonly file:");
+	  return false;
+	}
     }
   else
     {
       // Cannot open a file in both feed and fetch mode
       err = OPNOTSUP;
-      return false;
-    }
-
-  omode_ = omode;
-
-  if (sysapi::file::size(filename_.c_str(), &sz_) == false)
-    {
-      sysapi::error::stringify("Cannot open the file");
-      return false;
-    }
-
-  ret = sysapi::file::open(&hfile_, filename_.c_str(), sysapi::file::RDONLY);
-  if (ret == false)
-    {
-      std::cout << "open failed OIPENLKDSFJKLFJ" <<  std::endl;
       return false;
     }
 
@@ -113,7 +115,7 @@ bool	dataman::file::fetch(buffer& buf, unsigned int nrtoread, error_t& err)
 
   if (nrtoread_ == 0)
     {
-      err =  EOFETCHING;
+      err = EOFETCHING;
       return true;
     }
   
@@ -158,6 +160,12 @@ bool	dataman::file::feed(buffer& buf, error_t& err)
   sysapi::file::size_t nwritten;
 
   err = ESUCCESS;
+
+  if (opened_ == false)
+    {
+      err = NOTOPENED;
+      return false;
+    }
 
   if (omode_ == O_FETCHONLY)
     {
