@@ -175,6 +175,23 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	char	size[20];
 	bool	err_code = true;
 
+
+	if (session.info_in().body())
+	{
+		dataman::buffer tmp;
+		int				size;			
+
+		session.services_->create_resource(session, session.uri().localname());
+		session.resource()->open(dataman::resource::O_FEEDONLY, err);
+		size = atoi(session.info_in()["Content-length"].c_str());
+		session.services_->create_resource_in(session, session.hsock_con(), size);
+		if (session.resource_in()->fetch(tmp, err) != dataman::resource::EOFETCHING)
+			session.resource()->feed(tmp, err);
+		session.resource()->close(err);
+		session.resource_in()->close(err);
+		return (true);
+	}
+
 	info.type = UNSET;
 	if (!session.chunked())
 	{
@@ -216,40 +233,26 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		// resource feed the tmp buffer
 		// else
 		// if method doesn't have body
-		if (session.info_in().body())
-		{
-			dataman::buffer tmp;
-			int				size;			
-
-			size = atoi(session.info_in()["Content-length"].c_str());
-			session.services_->create_resource_in(session, session.hsock_con(), size);
-			if (session.resource_in()->fetch(tmp, err) != dataman::resource::EOFETCHING)
-				session.resource()->feed(tmp, err);
-		}
+		if (!session.resource()->fetch(session.content_out(), CHUNKSZ, err))
+		  cout << "[!]FETCH TROUBLE" << endl;
 		else
 		{
-			if (!session.resource()->fetch(session.content_out(), CHUNKSZ, err))
-			  cout << "[!]FETCH TROUBLE" << endl;
-			else
+			//cout << "ERR:" << err << endl;
+			//cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
+			if (err == dataman::resource::ESUCCESS)
 			{
-				//cout << "ERR:" << err << endl;
-				//cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
-				if (err == dataman::resource::ESUCCESS)
-				{
-					session.chunked() = true;
-					//std::cout << "IS CHUNKED" << std::endl;
-				}
-				else if (err == dataman::resource::EOFETCHING)
-				{
-					session.chunked() = true; 
-					session.last_chunk() = true; 
-					session.resource()->close(err);
-					//std::cout << "END OF  CHUNKED" << std::endl;
-				}
+				session.chunked() = true;
+				//std::cout << "IS CHUNKED" << std::endl;
+			}
+			else if (err == dataman::resource::EOFETCHING)
+			{
+				session.chunked() = true; 
+				session.last_chunk() = true; 
+				session.resource()->close(err);
+				//std::cout << "END OF  CHUNKED" << std::endl;
 			}
 		}
 	}
-
 
 	  //get the size of the buffer for add the content length entry to the response header
 	sprintf(size, "%d", session.content_out().size());
