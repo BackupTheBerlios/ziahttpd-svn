@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:32:20 2005 
-// Last update Fri Dec 02 15:23:15 2005 texane
+// Last update Sun Dec 04 16:21:49 2005 texane
 //
 
 
@@ -142,6 +142,15 @@ bool	posix::process::wait_single(handle_t hdl, state_t* , waitopt_t wopt)
 // !fixme: fill in the state
 bool	posix::process::wait_any(handle_t* hdl, state_t*, waitopt_t wopt)
 {
-  // SHOULD NOT BE PART OF THE INTERFACE, THE PROCESS HAS TO KEEP TRACK OF CHILDREN AND WAIT_SINGLE
+  bool res = true;
+
+  switch (sig)
+    {
+    case TERMINATE:
+      cerr << "process termination notimplemented" << endl;
+      res = false;
+      break;
+    }
+
   return false;
 }

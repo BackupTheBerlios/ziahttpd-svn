@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Thu Dec 01 22:18:42 2005 texane
+## Last update Sun Dec 04 16:43:51 2005 texane
 ##
 
 # ! Always include this file
@@ -38,6 +38,7 @@ srcs	= main.cc \
 	  dataman$(SLASH)resource_cgi.cc \
 	  dataman$(SLASH)resource_file.cc \
 	  dataman$(SLASH)resource_report.cc \
+	  dataman$(SLASH)resource_bodydata.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
 	  sysapi$(SLASH)$(PROJ_SYSAPI)$(SLASH)mutex.cc \

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:58:22 2005 texane
-// Last update Thu Nov 24 16:56:15 2005 texane
+// Last update Sun Dec 04 17:04:35 2005 texane
 //
 
 
@@ -28,6 +28,7 @@ using dataman::resource;
 
 
 #include <iostream>
+#include <sysapi/sysapi.hh>
 
 
 resource* dataman::resource::factory(const string& filename)
@@ -46,4 +47,14 @@ resource* dataman::resource::factory(const std::vector<const std::string>& av,
 resource* dataman::resource::factory(unsigned int status_code)
 {
   return new report(status_code);
+}
+
+
+resource* dataman::resource::factory(sysapi::socket_in::handle_t hsock,
+				     sysapi::socket_in::size_t szbody,
+				     bool chunked)
+{
+  if (chunked == true)
+    { return 0; }
+  return new bodydata(hsock, szbody);
 }

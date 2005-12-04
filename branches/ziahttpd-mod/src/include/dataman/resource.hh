@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:04:52 2005 texane
-// Last update Fri Dec 02 15:59:14 2005 texane
+// Last update Sun Dec 04 17:05:32 2005 texane
 //
 
 
@@ -89,6 +89,9 @@ namespace dataman
     static resource* factory(const std::vector<const std::string>&,
 			     const std::vector<const std::string>&);
     static resource* factory(unsigned int);
+    static resource* factory(sysapi::socket_in::handle_t,
+			     sysapi::socket_in::size_t,
+			     bool = false);
   };
 }
 
@@ -203,6 +206,36 @@ namespace dataman
     unsigned int stcode_;
     bool formed_;
     std::string buf_;
+  };
+}
+
+
+namespace dataman
+{
+  // -
+  // Resource got from the request, sent in
+  // the client request body.
+
+  class bodydata : public resource
+  {
+  public:
+    bodydata(sysapi::socket_in::handle_t,
+	     sysapi::socket_in::size_t);
+
+    // Implement the resource interface
+    bool open(openmode_t, error_t&);
+    bool fetch(buffer&, unsigned int, error_t&);
+    bool fetch(buffer&, error_t&);
+    bool feed(buffer&, error_t&);
+    bool close(error_t&);
+
+    virtual ~bodydata();
+
+  private:
+    sysapi::socket_in::handle_t hsock_;
+    sysapi::socket_in::size_t szbody_;
+    sysapi::socket_in::size_t szread_;
+    bool opened_;
   };
 }
 

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Fri Dec 02 14:55:20 2005 texane
+// Last update Sun Dec 04 15:56:23 2005 texane
 //
 
 
@@ -27,7 +27,7 @@ using dataman::buffer;
 using dataman::resource;
 
 
-#define CHUNKSZ  256
+#define CHUNKSZ  1024
 
 
 
