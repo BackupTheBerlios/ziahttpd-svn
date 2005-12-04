@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Sun Dec 04 18:30:48 2005 texane
+// Last update Sun Dec 04 15:56:23 2005 texane
 //
 
 
@@ -174,28 +174,31 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	dataman::resource::error_t err;
 	char	size[20];
 	bool	err_code = true;
-
+	dataman::buffer tmp;
 
 	if (session.info_in().body() == true)
 	{
-		dataman::buffer tmp;
 		int				size;			
 
-
+		size = atoi(session.info_in()["Content-length"].c_str()) + 2;
+		session.services_->create_resource_in(session, session.hsock_con(), size);
+		session.resource_in()->open(dataman::resource::O_FETCHONLY, err);
+		session.resource_in()->fetch(tmp, err);
+		tmp.display();
+		session.resource_in()->close(err);
+	}
+	if (session.info_in().method_string() == "put")
+	{
 		session.services_->create_resource(session, session.uri().localname());
 		session.resource()->open(dataman::resource::O_FEEDONLY, err);
-		size = atoi(session.info_in()["Content-length"].c_str());
-		session.services_->create_resource_in(session, session.hsock_con(), size);
-		  session.resource_in()->open(dataman::resource::O_FETCHONLY, err);
-		if (session.resource_in()->fetch(tmp, err) != dataman::resource::EOFETCHING)
-		  {
-		    cout <<  tmp.to_string() << endl;
-			session.resource()->feed(tmp, err);
-			  }
+		session.resource()->feed(tmp, err);
 		session.resource()->close(err);
-		session.resource_in()->close(err);
+		session.info_out()["content-length"] = "0";
+		session.chunked() = false;
+		session.last_chunk() = false;
 		return (true);
 	}
+	cout << "LALALALALLAALA" << endl;
 
 	info.type = UNSET;
 	if (!session.chunked())
@@ -212,6 +215,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		  // cout << "c'est CGI" << endl;
 			vector<const string> env;
 			//cout << info.binary[0] << " : " << info.binary[1] << endl;
+			
 			session.services_->create_resource(session,
 						       (const vector<const string>)info.binary,
 						       (const vector<const string>)env);

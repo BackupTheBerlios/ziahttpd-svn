@@ -86,12 +86,12 @@ MOD_EXPORT(HK_BUILD_RESP_METADATA) (http::session& session, server::core* core, 
 MOD_EXPORT(HK_ALTER_RESP_METADATA) (http::session& session, server::core* core, int& status)
 {
 	error_code_string(session.uri().status(), session.uri().strstatus());
-	if (session.chunked())
+	if (session.chunked() == true)
 	{
 		session.info_out()["content-length"] = "";
 		session.info_out()["Transfer-Encoding"] = "chunked";
 	}
-	if (session.first_chunk() || !session.chunked())
+	if (session.first_chunk() || session.chunked() == false)
 	{
 		session.info_out().stringify_respline(session.hdrlines_out(), session.uri());
 		session.info_out().reset();
@@ -103,14 +103,13 @@ MOD_EXPORT(HK_ALTER_RESP_METADATA) (http::session& session, server::core* core, 
 	{
 		session.hdrlines_out().clear();
 	}
-	//session.hdrlines_out().display();
 	return (true);
 }
 
 MOD_EXPORT(HK_ALTER_RESP_DATA) (http::session& session, server::core* core, int& status)
 {
-
-	if (session.chunked() && (session.last_chunk() == false))
+	
+	if (session.chunked() == true && (session.last_chunk() == false))
 	{
 		string					hex;
 		stringmanager::string	p;
