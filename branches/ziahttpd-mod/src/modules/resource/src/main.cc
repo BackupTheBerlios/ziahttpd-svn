@@ -49,7 +49,10 @@ struct info_t {
 bool	have_directoryindex(http::session& session);
 bool	check_typemine(http::uri &uri, info_t &info);
 
+
+
 // List of exported functions
+//MOD_EXPORT( HK_GET_RQST_DATA )(http::session& session, server::core*, int&);
 MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core*, int&);
 
 bool	check_cgi(http::uri& uri, const string& file, info_t& info)
@@ -190,19 +193,16 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 			session.services_->create_resource(session,
 						       (const vector<const string>)info.binary,
 						       (const vector<const string>)env);
+
 		}
 		if (info.type != ISNONE
 			&& info.type != UNSET)
 		{
+			//check type method
 			if (!session.resource()->open(dataman::resource::O_FETCHONLY, err))
-			{
-				//status code internal error
 				printf("status code internal error\n");
-			}
 			else
-			  {
 			    session.first_chunk() = true;
-			  }
 		}
 	} else {
 		info.type = ISRAW;
@@ -210,25 +210,44 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	if (info.type != ISNONE
 		&& info.type != UNSET)
 	{
-		if (!session.resource()->fetch(session.content_out(), CHUNKSZ, err))
-		  cout << "[!]FETCH TROUBLE" << endl;
+
+		// if method have body
+		// resourcein fetch in tmp buffer
+		// resource feed the tmp buffer
+		// else
+		// if method doesn't have body
+		if (session.info_in().body())
+		{
+			dataman::buffer tmp;
+			int				size;			
+
+			size = atoi(session.info_in()["Content-length"].c_str());
+			session.services_->create_resource_in(session, session.hsock_con(), size);
+			if (session.resource_in()->fetch(tmp, err) != dataman::resource::EOFETCHING)
+				session.resource()->feed(tmp, err);
+		}
 		else
 		{
-			//cout << "ERR:" << err << endl;
-		    //cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
-			if (err == dataman::resource::ESUCCESS)
+			if (!session.resource()->fetch(session.content_out(), CHUNKSZ, err))
+			  cout << "[!]FETCH TROUBLE" << endl;
+			else
 			{
-				session.chunked() = true;
-				//std::cout << "IS CHUNKED" << std::endl;
+				//cout << "ERR:" << err << endl;
+				//cout << "FETCH SIZE :" <<  session.content_out().size() << endl;
+				if (err == dataman::resource::ESUCCESS)
+				{
+					session.chunked() = true;
+					//std::cout << "IS CHUNKED" << std::endl;
+				}
+				else if (err == dataman::resource::EOFETCHING)
+				{
+					session.chunked() = true; 
+					session.last_chunk() = true; 
+					session.resource()->close(err);
+					//std::cout << "END OF  CHUNKED" << std::endl;
+				}
 			}
-			  else if (err == dataman::resource::EOFETCHING)
-			{
-				session.chunked() = true; 
-				session.last_chunk() = true; 
-				session.resource()->close(err);
-				//std::cout << "END OF  CHUNKED" << std::endl;
-			}
-		}			
+		}
 	}
 
 

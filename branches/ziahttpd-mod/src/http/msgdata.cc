@@ -53,6 +53,7 @@ void	http::msgdata::reset()
 	version_.clear();
 	query_.clear();
 	hdrlines_.clear();
+	body_ = false;
 }
 
 bool	http::msgdata::build_respline(msgdata& rqst, const uri&)
@@ -109,6 +110,8 @@ bool	http::msgdata::parse_rqstline_statusline(buffer& buf, uri& uri)
 	// method
 	method_ = vec[0];
 	p.normalize(method_);
+	if (method_ == "post" || method_ == "put")
+		body_ = true;
 	// parse uri
 	if (!parse_uri(vec[1]))
 		return (false);

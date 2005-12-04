@@ -38,6 +38,7 @@ namespace http
 	std::string& uri_string()		{ return uri_; };
 	std::string& query_string();
 	void		 reset();
+	bool&		 body() { return body_; }
 
 	msgdata& operator=(msgdata&);
   private:
@@ -46,7 +47,7 @@ namespace http
 	  std::string								version_;
 	  std::map<std::string, std::string>		hdrlines_;
 	  std::string								query_;
-
+	  bool										body_;
 
 	  bool parse_uri(std::string &uri);
   };
