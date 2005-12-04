@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Nov 22 19:44:26 2005 texane
-// Last update Fri Dec 02 15:43:01 2005 texane
+// Last update Sun Dec 04 19:46:52 2005 texane
 //
 
 
@@ -51,7 +51,7 @@ bool read_metadata(sysapi::socket_in::handle_t& hsock,
   }
 
   // Read the next http line
-  while ((ret = dataman::get_nextline(hsock, &line, &err)) == true)
+  while ((ret = session->services_->get_nextline(hsock, &line, &err)) == true)
     {
       if (strlen(line) != 0)
 	{
@@ -100,9 +100,9 @@ bool read_data(sysapi::socket_in::handle_t& hsock,
     }
 
   // Read the content
-  if (dataman::get_nextblock(session->hsock_con(), &content,
-			     session->content_in().size(),
-			     &nrecv, &err) == false)
+  if (session->services_->get_nextblock(session->hsock_con(), &content,
+					session->content_in().size(),
+					&nrecv, &err) == false)
     {
       reason = err;
       return false;

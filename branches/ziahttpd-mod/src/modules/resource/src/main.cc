@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Sun Dec 04 15:56:23 2005 texane
+// Last update Sun Dec 04 18:30:48 2005 texane
 //
 
 
@@ -181,12 +181,17 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		dataman::buffer tmp;
 		int				size;			
 
+
 		session.services_->create_resource(session, session.uri().localname());
 		session.resource()->open(dataman::resource::O_FEEDONLY, err);
 		size = atoi(session.info_in()["Content-length"].c_str());
 		session.services_->create_resource_in(session, session.hsock_con(), size);
+		  session.resource_in()->open(dataman::resource::O_FETCHONLY, err);
 		if (session.resource_in()->fetch(tmp, err) != dataman::resource::EOFETCHING)
+		  {
+		    cout <<  tmp.to_string() << endl;
 			session.resource()->feed(tmp, err);
+			  }
 		session.resource()->close(err);
 		session.resource_in()->close(err);
 		return (true);

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:45:55 2005 
-// Last update Sun Dec 04 17:13:58 2005 texane
+// Last update Sun Dec 04 19:36:37 2005 texane
 //
 
 
@@ -19,6 +19,7 @@
 #include <dataman/buffer.hh>
 #include <dataman/conf.hh>
 #include <dataman/resource.hh>
+#include <dataman/inet_helper.hh>
 
 
 using std::string;
@@ -204,4 +205,23 @@ vector<string>&	server::service::query_conf_complex(session& session,
 						    const string& key)
 {
   return session.conf().GetListVector(key);
+}
+
+
+// http string related operations
+bool		server::service::get_nextline(sysapi::socket_in::handle_t hsock,
+					      char** line,
+					      sysapi::socket_in::error_t* err)
+{
+  return dataman::get_nextline(hsock, line, err);
+}
+
+
+bool		server::service::get_nextblock(sysapi::socket_in::handle_t hsock,
+					       unsigned char** block,
+					       sysapi::socket_in::size_t szblock,
+					       sysapi::socket_in::size_t* nread,
+					       sysapi::socket_in::error_t* err)
+{
+  return dataman::get_nextblock(hsock, block, szblock, nread, err);
 }

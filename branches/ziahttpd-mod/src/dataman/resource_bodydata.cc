@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Dec 04 16:24:04 2005 texane
-// Last update Sun Dec 04 17:06:22 2005 texane
+// Last update Sun Dec 04 18:41:27 2005 texane
 //
 
 
@@ -13,6 +13,7 @@
 #include <sysapi/sysapi.hh>
 #include <dataman/buffer.hh>
 #include <dataman/resource.hh>
+#include <dataman/inet_helper.hh>
 
 
 using std::cerr;
@@ -89,19 +90,18 @@ bool	dataman::bodydata::fetch(buffer& buf,
 	}
       else
 	{
-	  wrk = new unsigned char[nbuf];
-	  ret = sysapi::socket_in::recv(hsock_,
-					wrk,
-					nbuf,
-					&nread);
+	  ret = dataman::get_nextblock(hsock_,
+				       &wrk,
+				       nbuf,
+				       &nread);
 	  if (ret == false)
 	    err = OPFAILED;
 	  else
 	    {
 	      buf = buffer(wrk, nread);
 	      szread_ += nread;
+	      delete wrk;
 	    }
-	  delete wrk;
 	}
     }
 

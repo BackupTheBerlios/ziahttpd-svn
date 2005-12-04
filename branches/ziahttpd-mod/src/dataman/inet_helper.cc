@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:05:06 2005 
-// Last update Fri Dec 02 11:18:05 2005 texane
+// Last update Sun Dec 04 19:15:05 2005 texane
 //
 
 
@@ -17,6 +17,9 @@
 
 
 using namespace dataman;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 
 // This file implements the two basic blocks
@@ -260,6 +263,7 @@ bool	dataman::get_nextblock(sysapi::socket_in::handle_t hdl_con,
 			       sysapi::socket_in::error_t* err)
 {
   http_block_t* blk;
+  sysapi::socket_in::error_t sockerr;
 
   blk = lookfor_block_byhdl(hdl_con);
   if (blk == NULL)
@@ -267,20 +271,25 @@ bool	dataman::get_nextblock(sysapi::socket_in::handle_t hdl_con,
 
   *buf = new unsigned char[blocksz];
   *recvsz = 0;
-  
+
+  cout << "coming with: " << blk->sz_ << endl;
+
   if (blk->sz_ < blocksz)
     {
       sysapi::socket_in::size_t nr_missing;
       sysapi::socket_in::size_t nr_recv;
       int i;
-      
+
       nr_missing = blocksz - blk->sz_;
       i = blk->sz_;
       while (--i >= 0)
 	(*buf)[i] = blk->buf_[i];
-      sysapi::socket_in::recv(blk->hdl_con_, (*buf) + blk->sz_, nr_missing, &nr_recv, err);
-      if (*err == sysapi::socket_in::CONN_DISCONNECTED)
-	return false;
+      sysapi::socket_in::recv(blk->hdl_con_, (*buf) + blk->sz_, nr_missing, &nr_recv, &sockerr);
+      if (sockerr == sysapi::socket_in::CONN_DISCONNECTED)
+	{
+	  if (err) *err = sockerr;
+	  return false;
+	}
 
       *recvsz = blk->sz_ + nr_recv;
       blk->sz_ = 0;

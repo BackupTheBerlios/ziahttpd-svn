@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Nov 14 15:37:39 2005 
-// Last update Sun Dec 04 17:15:13 2005 texane
+// Last update Sun Dec 04 19:34:02 2005 texane
 //
 
 
@@ -92,6 +92,14 @@ namespace server
 			    eventid_t,
 			    sockioman::sockiohandler_t,
 			    dataman::buffer* = 0);
+    virtual bool get_nextline(sysapi::socket_in::handle_t,
+			      char**,
+			      sysapi::socket_in::error_t* = NULL);
+    virtual bool get_nextblock(sysapi::socket_in::handle_t,
+			       unsigned char**,
+			       sysapi::socket_in::size_t,
+			       sysapi::socket_in::size_t*,
+			       sysapi::socket_in::error_t* = NULL);
 
     // - Resource creation related services
     virtual bool create_resource(http::session&, const std::string&);
