@@ -176,7 +176,7 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 	bool	err_code = true;
 
 
-	if (session.info_in().body())
+	if (session.info_in().body() == true)
 	{
 		dataman::buffer tmp;
 		int				size;			
