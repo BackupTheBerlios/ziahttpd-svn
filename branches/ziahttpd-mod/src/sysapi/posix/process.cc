@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:32:20 2005 
-// Last update Sun Dec 04 16:21:49 2005 texane
+// Last update Mon Dec  5 20:36:27 2005 
 //
 
 
@@ -109,10 +109,18 @@ bool	posix::process::myhandle(handle_t* hdl)
 }
 
 
-bool	posix::process::signal(handle_t, sigid_t)
+bool	posix::process::signal(handle_t, sigid_t sig)
 {
-  cerr << "[!] Signal a process is not yet impelented!" << endl;
-  
+  bool res = true;
+
+  switch (sig)
+    {
+    case TERMINATE:
+      cerr << "process termination notimplemented" << endl;
+      res = false;
+      break;
+    }
+
   return false;
 }
 
@@ -137,20 +145,4 @@ bool	posix::process::wait_single(handle_t hdl, state_t* , waitopt_t wopt)
     return false;
 
   return true;
-}
-
-// !fixme: fill in the state
-bool	posix::process::wait_any(handle_t* hdl, state_t*, waitopt_t wopt)
-{
-  bool res = true;
-
-  switch (sig)
-    {
-    case TERMINATE:
-      cerr << "process termination notimplemented" << endl;
-      res = false;
-      break;
-    }
-
-  return false;
 }

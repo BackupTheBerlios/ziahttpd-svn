@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 21:01:23 2005 
-// Last update Sun Dec 04 15:56:23 2005 texane
+// Last update Mon Dec  5 21:14:06 2005 
 //
 
 
@@ -31,19 +31,19 @@ using dataman::resource;
 
 
 
-enum type_t {
+typedef enum {
 	UNSET = 0,
 	ISCGI,
 	ISFILE,
 	ISRAW,
 	ISNONE
-}  ;
+}  type_t;
 
 struct info_t {
-	std::string			content_type;
+	string				content_type;
 	type_t				type;
-	std::vector<const string>	binary;
-	std::string			new_localtion;
+	vector<string>			binary;
+	string				new_localtion;
 };
 
 bool	have_directoryindex(http::session& session);
@@ -213,12 +213,12 @@ MOD_EXPORT( HK_BUILD_RESP_DATA )(http::session& session, server::core* core, int
 		if (info.type == ISCGI)
 		{
 		  // cout << "c'est CGI" << endl;
-			vector<const string> env;
-			//cout << info.binary[0] << " : " << info.binary[1] << endl;
+		  vector<string> env;
+		  //cout << info.binary[0] << " : " << info.binary[1] << endl;
 			
-			session.services_->create_resource(session,
-						       (const vector<const string>)info.binary,
-						       (const vector<const string>)env);
+		  session.services_->create_resource(session,
+						     (const vector<const string>&)info.binary,
+						     (const vector<const string>&)env);
 
 		}
 		if (info.type != ISNONE

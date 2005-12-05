@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 23 20:19:10 2005 texane
-// Last update Sun Nov 27 15:19:11 2005 texane
+// Last update Mon Dec  5 20:26:58 2005 
 //
 
 
@@ -293,7 +293,7 @@ void	dataman::buffer::size(size_t sz)
 
 inline static char to_printable(char c)
 {
-  if (c > 32 && c <= 127)
+  if (((unsigned char)c > 32) && ((unsigned char)c <= 127))
     return c;
   return '.';
 }
@@ -309,6 +309,7 @@ string	dataman::buffer::to_string(unsigned int windent,
   ostringstream wspc;
   ostringstream prnt;
   ostringstream strm;
+  unsigned int offset;
 
   for (unsigned int i = 0; i < windent; ++i)
     idnt << ' ';
@@ -319,7 +320,7 @@ string	dataman::buffer::to_string(unsigned int windent,
   for (unsigned int i = 0; i < wspace; ++i)
     wspc << ' ';
 
-  for (unsigned int offset = 0; offset < sz_; ++offset)
+  for (offset = 0; offset < sz_; ++offset)
     {
       if ((offset % wstep) == 0)
 	{

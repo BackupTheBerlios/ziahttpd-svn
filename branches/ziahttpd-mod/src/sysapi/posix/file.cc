@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Mon Oct 17 18:10:19 2005 
-// Last update Wed Nov 23 22:34:17 2005 texane
+// Last update Mon Dec  5 20:33:55 2005 
 //
 
 
@@ -208,9 +208,9 @@ bool	posix::file::is_executable(const char* filename)
   return file_query_about(filename, EXECUTABLE, 0);
 }
 
-bool	posix::file::size(const char* filename, unsigned long* sz)
+bool	posix::file::size(const char* filename, posix::file::size_t* sz)
 {
-  return file_query_about(filename, SIZE, sz);
+  return file_query_about(filename, SIZE, (unsigned long*)sz);
 }
 
 bool	posix::file::normalize_name(string& name)

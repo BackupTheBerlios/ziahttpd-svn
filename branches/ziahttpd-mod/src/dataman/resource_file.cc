@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Nov 23 13:53:14 2005 texane
-// Last update Sun Dec 04 19:11:38 2005 texane
+// Last update Mon Dec  5 20:30:48 2005 
 //
 
 
@@ -21,7 +21,6 @@ using std::cout;
 using std::endl;
 using std::string;
 using dataman::buffer;
-using dataman::resource::error_t;
 
 
 dataman::file::file(const string& filename)

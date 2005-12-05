@@ -5,14 +5,12 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Oct 09 13:57:14 2005 texane
-// Last update Thu Dec 01 16:21:56 2005 texane
+// Last update Mon Dec  5 20:32:30 2005 
 //
 
 
 #ifndef SYSAPI_POSIX_HH
 # define SYSAPI_POSIX_HH
-
-# error "recv function not implemented... remove me when done"
 
 // @see sysapi.hh
 // This file declares the namespace
@@ -74,7 +72,7 @@ namespace posix
 
     // Access rights functions
     bool	exists(const char*);
-    bool	size(const char*, unsigned long*);
+    bool	size(const char*, posix::file::size_t*);
     bool	is_directory(const char*);
     bool	is_readable(const char*);
     bool	is_writtable(const char*);

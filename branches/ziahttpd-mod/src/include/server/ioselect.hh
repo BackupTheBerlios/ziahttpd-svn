@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 25 20:15:24 2005 texane
-// Last update Sun Nov 27 00:54:47 2005 texane
+// Last update Mon Dec  5 20:43:38 2005 
 //
 
 
@@ -22,8 +22,11 @@
 // of the socket io manager interface
 
 
+#if defined(_WIN32)
 namespace thrman = server;
-
+#else
+# define thrman server
+#endif
 
 namespace thrman
 {
