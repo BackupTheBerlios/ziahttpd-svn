@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Nov 25 20:10:53 2005 texane
-// Last update Fri Dec 02 15:47:02 2005 texane
+// Last update Mon Dec 05 21:39:28 2005 texane
 //
 
 
@@ -251,7 +251,7 @@ bool	thrman::ioselect::handle_events(fd_set& rdset, fd_set& wrset)
       closeme = false;
 
       // There is something to read
-      if (FD_ISSET(sockios_[i].hsock_, &rdset))
+      if (sockios_[i].used_ && FD_ISSET(sockios_[i].hsock_, &rdset))
 	{
 	  activio = true;
 	  handler = sockios_[i].onread_;
@@ -264,7 +264,7 @@ bool	thrman::ioselect::handle_events(fd_set& rdset, fd_set& wrset)
 	}
      
       // There is something to write
-      if (FD_ISSET(sockios_[i].hsock_, &wrset) && closeme == false)
+      if (sockios_[i].used_ && FD_ISSET(sockios_[i].hsock_, &wrset) && closeme == false)
 	{
 	  activio = true;
 	  handler = sockios_[i].onwrite_;

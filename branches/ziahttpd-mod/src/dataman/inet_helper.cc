@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sun Nov 13 15:05:06 2005 
-// Last update Sun Dec 04 19:15:05 2005 texane
+// Last update Mon Dec 05 21:28:50 2005 texane
 //
 
 
@@ -230,10 +230,13 @@ bool	dataman::get_nextline(sysapi::socket_in::handle_t hdl_con,
   if (blk == NULL)
     return false;
 
+  cout << "GETTIN LINE" << endl;
+
   if (getline(blk) == true)
     {
       *line = blk->line_;
       blk->line_ = 0;
+      cout << "GETTIN LINE DONE" << endl;
       return true;
     }
 
@@ -248,9 +251,12 @@ bool	dataman::get_nextline(sysapi::socket_in::handle_t hdl_con,
 	{
 	  *line = blk->line_;
 	  blk->line_ = 0;
+	  cout << "GETTIN LINE DONE" << endl;
 	  return true;
 	}
     }
+
+  cout << "GETTIN LINE DONE" << endl;
 
   return false;
 }
