@@ -5,12 +5,12 @@
 // Login   <@epita.fr>
 //
 // Started on  Thu Dec 01 11:51:59 2005 Bigand Xavier
-// Last update Thu Dec 01 17:05:38 2005 Bigand Xavier
+// Last update Tue Dec 06 22:59:16 2005 Bigand Xavier
 //
 
 #include "SmartTree.hh"
 
-void	SmartTree::FillData(TiXmlNode *pCurrentContainer, string &sName, map<string, string> &mAttributes)
+void	SmartTree::FillData(TiXmlNode *pCurrentContainer, string &sName, string &sValue, map<string, string> &mAttributes)
 {
   TiXmlElement		*pCurrentElement;
   TiXmlAttribute	*pCurrentAttribute;
@@ -23,64 +23,64 @@ void	SmartTree::FillData(TiXmlNode *pCurrentContainer, string &sName, map<string
 	   pCurrentAttribute = pCurrentAttribute->Next())
 	mAttributes[pCurrentAttribute->Name()] = pCurrentAttribute->Value();
     }
+  else if (pCurrentContainer->ToText())
+    sValue = pCurrentContainer->ValueStr();
 }
 
-void	SmartTree::BuildTree(TiXmlNode *pBeginContainer, string &sName, map<string, string> &mAttributes)
+void	SmartTree::BuildTree(TiXmlNode *pBeginContainer, string &sName, string &sValue, map<string, string> &mAttributes)
 {
   TiXmlNode	*pCurrentContainer;
   SmartTree	*pCurrent;
 
-  FillData(pBeginContainer, this->_sName, this->_mAttributes);
-  if ((pCurrentContainer = pBeginContainer->FirstChild()))
+  if (pBeginContainer)
     {
-      this->_Child = new SmartTree();
-      pCurrent = this->_Child;
-      pCurrent->BuildTree(pCurrentContainer, pCurrent->_sName, pCurrent->_mAttributes);
-    }
-  for (pCurrentContainer = pBeginContainer;
-       pCurrentContainer;
-       pCurrentContainer = pCurrentContainer->NextSibling())
-    {
-      this->_Brother = new SmartTree();
-      pCurrent = this->_Brother;
-      pCurrent->BuildTree(pCurrentContainer, pCurrent->_sName, pCurrent->_mAttributes);
+      FillData(pBeginContainer, this->_sName, this->_sValue, this->_mAttributes);
+      if ((pCurrentContainer = pBeginContainer->FirstChild()))
+	{
+	  this->_pChild = new SmartTree();
+	  pCurrent = this->_pChild;
+	  pCurrent->BuildTree(pCurrentContainer, pCurrent->_sName, pCurrent->_sValue, pCurrent->_mAttributes);
+	}
+      for (pCurrentContainer = pBeginContainer->NextSibling();
+	   pCurrentContainer;
+	   pCurrentContainer = pCurrentContainer->NextSibling())
+	{
+	  this->_pBrother = new SmartTree();
+	  pCurrent = this->_pBrother;
+	  pCurrent->BuildTree(pCurrentContainer, pCurrent->_sName, pCurrent->_sValue, pCurrent->_mAttributes);
+	}
     }
 }
 
 SmartTree::SmartTree()
 {
-  _Child = NULL;
-  _Brother = NULL;
+  _pChild = NULL;
+  _pBrother = NULL;
+  _pCurrent = this;
+  _bFirst = true;
 }
 
 SmartTree::~SmartTree()
 {
-  delete _Child;
-  delete _Brother;
+  delete _pChild;
+  delete _pBrother;
 }
 
 void	SmartTree::AddBrother(TiXmlNode *pCurrentContainer)
 {
-  SmartTree	*pCurrent;
-
-  if (pCurrentContainer->ToElement())
+  if (pCurrentContainer->Type() == TiXmlNode::ELEMENT)
     {
-
-      for (pCurrent = this;
-	   pCurrent->_Child && !pCurrent->_sName.empty();
-	   pCurrent = pCurrent->_Child)
-	;
-      if (!pCurrent->_Child && !pCurrent->_sName.empty())
+     if (!_pCurrent->_pChild && !_pCurrent->_sName.empty())
 	{
-	  pCurrent->_Child = new SmartTree();
-	  pCurrent = pCurrent->_Child;
+	  _pCurrent->_pChild = new SmartTree();
+	  _pCurrent = _pCurrent->_pChild;
 	}
-      FillData(pCurrentContainer, pCurrent->_sName, pCurrent->_mAttributes);
+      FillData(pCurrentContainer, _pCurrent->_sName, _pCurrent->_sValue, _pCurrent->_mAttributes);
       if (pCurrentContainer->FirstChild())
 	{
-	  pCurrent->_Brother = new SmartTree();
-	  pCurrent = pCurrent->_Brother;
-	  pCurrent->BuildTree(pCurrentContainer->FirstChild(), pCurrent->_sName, pCurrent->_mAttributes);
+	  _pCurrent->_pBrother = new SmartTree();
+	  _pCurrent = _pCurrent->_pBrother;
+	  _pCurrent->BuildTree(pCurrentContainer->FirstChild(), _pCurrent->_sName, _pCurrent->_sValue, _pCurrent->_mAttributes);
 	}
     }
 }

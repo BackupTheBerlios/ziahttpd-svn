@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Thu Dec 01 11:49:44 2005 Bigand Xavier
-// Last update Thu Dec 01 16:27:50 2005 Bigand Xavier
+// Last update Tue Dec 06 22:58:55 2005 Bigand Xavier
 //
 
 #ifndef __SmartTree_H__
@@ -24,11 +24,13 @@ private:
   string		_sName;
   string		_sValue;
   map<string, string>	_mAttributes;
-  SmartTree		*_Child;
-  SmartTree		*_Brother;
+  SmartTree		*_pChild;
+  SmartTree		*_pBrother;
+  static SmartTree	*_pCurrent;
+  static bool		_bFirst;
 
-  void	FillData(TiXmlNode *pCurrentContainer, string &Name, map<string, string> &mAttributes);
-  void	BuildTree(TiXmlNode *pCurrentContainer, string &Name, map<string, string> &mAttributes);
+  void	FillData(TiXmlNode *pCurrentContainer, string &sName, string &sValue, map<string, string> &mAttributes);
+  void	BuildTree(TiXmlNode *pCurrentContainer, string &sName, string &sValue, map<string, string> &mAttributes);
 
 public:
   SmartTree();
