@@ -5,10 +5,13 @@
 // Login   <@epita.fr>
 //
 // Started on  Thu Dec 01 11:51:59 2005 Bigand Xavier
-// Last update Tue Dec 06 22:59:16 2005 Bigand Xavier
+// Last update Wed Dec 07 11:09:18 2005 Bigand Xavier
 //
 
 #include "SmartTree.hh"
+
+SmartTree	*SmartTree::_pCurrent = NULL;
+bool		SmartTree::_bFirst = true;
 
 void	SmartTree::FillData(TiXmlNode *pCurrentContainer, string &sName, string &sValue, map<string, string> &mAttributes)
 {

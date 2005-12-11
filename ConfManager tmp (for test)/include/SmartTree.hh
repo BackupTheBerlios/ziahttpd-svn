@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Thu Dec 01 11:49:44 2005 Bigand Xavier
-// Last update Tue Dec 06 22:58:55 2005 Bigand Xavier
+// Last update Wed Dec 07 11:08:14 2005 Bigand Xavier
 //
 
 #ifndef __SmartTree_H__
