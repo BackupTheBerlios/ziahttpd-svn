@@ -124,6 +124,9 @@
 				RelativePath=".\src\ConfManager.cc">
 			</File>
 			<File
+				RelativePath=".\src\Getopt.cpp">
+			</File>
+			<File
 				RelativePath=".\src\main.cpp">
 			</File>
 			<File
@@ -139,6 +142,9 @@
 			</File>
 			<File
 				RelativePath=".\include\ConfManager.hh">
+			</File>
+			<File
+				RelativePath=".\include\Getopt.hh">
 			</File>
 			<File
 				RelativePath=".\include\SmartTree.hh">
