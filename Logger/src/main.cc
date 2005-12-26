@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Mon Dec 26 12:43:42 2005 Bigand Xavier
-// Last update Mon Dec 26 16:12:40 2005 Bigand Xavier
+// Last update Mon Dec 26 16:51:11 2005 Bigand Xavier
 //
 
 #include "Logger.hh"

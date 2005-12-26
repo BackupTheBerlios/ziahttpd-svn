@@ -142,6 +142,9 @@
 			<File
 				RelativePath=".\include\Logger.hh">
 			</File>
+			<File
+				RelativePath=".\include\ManageFlow.hh">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

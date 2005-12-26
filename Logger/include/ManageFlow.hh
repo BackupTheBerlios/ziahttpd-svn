@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Mon Dec 26 17:16:04 2005 Bigand Xavier
-// Last update Mon Dec 26 17:26:16 2005 Bigand Xavier
+// Last update Mon Dec 26 17:42:19 2005 Bigand Xavier
 //
 
 #ifndef __ManageFlow_H__
@@ -19,9 +19,9 @@ class	ManageFlow
 protected:
 
 public :
-  bool	open(std::string sStr) = 0;
-  bool	write(std::string sStr) = 0;
-  bool	close() = 0;
+  virtual bool	Open(std::string sStr) = 0;
+  virtual bool	Write(std::string sStr) = 0;
+  virtual bool	Close() = 0;
 };
 
 #endif // __ManageFlow_H__
