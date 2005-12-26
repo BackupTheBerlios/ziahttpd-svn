@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Mon Dec 26 12:44:16 2005 Bigand Xavier
-// Last update Mon Dec 26 17:45:26 2005 Bigand Xavier
+// Last update Mon Dec 26 17:58:43 2005 Bigand Xavier
 //
 
 #ifndef __Logger_H__
@@ -37,11 +37,16 @@
 
 #define STR_SIZE	512
 
+#define UNKNOWN		-1
+#define WRONG_TYPE	0
+#define	WRITE_ERROR	1
+
 class	Logger
 {
 private:
   size_t	tStrSize;
   bool		bError;
+  int		iError;
   ManageFlow	*Flow[NB_TYPE];
 
 public:
@@ -55,6 +60,7 @@ public:
 	if (iType >= NB_TYPE || iType < 0)
 	  {
 	    bError = true;
+	    iError = WRONG_TYPE;
 	    return ;
 	  }
 
@@ -65,6 +71,8 @@ public:
 	va_start(tParam, sStr);
 	vsnprintf(pRes, tStrSize, sStr.c_str(), tParam);
 	bError = Flow[iType]->Write(pRes);
+	if (bError)
+	  iError = WRITE_ERROR;
 	//std::cout << pRes;
 	va_end(tParam);
 	delete[] pRes;
@@ -88,6 +96,8 @@ public:
     tStrSize = tLen;
     return true;
   };
+
+  int	GetError() {return iError;};
 };
 
 #endif // __Logger_H__
