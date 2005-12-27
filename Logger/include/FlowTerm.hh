@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Tue Dec 27 16:10:42 2005 Bigand Xavier
-// Last update Tue Dec 27 16:21:28 2005 Bigand Xavier
+// Last update Tue Dec 27 17:08:33 2005 Bigand Xavier
 //
 
 #ifndef __FlowTerm_H__
@@ -19,10 +19,14 @@
 class	FlowTerm : public ManageFlow
 {
 public:
-  FlowTerm();
-  ~FlowTerm();
+  FlowTerm() {};
+  ~FlowTerm() {};
 
-  bool	Write(std::string sStr);
+  bool	Write(std::string sStr)
+  {
+    std::cout << sStr;
+    return true;
+  };
 };
 
 #endif // __FlowTerm_H__
