@@ -5,7 +5,7 @@
 // Login   <@epita.fr>
 //
 // Started on  Mon Dec 26 12:44:16 2005 Bigand Xavier
-// Last update Mon Dec 26 17:58:43 2005 Bigand Xavier
+// Last update Tue Dec 27 15:33:27 2005 Bigand Xavier
 //
 
 #ifndef __Logger_H__
@@ -40,64 +40,84 @@
 #define UNKNOWN		-1
 #define WRONG_TYPE	0
 #define	WRITE_ERROR	1
+#define OPEN_ERROR	2
 
 class	Logger
 {
 private:
-  size_t	tStrSize;
-  bool		bError;
-  int		iError;
-  ManageFlow	*Flow[NB_TYPE];
+  size_t	_tStrSize;
+  bool		_bError;
+  int		_iError;
+  ManageFlow	*_Flow[NB_TYPE];
 
 public:
   Logger();
   ~Logger();
 
-  void	Log(int iType, std::string sStr, ...)
+  void		Log(int iType, std::string sStr, ...)
   {
     if (iType >= LOGGER_STATE)
       {
 	if (iType >= NB_TYPE || iType < 0)
 	  {
-	    bError = true;
-	    iError = WRONG_TYPE;
+	    _bError = true;
+	    _iError = WRONG_TYPE;
 	    return ;
 	  }
 
 	va_list	tParam;
-	char	*pRes = new char[tStrSize];
+	char	*pRes = new char[_tStrSize];
 
-	memset(pRes, 0, tStrSize);
+	memset(pRes, 0, _tStrSize);
 	va_start(tParam, sStr);
-	vsnprintf(pRes, tStrSize, sStr.c_str(), tParam);
-	bError = Flow[iType]->Write(pRes);
-	if (bError)
-	  iError = WRITE_ERROR;
-	//std::cout << pRes;
+	vsnprintf(pRes, _tStrSize, sStr.c_str(), tParam);
+	_bError = _Flow[iType]->Write(pRes);
+	if (_bError)
+	  _iError = WRITE_ERROR;
 	va_end(tParam);
 	delete[] pRes;
       }
   };
 
-  bool	Error()
+  void		SetFlow(int iType, ManageFlow &Flow)
   {
-    if (!bError)
+    if (iType >= LOGGER_STATE)
+      {
+	if (iType >= NB_TYPE || iType < 0)
+	  {
+	    _bError = true;
+	    _iError = WRONG_TYPE;
+	    return;
+	  }
+	delete _Flow[iType];
+	_Flow[iType] = &Flow;
+	if (!_Flow[iType]->Open())
+	  {
+	    _bError = true;
+	    _iError = OPEN_ERROR;
+	  }
+      }
+  }
+
+  bool		Error()
+  {
+    if (!_bError)
       return false;
-    bError = false;
+    _bError = false;
     return true;
   };
 
-  size_t	GetMaxLen() {return tStrSize;};
 
   bool		SetMaxLen(size_t tLen)
   {
     if (tLen <= 0)
       return false;
-    tStrSize = tLen;
+    _tStrSize = tLen;
     return true;
   };
 
-  int	GetError() {return iError;};
+  int		GetError() {return _iError;};
+  size_t	GetMaxLen() {return _tStrSize;};
 };
 
 #endif // __Logger_H__
