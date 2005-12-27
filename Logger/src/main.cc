@@ -5,11 +5,12 @@
 // Login   <@epita.fr>
 //
 // Started on  Mon Dec 26 12:43:42 2005 Bigand Xavier
-// Last update Tue Dec 27 16:28:36 2005 Bigand Xavier
+// Last update Tue Dec 27 17:21:39 2005 Bigand Xavier
 //
 
 #include "Logger.hh"
 #include "FlowTerm.hh"
+#include "FlowFile.hh"
 #include <iostream>
 
 #define MAX	1000
@@ -20,7 +21,7 @@ int	main(int ac, char **av)
 
   Logger	test;
   FlowTerm	Flow1;
-  FlowTerm	Flow2;
+  FlowFile	Flow2("./tmp.txt");
 
   test.SetFlow(INFO, Flow1);
   for (i = 0; i < MAX; i++)
