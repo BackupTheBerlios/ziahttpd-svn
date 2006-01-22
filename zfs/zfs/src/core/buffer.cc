@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Sun Jan 22 13:52:25 2006 texane
+// Last update Sun Jan 22 16:03:17 2006 texane
 //
 
 
@@ -234,7 +234,7 @@ void	buffer::size(size_t sz)
 
 // helper function
 
-inline static char to_printable(char c)
+inline static char to_printable(unsigned char c)
 {
   if (c > 32 && c <= 127)
     return c;
@@ -252,6 +252,7 @@ string	buffer::tostring(unsigned int windent,
   ostringstream wspc;
   ostringstream prnt;
   ostringstream strm;
+  unsigned int offset;
 
   for (unsigned int i = 0; i < windent; ++i)
     idnt << ' ';
@@ -262,7 +263,7 @@ string	buffer::tostring(unsigned int windent,
   for (unsigned int i = 0; i < wspace; ++i)
     wspc << ' ';
 
-  for (unsigned int offset = 0; offset < sz_; ++offset)
+  for (offset = 0; offset < sz_; ++offset)
     {
       if ((offset % wstep) == 0)
 	{

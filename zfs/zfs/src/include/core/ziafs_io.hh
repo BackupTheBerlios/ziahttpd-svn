@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Sun Jan 22 13:51:54 2006 texane
+// Last update Sun Jan 22 16:46:21 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 
 #include <list>
 #include <string>
+#include <sys/sysapi.hh>
 #include <core/ziafs_buffer.hh>
 #include <core/ziafs_status.hh>
 
@@ -57,9 +58,16 @@ namespace io
   {
     friend manager;
 
+    // ?
+    // resources are not created and opened
+    // at the same time, since the protocol will
+    // return a resource, and later the ioman
+    // will do the actual open on it.
+    // For instance, think about processs...
+
   public:
     // construction/destruction
-    resource();
+    resource(stmask);
     virtual ~resource() {}
 
     // Same for all
@@ -80,8 +88,11 @@ namespace io
     // Manager related informations
     restype m_rtype;
     stmask m_state;
+    stmask m_openmod;
     iomask m_pending;
     int m_refcount;
+    buffer m_fetch_buf;
+    buffer m_feed_buf;
   };
 }
 
@@ -92,6 +103,7 @@ namespace io
   class res_file : public resource
   {
   public:
+    res_file(stmask, const std::string&);
     ~res_file();
     status::error io_on_open();
     status::error io_on_close();
@@ -100,6 +112,13 @@ namespace io
     status::error io_on_expire();
     status::error io_has_expired(bool&) const;
     status::error dump(buffer&) const;
+
+  private:
+    // openmode_t m_omode;
+    std::string m_path;
+    unsigned int m_nrtoread;
+    unsigned long m_filesz;
+    sysapi::file::handle_t m_hfile;
   };
 }
 

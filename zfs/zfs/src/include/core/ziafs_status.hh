@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:22:54 2006 texane
-// Last update Sun Jan 22 00:59:20 2006 texane
+// Last update Sun Jan 22 16:27:28 2006 texane
 //
 
 
@@ -35,6 +35,7 @@ namespace status
     {
       SUCCESS = 0,
       NOTIMPL,
+      BADMODE,
       UNKOWN
     } error;
 
