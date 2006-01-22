@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 20:39:38 2005 texane
-## Last update Sun Jan 22 13:42:29 2006 texane
+## Last update Sun Jan 22 17:31:28 2006 texane
 ##
 
 # ! Always include this file
@@ -16,12 +16,19 @@
 name	= ziafs.x
 srcs	= src$(SLASH)core$(SLASH)main.cc \
 	  src$(SLASH)core$(SLASH)server.cc \
+	  src$(SLASH)core$(SLASH)config.cc \
 	  src$(SLASH)core$(SLASH)buffer.cc \
 	  src$(SLASH)core$(SLASH)error.cc \
 	  src$(SLASH)core$(SLASH)ioman.cc \
 	  src$(SLASH)core$(SLASH)session.cc \
 	  src$(SLASH)core$(SLASH)iores.cc \
-	  src$(SLASH)core$(SLASH)iores_file.cc
+	  src$(SLASH)core$(SLASH)iores_file.cc \
+	  src$(SLASH)sys$(SLASH)win32$(SLASH)file.cc \
+	  src$(SLASH)sys$(SLASH)win32$(SLASH)error.cc \
+	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxmlparser.cc \
+	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxmlerror.cc \
+	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxml.cc \
+	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinystr.cc
 # 	  src$(SLASH)core$(SLASH)iores_proc.cc
 # 	  src$(SLASH)core$(SLASH)iores_mem.cc
 # 	  src$(SLASH)core$(SLASH)iores_insock.cc
