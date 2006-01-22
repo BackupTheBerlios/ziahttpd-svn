@@ -16,7 +16,10 @@
 #include <string>
 #include <core/ziafs_buffer.hh>
 #include <core/ziafs_status.hh>
-
+// + Math
+#include <config/tinyxml.hh>
+#include <list>
+// - Math
 
 // Forward declarations
 namespace io { class resource; }
@@ -72,7 +75,7 @@ namespace net
   public:
     virtual ~protocol();
 
-    // protcol interface
+    // protocol interface
     virtual status::error consume(buffer&) = 0;
     virtual status::error produce(buffer&) = 0;
   };
@@ -83,14 +86,49 @@ namespace net
   };
 }
 
+// + Math
+
+// HOW TO USE
+
+//net::config	conf((std::string)"../test/root/config/test.xml");
+//std::list<net::config::protocol*>::iterator t;
+//conf.get_protocol(t);
+//while (!conf.end_protocol(t))
+//{
+//	std::cout << (*t)->port << std::endl;
+//	t++;
+//}
+
+
+
 
 namespace net
 {
   class config
   {
-	  config(buffer&);
+  public:
+	  struct protocol
+	  {
+		  int			id;
+		  int			port;
+		  std::string	type;
+	  };
+  public:
+	  config(std::string &);
+	  config();
+	  config(char **);
+	  bool		reset();
+	  bool		get_protocol(std::list<protocol*>::iterator&);
+	  bool		end_protocol(const std::list<protocol*>::iterator&);
+  private:
+	  bool			load_default();
+	  bool			parse();
+	  TiXmlDocument m_xmldoc;
+	  TiXmlNode*	m_xmlnode;
+	  bool			parse_protocol();
+	  std::list<protocol*>	m_lprotocol;
   };
 }
-
+// - Math
 
 #endif // ! ZIAFS_NET_HH

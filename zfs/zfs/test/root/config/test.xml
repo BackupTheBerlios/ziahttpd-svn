@@ -1,0 +1,13 @@
+<?xml version="1.0" standalone=no>
+
+<protocol>
+  <id>1</id>
+  <type>http</type>
+  <port>80</port>
+</protocol>
+
+<protocol>
+  <id>1</id>
+  <port>443</port>
+  <type>https</type>
+</protocol>

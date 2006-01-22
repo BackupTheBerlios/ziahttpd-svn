@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src/include/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;TIXML_USE_STL"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
@@ -33,6 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="tinyxmld_STL.lib"
 				OutputFile="$(OutDir)../../../src/ziafs_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\lib"
@@ -70,7 +71,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../src/include/"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;TIXML_USE_STL"
 				RuntimeLibrary="4"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -80,12 +81,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="tinyxml_STL.lib"
 				OutputFile="$(OutDir)../../../src/ziafs.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../lib"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				EntryPointSymbol=""
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -114,7 +118,7 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			Filter="cc;cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
 				RelativePath=".\remove.cpp">
@@ -124,6 +128,9 @@
 				Filter="">
 				<File
 					RelativePath="..\src\core\buffer.cc">
+				</File>
+				<File
+					RelativePath="..\src\core\config.cc">
 				</File>
 				<File
 					RelativePath="..\src\core\error.cc">
@@ -150,13 +157,13 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<Filter
-				Name="conf"
+				Name="config"
 				Filter="">
 				<File
-					RelativePath="..\src\include\conf\tinystr.hh">
+					RelativePath="..\src\include\config\tinystr.hh">
 				</File>
 				<File
-					RelativePath="..\src\include\conf\tinyxml.hh">
+					RelativePath="..\src\include\config\tinyxml.hh">
 				</File>
 			</Filter>
 			<Filter

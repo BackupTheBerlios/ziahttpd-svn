@@ -22,7 +22,6 @@ int main(int ac, char** av)
   buffer buf;
 
   man.create(res, ST_FEEDING, "toto.out");
-
   while (res->fetch(buf) == SUCCESS)
     {
       std::cout << buf.tostring() << std::endl;
