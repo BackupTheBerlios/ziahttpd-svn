@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Sun Jan 22 13:52:03 2006 texane
+// Last update Sun Jan 22 17:41:05 2006 texane
 //
 
 
@@ -16,10 +16,8 @@
 #include <string>
 #include <core/ziafs_buffer.hh>
 #include <core/ziafs_status.hh>
-// + Math
 #include <config/tinyxml.hh>
 #include <list>
-// - Math
 
 // Forward declarations
 namespace io { class resource; }
@@ -36,13 +34,18 @@ namespace net
   public:
     server(config*);
     server(char**);
-    server(std::string&);
+    server(const std::string&);
     ~server();
+
+    status::error process_requests();
 
   private:
     // internal data
     config* m_config;
     io::manager* m_ioman;
+
+    // internal state
+    bool m_done;
 
     // internal management routines
     void reset();
@@ -86,21 +89,6 @@ namespace net
   };
 }
 
-// + Math
-
-// HOW TO USE
-
-//net::config	conf((std::string)"../test/root/config/test.xml");
-//std::list<net::config::protocol*>::iterator t;
-//conf.get_protocol(t);
-//while (!conf.end_protocol(t))
-//{
-//	std::cout << (*t)->port << std::endl;
-//	t++;
-//}
-
-
-
 
 namespace net
 {
@@ -130,6 +118,5 @@ namespace net
 	  std::list<protocol*>	m_lprotocol;
   };
 }
-// - Math
 
 #endif // ! ZIAFS_NET_HH
