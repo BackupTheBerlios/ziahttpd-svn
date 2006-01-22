@@ -114,8 +114,9 @@ namespace net
 		  std::string	type;
 	  };
   public:
-	  config(std::string &);
+	  config(const std::string &);
 	  config();
+	  ~config();
 	  config(char **);
 	  bool		reset();
 	  bool		get_protocol(std::list<protocol*>::iterator&);
