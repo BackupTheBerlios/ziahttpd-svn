@@ -54,12 +54,23 @@ bool	net::config::reset()
 
 bool	net::config::parse()
 {
+	struct	key
+	{
+		std::string	keyword;
+		bool	(net::config::*fct)();
+	};
+	key	key_s[] = {
+		{"protocol", parse_protocol},
+		{"", NULL}
+	};
+	int	i;
 	for(m_xmlnode = m_xmldoc.FirstChild();
 		m_xmlnode;
 		m_xmlnode = m_xmlnode->NextSibling() )
 	{
-		if (m_xmlnode->ValueStr() == "protocol")
-			parse_protocol();
+		for (i = 0; key_s[i].fct; i++)
+			if (m_xmlnode->ValueStr() == key_s[i].keyword)
+				parse_protocol();
 	}
 	return (true);
 }

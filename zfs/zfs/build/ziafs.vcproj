@@ -191,6 +191,18 @@
 			<Filter
 				Name="sys"
 				Filter="">
+				<File
+					RelativePath="..\src\include\sys\common_api.hh">
+				</File>
+				<File
+					RelativePath="..\src\include\sys\posix_api.hh">
+				</File>
+				<File
+					RelativePath="..\src\include\sys\sysapi.hh">
+				</File>
+				<File
+					RelativePath="..\src\include\sys\win32_api.hh">
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
