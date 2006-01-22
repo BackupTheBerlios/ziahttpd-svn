@@ -88,6 +88,7 @@ namespace net
 {
   class config
   {
+	  config(buffer&);
   };
 }
 
