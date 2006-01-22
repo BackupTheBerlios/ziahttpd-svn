@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Sun Jan 22 03:14:45 2006 texane
+// Last update Sun Jan 22 13:51:54 2006 texane
 //
 
 
@@ -15,8 +15,8 @@
 
 #include <list>
 #include <string>
-#include <ziafs_buffer.hh>
-#include <ziafs_status.hh>
+#include <core/ziafs_buffer.hh>
+#include <core/ziafs_status.hh>
 
 
 namespace io

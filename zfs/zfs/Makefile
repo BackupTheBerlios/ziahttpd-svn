@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 20:39:38 2005 texane
-## Last update Sun Jan 22 03:11:37 2006 texane
+## Last update Sun Jan 22 13:42:29 2006 texane
 ##
 
 # ! Always include this file
@@ -15,6 +15,7 @@
 # Give your own variables here
 name	= ziafs.x
 srcs	= src$(SLASH)core$(SLASH)main.cc \
+	  src$(SLASH)core$(SLASH)server.cc \
 	  src$(SLASH)core$(SLASH)buffer.cc \
 	  src$(SLASH)core$(SLASH)error.cc \
 	  src$(SLASH)core$(SLASH)ioman.cc \

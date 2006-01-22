@@ -5,12 +5,12 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 00:16:46 2006 texane
-// Last update Sun Jan 22 03:17:14 2006 texane
+// Last update Sun Jan 22 13:53:15 2006 texane
 //
 
 
 #include <iostream>
-#include <ziafs.hh>
+#include <core/ziafs.hh>
 
 using namespace status;
 using namespace io;

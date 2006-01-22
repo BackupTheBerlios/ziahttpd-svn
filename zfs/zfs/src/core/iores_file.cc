@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 03:10:24 2006 texane
-// Last update Sun Jan 22 03:18:38 2006 texane
+// Last update Sun Jan 22 13:53:08 2006 texane
 //
 
 
@@ -13,8 +13,8 @@
 
 
 #include <string>
-#include <ziafs_io.hh>
-#include <ziafs_status.hh>
+#include <core/ziafs_io.hh>
+#include <core/ziafs_status.hh>
 
 
 using std::string;

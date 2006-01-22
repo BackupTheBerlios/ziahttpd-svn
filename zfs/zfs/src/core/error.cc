@@ -5,14 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 00:20:24 2006 texane
-// Last update Sun Jan 22 00:55:26 2006 texane
+// Last update Sun Jan 22 13:52:31 2006 texane
 //
 
 
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <ziafs_status.hh>
+#include <core/ziafs_status.hh>
 
 
 using std::cerr;

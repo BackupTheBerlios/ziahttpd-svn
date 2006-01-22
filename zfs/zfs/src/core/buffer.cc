@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Sun Jan 22 01:08:22 2006 texane
+// Last update Sun Jan 22 13:52:25 2006 texane
 //
 
 
@@ -13,7 +13,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cstring>
-#include <ziafs_buffer.hh>
+#include <core/ziafs_buffer.hh>
 
 
 using std::setfill;

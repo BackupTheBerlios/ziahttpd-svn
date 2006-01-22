@@ -5,22 +5,23 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:59:38 2006 texane
-// Last update Sun Jan 22 03:04:03 2006 texane
+// Last update Sun Jan 22 13:53:27 2006 texane
 //
 
 
-#include <ziafs_io.hh>
-#include <ziafs_net.hh>
-#include <ziafs_status.hh>
+#include <core/ziafs_io.hh>
+#include <core/ziafs_net.hh>
+#include <core/ziafs_status.hh>
 
 
 using namespace io;
 using namespace net;
 
 
-session::session(resource* client)
+session::session(resource* client, config* config)
 {
-  m_client = 0;
+  m_client = client;
+  m_config = config;
   m_target = 0;
   m_proto = 0;
 }
@@ -28,6 +29,8 @@ session::session(resource* client)
 
 session::~session()
 {
+  // Config is global, so
+  // don't release it here.
   if (m_client)
     delete m_client;
   if (m_target)
