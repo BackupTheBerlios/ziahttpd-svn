@@ -20,15 +20,7 @@ int main(int ac, char** av)
   manager man;
   resource* res;
   buffer buf;
-  net::config	conf((std::string)"../test/root/config/test.xml");
-  std::list<net::config::protocol*>::iterator t;
-  conf.get_protocol(t);
-  while (!conf.end_protocol(t))
-  {
-	  std::cout << (*t)->port << std::endl;
-	  t++;
-  }
-  getchar();
+
   man.create(res, ST_FEEDING, "toto.out");
   while (res->fetch(buf) == SUCCESS)
     {
