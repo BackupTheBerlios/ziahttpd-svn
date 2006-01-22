@@ -71,7 +71,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../src/include/"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;TIXML_USE_STL"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;TIXML_USE_STL;ZIA_DEBUG_MSG"
 				RuntimeLibrary="4"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

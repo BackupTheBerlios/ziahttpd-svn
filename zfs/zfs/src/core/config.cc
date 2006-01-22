@@ -79,7 +79,6 @@ bool	net::config::parse_protocol()
 {
 	protocol	*p = new protocol;
 	TiXmlElement*	xmltmp;
-	
 
 	for(xmltmp = m_xmlnode->FirstChildElement();
 		xmltmp;
@@ -92,8 +91,16 @@ bool	net::config::parse_protocol()
 		if (xmltmp->ValueStr() == "type")
 			p->type = xmltmp->GetText();
 	}
-	m_lprotocol.push_front(p);
+	std::list<protocol *>::iterator i;
 
+	for(i = m_lprotocol.begin(); i != m_lprotocol.end(); ++i)
+		if ((*i)->port == p->port)
+		{
+			(*i)->type = p->type;
+			(*i)->id = p->id;
+			return (true);
+		}
+	m_lprotocol.push_front(p);	
 	return (true);
 }
 
