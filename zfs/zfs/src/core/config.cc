@@ -42,6 +42,7 @@ bool	net::config::load_default()
 		"</protocol>";
 
 	m_xmldoc.Parse(def_conf);
+	parse();
 	return (true);
 }
 
@@ -97,4 +98,3 @@ bool	net::config::end_protocol(const std::list<protocol*>::iterator &it)
 		return (false);
 	return (true);
 }
-							

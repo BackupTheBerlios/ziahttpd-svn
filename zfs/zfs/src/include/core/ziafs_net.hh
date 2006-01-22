@@ -115,6 +115,7 @@ namespace net
 	  TiXmlDocument m_xmldoc;
 	  TiXmlNode*	m_xmlnode;
 	  bool			parse_protocol();
+
 	  std::list<protocol*>	m_lprotocol;
   };
 }
