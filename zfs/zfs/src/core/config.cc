@@ -1,12 +1,13 @@
 #include <core/ziafs_net.hh>
 #include <iostream>
+#include <core/ziafs_debug.hh>
 
 net::config::config(const std::string &config_file)
 {
 	load_default();
 	if (!m_xmldoc.LoadFile(config_file.c_str(), TIXML_DEFAULT_ENCODING))
 	{
-		std::cout << "ERR" << std::endl;
+		ziafs_debug_msg("File not found :%s\n", config_file.c_str());
 		return ;
 	}
 	parse();
@@ -39,7 +40,11 @@ bool	net::config::load_default()
 		"<id>1</id>"
 		"<type>http</type>"
 		"<port>80</port>"
-		"</protocol>";
+		"</protocol>"
+		"<directory id=1>"
+		"<servername></servername>"
+		"<docroot>test/www/</docroot>"
+		"</directory>";
 
 	m_xmldoc.Parse(def_conf);
 	parse();
@@ -48,29 +53,24 @@ bool	net::config::load_default()
 
 bool	net::config::reset()
 {
+	m_ldirectory.clear();
+	m_lprotocol.clear();
 	load_default();
 	return (true);
 }
 
 bool	net::config::parse()
 {
-	struct	key
-	{
-		std::string	keyword;
-		bool	(net::config::*fct)();
-	};
-	key	key_s[] = {
-		{"protocol", parse_protocol},
-		{"", NULL}
-	};
+	key	key_s[] = {"protocol", "directory", ""};
+	pFunc funcArray[] = {&net::config::parse_protocol, &net::config::parse_directory};
 	int	i;
 	for(m_xmlnode = m_xmldoc.FirstChild();
 		m_xmlnode;
 		m_xmlnode = m_xmlnode->NextSibling() )
 	{
-		for (i = 0; key_s[i].fct; i++)
+		for (i = 0; !key_s[i].keyword.empty(); i++)
 			if (m_xmlnode->ValueStr() == key_s[i].keyword)
-				parse_protocol();
+				(this->*funcArray[i])();
 	}
 	return (true);
 }
@@ -98,9 +98,48 @@ bool	net::config::parse_protocol()
 		{
 			(*i)->type = p->type;
 			(*i)->id = p->id;
+			delete	p;
 			return (true);
 		}
 	m_lprotocol.push_front(p);	
+	return (true);
+}
+
+bool	net::config::parse_directory()
+{
+	directory		*d = new directory;
+	TiXmlElement*	xmltmp;
+
+	d->servername = "";
+	d->docroot = "./";
+	xmltmp = m_xmlnode->ToElement();
+	d->id = atoi(xmltmp->FirstAttribute()->Value());
+
+	for(xmltmp = m_xmlnode->FirstChildElement();
+		xmltmp;
+		xmltmp = xmltmp->NextSiblingElement())
+	{
+		if (xmltmp->ValueStr() == "servername" && xmltmp->GetText())
+			d->servername = xmltmp->GetText();
+		if (xmltmp->ValueStr() == "docroot")
+		{
+			d->docroot = xmltmp->GetText();
+			if (d->docroot[d->docroot.length() - 1] != '/')
+				d->docroot += "/";
+		}
+	}
+
+	std::list<directory*>::iterator i;
+	
+	for(i = m_ldirectory.begin(); i != m_ldirectory.end(); ++i)
+		if ((*i)->id == d->id)
+		{
+			(*i)->docroot = d->docroot;
+			(*i)->servername = d->servername;
+			delete	d;
+			return (true);
+		}
+	m_ldirectory.push_front(d);	
 	return (true);
 }
 
@@ -114,5 +153,23 @@ bool	net::config::end_protocol(const std::list<protocol*>::iterator &it)
 {
 	if (it != m_lprotocol.end())
 		return (false);
+	return (true);
+}
+
+bool	net::config::get_directory(std::list<directory*>::iterator &it)
+{
+	it = m_ldirectory.begin();
+	return (true);
+}
+
+bool	net::config::end_directory(const std::list<directory*>::iterator &it)
+{
+	if (it != m_ldirectory.end())
+		return (false);
+	return (true);
+}
+
+bool	net::config::dump(buffer &buf)
+{
 	return (true);
 }

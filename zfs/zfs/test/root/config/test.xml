@@ -7,7 +7,12 @@
 </protocol>
 
 <protocol>
-  <id>1</id>
+  <id>2</id>
   <port>443</port>
   <type>https</type>
 </protocol>
+
+<directory id=1>
+  <servername></servername>
+  <docroot>test/www/</docroot>
+</directory>

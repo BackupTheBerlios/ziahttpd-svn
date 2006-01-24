@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src/include/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;TIXML_USE_STL"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;TIXML_USE_STL;ZIAFS_DEBUG_ERROR;ZIAFS_LOG_ERROR;ZIAFS_DEBUG_MSG"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
@@ -136,6 +136,9 @@
 					RelativePath="..\src\core\error.cc">
 				</File>
 				<File
+					RelativePath="..\src\core\http.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\ioman.cc">
 				</File>
 				<File
@@ -149,6 +152,9 @@
 				</File>
 				<File
 					RelativePath="..\src\core\session.cc">
+				</File>
+				<File
+					RelativePath="..\src\core\zia_stringmanager.cc">
 				</File>
 			</Filter>
 		</Filter>
@@ -170,10 +176,16 @@
 				Name="core"
 				Filter="">
 				<File
+					RelativePath="..\src\include\core\zia_stringmanager.hh">
+				</File>
+				<File
 					RelativePath="..\src\include\core\ziafs.hh">
 				</File>
 				<File
 					RelativePath="..\src\include\core\ziafs_buffer.hh">
+				</File>
+				<File
+					RelativePath="..\src\include\core\ziafs_debug.hh">
 				</File>
 				<File
 					RelativePath="..\src\include\core\ziafs_io.hh">
