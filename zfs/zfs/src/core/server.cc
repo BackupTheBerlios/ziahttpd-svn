@@ -5,19 +5,18 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Sun Jan 22 17:47:18 2006 texane
+// Last update Wed Jan 25 14:19:02 2006 texane
 //
 
 
 #include <list>
 #include <string>
-#include <iostream>
 #include <core/ziafs_io.hh>
 #include <core/ziafs_net.hh>
+#include <core/ziafs_status.hh>
+#include <sys/sysapi.hh>
 
 
-using std::cout;
-using std::endl;
 using std::string;
 using std::list;
 using namespace status;
@@ -26,53 +25,108 @@ using namespace status;
 void net::server::reset()
 {
   m_config = 0;
-  m_ioman = 0;
+  m_resman = 0;
   m_done = false;
 }
 
+void net::server::init()
+{
+  reset();
+  sysapi::insock::init_subsystem();
+}
+
+void net::server::release()
+{
+  list<session*>::iterator current = m_sessions.begin();
+  list<session*>::iterator last = m_sessions.end();
+
+  // release all the session
+  while (current != last)
+    {
+      // ! we should reap the resources
+      // + iomanager here...
+      delete *current;
+      ++current;
+    }
+
+  if (m_resman)
+    delete m_resman;
+  if (m_config)
+    delete m_config;
+
+  sysapi::insock::release_subsystem();
+}
+
+
+// Exported functions
 
 net::server::server(config* config)
 {
-  reset();
+  init();
   m_config = config;
+  m_resman = new io::res_manager;
 }
 
 
 net::server::server(char** av)
 {
-  reset();
+  init();
   m_config = new config(av);
+  m_resman = new io::res_manager;
 }
 
 
 net::server::server(const string& confpath)
 {
-  reset();
+  init();
   m_config = new config(confpath);
+  m_resman = new io::res_manager;
 }
 
 
 net::server::~server()
 {
-  delete m_config;
+  release();
 }
 
 
 status::error net::server::process_requests()
 {
-  // Process all the requests
   list<config::protocol*>::iterator it;
-  m_config->get_protocol(it);
+  list<session*>::iterator sess_current;
+  list<session*>::iterator sess_last;
+  net::session* sess_client;
+  io::resource* res_serv;
+  io::resource* res_client;
 
-  
+  // Create a resource foreach port
+  m_config->get_protocol(it);
   while (!m_config->end_protocol(it))
     {
-      cout << "port: " << (*it)->port << endl;
+      res_serv = new io::res_insock(io::ST_FETCHING, "localhost", 40000);
+      ziafs_print_object( *res_serv );
       ++it;
     }
 
+  // Get incoming connections
+  res_serv->io_on_open();
+  res_serv->io_on_read((void*&)res_client);
+
+  // Create a new session
+  sess_client = new session(res_client, m_config);
+  m_sessions.push_front(sess_client);
+
+  // Serve incoming requests
   while (m_done == false)
     {
+      sess_current = m_sessions.begin();
+      sess_last = m_sessions.end();
+      while (sess_current != sess_last)
+	{
+	  (*sess_current)->process();
+	  ++sess_current;
+	}
     }
-  ziafs_return_status( NOTIMPL );
+
+  ziafs_return_status( SUCCESS );
 }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Wed Jan 25 12:01:00 2006 texane
+// Last update Wed Jan 25 12:44:44 2006 texane
 //
 
 
@@ -33,8 +33,12 @@ namespace sys
 
 	  OPEN_FAILED,
 	  CLOSE_FAILED,
+	  READ_FAILED,
+	  WRITE_FAILED,
 	  INVALID_NAME,
 	  INVALID_DESCRIPTOR,
+
+	  CONNECTION_CLOSED,
 
 	  // unknown error
 	  UNKNOWN

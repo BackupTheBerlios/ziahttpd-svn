@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Wed Jan 25 12:15:44 2006 texane
+// Last update Wed Jan 25 12:44:07 2006 texane
 //
 
 
@@ -92,8 +92,8 @@ status::error io::res_insock::io_on_read(void*& pdata)
   sysapi::insock::handle_t hsock;
   resource* res;
   stmask omode;
+  unsigned int nread;
   int addrlen;
-  int nread;
 
   // This is an accepting socket,
   // reading means accetping an
@@ -114,10 +114,20 @@ status::error io::res_insock::io_on_read(void*& pdata)
     {
 # define BUFSZ 256
       buffer* buf = new buffer;
-
+      sysapi::error::handle_t herr;
       buf->resize(BUFSZ);
-      nread = ::recv(m_hsock, (char*)buf->bufptr(), (int)buf->size(), 0);
-      if (nread > 0)
+      herr = sysapi::insock::recv(m_hsock, buf->bufptr(), buf->size(), nread);
+      if (herr != sysapi::error::SUCCESS)
+	{
+	  if (herr == sysapi::error::CONNECTION_CLOSED)
+	    {
+	      // mark the resource as closing
+	      // go to the iomanager that will
+	      // close it.
+	    }
+	  else ziafs_return_status( CANNOT_READ );
+	}
+      else
 	{
 	  buf->resize(nread);
 	}

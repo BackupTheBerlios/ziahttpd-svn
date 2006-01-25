@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Sun Jan 22 17:41:05 2006 texane
+// Last update Wed Jan 25 14:11:22 2006 texane
 //
 
 
@@ -25,6 +25,8 @@ namespace io { class resource; }
 namespace io { class manager; };
 namespace net { class protocol; }
 namespace net { class config; }
+namespace net { class session; }
+namespace net { class server; }
 
 
 
@@ -43,25 +45,32 @@ namespace net
   private:
     // internal data
     config* m_config;
-    io::manager* m_ioman;
+    io::res_manager* m_resman;
+
+    // set of session
+    std::list<session*> m_sessions;
 
     // internal state
     bool m_done;
 
     // internal management routines
     void reset();
+    void init();
+    void release();
   };
 }
 
 namespace net
 {
+  friend class server;
+
   class session
   {
   public:
     session(io::resource* client, config*);
     ~session();
 
-    // Accessor
+    status::error process();
 
   private:
     io::resource* m_client;

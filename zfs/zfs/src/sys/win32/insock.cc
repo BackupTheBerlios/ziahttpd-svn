@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 10:35:30 2006 texane
-// Last update Wed Jan 25 12:01:05 2006 texane
+// Last update Wed Jan 25 12:39:32 2006 texane
 //
 
 
@@ -177,6 +177,13 @@ sysapi::error::handle_t sysapi::insock::accept(handle_t& hsock, struct sockaddr_
 
 sysapi::error::handle_t sysapi::insock::recv(handle_t& hsock, unsigned char* buf, unsigned int nbytes, unsigned int& nrecv)
 {
+  nrecv = ::recv(hsock, (char*)buf, (int)nbytes, 0);
+
+  if (nrecv < 0)
+    return error::READ_FAILED;
+  else if (nrecv == 0)
+    return error::CONNECTION_CLOSED;
+  
   return error::SUCCESS;
 }
 

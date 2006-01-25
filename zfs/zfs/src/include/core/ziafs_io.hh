@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Wed Jan 25 11:41:07 2006 texane
+// Last update Wed Jan 25 14:00:59 2006 texane
 //
 
 
@@ -23,7 +23,7 @@
 namespace io
 {
   // forward declaration
-  class manager;
+  class res_manager;
 
   // Creation mask
   typedef enum
@@ -57,7 +57,7 @@ namespace io
   // Resource base class
   class resource
   {
-    friend manager;
+    friend class res_manager;
 
     // ?
     // resources are not created and opened
@@ -166,12 +166,17 @@ namespace io
 
 namespace io
 {
-  class manager
+  class res_manager
   {
   public:
     // Factory
     status::error create(resource*&, stmask, const std::string&);
     status::error destruct(resource*);
+
+    status::error open(resource*);
+    status::error close(resource*);
+    status::error fetch(resource*);
+    status::error feed(resource*);
 
   private:
     std::list<resource*> resources;
