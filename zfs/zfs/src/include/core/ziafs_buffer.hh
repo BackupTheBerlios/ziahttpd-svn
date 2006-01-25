@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:35:20 2006 texane
-// Last update Sun Jan 22 01:08:03 2006 texane
+// Last update Wed Jan 25 12:13:31 2006 texane
 //
 
 
@@ -29,7 +29,7 @@ public:
   // mutators, to remove
   void buf(unsigned char*, size_t);
 
-  void size(size_t);
+  void resize(size_t);
 
   size_t size() const;
   char* c_str() const;
@@ -50,6 +50,7 @@ public:
 		       unsigned int = 3,
 		       unsigned int = 1,
 		       unsigned int = 16) const;
+  unsigned char* bufptr();
 
 private:
 

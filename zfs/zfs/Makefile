@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 20:39:38 2005 texane
-## Last update Tue Jan 24 23:51:47 2006 texane
+## Last update Wed Jan 25 10:56:15 2006 texane
 ##
 
 # ! Always include this file
@@ -24,9 +24,9 @@ srcs	= src$(SLASH)core$(SLASH)main.cc \
 	  src$(SLASH)core$(SLASH)iores.cc \
 	  src$(SLASH)core$(SLASH)iores_file.cc \
 	  src$(SLASH)core$(SLASH)iores_insock.cc \
-	  src$(SLASH)core$(SLASH)inet_utils.cc \
 	  src$(SLASH)sys$(SLASH)win32$(SLASH)file.cc \
 	  src$(SLASH)sys$(SLASH)win32$(SLASH)error.cc \
+	  src$(SLASH)sys$(SLASH)win32$(SLASH)insock.cc \
 	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxmlparser.cc \
 	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxmlerror.cc \
 	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxml.cc \

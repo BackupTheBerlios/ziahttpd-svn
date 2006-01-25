@@ -5,14 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Wed Jan 25 01:23:39 2006 texane
+// Last update Wed Jan 25 12:15:44 2006 texane
 //
 
 
 #include <string>
+#include <sys/sysapi.hh>
 #include <core/ziafs_io.hh>
 #include <core/ziafs_status.hh>
-#include <core/inet_utils.hh>
 
 
 using std::string;
@@ -39,7 +39,7 @@ io::res_insock::res_insock(stmask openmod, const string& local_addr, unsigned sh
 
 
 // a new connection have been accepted
-io::res_insock::res_insock(stmask openmod, const struct sockaddr_in& foreign_addr, int hsock) : resource(openmod)
+io::res_insock::res_insock(stmask openmod, const struct sockaddr_in& foreign_addr, const sysapi::insock::handle_t& hsock) : resource(openmod)
 {
   // This constructor creates a socket
   // from the descriptor returned by the
@@ -70,7 +70,9 @@ status::error io::res_insock::io_on_open()
 
   if (m_accepting)
     {
-      if (inet_utils::create_listening_socket(m_hsock, m_local_addr, m_my_port, m_my_addr, 10) == false)
+      if (sysapi::insock::p_to_inaddr(m_local_addr, m_my_addr, m_my_port) != sysapi::error::SUCCESS)
+	ziafs_return_status( CANNOT_OPEN );
+      if (sysapi::insock::create_listening(m_hsock, m_local_addr, 10) != sysapi::error::SUCCESS)
 	ziafs_return_status( CANNOT_OPEN );
     }
 
@@ -80,21 +82,16 @@ status::error io::res_insock::io_on_open()
 
 status::error io::res_insock::io_on_close()
 {
-  ziafs_return_status( NOTIMPL );
+  sysapi::insock::close(m_hsock);
+  ziafs_return_status( PARTIALIMPL );
 }
-
-
-#include <iostream>
-using std::cout;
-using std::endl;
 
 
 status::error io::res_insock::io_on_read(void*& pdata)
 {
-  struct sockaddr_in foreign_addr;
+  sysapi::insock::handle_t hsock;
   resource* res;
   stmask omode;
-  int hsock;
   int addrlen;
   int nread;
 
@@ -105,9 +102,9 @@ status::error io::res_insock::io_on_read(void*& pdata)
     {
       pdata = 0;
       addrlen = sizeof(struct sockaddr_in);
-      inet_utils::accept(hsock, foreign_addr, m_hsock);
+      sysapi::insock::accept(hsock, m_foreign_addr, m_hsock);
       omode = (stmask)((int)ST_FETCHING & (int)ST_FEEDING);
-      res = new res_insock(omode, foreign_addr, hsock);
+      res = new res_insock(omode, m_foreign_addr, hsock);
       pdata = (void*)res;
     }
   // This is NOT an accepting
@@ -117,14 +114,14 @@ status::error io::res_insock::io_on_read(void*& pdata)
     {
 # define BUFSZ 256
       buffer* buf = new buffer;
-      unsigned char* ptr;
 
-      buf->size(BUFSZ);
-      ptr = (unsigned char*)buf;
-      nread = ::recv(m_hsock, (char*)ptr, (int)buf->size(), 0);
-//       std::cout << buf->tostring() << std::endl;
-      std::cout << (char*)((unsigned char*)buf) << std::endl;
-      pdata = (void*&)buf;
+      buf->resize(BUFSZ);
+      nread = ::recv(m_hsock, (char*)buf->bufptr(), (int)buf->size(), 0);
+      if (nread > 0)
+	{
+	  buf->resize(nread);
+	}
+      pdata = (void*)buf;
     }
 
   ziafs_return_status( SUCCESS );

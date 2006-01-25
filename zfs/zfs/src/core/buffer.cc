@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Wed Jan 25 01:26:32 2006 texane
+// Last update Wed Jan 25 12:16:43 2006 texane
 //
 
 
@@ -108,6 +108,11 @@ char*	buffer::c_str() const
   str[i] = 0;
   
   return str;
+}
+
+unsigned char* buffer::bufptr()
+{
+  return buf_;
 }
 
 
@@ -226,11 +231,27 @@ void	buffer::buf(unsigned char* buf, size_t sz)
 }
 
 
-void	buffer::size(size_t sz)
+void	buffer::resize(size_t sz)
 {
   if (buf_)
-    delete[] buf_;
-  buf_ = new unsigned char[sz];
+    {
+      // First case, buf size < new size
+      if (sz > sz_)
+	{
+	  unsigned char* ptr;
+	  ptr = buf_;
+	  buf_ = new unsigned char[sz];
+	  bufcpy(buf_, ptr, sz);
+	  delete[] ptr;
+	}
+      // Second case, buf size >= sz,
+      // do nothing but reduce the size
+      // @see end of function.
+    }
+  else
+    {
+      buf_ = new unsigned char[sz];
+    }
   sz_ = sz;
 }
 

@@ -5,16 +5,12 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Wed Jan 25 00:28:33 2006 texane
+// Last update Wed Jan 25 11:41:07 2006 texane
 //
 
 
 #ifndef ZIAFS_IO_HH
 # define ZIAFS_IO_HH
-
-
-// this should be remove when sysapi done
-#include <windows.h>
 
 
 #include <list>
@@ -138,7 +134,7 @@ namespace io
   public:
     res_insock(stmask, const struct sockaddr_in&);
     res_insock(stmask, const std::string&, unsigned short);
-    res_insock(stmask, const struct sockaddr_in&, int);
+    res_insock(stmask, const struct sockaddr_in&, const sysapi::insock::handle_t&);
     ~res_insock();
 
     // resouce interface implementation
@@ -159,7 +155,7 @@ namespace io
     unsigned short m_my_port;
 
     // socket for this connection part
-    int m_hsock;
+    sysapi::insock::handle_t m_hsock;
 
     // inet addresses of the connection
     struct sockaddr_in m_local_addr;

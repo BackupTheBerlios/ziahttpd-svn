@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:59:25 2006 texane
-// Last update Sun Jan 22 15:58:11 2006 texane
+// Last update Wed Jan 25 11:05:10 2006 texane
 //
 
 
@@ -20,17 +20,17 @@ namespace sys
 {
   namespace win32_api
   {
-    namespace error
-    {
-      // Error related
-      typedef DWORD handle_t;
-    }
-
     namespace file
     {
       // File related part
       typedef HANDLE handle_t;
     }
+
+    namespace insock
+    {
+      // internet socket part
+      typedef SOCKET handle_t;
+    };
   }
 }
 

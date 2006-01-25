@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 00:16:46 2006 texane
-// Last update Wed Jan 25 00:54:56 2006 texane
+// Last update Wed Jan 25 12:05:46 2006 texane
 //
 
 
@@ -19,6 +19,18 @@ using namespace std;
 
 std::list<std::string> ziafs_internal_dump_list;
 
+
+static void global_ctor()
+{
+  sysapi::insock::init_subsystem();
+}
+
+
+static void global_dtor()
+{
+  sysapi::insock::release_subsystem();
+}
+
 int main(int ac, char** av)
 {
 //   string confpath(av[1]);
@@ -29,15 +41,15 @@ int main(int ac, char** av)
   io::resource* resource;
   io::resource* client;
   buffer* buf;
-  bool has_expired;
+  bool has_expired = false;
+
+  // do global construction of the server
+  global_ctor();
 
   // Create a new resource
   resource = new io::res_insock(io::ST_FETCHING, "localhost", 40000);
   ziafs_print_object( *resource );
-
-  inet_utils::init_subsystem();
   resource->io_on_open();
-  has_expired = false;
   resource->io_on_read((void*&)client);
 
   // Basic sequencing flow
@@ -57,8 +69,9 @@ int main(int ac, char** av)
 // 	}
       
     }
-
-
   resource->io_on_close();
-  inet_utils::release_subsystem();
+
+
+  // do global destruction of the server
+  global_dtor();
 }
