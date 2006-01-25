@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Wed Jan 25 14:19:02 2006 texane
+// Last update Wed Jan 25 21:56:42 2006 texane
 //
 
 
@@ -96,6 +96,7 @@ status::error net::server::process_requests()
   list<session*>::iterator sess_current;
   list<session*>::iterator sess_last;
   net::session* sess_client;
+  net::protocol* proto_client;
   io::resource* res_serv;
   io::resource* res_client;
 
@@ -104,6 +105,7 @@ status::error net::server::process_requests()
   while (!m_config->end_protocol(it))
     {
       res_serv = new io::res_insock(io::ST_FETCHING, "localhost", 40000);
+      proto_client = new http;
       ziafs_print_object( *res_serv );
       ++it;
     }
@@ -113,7 +115,7 @@ status::error net::server::process_requests()
   res_serv->io_on_read((void*&)res_client);
 
   // Create a new session
-  sess_client = new session(res_client, m_config);
+  sess_client = new session(res_client, m_config, proto_client);
   m_sessions.push_front(sess_client);
 
   // Serve incoming requests

@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 20:39:38 2005 texane
-## Last update Wed Jan 25 19:12:33 2006 texane
+## Last update Wed Jan 25 21:52:09 2006 texane
 ##
 
 # ! Always include this file
@@ -25,6 +25,8 @@ srcs	= src$(SLASH)core$(SLASH)main.cc \
 	  src$(SLASH)core$(SLASH)iores_file.cc \
 	  src$(SLASH)core$(SLASH)iores_insock.cc \
 	  src$(SLASH)core$(SLASH)utils_line.cc \
+	  src$(SLASH)core$(SLASH)http.cc \
+	  src$(SLASH)core$(SLASH)zia_stringmanager.cc \
 	  src$(SLASH)sys$(SLASH)win32$(SLASH)file.cc \
 	  src$(SLASH)sys$(SLASH)win32$(SLASH)error.cc \
 	  src$(SLASH)sys$(SLASH)win32$(SLASH)insock.cc \

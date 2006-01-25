@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:59:38 2006 texane
-// Last update Wed Jan 25 21:34:25 2006 texane
+// Last update Wed Jan 25 21:50:18 2006 texane
 //
 
 
@@ -22,12 +22,12 @@ using namespace io;
 using namespace net;
 
 
-session::session(resource* client, config* config)
+session::session(resource* client, config* config, protocol* proto)
 {
   m_client = client;
   m_config = config;
+  m_proto = proto;
   m_target = 0;
-  m_proto = 0;
 }
 
 

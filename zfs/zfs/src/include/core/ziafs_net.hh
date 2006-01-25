@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Wed Jan 25 21:33:40 2006 texane
+// Last update Wed Jan 25 21:56:37 2006 texane
 //
 
 
@@ -68,7 +68,7 @@ namespace net
   class session
   {
   public:
-    session(io::resource* client, config*);
+    session(io::resource* client, config*, protocol*);
     ~session();
 
     status::error process();
@@ -87,7 +87,7 @@ namespace net
   class protocol
   {
   public:
-    virtual ~protocol();
+    virtual ~protocol() {}
 
     // protocol interface
     virtual status::error consume(session*, buffer&) = 0;
@@ -98,7 +98,6 @@ namespace net
   class http : public protocol
   {
   public:
-    http();
     std::string& operator[](const std::string&);
     std::string& operator=(const std::string&);
     status::error	consume(session*, buffer&);
