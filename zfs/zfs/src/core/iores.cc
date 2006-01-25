@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:20:15 2006 texane
-// Last update Sun Jan 22 16:44:38 2006 texane
+// Last update Tue Jan 24 21:06:45 2006 texane
 //
 
 
@@ -72,4 +72,16 @@ error resource::feed(buffer& buf)
   buf.reset();
 
   ziafs_return_status( SUCCESS );
+}
+
+
+error resource::open()
+{
+  ziafs_return_status( NOTIMPL );
+}
+
+
+error resource::close()
+{
+  ziafs_return_status( NOTIMPL );
 }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 00:20:24 2006 texane
-// Last update Sun Jan 22 13:52:31 2006 texane
+// Last update Tue Jan 24 23:45:37 2006 texane
 //
 
 
@@ -55,6 +55,7 @@ string status::tostring(error e)
     {
       on_case( SUCCESS, "operation success" );
       on_case( NOTIMPL, "feature not implemented" );
+      on_case( PARTIALIMPL, "feature partially implemented" );
     default:
       str = "unknown error";
     }

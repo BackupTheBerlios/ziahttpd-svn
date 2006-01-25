@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Sun Jan 22 16:03:17 2006 texane
+// Last update Wed Jan 25 01:26:32 2006 texane
 //
 
 
@@ -228,13 +228,16 @@ void	buffer::buf(unsigned char* buf, size_t sz)
 
 void	buffer::size(size_t sz)
 {
+  if (buf_)
+    delete[] buf_;
+  buf_ = new unsigned char[sz];
   sz_ = sz;
 }
 
 
 // helper function
 
-inline static char to_printable(unsigned char c)
+inline static unsigned char to_printable(unsigned char c)
 {
   if (c > 32 && c <= 127)
     return c;

@@ -5,12 +5,16 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Sun Jan 22 16:46:21 2006 texane
+// Last update Wed Jan 25 00:28:33 2006 texane
 //
 
 
 #ifndef ZIAFS_IO_HH
 # define ZIAFS_IO_HH
+
+
+// this should be remove when sysapi done
+#include <windows.h>
 
 
 #include <list>
@@ -49,6 +53,7 @@ namespace io
       TYPEID_MEM = 0,
       TYPEID_FILE,
       TYPEID_INSOCK,
+      TYPEID_INSOCK_SSL,
       TYPEID_PROC
     } restype;
 
@@ -71,20 +76,23 @@ namespace io
     virtual ~resource() {}
 
     // Same for all
+    status::error open();
+    status::error close();
     status::error fetch(buffer&);
     status::error feed(buffer&);
 
     // Interface
     virtual status::error io_on_open() = 0;
     virtual status::error io_on_close() = 0;
-    virtual status::error io_on_read() = 0;
+    virtual status::error io_on_read(void*&) = 0;
     virtual status::error io_on_write() = 0;
     virtual status::error io_on_expire() = 0;
     virtual status::error io_has_expired(bool&) const = 0;
     virtual status::error dump(buffer&) const = 0;
+    virtual status::error name(std::string&) const = 0;
 
     
-  private:
+  protected:
     // Manager related informations
     restype m_rtype;
     stmask m_state;
@@ -107,18 +115,55 @@ namespace io
     ~res_file();
     status::error io_on_open();
     status::error io_on_close();
-    status::error io_on_read();
+    status::error io_on_read(void*&);
     status::error io_on_write();
     status::error io_on_expire();
     status::error io_has_expired(bool&) const;
     status::error dump(buffer&) const;
+    status::error name(std::string&) const;
 
   private:
-    // openmode_t m_omode;
     std::string m_path;
     unsigned int m_nrtoread;
     unsigned long m_filesz;
     sysapi::file::handle_t m_hfile;
+  };
+}
+
+
+namespace io
+{
+  class res_insock : public resource
+  {
+  public:
+    res_insock(stmask, const struct sockaddr_in&);
+    res_insock(stmask, const std::string&, unsigned short);
+    res_insock(stmask, const struct sockaddr_in&, int);
+    ~res_insock();
+
+    // resouce interface implementation
+    status::error io_on_open();
+    status::error io_on_close();
+    status::error io_on_read(void*&);
+    status::error io_on_write();
+    status::error io_on_expire();
+    status::error io_has_expired(bool&) const;
+    status::error dump(buffer&) const;
+    status::error name(std::string&) const;
+
+  private:
+    // For accepting socket to be
+    // bound at open time.
+    bool m_accepting;
+    std::string m_my_addr;
+    unsigned short m_my_port;
+
+    // socket for this connection part
+    int m_hsock;
+
+    // inet addresses of the connection
+    struct sockaddr_in m_local_addr;
+    struct sockaddr_in m_foreign_addr;
   };
 }
 
