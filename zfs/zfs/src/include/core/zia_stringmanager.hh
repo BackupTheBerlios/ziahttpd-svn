@@ -10,6 +10,12 @@ public:
 	static bool	normalize(std::string &);
 	static bool	normalize(char *);
 	static bool	split(const std::string&, const std::string&, std::vector<std::string>&, const std::string& putdel = "");
+	static bool	convert_hexa(const std::string &, std::string &);
+	static bool	unconvert_hexa(const std::string &, std::string &);
+	static bool	convert_hexa(std::string &);
+	static bool	unconvert_hexa(std::string &);
+	static bool	hex_to_char(const std::string &, char &);
+	static bool	dec_to_hex(const int, std::string &);
 private:
 	static bool	is_delimitor(char, const std::string &);
 };

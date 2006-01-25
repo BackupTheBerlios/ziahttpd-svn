@@ -63,3 +63,78 @@ bool	stringmanager::normalize(char *str)
 			str[i] = str[i] - 'A' + 'a';
 	return (true);
 }
+
+bool	stringmanager::unconvert_hexa(const std::string &source, std::string &dest)
+{
+	dest = source;
+	return (unconvert_hexa(dest));
+}
+
+bool	stringmanager::convert_hexa(const std::string &source, std::string &dest)
+{
+	return (true);
+}
+bool	stringmanager::convert_hexa(std::string &str)
+{
+	return (true);
+}
+bool	stringmanager::unconvert_hexa(std::string &str)
+{
+	for (int i = 0; i < str[i]; i++)
+	{
+		if (str[i] == '%')
+		{
+			std::string	strr;
+			char	c[2];
+
+			strr = str.substr(i + 1, 2);
+			if (!hex_to_char(strr, c[0]))
+				return (false);
+			c[1] = '\0';
+			str.replace(i, 1, c);
+			str.erase(i+1, 2);
+		}
+	}
+	return (true);
+}
+
+bool	stringmanager::hex_to_char(const std::string &source, char &dest)
+{
+	int		len = (int)source.size();
+	char	alf[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+	int		res = 0;
+	int		loop_ = 1;
+	int		flag;
+	char	cur;
+
+	for (int i = (len - 1); i != -1; i--)
+	{
+		cur = source[i];
+		if (cur >= 'a' && cur <= 'f')
+			cur = cur - 'a' + 'A';
+		flag = 0;
+		for (int t = 0; alf[t]; t++)
+		{
+			if (alf[t] == cur)
+			{
+				flag = 1;
+				res += t * loop_;
+				break ;
+			}
+		}
+		if (!flag)
+			return (false);
+		loop_ *= 16;
+	}
+	dest = res;
+	return (true);
+}
+
+bool	stringmanager::dec_to_hex(const int nb, std::string& dest)
+{
+	char	tmp[10];
+
+	sprintf(tmp, "%x", nb);
+	dest = tmp;
+	return (true);
+}

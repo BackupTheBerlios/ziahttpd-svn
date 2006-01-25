@@ -150,7 +150,7 @@ bool	net::config::parse_mimes()
 	TiXmlElement*	xmltmp;
 
 	xmltmp = m_xmlnode->ToElement();
-	m->extension = atoi(xmltmp->FirstAttribute()->Value());
+	m->extension = xmltmp->FirstAttribute()->Value();
 
 	for(xmltmp = m_xmlnode->FirstChildElement();
 		xmltmp;
@@ -209,7 +209,8 @@ bool	net::config::end_mimes(const std::list<mime*>::iterator &it)
 bool	net::config::dump(buffer &buf)
 {
 	std::list<protocol *>::iterator ip;
-
+	std::list<directory *>::iterator id;
+	std::list<mime *>::iterator im;
 
 	buf += "<protocol>\n";
 	for(ip = m_lprotocol.begin(); ip != m_lprotocol.end(); ++ip)
@@ -218,6 +219,22 @@ bool	net::config::dump(buffer &buf)
 		stream << "  ID :" << (*ip)->id << " TYPE :" << (*ip)->type << " PORT :" << (*ip)->port << "\n";
 		buf += stream.str();
 	}
-	buf += "<protocol>\n";
+	buf += "</protocol>\n";
+	buf += "<directory>\n";
+	for(id = m_ldirectory.begin(); id != m_ldirectory.end(); ++id)
+	{
+		std::ostringstream stream;
+		stream << "  ID :" << (*id)->id << " SERVERNAME :" << (*id)->servername << " DOCROOT :" << (*id)->docroot << "\n";
+		buf += stream.str();
+	}
+	buf += "</directory>\n";
+	buf += "<mimes>\n";
+	for(im = m_lmimes.begin(); im != m_lmimes.end(); ++im)
+	{
+		std::ostringstream stream;
+		stream << "  EXT :" << (*im)->extension << " TYPE :" << (*im)->type << " IMG :" << (*im)->image << " CGI :" <<(*im)->cgi << "\n";
+		buf += stream.str();
+	}
+	buf += "</mimes>\n";
 	return (true);
 }

@@ -21,7 +21,7 @@ std::list<std::string> ziafs_internal_dump_list;
 
 int main(int ac, char** av)
 {
-  string confpath("");
+  string confpath("../test/root/conf/test.xml");
   server srv(confpath);
   srv.process_requests();
 }

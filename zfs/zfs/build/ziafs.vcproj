@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tinyxmld_STL.lib"
+				AdditionalDependencies="tinyxmld_STL.lib Ws2_32.lib"
 				OutputFile="$(OutDir)../../../src/ziafs_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\lib"
@@ -139,22 +139,56 @@
 					RelativePath="..\src\core\http.cc">
 				</File>
 				<File
-					RelativePath="..\src\core\ioman.cc">
-				</File>
-				<File
 					RelativePath="..\src\core\iores.cc">
 				</File>
 				<File
 					RelativePath="..\src\core\iores_file.cc">
 				</File>
 				<File
+					RelativePath="..\src\core\iores_insock.cc">
+				</File>
+				<File
+					RelativePath="..\src\core\iores_manager.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\main.cc">
+				</File>
+				<File
+					RelativePath="..\src\core\server.cc">
 				</File>
 				<File
 					RelativePath="..\src\core\session.cc">
 				</File>
 				<File
+					RelativePath="..\src\core\utils_line.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\zia_stringmanager.cc">
+				</File>
+			</Filter>
+			<Filter
+				Name="sysapi"
+				Filter="">
+				<File
+					RelativePath="..\src\sys\win32\error.cc">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\src\sys\win32\file.cc">
+				</File>
+				<File
+					RelativePath="..\src\sys\win32\insock.cc">
 				</File>
 			</Filter>
 		</Filter>

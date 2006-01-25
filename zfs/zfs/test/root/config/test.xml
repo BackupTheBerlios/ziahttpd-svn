@@ -1,5 +1,10 @@
 <?xml version="1.0" standalone=no>
 
+<global>
+  <cgiroot></cgiroot>
+  <dirlisting></dirlisting>
+</global>
+
 <protocol>
   <id>1</id>
   <type>http</type>
@@ -19,6 +24,18 @@
 
 <mime extension="html">
   <type>text/html</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
+<mime extension="htm">
+  <type>text/html</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
+<mime extension="gif">
+  <type>image/gif</type>
   <cgi></cgi>
   <image></image>
 </mime>
