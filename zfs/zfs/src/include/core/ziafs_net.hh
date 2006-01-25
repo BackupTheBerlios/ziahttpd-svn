@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Wed Jan 25 23:52:46 2006 texane
+// Last update Thu Jan 26 00:06:32 2006 texane
 //
 
 
@@ -65,15 +65,16 @@ namespace net
 {
   friend class server;
 
+  // structure semantic
   class session
   {
   public:
+    // methods
     session(io::resource* client, config*, protocol*);
     ~session();
-
     status::error process();
 
-  private:
+    // attributes
     io::resource* m_client;
     io::resource* m_target;
     protocol* m_proto;
