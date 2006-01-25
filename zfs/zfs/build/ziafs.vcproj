@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src/include/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;TIXML_USE_STL;ZIAFS_DEBUG_ERROR;ZIAFS_LOG_ERROR;ZIAFS_DEBUG_MSG"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;TIXML_USE_STL;;ZIAFS_DEBUG_MSG"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"

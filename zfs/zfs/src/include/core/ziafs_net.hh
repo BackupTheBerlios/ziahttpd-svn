@@ -103,10 +103,12 @@ namespace net
   class http : public protocol
   {
   public:
+		http();
     std::string& operator[](const std::string&);
     std::string& operator=(const std::string&);
     status::error	consume(session*, buffer&);
     status::error	produce(buffer&);
+		static status::error	first_stage(session*);
   private:
     std::map<std::string, std::string> m_hdrlines;
     utils::line m_line;
