@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:20:15 2006 texane
-// Last update Tue Jan 24 21:06:45 2006 texane
+// Last update Wed Jan 25 18:53:31 2006 texane
 //
 
 
@@ -41,6 +41,7 @@ resource::resource(stmask openmod)
   m_state = ST_NONE;
   m_openmod = openmod;
   m_refcount = 0;
+  m_expired = false;
 }
 
 

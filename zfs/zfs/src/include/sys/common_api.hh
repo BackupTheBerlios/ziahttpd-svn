@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Wed Jan 25 12:44:44 2006 texane
+// Last update Wed Jan 25 18:56:52 2006 texane
 //
 
 
@@ -69,7 +69,7 @@ namespace sys
       error::handle_t create_listening(handle_t&, struct sockaddr_in&, unsigned int nbklog);
       error::handle_t accept(handle_t&, struct sockaddr_in&, handle_t&);
       error::handle_t recv(handle_t&, unsigned char*, unsigned int, unsigned int&);
-      error::handle_t send(handle_t&);
+      error::handle_t send(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t close(handle_t&);
     }
   }

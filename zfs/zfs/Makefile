@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 20:39:38 2005 texane
-## Last update Wed Jan 25 17:01:04 2006 texane
+## Last update Wed Jan 25 19:12:33 2006 texane
 ##
 
 # ! Always include this file
@@ -19,9 +19,9 @@ srcs	= src$(SLASH)core$(SLASH)main.cc \
 	  src$(SLASH)core$(SLASH)config.cc \
 	  src$(SLASH)core$(SLASH)buffer.cc \
 	  src$(SLASH)core$(SLASH)error.cc \
-	  src$(SLASH)core$(SLASH)ioman.cc \
 	  src$(SLASH)core$(SLASH)session.cc \
 	  src$(SLASH)core$(SLASH)iores.cc \
+	  src$(SLASH)core$(SLASH)iores_manager.cc \
 	  src$(SLASH)core$(SLASH)iores_file.cc \
 	  src$(SLASH)core$(SLASH)iores_insock.cc \
 	  src$(SLASH)core$(SLASH)utils_line.cc \

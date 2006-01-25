@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Wed Jan 25 17:05:56 2006 texane
+// Last update Wed Jan 25 19:09:33 2006 texane
 //
 
 
@@ -120,12 +120,8 @@ status::error io::res_insock::io_on_read(void*& pdata)
       if (herr != sysapi::error::SUCCESS)
 	{
 	  if (herr == sysapi::error::CONNECTION_CLOSED)
-	    {
-	      // mark the resource as closing
-	      // go to the iomanager that will
-	      // close it.
-	    }
-	  else ziafs_return_status( CANNOT_READ );
+	    m_expired = true;
+	  ziafs_return_status( CANNOT_READ );
 	}
       else
 	{
@@ -138,28 +134,47 @@ status::error io::res_insock::io_on_read(void*& pdata)
 }
 
 
-status::error io::res_insock::io_on_write()
+status::error io::res_insock::io_on_write(void*& pdata)
 {
-  ziafs_return_status( NOTIMPL );
+  buffer* buf;
+  unsigned int nsent;
+  sysapi::error::handle_t herr;
+
+  // Not supported for an accepting socket.
+  if (m_accepting == true)
+    return status::BADMODE;
+
+  buf = (buffer*)pdata;
+  herr = sysapi::insock::send(m_hsock, buf->bufptr(), (unsigned int)buf->size(), nsent);
+  if (herr != sysapi::error::SUCCESS)
+    {
+      if (herr == sysapi::error::CONNECTION_CLOSED)
+	m_expired = true;
+      ziafs_return_status( CANNOT_WRITE );
+    }
+
+  ziafs_return_status( SUCCESS );
 }
 
 
+#include <iostream>
+using namespace std;
 status::error io::res_insock::io_on_expire()
 {
-  ziafs_return_status( NOTIMPL );
+  // This function is called when
+  // the resource manager sees
+  // the resource has expired,
+  // before releasing it.
+
+  cout << "the resource expired!" << endl;
+  ziafs_return_status( SUCCESS );
 }
 
 
 status::error io::res_insock::io_has_expired(bool& has_expired) const
 {
-  static unsigned int count = 0;
-
-  has_expired = false;
-  ++count;
-  if (count == 100)
-    has_expired = true;
-
-  ziafs_return_status( PARTIALIMPL );
+  has_expired = m_expired;
+  ziafs_return_status( SUCCESS );
 }
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 10:35:30 2006 texane
-// Last update Wed Jan 25 12:39:32 2006 texane
+// Last update Wed Jan 25 18:58:14 2006 texane
 //
 
 
@@ -81,9 +81,9 @@ static inline bool inaddr_tobuf(unsigned long* buf, const char* addr)
 }
 
 
-static inline bool set_nonblocking_mode(SOCKET& hsock)
+static inline bool set_insock_basic_opts(SOCKET hsock)
 {
-  char optval = 1;
+  char optval = TRUE;
   setsockopt(hsock, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
   return true;
 }
@@ -147,8 +147,8 @@ sysapi::error::handle_t sysapi::insock::create_listening(handle_t& hsock, struct
     return error::OPEN_FAILED;
 
   // Set socket attributes
-  // . non blocking
-  set_nonblocking_mode(hsock);
+  // . set basic options
+  set_insock_basic_opts(hsock);
   ret = ::bind(hsock, reinterpret_cast<struct sockaddr*>(&inaddr), sizeof(struct sockaddr_in));
   if (ret == -1)
     return error::OPEN_FAILED;
@@ -177,19 +177,65 @@ sysapi::error::handle_t sysapi::insock::accept(handle_t& hsock, struct sockaddr_
 
 sysapi::error::handle_t sysapi::insock::recv(handle_t& hsock, unsigned char* buf, unsigned int nbytes, unsigned int& nrecv)
 {
-  nrecv = ::recv(hsock, (char*)buf, (int)nbytes, 0);
+  int n;
 
-  if (nrecv < 0)
-    return error::READ_FAILED;
-  else if (nrecv == 0)
+  n = ::recv(hsock, (char*)buf, (int)nbytes, 0);
+  if (n < 0)
+    {
+      // Try to acure the error code
+      int err;
+      sysapi::error::handle_t serr;
+      err = WSAGetLastError();
+      serr = error::READ_FAILED;
+      switch (err)
+	{
+	case WSAECONNABORTED:
+	case WSAECONNRESET:
+	case WSAETIMEDOUT:
+	case WSAESHUTDOWN:
+	case WSAENOTCONN:
+	case WSAENETRESET:
+	  serr = error::CONNECTION_CLOSED;
+	  break;
+	}
+      return serr;
+    }
+  else if (n == 0)
     return error::CONNECTION_CLOSED;
   
+  nrecv = n;
   return error::SUCCESS;
 }
 
 
-sysapi::error::handle_t sysapi::insock::send(handle_t&)
+sysapi::error::handle_t sysapi::insock::send(handle_t& hsock, unsigned char* buf, unsigned int nbytes, unsigned int& nsent)
 {
+  int n;
+
+  n = ::send(hsock, (char*)buf, (int)nbytes, 0);
+
+  if (n <= 0)
+    {
+      // Try to acure the error code
+      int err;
+      sysapi::error::handle_t serr;
+      err = WSAGetLastError();
+      serr = error::READ_FAILED;
+      switch (err)
+	{
+	case WSAECONNABORTED:
+	case WSAECONNRESET:
+	case WSAETIMEDOUT:
+	case WSAESHUTDOWN:
+	case WSAENOTCONN:
+	case WSAENETRESET:
+	  serr = error::CONNECTION_CLOSED;
+	  break;
+	}
+      return serr;
+    }
+    
+  nsent = n;
   return error::SUCCESS;
 }
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 03:10:24 2006 texane
-// Last update Wed Jan 25 00:35:05 2006 texane
+// Last update Wed Jan 25 19:35:44 2006 texane
 //
 
 
@@ -61,7 +61,7 @@ error res_file::io_on_read(void*&)
   ziafs_return_status(NOTIMPL);
 }
 
-error res_file::io_on_write()
+error res_file::io_on_write(void*&)
 {
   ziafs_return_status(NOTIMPL);
 }

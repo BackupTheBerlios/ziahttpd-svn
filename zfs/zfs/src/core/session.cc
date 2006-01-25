@@ -5,11 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:59:38 2006 texane
-// Last update Wed Jan 25 17:08:51 2006 texane
+// Last update Wed Jan 25 19:10:01 2006 texane
 //
 
 
-#include <iostream>
+#include <string>
 #include <core/ziafs_io.hh>
 #include <core/ziafs_net.hh>
 #include <core/ziafs_utils.hh>
@@ -17,7 +17,7 @@
 #include <core/ziafs_status.hh>
 
 
-using namespace std;
+using std::string;
 using namespace io;
 using namespace net;
 
@@ -56,25 +56,28 @@ status::error session::process()
   m_client->io_has_expired(has_expired);
   if (has_expired == true)
     {
+      m_client->io_on_expire();
       ziafs_return_status( status::EXPIRED );
     }
 
   // Process the pending data
-  m_client->io_on_read((void*&)buf);
-  if (buf)
+  if (m_client->io_on_read((void*&)buf) == status::SUCCESS)
     {
-      if (m_line.from_buffer(ln, *buf) == true)
+      if (buf)
 	{
-	  // a line has been found
+	  if (m_line.from_buffer(ln, *buf) == true)
+	    {
+	      // a line has been found, in ln
+	    }
+	  // proto->consum(session, buffer);
+	  // session->target = new io::res...
+	  // cout << buf->tostring() << endl;
+	  delete buf;
 	}
-      // proto->consum(session, buffer);
-      // session->target = new io::res...
-      // cout << buf->tostring() << endl;
-      delete buf;
     }
 
   // should close the session somewhere
   // res_client->io_on_close();
 
-  ziafs_return_status( status::PARTIALIMPL );
+  ziafs_return_status( status::SUCCESS );
 }

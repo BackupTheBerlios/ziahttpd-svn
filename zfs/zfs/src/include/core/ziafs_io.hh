@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Wed Jan 25 14:00:59 2006 texane
+// Last update Wed Jan 25 19:29:25 2006 texane
 //
 
 
@@ -81,7 +81,7 @@ namespace io
     virtual status::error io_on_open() = 0;
     virtual status::error io_on_close() = 0;
     virtual status::error io_on_read(void*&) = 0;
-    virtual status::error io_on_write() = 0;
+    virtual status::error io_on_write(void*&) = 0;
     virtual status::error io_on_expire() = 0;
     virtual status::error io_has_expired(bool&) const = 0;
     virtual status::error dump(buffer&) const = 0;
@@ -97,6 +97,7 @@ namespace io
     int m_refcount;
     buffer m_fetch_buf;
     buffer m_feed_buf;
+    bool m_expired;
   };
 }
 
@@ -112,7 +113,7 @@ namespace io
     status::error io_on_open();
     status::error io_on_close();
     status::error io_on_read(void*&);
-    status::error io_on_write();
+    status::error io_on_write(void*&);
     status::error io_on_expire();
     status::error io_has_expired(bool&) const;
     status::error dump(buffer&) const;
@@ -141,7 +142,7 @@ namespace io
     status::error io_on_open();
     status::error io_on_close();
     status::error io_on_read(void*&);
-    status::error io_on_write();
+    status::error io_on_write(void*&);
     status::error io_on_expire();
     status::error io_has_expired(bool&) const;
     status::error dump(buffer&) const;
@@ -164,21 +165,46 @@ namespace io
 }
 
 
+// Forward declarations
+namespace net { class config; }
+
 namespace io
 {
+  // The aim is to centralize resource
+  // io operations in the manager.
+
   class res_manager
   {
   public:
-    // Factory
+    // Construction/destruction
+    res_manager();
+    ~res_manager();
+
+    // resource factory
+    // + Create a bound socket resource
+    status::error create(resource*&, stmask, const std::string&, unsigned short);
+    // + Create a client resource
+    status::error create(resource*&, stmask, const struct sockaddr_in&, const sysapi::insock::handle_t&);
+    // + Create a file resource
     status::error create(resource*&, stmask, const std::string&);
+
+    // destruct a resource
     status::error destruct(resource*);
 
+    // resource manipulation
     status::error open(resource*);
     status::error close(resource*);
-    status::error fetch(resource*);
-    status::error feed(resource*);
+    status::error fetch(resource*, void*&);
+    status::error feed(resource*, void*&);
+
+    // resource processing
+    status::error process_all();
 
   private:
+    // internal management routines
+    status::error load_config(const net::config&);
+
+    // Set of resources
     std::list<resource*> resources;
   };
 }
