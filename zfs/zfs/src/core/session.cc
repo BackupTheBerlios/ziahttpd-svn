@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:59:38 2006 texane
-// Last update Wed Jan 25 14:19:58 2006 texane
+// Last update Wed Jan 25 14:23:09 2006 texane
 //
 
 
@@ -63,7 +63,7 @@ status::error session::process()
     {
       // proto->consum(session, buffer);
       //  session->target = new io::res...
-      cout << buf->tostring() << endl;
+      // cout << buf->tostring() << endl;
       delete buf;
     }
 
