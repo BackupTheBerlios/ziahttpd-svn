@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:59:38 2006 texane
-// Last update Wed Jan 25 19:10:01 2006 texane
+// Last update Wed Jan 25 21:34:25 2006 texane
 //
 
 
@@ -65,10 +65,11 @@ status::error session::process()
     {
       if (buf)
 	{
-	  if (m_line.from_buffer(ln, *buf) == true)
-	    {
+	  m_proto->consume(this, *buf);
+// 	  if (m_line.from_buffer(ln, *buf) == true)
+// 	    {
 	      // a line has been found, in ln
-	    }
+// 	    }
 	  // proto->consum(session, buffer);
 	  // session->target = new io::res...
 	  // cout << buf->tostring() << endl;

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Wed Jan 25 15:52:46 2006 texane
+// Last update Wed Jan 25 21:33:40 2006 texane
 //
 
 
@@ -78,7 +78,6 @@ namespace net
     io::resource* m_target;
     protocol* m_proto;
     config* m_config;
-    utils::line m_line;
   };
 }
 
@@ -91,7 +90,7 @@ namespace net
     virtual ~protocol();
 
     // protocol interface
-    virtual status::error consume(buffer&) = 0;
+    virtual status::error consume(session*, buffer&) = 0;
     virtual status::error produce(buffer&) = 0;
   };
 
@@ -99,13 +98,15 @@ namespace net
   class http : public protocol
   {
   public:
-	  http();
-	  std::string& operator[](const std::string&);
-	  std::string& operator=(const std::string&);
-	  status::error	consume(buffer&);
-	  status::error	produce(buffer&);
+    http();
+    std::string& operator[](const std::string&);
+    std::string& operator=(const std::string&);
+    status::error	consume(session*, buffer&);
+    status::error	produce(buffer&);
   private:
-	  std::map<std::string, std::string> m_hdrlines;
+    std::map<std::string, std::string> m_hdrlines;
+    utils::line m_line;
+    
   };
 }
 
@@ -115,56 +116,56 @@ namespace net
   class config
   {
   public:
-	  struct protocol
-	  {
-		  int			id;
-		  int			port;
-		  std::string	type;
-	  };
-	  struct directory
-	  {
-		  int			id;
-		  std::string	servername;
-		  std::string	docroot;
-	  };
-	  struct mime
-	  {
-		  std::string	extension;
-		  std::string	type;
-		  std::string	image;
-		  std::string	cgi;
-	  };
+    struct protocol
+    {
+      int			id;
+      int			port;
+      std::string	type;
+    };
+    struct directory
+    {
+      int			id;
+      std::string	servername;
+      std::string	docroot;
+    };
+    struct mime
+    {
+      std::string	extension;
+      std::string	type;
+      std::string	image;
+      std::string	cgi;
+    };
   public:
-	  config(const std::string &);
-	  config();
-	  ~config();
-	  config(char **);
-	  bool		dump(buffer &buf);
-	  bool		reset();
-	  bool		get_protocol(std::list<protocol*>::iterator&);
-	  bool		end_protocol(const std::list<protocol*>::iterator&);
-	  bool		get_directory(std::list<directory*>::iterator&);
-	  bool		end_directory(const std::list<directory*>::iterator&);
-	  bool		get_mimes(std::list<mime*>::iterator&);
-	  bool		end_mimes(const std::list<mime*>::iterator&);
+    config(const std::string &);
+    config();
+    ~config();
+    config(char **);
+    bool		dump(buffer &buf);
+    bool		reset();
+    bool		get_protocol(std::list<protocol*>::iterator&);
+    bool		end_protocol(const std::list<protocol*>::iterator&);
+    bool		get_directory(std::list<directory*>::iterator&);
+    bool		end_directory(const std::list<directory*>::iterator&);
+    bool		get_mimes(std::list<mime*>::iterator&);
+    bool		end_mimes(const std::list<mime*>::iterator&);
 
   private:
-	  typedef bool (net::config::*pFunc)();
-	  struct	key
-	  {
-		  std::string	keyword;
-	  };
-	  bool			load_default();
-	  bool			parse();
-	  TiXmlDocument m_xmldoc;
-	  TiXmlNode*	m_xmlnode;
-	  bool			parse_protocol();
-	  bool			parse_directory();
-	  bool			parse_mimes();
+    typedef bool (net::config::*pFunc)();
+    struct	key
+    {
+      std::string	keyword;
+    };
+    bool			load_default();
+    bool			parse();
+    TiXmlDocument m_xmldoc;
+    TiXmlNode*	m_xmlnode;
+    bool			parse_protocol();
+    bool			parse_directory();
+    bool			parse_mimes();
 
-	  std::list<protocol*>	m_lprotocol;
-	  std::list<directory*>	m_ldirectory;
-	  std::list<mime*>		m_lmimes;
+    std::list<protocol*>	m_lprotocol;
+    std::list<directory*>	m_ldirectory;
+    std::list<mime*>		m_lmimes;
   };
 }
 
