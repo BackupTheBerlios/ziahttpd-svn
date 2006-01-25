@@ -1,6 +1,7 @@
 #include <core/ziafs_net.hh>
 #include <iostream>
 #include <core/ziafs_debug.hh>
+#include <sstream>
 
 net::config::config(const std::string &config_file)
 {
@@ -61,8 +62,8 @@ bool	net::config::reset()
 
 bool	net::config::parse()
 {
-	key	key_s[] = {"protocol", "directory", ""};
-	pFunc funcArray[] = {&net::config::parse_protocol, &net::config::parse_directory};
+	key	key_s[] = {"protocol", "directory", "mime", ""};
+	pFunc funcArray[] = {&net::config::parse_protocol, &net::config::parse_directory, &net::config::parse_mimes};
 	int	i;
 	for(m_xmlnode = m_xmldoc.FirstChild();
 		m_xmlnode;
@@ -143,6 +144,29 @@ bool	net::config::parse_directory()
 	return (true);
 }
 
+bool	net::config::parse_mimes()
+{
+	mime			*m = new mime;
+	TiXmlElement*	xmltmp;
+
+	xmltmp = m_xmlnode->ToElement();
+	m->extension = atoi(xmltmp->FirstAttribute()->Value());
+
+	for(xmltmp = m_xmlnode->FirstChildElement();
+		xmltmp;
+		xmltmp = xmltmp->NextSiblingElement())
+	{
+		if (xmltmp->ValueStr() == "type" && xmltmp->GetText())
+			m->type = xmltmp->GetText();
+		if (xmltmp->ValueStr() == "image" && xmltmp->GetText())
+			m->image = xmltmp->GetText();
+		if (xmltmp->ValueStr() == "cgi" && xmltmp->GetText())
+			m->cgi = xmltmp->GetText();
+	}
+	m_lmimes.push_front(m);	
+	return (true);
+}
+
 bool	net::config::get_protocol(std::list<protocol*>::iterator &it)
 {
 	it = m_lprotocol.begin();
@@ -169,7 +193,31 @@ bool	net::config::end_directory(const std::list<directory*>::iterator &it)
 	return (true);
 }
 
+bool	net::config::get_mimes(std::list<mime*>::iterator &it)
+{
+	it = m_lmimes.begin();
+	return (true);
+}
+
+bool	net::config::end_mimes(const std::list<mime*>::iterator &it)
+{
+	if (it != m_lmimes.end())
+		return (false);
+	return (true);
+}
+
 bool	net::config::dump(buffer &buf)
 {
+	std::list<protocol *>::iterator ip;
+
+
+	buf += "<protocol>\n";
+	for(ip = m_lprotocol.begin(); ip != m_lprotocol.end(); ++ip)
+	{
+		std::ostringstream stream;
+		stream << "  ID :" << (*ip)->id << " TYPE :" << (*ip)->type << " PORT :" << (*ip)->port << "\n";
+		buf += stream.str();
+	}
+	buf += "<protocol>\n";
 	return (true);
 }

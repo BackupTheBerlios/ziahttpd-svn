@@ -18,6 +18,7 @@ std::string&			net::http::operator=(const std::string& val)
 
 status::error	net::http::consume(buffer &buf)
 {
+
 	ziafs_return_status(status::NOTIMPL);
 }
 

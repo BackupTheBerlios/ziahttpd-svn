@@ -116,6 +116,13 @@ namespace net
 		  std::string	servername;
 		  std::string	docroot;
 	  };
+	  struct mime
+	  {
+		  std::string	extension;
+		  std::string	type;
+		  std::string	image;
+		  std::string	cgi;
+	  };
   public:
 	  config(const std::string &);
 	  config();
@@ -127,6 +134,8 @@ namespace net
 	  bool		end_protocol(const std::list<protocol*>::iterator&);
 	  bool		get_directory(std::list<directory*>::iterator&);
 	  bool		end_directory(const std::list<directory*>::iterator&);
+	  bool		get_mimes(std::list<mime*>::iterator&);
+	  bool		end_mimes(const std::list<mime*>::iterator&);
 
   private:
 	  typedef bool (net::config::*pFunc)();
@@ -134,18 +143,17 @@ namespace net
 	  {
 		  std::string	keyword;
 	  };
-
-	  key			*key_s;
 	  bool			load_default();
 	  bool			parse();
 	  TiXmlDocument m_xmldoc;
 	  TiXmlNode*	m_xmlnode;
 	  bool			parse_protocol();
 	  bool			parse_directory();
-	  bool			init_ptr();
+	  bool			parse_mimes();
 
 	  std::list<protocol*>	m_lprotocol;
 	  std::list<directory*>	m_ldirectory;
+	  std::list<mime*>		m_lmimes;
   };
 }
 

@@ -16,3 +16,14 @@
   <servername></servername>
   <docroot>test/www/</docroot>
 </directory>
+
+<mime extension="html">
+  <type>text/html</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
+<error code="404">
+  <page actif=0></page>
+  <code actif=0></code>
+</error>
