@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 20:39:38 2005 texane
-## Last update Sun Jan 22 17:31:28 2006 texane
+## Last update Tue Jan 24 23:51:47 2006 texane
 ##
 
 # ! Always include this file
@@ -23,6 +23,8 @@ srcs	= src$(SLASH)core$(SLASH)main.cc \
 	  src$(SLASH)core$(SLASH)session.cc \
 	  src$(SLASH)core$(SLASH)iores.cc \
 	  src$(SLASH)core$(SLASH)iores_file.cc \
+	  src$(SLASH)core$(SLASH)iores_insock.cc \
+	  src$(SLASH)core$(SLASH)inet_utils.cc \
 	  src$(SLASH)sys$(SLASH)win32$(SLASH)file.cc \
 	  src$(SLASH)sys$(SLASH)win32$(SLASH)error.cc \
 	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxmlparser.cc \
@@ -37,7 +39,7 @@ trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \
 	  Makefile~
 
-CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_ERROR -DZIAFS_LOG_ERROR
+CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_ERROR -DZIAFS_DUMP_OBJECTS -DZIAFS_PRINT_OBJECTS
 
 # Override default variables here
 

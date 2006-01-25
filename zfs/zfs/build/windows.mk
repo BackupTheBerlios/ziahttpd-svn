@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Sun Jan 22 17:32:01 2006 texane
+## Last update Tue Jan 24 22:06:42 2006 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -36,8 +36,7 @@ LD	=	link -nologo
 LDPATHS	=	-libpath:"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Lib/" \
 		-libpath:"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Lib/" \
 		-libpath:"lib"
-LDLIBS	=	-implib:Ws2_32.lib \
-		-implib:user32.lib
+LDLIBS	=	-defaultlib:Ws2_32.lib
 LDGEN	=	-machine:x86 -subsystem:console -opt:noref
 LIBOUT	=	-lib
 DLLOUT	=	-dll
