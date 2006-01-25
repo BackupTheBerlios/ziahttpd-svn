@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Wed Jan 25 21:56:37 2006 texane
+// Last update Wed Jan 25 23:52:46 2006 texane
 //
 
 
@@ -92,6 +92,10 @@ namespace net
     // protocol interface
     virtual status::error consume(session*, buffer&) = 0;
     virtual status::error produce(buffer&) = 0;
+    
+    // switch function pointer
+    status::error (*process_stage_fn)(session*);
+    
   };
 
 
