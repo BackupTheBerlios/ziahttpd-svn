@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:35:20 2006 texane
-// Last update Wed Jan 25 12:13:31 2006 texane
+// Last update Wed Jan 25 16:53:29 2006 texane
 //
 
 
@@ -26,8 +26,8 @@ public:
 
   ~buffer();
 
-  // mutators, to remove
   void buf(unsigned char*, size_t);
+  void affect(unsigned char*, size_t);
 
   void resize(size_t);
 
@@ -43,7 +43,7 @@ public:
   buffer& operator+=(const std::string&);
   buffer& operator=(const buffer&);
   buffer& operator=(const std::string&);
-  unsigned char& operator[](int);
+  unsigned char& operator[](unsigned int);
   operator unsigned char*();
 
   std::string tostring(unsigned int = 0,

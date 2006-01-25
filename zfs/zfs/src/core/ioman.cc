@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:30:18 2006 texane
-// Last update Sun Jan 22 13:52:45 2006 texane
+// Last update Wed Jan 25 15:53:22 2006 texane
 //
 
 
@@ -18,13 +18,13 @@ using std::string;
 using namespace status;
 
 
-error io::manager::create(resource*&, stmask, const string&)
+error io::res_manager::create(resource*&, stmask, const string&)
 {
   ziafs_return_status(NOTIMPL);
 }
 
 
-error io::manager::destruct(resource* res)
+error io::res_manager::destruct(resource* res)
 {
   --res->m_refcount;
   if (res->m_refcount == 0)

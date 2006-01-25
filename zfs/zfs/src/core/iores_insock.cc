@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Wed Jan 25 12:44:07 2006 texane
+// Last update Wed Jan 25 17:05:56 2006 texane
 //
 
 
@@ -112,11 +112,11 @@ status::error io::res_insock::io_on_read(void*& pdata)
   // getting data from the descriptor
   else
     {
-# define BUFSZ 256
+# define BUFSZ 1
       buffer* buf = new buffer;
       sysapi::error::handle_t herr;
       buf->resize(BUFSZ);
-      herr = sysapi::insock::recv(m_hsock, buf->bufptr(), buf->size(), nread);
+      herr = sysapi::insock::recv(m_hsock, buf->bufptr(), (unsigned int)buf->size(), nread);
       if (herr != sysapi::error::SUCCESS)
 	{
 	  if (herr == sysapi::error::CONNECTION_CLOSED)

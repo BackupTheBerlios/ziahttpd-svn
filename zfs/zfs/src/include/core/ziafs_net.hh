@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Wed Jan 25 14:11:22 2006 texane
+// Last update Wed Jan 25 15:52:46 2006 texane
 //
 
 
@@ -16,13 +16,14 @@
 #include <string>
 #include <core/ziafs_buffer.hh>
 #include <core/ziafs_status.hh>
+#include <core/ziafs_utils.hh>
 #include <config/tinyxml.hh>
 #include <list>
 #include <map>
 
 // Forward declarations
 namespace io { class resource; }
-namespace io { class manager; };
+namespace io { class res_manager; };
 namespace net { class protocol; }
 namespace net { class config; }
 namespace net { class session; }
@@ -77,6 +78,7 @@ namespace net
     io::resource* m_target;
     protocol* m_proto;
     config* m_config;
+    utils::line m_line;
   };
 }
 

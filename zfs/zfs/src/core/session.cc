@@ -5,13 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:59:38 2006 texane
-// Last update Wed Jan 25 14:23:09 2006 texane
+// Last update Wed Jan 25 17:08:51 2006 texane
 //
 
 
 #include <iostream>
 #include <core/ziafs_io.hh>
 #include <core/ziafs_net.hh>
+#include <core/ziafs_utils.hh>
 #include <core/ziafs_buffer.hh>
 #include <core/ziafs_status.hh>
 
@@ -45,6 +46,7 @@ session::~session()
 
 status::error session::process()
 {
+  string ln;
   buffer* buf;
   bool has_expired;
 
@@ -61,8 +63,12 @@ status::error session::process()
   m_client->io_on_read((void*&)buf);
   if (buf)
     {
+      if (m_line.from_buffer(ln, *buf) == true)
+	{
+	  // a line has been found
+	}
       // proto->consum(session, buffer);
-      //  session->target = new io::res...
+      // session->target = new io::res...
       // cout << buf->tostring() << endl;
       delete buf;
     }

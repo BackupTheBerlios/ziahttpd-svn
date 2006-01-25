@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Wed Jan 25 12:16:43 2006 texane
+// Last update Wed Jan 25 16:52:54 2006 texane
 //
 
 
@@ -207,7 +207,7 @@ buffer& buffer::operator=(const string& s)
 }
 
 
-unsigned char& buffer::operator[](int i)
+unsigned char& buffer::operator[](unsigned int i)
 {
   if (!buf_ || (size_t)i < 0 || (size_t)i >= sz_)
     throw (int)0;
@@ -227,6 +227,14 @@ void	buffer::buf(unsigned char* buf, size_t sz)
   reset();
   buf_ = new unsigned char[sz];
   bufcpy(buf_, buf, sz);
+  sz_ = sz;
+}
+
+
+void	buffer::affect(unsigned char* buf, size_t sz)
+{
+  reset();
+  buf_ = buf;
   sz_ = sz;
 }
 
