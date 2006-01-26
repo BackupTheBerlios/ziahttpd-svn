@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 23:26:09 2006 texane
-// Last update Thu Jan 26 01:24:16 2006 texane
+// Last update Thu Jan 26 03:01:23 2006 texane
 //
 
 
@@ -38,13 +38,16 @@ namespace net
 
   public:
     // Module construction/destruction
-    virtual ~module();
+    virtual ~module()
+    {
+      sysapi::module::unload(m_hmod);
+    }
 
     // This method register a new resource
     // that will bound a socket listening for
     // incoming connections.
-    virtual status::error accept_connection(session*, std::string&, unsigned short) = 0;
-    virtual status::error register_filter(session*) = 0;
+    virtual status::error accept_connection(session*, const std::string&, unsigned short) = 0;
+    virtual status::error register_filters(session*) = 0;
 
   private:
     std::string m_name;
@@ -61,6 +64,7 @@ namespace net
   {
   public:
     mod_manager(config*);
+    ~mod_manager();
     status::error load_module(const std::string&);
     status::error unload_module(const std::string&);
     status::error find_module(module*&, const std::string&);
