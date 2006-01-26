@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Wed Jan 25 16:52:54 2006 texane
+// Last update Thu Jan 26 19:35:03 2006 texane
 //
 
 
@@ -332,4 +332,27 @@ string	buffer::tostring(unsigned int windent,
     }
 
   return strm.str();
+}
+
+
+bool buffer::remove_front(unsigned int nbytes)
+{
+  unsigned char* to;
+  unsigned char* from;
+  unsigned int n;
+
+  if (buf_ == 0)
+    return false;
+
+  // normalize the size
+  if (nbytes > sz_)
+    nbytes = (unsigned int)sz_;
+
+  // recopy the buffer
+  to = buf_;
+  from = buf_ + nbytes;
+  for (n = 0; n < nbytes; ++n)
+    *to++ = *from++;
+  sz_ = nbytes;
+  return true;
 }

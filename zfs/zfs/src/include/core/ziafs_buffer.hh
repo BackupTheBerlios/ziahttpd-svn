@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:35:20 2006 texane
-// Last update Wed Jan 25 16:53:29 2006 texane
+// Last update Thu Jan 26 19:28:39 2006 texane
 //
 
 
@@ -37,6 +37,8 @@ public:
 
   void reset();
   void clear();
+
+  bool remove_front(unsigned int);
 
   buffer operator+(const buffer&);
   buffer& operator+=(const buffer&);
