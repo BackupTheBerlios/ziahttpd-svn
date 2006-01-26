@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Thu Jan 26 19:35:03 2006 texane
+// Last update Thu Jan 26 19:54:55 2006 texane
 //
 
 
@@ -351,8 +351,8 @@ bool buffer::remove_front(unsigned int nbytes)
   // recopy the buffer
   to = buf_;
   from = buf_ + nbytes;
-  for (n = 0; n < nbytes; ++n)
+  for (n = nbytes; n < sz_; ++n)
     *to++ = *from++;
-  sz_ = nbytes;
+  sz_ -= nbytes;
   return true;
 }
