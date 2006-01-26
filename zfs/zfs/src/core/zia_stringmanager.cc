@@ -1,4 +1,5 @@
 #include <core/zia_stringmanager.hh>
+#include <iostream>
 
 bool	stringmanager::split(const std::string &source, const std::string& delimitor, std::vector<std::string>& dest, const std::string& putdel)
 {
@@ -136,5 +137,13 @@ bool	stringmanager::dec_to_hex(const int nb, std::string& dest)
 
 	sprintf(tmp, "%x", nb);
 	dest = tmp;
+	return (true);
+}
+bool	stringmanager::remove_space(std::string& str)
+{
+	std::cout << "IN :" << str << std::endl;
+	while (str[0] == ' ')
+		str.erase(0, 1);
+	std::cout << "OUT :" << str << std::endl;
 	return (true);
 }

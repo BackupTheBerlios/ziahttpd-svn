@@ -55,11 +55,12 @@ status::error	net::http::consume(net::session *s, buffer &buf)
 	std::string	ln;
 	if (m_line.from_buffer(ln, buf) == true)
 	{
-//		ziafs_debug_msg("line : %s\n", ln.c_str());
+		ziafs_debug_msg("line : %s\n", ln.c_str());
 		if (ln.empty())
 		{
 			process_stage_fn = http::second_stage;
 			ziafs_debug_msg("end of header, go to second stage ;)%s\n", "");
+			handle_metadata();
 			m_state = BODYDATA;
 		}
 		if (m_state == HDRLINES)
@@ -109,6 +110,7 @@ status::error					net::http::parse_header_line(std::string& ln)
 	{
 		key = ln.substr(0, i);
 		val = ln.substr(i + 1, ln.length() - i - 1);
+		stringmanager::remove_space(val);
 		stringmanager::normalize(key);
 		m_hdrlines[key] = val;
 	}
@@ -127,5 +129,14 @@ status::error					net::http::dump(buffer& buf)
 
 	stream << "STATUS CODE :" << m_uri.status_code() << " WWWNAME :" << m_uri.wwwname() << " QUERY :" << m_query;
 	buf = stream.str();
+	ziafs_return_status(status::SUCCESS);
+}
+status::error					net::http::handle_metadata()
+{
+
+	if (m_hdrlines["transfer-encoding"] == "chunked")
+		m_data_enco = new chunked;
+	else
+		m_data_enco = new unchunked;
 	ziafs_return_status(status::SUCCESS);
 }

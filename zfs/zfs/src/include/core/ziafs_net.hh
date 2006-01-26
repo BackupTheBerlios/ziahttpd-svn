@@ -127,10 +127,30 @@ namespace net
 		static status::error	second_stage(session*);
 		status::error					dump(buffer&);
 	private:
+		class data_enco
+		{
+		public:
+			virtual status::error	encode(buffer&) = 0;
+			virtual status::error	decode(buffer&) = 0;
+		};
+		class chunked : public data_enco
+		{
+		public:
+			status::error	encode(buffer&) { ziafs_return_status(status::SUCCESS); };
+			status::error	decode(buffer&) { ziafs_return_status(status::SUCCESS); };
+		};
+		class unchunked : public data_enco
+		{
+		public:
+			status::error	encode(buffer&) { ziafs_return_status(status::SUCCESS); };
+			status::error	decode(buffer&) { ziafs_return_status(status::SUCCESS); };
+		};
 		status::error	parse_status_line(std::string&);
 		status::error	parse_header_line(std::string&);
-    std::map<std::string, std::string> m_hdrlines;
-    utils::line m_line;
+		status::error	handle_metadata();
+
+    std::map<std::string, std::string>	m_hdrlines;
+    utils::line													m_line;
 		enum e_state
 		{
 			STUSLINES,
@@ -142,6 +162,7 @@ namespace net
 		std::string	m_version;
 		std::string	m_query;
 		uri					m_uri;
+		data_enco		*m_data_enco;
   };
 
 }
