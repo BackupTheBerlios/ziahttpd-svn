@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:22:54 2006 texane
-// Last update Wed Jan 25 14:19:26 2006 texane
+// Last update Thu Jan 26 01:12:20 2006 texane
 //
 
 
@@ -41,7 +41,9 @@ namespace status
       CANNOT_READ,
       CANNOT_WRITE,
       CANNOT_CLOSE,
+      NOT_FOUND,
       EXPIRED,
+      INIT_FAILED,
       UNKOWN
     } error;
 

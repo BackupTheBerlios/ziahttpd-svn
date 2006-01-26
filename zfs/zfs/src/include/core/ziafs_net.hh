@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Thu Jan 26 00:06:32 2006 texane
+// Last update Thu Jan 26 01:21:00 2006 texane
 //
 
 
@@ -17,17 +17,19 @@
 #include <core/ziafs_buffer.hh>
 #include <core/ziafs_status.hh>
 #include <core/ziafs_utils.hh>
+#include <core/ziafs_mod.hh>
 #include <config/tinyxml.hh>
 #include <list>
 #include <map>
 
 // Forward declarations
 namespace io { class resource; }
-namespace io { class res_manager; };
+namespace io { class res_manager; }
 namespace net { class protocol; }
 namespace net { class config; }
 namespace net { class session; }
 namespace net { class server; }
+namespace net { class mod_manager; }
 
 
 
@@ -47,6 +49,7 @@ namespace net
     // internal data
     config* m_config;
     io::res_manager* m_resman;
+    net::mod_manager* m_modman;
 
     // set of session
     std::list<session*> m_sessions;

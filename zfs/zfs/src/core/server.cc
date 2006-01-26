@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Wed Jan 25 21:56:42 2006 texane
+// Last update Thu Jan 26 01:23:25 2006 texane
 //
 
 
@@ -26,6 +26,7 @@ void net::server::reset()
 {
   m_config = 0;
   m_resman = 0;
+  m_modman = 0;
   m_done = false;
 }
 
@@ -53,6 +54,8 @@ void net::server::release()
     delete m_resman;
   if (m_config)
     delete m_config;
+  if (m_modman)
+    delete m_modman;
 
   sysapi::insock::release_subsystem();
 }
@@ -65,6 +68,7 @@ net::server::server(config* config)
   init();
   m_config = config;
   m_resman = new io::res_manager;
+  m_modman = new mod_manager(config);
 }
 
 
@@ -73,6 +77,7 @@ net::server::server(char** av)
   init();
   m_config = new config(av);
   m_resman = new io::res_manager;
+  m_modman = new mod_manager(m_config);
 }
 
 
@@ -81,6 +86,7 @@ net::server::server(const string& confpath)
   init();
   m_config = new config(confpath);
   m_resman = new io::res_manager;
+  m_modman = new mod_manager(m_config);
 }
 
 

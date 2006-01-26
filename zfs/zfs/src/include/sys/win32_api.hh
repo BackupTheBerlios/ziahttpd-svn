@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:59:25 2006 texane
-// Last update Wed Jan 25 11:05:10 2006 texane
+// Last update Thu Jan 26 00:48:19 2006 texane
 //
 
 
@@ -31,6 +31,12 @@ namespace sys
       // internet socket part
       typedef SOCKET handle_t;
     };
+
+    namespace module
+    {
+      // module loading, unloading, resolving
+      typedef HMODULE handle_t;
+    }
   }
 }
 

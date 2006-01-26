@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Wed Jan 25 18:56:52 2006 texane
+// Last update Thu Jan 26 00:53:46 2006 texane
 //
 
 
@@ -35,6 +35,7 @@ namespace sys
 	  CLOSE_FAILED,
 	  READ_FAILED,
 	  WRITE_FAILED,
+	  RESOLV_FAILED,
 	  INVALID_NAME,
 	  INVALID_DESCRIPTOR,
 
@@ -71,6 +72,15 @@ namespace sys
       error::handle_t recv(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t send(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t close(handle_t&);
+    }
+
+
+    // modules related
+    namespace module
+    {
+      error::handle_t load(handle_t&, const std::string&);
+      error::handle_t unload(handle_t&);
+      error::handle_t resolve(void*&, handle_t&, const std::string&);
     }
   }
 

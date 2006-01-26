@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:59:38 2006 texane
-// Last update Wed Jan 25 23:54:37 2006 texane
+// Last update Thu Jan 26 00:11:01 2006 texane
 //
 
 
@@ -46,9 +46,6 @@ session::~session()
 
 status::error session::process()
 {
-  // m_proto->process_stage_fn(this);
-
-  buffer* buf;
   bool has_expired;
 
   // Check if the resource has expired
@@ -62,20 +59,7 @@ status::error session::process()
     }
 
   // Process the pending data
-  if (m_client->io_on_read((void*&)buf) == status::SUCCESS)
-    {
-      if (buf)
-	{
-	  m_proto->consume(this, *buf);
-	  // proto->consum(session, buffer);
-	  // session->target = new io::res...
-	  // cout << buf->tostring() << endl;
-	  delete buf;
-	}
-    }
-
-  // should close the session somewhere
-  // res_client->io_on_close();
+  m_proto->process_stage_fn(this);
 
   ziafs_return_status( status::SUCCESS );
 }
