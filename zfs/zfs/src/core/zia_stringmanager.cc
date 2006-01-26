@@ -145,3 +145,10 @@ bool	stringmanager::remove_space(std::string& str)
 		str.erase(0, 1);
 	return (true);
 }
+
+bool stringmanager::hex_to_int(const std::string& hexnumber, int& number)
+{ 
+	char* tmp; 
+	number = strtol(hexnumber.c_str(), &tmp, 16);
+	return (true);
+}

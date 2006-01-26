@@ -47,12 +47,27 @@ status::error net::http::first_stage(session* s)
 
 status::error net::http::second_stage(session* s)
 {
+	buffer*	buf;
+	if (s->m_client->io_on_read((void*&)buf) == status::SUCCESS)
+	{
+		if (buf)
+		{
+			s->m_proto->consume(s, *buf);
+			delete buf;
+		}
+	}
 	ziafs_return_status(status::NOTIMPL);
 }
 
 status::error	net::http::consume(net::session *s, buffer &buf)
 {
 	std::string	ln;
+
+	if (m_state == BODYDATA)
+	{
+		m_data_enco->decode(m_line, buf);
+		ziafs_return_status(status::SUCCESS);
+	}
 	if (m_line.from_buffer(ln, buf) == true)
 	{
 		ziafs_debug_msg("line : %s\n", ln.c_str());
@@ -62,13 +77,18 @@ status::error	net::http::consume(net::session *s, buffer &buf)
 			ziafs_debug_msg("end of header, go to second stage ;)%s\n", "");
 			handle_metadata();
 			m_state = BODYDATA;
+			ziafs_return_status(status::SUCCESS);
 		}
 		if (m_state == HDRLINES)
+		{
 			parse_header_line(ln);
+			ziafs_return_status(status::SUCCESS);
+		}
 		if (m_state == STUSLINES)
 		{
 			parse_status_line(ln);
 			m_state = HDRLINES;
+			ziafs_return_status(status::SUCCESS);
 		}
 	}
 	ziafs_return_status(status::SUCCESS);
@@ -139,4 +159,41 @@ status::error					net::http::handle_metadata()
 	else
 		m_data_enco = new unchunked;
 	ziafs_return_status(status::SUCCESS);
+}
+
+status::error				net::http::chunked::decode(utils::line& m_line, buffer& buf)
+{
+	
+
+	if (m_state == HDRLINE)
+	{
+		std::string		ln;
+		if (m_line.from_buffer(ln, buf) == true)
+		{
+			stringmanager::hex_to_int((const std::string&)ln, m_chunk_size);
+			ziafs_debug_msg("chunk size-> %i\n", m_chunk_size);
+			m_state = BODYDATA;
+		}
+	}
+	if (m_state == BODYDATA)
+	{
+//			m_buffer.from_buffer(buf);
+		//if (m_chunk_size != buffer.size())
+//				m_buf += buf;
+//		if (m_chunk_size == buffer.size())
+				
+
+	}
+	ziafs_return_status(status::SUCCESS);
+}
+status::error	net::http::data_enco::done()
+{
+	if (m_done)
+	{
+		ziafs_return_status(status::SUCCESS);
+	}
+	else
+	{
+		ziafs_return_status(status::FAILED);
+	}
 }

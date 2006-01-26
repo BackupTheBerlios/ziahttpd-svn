@@ -34,6 +34,7 @@ namespace status
   typedef enum
     {
       SUCCESS = 0,
+			FAILED,
       NOTIMPL,
       PARTIALIMPL,
       BADMODE,

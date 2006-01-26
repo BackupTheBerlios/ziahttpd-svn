@@ -115,6 +115,7 @@ namespace net
 		int	m_status_code;
 	};
 
+
   class http : public protocol
   {
   public:
@@ -126,25 +127,45 @@ namespace net
 		static status::error	first_stage(session*);
 		static status::error	second_stage(session*);
 		status::error					dump(buffer&);
+
+
 	private:
+
 		class data_enco
 		{
 		public:
+			data_enco() { m_done = 0; };
 			virtual status::error	encode(buffer&) = 0;
-			virtual status::error	decode(buffer&) = 0;
+			virtual status::error	decode(utils::line&, buffer&) = 0;
+			buffer&	buff() { return m_buf; };
+			status::error	done();
+		private:
+			buffer	m_buf;
+			int			m_done;
 		};
 		class chunked : public data_enco
 		{
 		public:
-			status::error	encode(buffer&) { ziafs_return_status(status::SUCCESS); };
-			status::error	decode(buffer&) { ziafs_return_status(status::SUCCESS); };
+			chunked() : data_enco() { m_state = HDRLINE; };
+			status::error	encode(buffer&) { ziafs_return_status(status::SUCCESS); }
+			status::error	decode(utils::line&, buffer&);
+		private:
+			enum e_state
+			{
+				HDRLINE = 0,
+				BODYDATA
+			};
+		private:
+			int					m_chunk_size;
+			e_state			m_state;
 		};
 		class unchunked : public data_enco
 		{
 		public:
 			status::error	encode(buffer&) { ziafs_return_status(status::SUCCESS); };
-			status::error	decode(buffer&) { ziafs_return_status(status::SUCCESS); };
+			status::error	decode(utils::line&, buffer&) { ziafs_return_status(status::SUCCESS); };
 		};
+
 		status::error	parse_status_line(std::string&);
 		status::error	parse_header_line(std::string&);
 		status::error	handle_metadata();
@@ -153,9 +174,9 @@ namespace net
     utils::line													m_line;
 		enum e_state
 		{
-			STUSLINES,
+			STUSLINES = 0,
 			HDRLINES,
-			BODYDATA,
+			BODYDATA
 		};
 		e_state			m_state;
 		std::string	m_method;
@@ -163,7 +184,9 @@ namespace net
 		std::string	m_query;
 		uri					m_uri;
 		data_enco		*m_data_enco;
-  };
+	public:
+		data_enco*	dataenco(){ return m_data_enco; };
+	};
 
 }
 

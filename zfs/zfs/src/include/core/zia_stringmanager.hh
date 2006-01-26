@@ -17,6 +17,7 @@ public:
 	static bool	hex_to_char(const std::string &, char &);
 	static bool	dec_to_hex(const int, std::string &);
 	static bool	remove_space(std::string& str);
+	static bool hex_to_int(const std::string&, int&);
 private:
 	static bool	is_delimitor(char, const std::string &);
 };
