@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 00:16:46 2006 texane
-// Last update Wed Jan 25 13:59:08 2006 texane
+// Last update Thu Jan 26 22:04:19 2006 texane
 //
 
 
@@ -21,7 +21,6 @@ std::list<std::string> ziafs_internal_dump_list;
 
 int main(int ac, char** av)
 {
-  string confpath("../test/root/config/test.xml");
-  server srv(confpath);
+  server srv(string("fab.xml"));
   srv.process_requests();
 }

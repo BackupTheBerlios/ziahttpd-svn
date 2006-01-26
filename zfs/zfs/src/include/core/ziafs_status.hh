@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:22:54 2006 texane
-// Last update Thu Jan 26 01:12:20 2006 texane
+// Last update Thu Jan 26 21:28:37 2006 texane
 //
 
 
@@ -34,7 +34,7 @@ namespace status
   typedef enum
     {
       SUCCESS = 0,
-			FAILED,
+      FAILED,
       NOTIMPL,
       PARTIALIMPL,
       BADMODE,
@@ -44,11 +44,12 @@ namespace status
       CANNOT_CLOSE,
       NOT_FOUND,
       EXPIRED,
-			//http
-			STATUSLINE_FAILED,
-			STATUSLINE_SUCCESS,
-			HEADERLINE_FAILED,
-			HEADERLINE_SUCCESS,
+
+      //http
+      STATUSLINE_FAILED,
+      STATUSLINE_SUCCESS,
+      HEADERLINE_FAILED,
+      HEADERLINE_SUCCESS,
 			ENDOFREQUEST,
       INIT_FAILED,
       UNKOWN

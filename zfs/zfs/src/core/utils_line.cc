@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:28:42 2006 texane
-// Last update Thu Jan 26 20:15:12 2006 texane
+// Last update Thu Jan 26 20:47:44 2006 texane
 //
 
 
@@ -172,7 +172,7 @@ bool utils::line::get_bytes(buffer& buf, unsigned int nbytes)
   // normalize the size
   bufsz = nbytes;
   if (nbytes > m_buf.size())
-    bufsz = m_buf.size();
+    bufsz = (unsigned int)m_buf.size();
 
   buf = m_buf;
   buf.resize(bufsz);

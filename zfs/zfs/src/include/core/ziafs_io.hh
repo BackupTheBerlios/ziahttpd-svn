@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Wed Jan 25 19:29:25 2006 texane
+// Last update Thu Jan 26 21:57:32 2006 texane
 //
 
 
@@ -50,7 +50,8 @@ namespace io
       TYPEID_FILE,
       TYPEID_INSOCK,
       TYPEID_INSOCK_SSL,
-      TYPEID_PROC
+      TYPEID_PROC,
+      TYPEID_UNKOWN
     } restype;
 
 
@@ -67,15 +68,7 @@ namespace io
     // For instance, think about processs...
 
   public:
-    // construction/destruction
-    resource(stmask);
     virtual ~resource() {}
-
-    // Same for all
-    status::error open();
-    status::error close();
-    status::error fetch(buffer&);
-    status::error feed(buffer&);
 
     // Interface
     virtual status::error io_on_open() = 0;
@@ -90,14 +83,18 @@ namespace io
     
   protected:
     // Manager related informations
-    restype m_rtype;
+    bool m_expired;
+
+  private:
+    // resource manager
     stmask m_state;
     stmask m_openmod;
+    buffer m_rd_buf;
+    buffer m_wr_buf;
+    bool m_opened;
     iomask m_pending;
     int m_refcount;
-    buffer m_fetch_buf;
-    buffer m_feed_buf;
-    bool m_expired;
+    restype m_typeid;
   };
 }
 
@@ -107,6 +104,8 @@ namespace io
 {
   class res_file : public resource
   {
+    friend class res_manager;
+
   public:
     res_file(stmask, const std::string&);
     ~res_file();
@@ -132,6 +131,8 @@ namespace io
 {
   class res_insock : public resource
   {
+    friend class res_manager;
+
   public:
     res_insock(stmask, const struct sockaddr_in&);
     res_insock(stmask, const std::string&, unsigned short);
@@ -198,14 +199,18 @@ namespace io
     status::error feed(resource*, void*&);
 
     // resource processing
-    status::error process_all();
+    status::error dispatch_io();
 
   private:
     // internal management routines
     status::error load_config(const net::config&);
+    void reset_resource(resource*);
+
+    // io operation dispatching
+    status::error dispatch_socket_io();
 
     // Set of resources
-    std::list<resource*> resources;
+    std::list<resource*> m_resources;
   };
 }
 

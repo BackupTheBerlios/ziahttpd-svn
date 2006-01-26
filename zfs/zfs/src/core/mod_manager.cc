@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Jan 26 00:23:58 2006 texane
-// Last update Thu Jan 26 02:55:09 2006 texane
+// Last update Thu Jan 26 22:17:35 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 #include <core/ziafs_net.hh>
 #include <core/ziafs_mod.hh>
 #include <core/ziafs_status.hh>
+#include <core/ziafs_debug.hh>
 
 
 using std::list;
@@ -26,11 +27,15 @@ using std::string;
 #include <iostream>
 net::mod_manager::mod_manager(config* config)
 {
+  list<config::module*>::iterator cur;
+
   // Here load the modules
-  // hardcode the mod_sock.lo loading
-//   load_module("mod_sock.lo");
-//   load_module("mod_ssl.lo");
-  load_module("sdk.lo");
+  config->get_modules(cur);
+  while (config->end_modules(cur) == false)
+    {
+      load_module((*cur)->name);
+      ++cur;
+    }
 }
 
 net::mod_manager::~mod_manager()

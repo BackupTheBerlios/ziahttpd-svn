@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Wed Jan 25 19:09:33 2006 texane
+// Last update Thu Jan 26 20:47:15 2006 texane
 //
 
 
@@ -19,7 +19,7 @@ using std::string;
 using namespace status;
 
 
-io::res_insock::res_insock(stmask openmod, const string& local_addr, unsigned short local_port) : resource(openmod)
+io::res_insock::res_insock(stmask openmod, const string& local_addr, unsigned short local_port) : resource()
 {
   // This constructor creates a new local
   // connection, that's one that's bound
@@ -39,7 +39,7 @@ io::res_insock::res_insock(stmask openmod, const string& local_addr, unsigned sh
 
 
 // a new connection have been accepted
-io::res_insock::res_insock(stmask openmod, const struct sockaddr_in& foreign_addr, const sysapi::insock::handle_t& hsock) : resource(openmod)
+io::res_insock::res_insock(stmask openmod, const struct sockaddr_in& foreign_addr, const sysapi::insock::handle_t& hsock) : resource()
 {
   // This constructor creates a socket
   // from the descriptor returned by the

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 03:10:24 2006 texane
-// Last update Wed Jan 25 19:35:44 2006 texane
+// Last update Thu Jan 26 20:46:35 2006 texane
 //
 
 
@@ -24,7 +24,7 @@ using namespace status;
 
 
 // construction/destruction
-res_file::res_file(stmask openmod, const string& path) : resource(openmod)
+res_file::res_file(stmask openmod, const string& path) : resource()
 {
   m_path = path;
   m_filesz = 0;

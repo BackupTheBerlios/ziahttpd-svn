@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Thu Jan 26 01:23:25 2006 texane
+// Last update Thu Jan 26 22:38:29 2006 texane
 //
 
 
@@ -15,6 +15,11 @@
 #include <core/ziafs_net.hh>
 #include <core/ziafs_status.hh>
 #include <sys/sysapi.hh>
+
+
+// todo list
+// + get resource from the connection module
+// + integrate created connections to the iomanager
 
 
 using std::string;
