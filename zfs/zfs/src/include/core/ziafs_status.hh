@@ -43,6 +43,11 @@ namespace status
       CANNOT_CLOSE,
       NOT_FOUND,
       EXPIRED,
+			//http
+			STATUSLINE_FAILED,
+			STATUSLINE_SUCCESS,
+			HEADERLINE_FAILED,
+			HEADERLINE_SUCCESS,
       INIT_FAILED,
       UNKOWN
     } error;

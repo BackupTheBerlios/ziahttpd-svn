@@ -154,10 +154,16 @@
 					RelativePath="..\src\core\main.cc">
 				</File>
 				<File
+					RelativePath="..\src\core\mod_manager.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\server.cc">
 				</File>
 				<File
 					RelativePath="..\src\core\session.cc">
+				</File>
+				<File
+					RelativePath="..\src\core\uri.cc">
 				</File>
 				<File
 					RelativePath="..\src\core\utils_line.cc">
@@ -189,6 +195,9 @@
 				</File>
 				<File
 					RelativePath="..\src\sys\win32\insock.cc">
+				</File>
+				<File
+					RelativePath="..\src\sys\win32\module.cc">
 				</File>
 			</Filter>
 		</Filter>

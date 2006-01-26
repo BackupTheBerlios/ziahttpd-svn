@@ -12,6 +12,9 @@ net::config::config(const std::string &config_file)
 		return ;
 	}
 	parse();
+	buffer t;
+	dump(t);
+	std::cout << t.c_str();
 }
 
 net::config::config(char **av)
@@ -38,13 +41,13 @@ bool	net::config::load_default()
 	const char* def_conf =
 		"<?xml version=\"1.0\"  standalone='no' >\n"
 		"<protocol>"
-		"<id>1</id>"
-		"<type>http</type>"
-		"<port>80</port>"
+		"  <id>1</id>"
+		"  <module>./module/net/net.lo</module>"
+		"  <port>80</port>"
 		"</protocol>"
 		"<directory id=1>"
-		"<servername></servername>"
-		"<docroot>test/www/</docroot>"
+		"  <servername></servername>"
+		"  <docroot>test/www/</docroot>"
 		"</directory>";
 
 	m_xmldoc.Parse(def_conf);
@@ -62,16 +65,22 @@ bool	net::config::reset()
 
 bool	net::config::parse()
 {
-	key	key_s[] = {"protocol", "directory", "mime", ""};
-	pFunc funcArray[] = {&net::config::parse_protocol, &net::config::parse_directory, &net::config::parse_mimes};
+	key	key_s[] = {"protocol", "directory", "mime", "module", ""};
+	pFunc funcArray[] = {&net::config::parse_protocol,
+											&net::config::parse_directory,
+											&net::config::parse_mimes,
+											&net::config::parse_modules};
 	int	i;
 	for(m_xmlnode = m_xmldoc.FirstChild();
 		m_xmlnode;
-		m_xmlnode = m_xmlnode->NextSibling() )
+		m_xmlnode = m_xmlnode->NextSibling())
 	{
 		for (i = 0; !key_s[i].keyword.empty(); i++)
 			if (m_xmlnode->ValueStr() == key_s[i].keyword)
+			{
+				
 				(this->*funcArray[i])();
+			}
 	}
 	return (true);
 }
@@ -89,15 +98,15 @@ bool	net::config::parse_protocol()
 			p->id = atoi(xmltmp->GetText());
 		if (xmltmp->ValueStr() == "port")
 			p->port = atoi(xmltmp->GetText());
-		if (xmltmp->ValueStr() == "type")
-			p->type = xmltmp->GetText();
+		if (xmltmp->ValueStr() == "modulename")
+			p->modulename = xmltmp->GetText();
 	}
 	std::list<protocol *>::iterator i;
 
 	for(i = m_lprotocol.begin(); i != m_lprotocol.end(); ++i)
 		if ((*i)->port == p->port)
 		{
-			(*i)->type = p->type;
+			(*i)->modulename = p->modulename;
 			(*i)->id = p->id;
 			delete	p;
 			return (true);
@@ -105,6 +114,25 @@ bool	net::config::parse_protocol()
 	m_lprotocol.push_front(p);	
 	return (true);
 }
+
+bool	net::config::parse_modules()
+{
+	module		*m = new module;
+	TiXmlElement*	xmltmp;
+
+	xmltmp = m_xmlnode->ToElement();
+	m->name = xmltmp->FirstAttribute()->Value();
+	for(xmltmp = m_xmlnode->FirstChildElement();
+		xmltmp;
+		xmltmp = xmltmp->NextSiblingElement())
+	{
+		if (xmltmp->ValueStr() == "file")
+			m->file = xmltmp->GetText();
+	}
+	m_lmodules.push_front(m);	
+	return (true);
+}
+
 
 bool	net::config::parse_directory()
 {
@@ -206,20 +234,28 @@ bool	net::config::end_mimes(const std::list<mime*>::iterator &it)
 	return (true);
 }
 
-bool	net::config::dump(buffer &buf)
+status::error	net::config::dump(buffer &buf)
 {
 	std::list<protocol *>::iterator ip;
 	std::list<directory *>::iterator id;
 	std::list<mime *>::iterator im;
-
+	std::list<module *>::iterator imo;
 	buf += "<protocol>\n";
 	for(ip = m_lprotocol.begin(); ip != m_lprotocol.end(); ++ip)
 	{
 		std::ostringstream stream;
-		stream << "  ID :" << (*ip)->id << " TYPE :" << (*ip)->type << " PORT :" << (*ip)->port << "\n";
+		stream << "  ID :" << (*ip)->id << " MODULE :" << (*ip)->modulename << " PORT :" << (*ip)->port << "\n";
 		buf += stream.str();
 	}
 	buf += "</protocol>\n";
+	buf += "<modules>\n";
+	for(imo = m_lmodules.begin(); imo != m_lmodules.end(); ++imo)
+	{
+		std::ostringstream stream;
+		stream << "  NAME :" << (*imo)->name << " FILE :" << (*imo)->file << "\n";
+		buf += stream.str();
+	}
+	buf += "</modules>\n";
 	buf += "<directory>\n";
 	for(id = m_ldirectory.begin(); id != m_ldirectory.end(); ++id)
 	{
@@ -236,5 +272,5 @@ bool	net::config::dump(buffer &buf)
 		buf += stream.str();
 	}
 	buf += "</mimes>\n";
-	return (true);
+	ziafs_return_status(status::SUCCESS);
 }

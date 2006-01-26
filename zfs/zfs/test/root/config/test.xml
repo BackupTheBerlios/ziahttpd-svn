@@ -1,32 +1,18 @@
 <?xml version="1.0" standalone=no>
 
-<module>
-  <name>SSL</name>
-  <file>./modules/ssl.lo<file>
-</module>
-
-<protocol>
-  <id>1</id>
-  <module>SSL</module>
-  <port>80</port>
-</protocol>
-
-
 <global>
   <cgiroot></cgiroot>
   <dirlisting></dirlisting>
 </global>
 
-<protocol>
-  <id>1</id>
-  <type>http</type>
-  <port>80</port>
-</protocol>
+<module name="HTTP">
+  <file>./lala/lala.lo</file>
+</module>
 
 <protocol>
-  <id>2</id>
-  <port>443</port>
-  <type>https</type>
+  <id>1</id>
+  <modulename>HTTP</modulename>
+  <port>80</port>
 </protocol>
 
 <directory id=1>
