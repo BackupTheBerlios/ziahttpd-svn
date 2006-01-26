@@ -234,6 +234,21 @@ bool	net::config::end_mimes(const std::list<mime*>::iterator &it)
 	return (true);
 }
 
+bool	net::config::get_modules(std::list<module*>::iterator &it)
+{
+	it = m_lmodules.begin();
+	return (true);
+}
+
+bool	net::config::end_modules(const std::list<module*>::iterator &it)
+{
+	if (it != m_lmodules.end())
+		return (false);
+	return (true);
+}
+
+
+
 status::error	net::config::dump(buffer &buf)
 {
 	std::list<protocol *>::iterator ip;
