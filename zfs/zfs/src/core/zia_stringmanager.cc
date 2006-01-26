@@ -141,9 +141,7 @@ bool	stringmanager::dec_to_hex(const int nb, std::string& dest)
 }
 bool	stringmanager::remove_space(std::string& str)
 {
-	std::cout << "IN :" << str << std::endl;
 	while (str[0] == ' ')
 		str.erase(0, 1);
-	std::cout << "OUT :" << str << std::endl;
 	return (true);
 }
