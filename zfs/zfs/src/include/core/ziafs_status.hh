@@ -49,6 +49,7 @@ namespace status
 			STATUSLINE_SUCCESS,
 			HEADERLINE_FAILED,
 			HEADERLINE_SUCCESS,
+			ENDOFREQUEST,
       INIT_FAILED,
       UNKOWN
     } error;

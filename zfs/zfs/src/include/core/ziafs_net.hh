@@ -126,29 +126,30 @@ namespace net
     status::error					produce(buffer&);
 		static status::error	first_stage(session*);
 		static status::error	second_stage(session*);
+		static status::error	third_stage(session*);
 		status::error					dump(buffer&);
-
+		std::string						method() { return m_method; };
 
 	private:
 
 		class data_enco
 		{
 		public:
-			data_enco() { m_done = 0; };
+			data_enco() { m_done = false; };
 			virtual status::error	encode(buffer&) = 0;
-			virtual status::error	decode(utils::line&, buffer&) = 0;
+			virtual status::error	decode(net::session*, utils::line&, buffer&) = 0;
 			buffer&	buff() { return m_buf; };
-			status::error	done();
-		private:
+			bool	done();
+		protected:
 			buffer	m_buf;
-			int			m_done;
+			bool		m_done;
 		};
 		class chunked : public data_enco
 		{
 		public:
 			chunked() : data_enco() { m_state = HDRLINE; };
 			status::error	encode(buffer&) { ziafs_return_status(status::SUCCESS); }
-			status::error	decode(utils::line&, buffer&);
+			status::error	decode(net::session*, utils::line&, buffer&);
 		private:
 			enum e_state
 			{
@@ -162,8 +163,18 @@ namespace net
 		class unchunked : public data_enco
 		{
 		public:
+			unchunked() { m_state = FIRSTTIME; };
 			status::error	encode(buffer&) { ziafs_return_status(status::SUCCESS); };
-			status::error	decode(utils::line&, buffer&) { ziafs_return_status(status::SUCCESS); };
+			status::error	decode(net::session*, utils::line&, buffer&);
+		private:
+			enum e_state
+			{
+				FIRSTTIME = 0,
+				OTHERTIME
+			};
+			int					m_size;
+			e_state			m_state;
+
 		};
 
 		status::error	parse_status_line(std::string&);

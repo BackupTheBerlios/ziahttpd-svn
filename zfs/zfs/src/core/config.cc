@@ -14,7 +14,8 @@ net::config::config(const std::string &config_file)
 	parse();
 	buffer t;
 	dump(t);
-	std::cout << t.c_str();
+//	std::cout << t.c_str();
+	ziafs_debug_msg("%s", t.c_str());
 }
 
 net::config::config(char **av)
