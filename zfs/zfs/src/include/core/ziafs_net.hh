@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Sat Jan 28 15:51:44 2006 texane
+// Last update Sat Jan 28 16:56:46 2006 texane
 //
 
 
@@ -47,6 +47,7 @@ namespace net
     status::error add_session(session*);
 
     // accessor, should be changed
+    io::res_manager* res_manager();
     config* conf();
 
   private:
@@ -86,6 +87,7 @@ namespace net
     io::resource* m_target;
     protocol* m_proto;
     config* m_config;
+    server* m_server;
   };
 }
 

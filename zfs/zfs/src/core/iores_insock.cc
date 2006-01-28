@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Sat Jan 28 15:51:37 2006 texane
+// Last update Sat Jan 28 17:31:41 2006 texane
 //
 
 
@@ -116,7 +116,7 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
       addrlen = sizeof(struct sockaddr_in);
       sysapi::insock::accept(hsock, m_foreign_addr, m_hsock);
       omode = (stmask)((int)ST_FETCHING & (int)ST_FEEDING);
-      res = new res_insock(omode, m_foreign_addr, hsock);
+      srv->res_manager()->create(res, omode, m_foreign_addr, hsock);
       pdata = (void*)res;
 
       // Create a new session
@@ -130,7 +130,7 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   // getting data from the descriptor
   else
     {
-# define BUFSZ 1
+# define BUFSZ 256
       buffer* buf = new buffer;
       sysapi::error::handle_t herr;
       buf->resize(BUFSZ);
@@ -144,8 +144,9 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
       else
 	{
 	  buf->resize(nread);
+	  m_rd_buf += *buf;
+	  delete buf;
 	}
-      pdata = (void*)buf;
     }
 
   ziafs_return_status( SUCCESS );

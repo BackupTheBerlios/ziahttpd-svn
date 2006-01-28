@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Sat Jan 28 15:39:31 2006 texane
+// Last update Sat Jan 28 17:33:52 2006 texane
 //
 
 
@@ -77,14 +77,13 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   last = m_resources.end();
   while (cur != last)
     {
-      ziafs_debug_msg("walking resource %s\n", "");
       if ((*cur)->m_typeid == io::TYPEID_INSOCK || (*cur)->m_typeid == io::TYPEID_INSOCK_SSL)
 	{
 	  insock = reinterpret_cast<res_insock*>(*cur);
-	  if (is_bitset(insock->m_pending, IO_READ) == true || insock->m_accepting == true)
+ 	  if (is_bitset(insock->m_pending, IO_READ) == true || insock->m_accepting == true)
 	    {
 	      ziafs_debug_msg("putting new resource in set %s\n", "");
-	      clrbit((*cur)->m_pending, IO_READ);
+	      // clrbit((*cur)->m_pending, IO_READ);
 	      FD_SET(insock->m_hsock, &rdset);
 	    }
 	  if (is_bitset(insock->m_pending, IO_WRITE) == true)
@@ -99,7 +98,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   ziafs_debug_msg("blocked in select %s\n", "");
   nev = select(0, &rdset, &wrset, 0, 0);
   ziafs_debug_msg("returned from select: %d\n", nev);
-  getchar();
+//   getchar();
 
   if (nev == -1)
     ziafs_return_status( FAILED );
@@ -197,6 +196,7 @@ status::error io::res_manager::create(resource*& res, stmask omask, const std::s
 
   res = new res_insock(omask, local_addr, local_port);
   res->m_typeid = TYPEID_INSOCK;
+  res->m_pending = IO_READ;
   res->m_refcount = 1;
   m_resources.push_front(res);
   ziafs_return_status( status::SUCCESS );
@@ -208,6 +208,7 @@ status::error io::res_manager::create(resource*& res, stmask omask, const struct
   // Instanciate a client socket
 
   res = new res_insock(omask, inaddr, hsrv);
+  res->m_pending = IO_READ;
   res->m_typeid = TYPEID_INSOCK;
   res->m_refcount = 1;
   m_resources.push_front(res);
@@ -245,17 +246,25 @@ status::error io::res_manager::close(resource*)
 }
 
 
+#include <iostream>
+using namespace std;
+
+
 status::error io::res_manager::fetch(resource* res, void*& pdata)
 {
-  buffer* buf = (buffer*&)pdata;
+  buffer* buf;
 
-  if ((res->m_openmod & ST_FETCHING) == false)
-    ziafs_return_status( BADMODE );
+//   if ((res->m_openmod & ST_FETCHING) == false)
+//     ziafs_return_status( BADMODE );
 
   // Fetch the user buffer
   setbit(res->m_state, ST_FETCHING);
-  *buf = res->m_rd_buf;
+  buf = new buffer(res->m_rd_buf);
+  pdata = buf;
   res->m_rd_buf.reset();
+
+  cout << "toto le buffer" << endl;
+  cout << buf->tostring() << endl;
 
   ziafs_return_status( SUCCESS );
 }

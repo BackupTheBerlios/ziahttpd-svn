@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Sat Jan 28 12:49:04 2006 texane
+## Last update Sat Jan 28 16:43:29 2006 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -21,8 +21,8 @@ __WINDOWS_MK	=	1
 
 # .compiler
 CC	=	cl -nologo
-CCPATHS	=	-I"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Include/"	\
-		-I"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Include/" \
+CCPATHS	=	-I"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Include/"	\
+		-I"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Include/" \
 		-I"$(PROJ_ROOT)/src/lib/tinyxml/" \
 		-I"$(PROJ_ROOT)/src/include/"
 CCDEFS	=	-DTIXML_USE_STL -D "_WIN32" -D "_CONSOLE" -D "_MBCS" -D "_MT" -D "_SYSAPI"=2 -MD
@@ -33,8 +33,8 @@ CCFLAGS	=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS)
 
 # .linker
 LD	=	link -nologo
-LDPATHS	=	-libpath:"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Lib/" \
-		-libpath:"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Lib/" \
+LDPATHS	=	-libpath:"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Lib/" \
+		-libpath:"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Lib/" \
 		-libpath:"lib"
 LDLIBS	=	-defaultlib:Ws2_32.lib
 LDGEN	=	-machine:x86 -subsystem:console -opt:noref

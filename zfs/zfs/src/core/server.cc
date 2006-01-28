@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Sat Jan 28 15:52:09 2006 texane
+// Last update Sat Jan 28 16:56:23 2006 texane
 //
 
 
@@ -112,8 +112,15 @@ net::config* net::server::conf()
 }
 
 
+io::res_manager* net::server::res_manager()
+{
+  return m_resman;
+}
+
+
 status::error net::server::add_session(session* sess)
 {
+  sess->m_server = this;
   m_sessions.push_front(sess);
   ziafs_return_status( SUCCESS );
 }

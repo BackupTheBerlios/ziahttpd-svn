@@ -32,7 +32,7 @@ status::error net::http::first_stage(session* s)
 {
 	buffer*	buf;
 
-	if (s->m_server->m_resmanger()->fetch(s->m_client, (void*&)buf) == status::SUCCESS)
+	if (s->m_server->res_manager()->fetch(s->m_client, (void*&)buf) == status::SUCCESS)
 	{
 		if (buf)
 		{
@@ -57,7 +57,7 @@ status::error net::http::second_stage(session* s)
 		s->m_proto->process_stage_fn = http::third_stage;
 		ziafs_return_status(status::NOTIMPL);
 	}
-	if (s->m_client->io_on_read((void*&)buf) == status::SUCCESS)
+	if (s->m_server->res_manager()->fetch(s->m_client, (void*&)buf) == status::SUCCESS)
 	{
 		if (buf)
 		{
