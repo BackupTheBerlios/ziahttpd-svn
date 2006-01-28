@@ -130,7 +130,7 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   // getting data from the descriptor
   else
     {
-# define BUFSZ 256
+# define BUFSZ 3
       buffer* buf = new buffer;
       sysapi::error::handle_t herr;
       buf->resize(BUFSZ);

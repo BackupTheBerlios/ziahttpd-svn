@@ -139,9 +139,6 @@
 					RelativePath="..\src\core\http.cc">
 				</File>
 				<File
-					RelativePath="..\src\core\iores.cc">
-				</File>
-				<File
 					RelativePath="..\src\core\iores_file.cc">
 				</File>
 				<File

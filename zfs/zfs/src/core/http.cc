@@ -94,9 +94,10 @@ status::error	net::http::consume(net::session *s, buffer &buf)
 		}
 		ziafs_return_status(status::SUCCESS);
 	}
-	if (m_line.from_buffer(ln, buf) == true)
+	while (m_line.from_buffer(ln, buf) == true)
 	{
 		ziafs_debug_msg("line : %s\n", ln.c_str());
+		getchar();
 		if (ln.empty())
 		{
 			process_stage_fn = http::second_stage;
@@ -107,15 +108,23 @@ status::error	net::http::consume(net::session *s, buffer &buf)
 		}
 		if (m_state == HDRLINES)
 		{
-			parse_header_line(ln);
-			ziafs_return_status(status::SUCCESS);
+			if (parse_header_line(ln) == status::HEADERLINE_FAILED)
+			{
+				ziafs_debug_msg("HEADER LINE INCORRECT%s\n", "");
+			}
+			//ziafs_return_status(status::SUCCESS);
 		}
 		if (m_state == STUSLINES)
 		{
-			parse_status_line(ln);
+			if (parse_status_line(ln) == status::STATUSLINE_FAILED)
+			{
+				ziafs_debug_msg("STATUS LINE INCORRECT%s\n", "");
+			}
 			m_state = HDRLINES;
-			ziafs_return_status(status::SUCCESS);
+			//ziafs_return_status(status::SUCCESS);
 		}
+		buf.reset();
+		//ln.clear();
 	}
 	ziafs_return_status(status::SUCCESS);
 }
