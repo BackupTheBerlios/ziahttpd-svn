@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Thu Jan 26 01:21:00 2006 texane
+// Last update Sat Jan 28 15:51:44 2006 texane
 //
 
 
@@ -44,6 +44,10 @@ namespace net
     ~server();
 
     status::error process_requests();
+    status::error add_session(session*);
+
+    // accessor, should be changed
+    config* conf();
 
   private:
     // internal data

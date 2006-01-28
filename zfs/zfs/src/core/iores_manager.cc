@@ -5,14 +5,21 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Thu Jan 26 21:59:01 2006 texane
+// Last update Sat Jan 28 15:39:31 2006 texane
 //
 
 
 #include <list>
 #include <string>
 #include <core/ziafs_io.hh>
+#include <core/ziafs_debug.hh>
 #include <core/ziafs_status.hh>
+
+
+// Todo list
+// + check error code from io operation
+// -> success, ok
+// -> would block, don't make the resource expire...
 
 
 using std::list;
@@ -41,16 +48,25 @@ inline static bool is_bitset(T val, T bit)
 }
 
 
-status::error io::res_manager::dispatch_socket_io()
+status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux)
 {
+  // Important notes:
+  // . this is not important to read n bytes, just read
+  // . for writting, we should clear the bit when the byte
+  // count  has been written, allowing the user to advance
+  // in its execution flow, assuming its buffer has tottally
+  // been written.
+
   list<resource*>::iterator cur;
   list<resource*>::iterator last;
+  status::error err;
   fd_set rdset;
   fd_set wrset;
   res_insock* insock;
   bool activio;
   bool closeme;
-  buffer* fake;
+  bool pushme;
+  buffer* buf;
   int nev;
 
   // -
@@ -61,18 +77,30 @@ status::error io::res_manager::dispatch_socket_io()
   last = m_resources.end();
   while (cur != last)
     {
-      insock = reinterpret_cast<res_insock*>(*cur);
-      if (is_bitset(insock->m_pending, IO_READ) == true)
-	FD_SET(insock->m_hsock, &rdset);
-      if (is_bitset(insock->m_pending, IO_WRITE) == true)
-	FD_SET(insock->m_hsock, &wrset);
+      ziafs_debug_msg("walking resource %s\n", "");
+      if ((*cur)->m_typeid == io::TYPEID_INSOCK || (*cur)->m_typeid == io::TYPEID_INSOCK_SSL)
+	{
+	  insock = reinterpret_cast<res_insock*>(*cur);
+	  if (is_bitset(insock->m_pending, IO_READ) == true || insock->m_accepting == true)
+	    {
+	      ziafs_debug_msg("putting new resource in set %s\n", "");
+	      clrbit((*cur)->m_pending, IO_READ);
+	      FD_SET(insock->m_hsock, &rdset);
+	    }
+	  if (is_bitset(insock->m_pending, IO_WRITE) == true)
+	    FD_SET(insock->m_hsock, &wrset);
+	}
       ++cur;
     }
 
   // -
   // Dispatch pending io
 
+  ziafs_debug_msg("blocked in select %s\n", "");
   nev = select(0, &rdset, &wrset, 0, 0);
+  ziafs_debug_msg("returned from select: %d\n", nev);
+  getchar();
+
   if (nev == -1)
     ziafs_return_status( FAILED );
   cur = m_resources.begin();
@@ -81,20 +109,42 @@ status::error io::res_manager::dispatch_socket_io()
     {
       activio = true;
       closeme = false;
+      pushme = false;
       insock = reinterpret_cast<res_insock*>(*cur);
 
       if (FD_ISSET(insock->m_hsock, &rdset))
 	{
 	  activio = true;
-	  if (insock->io_on_read((void*&)fake) != status::SUCCESS)
+	  buf = &(*cur)->m_rd_buf;
+	  err = insock->io_on_read((void*&)buf, aux);
+	  if (err != status::SUCCESS)
 	    closeme = true;
+	  else
+	    pushme = true;
 	}
 
       if (FD_ISSET(insock->m_hsock, &wrset))
 	{
+	  buf = &(*cur)->m_wr_buf;
 	  activio = true;
-	  if (insock->io_on_write((void*&)fake) != status::SUCCESS)
-	    closeme = true;
+	  err = insock->io_on_write((void*&)buf, aux);
+	  if (err != status::SUCCESS)
+	    {
+	      // The resource has expired
+	      closeme = true;
+	    }
+	  else
+	    {
+	      if (buf->size())
+		{
+		  // There are no more data to write
+		  clrbit((*cur)->m_pending, IO_WRITE);
+		}
+	      else
+		{
+		  pushme = true;
+		}
+	    }
 	}
 
       if (closeme == true)
@@ -102,6 +152,10 @@ status::error io::res_manager::dispatch_socket_io()
 	  // mark the resource as having expired
 	  insock->io_on_close();
 	  insock->m_expired = true;
+	}
+      else if (pushme)
+	{
+	  q.push_front(*cur);
 	}
 
       if (activio == true)
@@ -144,7 +198,7 @@ status::error io::res_manager::create(resource*& res, stmask omask, const std::s
   res = new res_insock(omask, local_addr, local_port);
   res->m_typeid = TYPEID_INSOCK;
   res->m_refcount = 1;
-  
+  m_resources.push_front(res);
   ziafs_return_status( status::SUCCESS );
 }
 
@@ -156,7 +210,7 @@ status::error io::res_manager::create(resource*& res, stmask omask, const struct
   res = new res_insock(omask, inaddr, hsrv);
   res->m_typeid = TYPEID_INSOCK;
   res->m_refcount = 1;
-
+  m_resources.push_front(res);
   ziafs_return_status( status::SUCCESS );
 }
 
@@ -200,9 +254,8 @@ status::error io::res_manager::fetch(resource* res, void*& pdata)
 
   // Fetch the user buffer
   setbit(res->m_state, ST_FETCHING);
-  clrbit(res->m_pending, IO_READ);
-//   buf = res->m_rdbuf;
-//   res->m_rdbuf.reset();
+  *buf = res->m_rd_buf;
+  res->m_rd_buf.reset();
 
   ziafs_return_status( SUCCESS );
 }
@@ -219,18 +272,18 @@ status::error io::res_manager::feed(resource* res, void*& pdata)
   // the feeding operation
   setbit(res->m_state, ST_FEEDING);
   setbit(res->m_pending, IO_WRITE);
-//   m_feed_buf = buf;
-//   buf.reset();
-
-  // Set the resource write buffer to...
+  res->m_wr_buf += *buf;
 
   ziafs_return_status( SUCCESS );
 }
 
 
-status::error io::res_manager::dispatch_io()
+status::error io::res_manager::dispatch_io(list<resource*>& q, void*& aux)
 {
-  dispatch_socket_io();
+  // should get a list of sessions
+  // that will be ready to be processed
+
+  dispatch_socket_io(q, aux);
   ziafs_return_status( SUCCESS );
 }
 

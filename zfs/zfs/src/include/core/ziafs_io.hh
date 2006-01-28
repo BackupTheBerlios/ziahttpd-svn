@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Thu Jan 26 21:57:32 2006 texane
+// Last update Sat Jan 28 15:40:03 2006 texane
 //
 
 
@@ -73,8 +73,8 @@ namespace io
     // Interface
     virtual status::error io_on_open() = 0;
     virtual status::error io_on_close() = 0;
-    virtual status::error io_on_read(void*&) = 0;
-    virtual status::error io_on_write(void*&) = 0;
+    virtual status::error io_on_read(void*&, void*&) = 0;
+    virtual status::error io_on_write(void*&, void*&) = 0;
     virtual status::error io_on_expire() = 0;
     virtual status::error io_has_expired(bool&) const = 0;
     virtual status::error dump(buffer&) const = 0;
@@ -85,7 +85,6 @@ namespace io
     // Manager related informations
     bool m_expired;
 
-  private:
     // resource manager
     stmask m_state;
     stmask m_openmod;
@@ -111,8 +110,8 @@ namespace io
     ~res_file();
     status::error io_on_open();
     status::error io_on_close();
-    status::error io_on_read(void*&);
-    status::error io_on_write(void*&);
+    status::error io_on_read(void*&, void*&);
+    status::error io_on_write(void*&, void*&);
     status::error io_on_expire();
     status::error io_has_expired(bool&) const;
     status::error dump(buffer&) const;
@@ -142,8 +141,8 @@ namespace io
     // resouce interface implementation
     status::error io_on_open();
     status::error io_on_close();
-    status::error io_on_read(void*&);
-    status::error io_on_write(void*&);
+    status::error io_on_read(void*&, void*&);
+    status::error io_on_write(void*&, void*&);
     status::error io_on_expire();
     status::error io_has_expired(bool&) const;
     status::error dump(buffer&) const;
@@ -168,6 +167,8 @@ namespace io
 
 // Forward declarations
 namespace net { class config; }
+namespace net { class session; }
+namespace net { class server; }
 
 namespace io
 {
@@ -176,6 +177,8 @@ namespace io
 
   class res_manager
   {
+    friend class net::server;
+
   public:
     // Construction/destruction
     res_manager();
@@ -199,7 +202,7 @@ namespace io
     status::error feed(resource*, void*&);
 
     // resource processing
-    status::error dispatch_io();
+    status::error dispatch_io(std::list<resource*>&, void*&);
 
   private:
     // internal management routines
@@ -207,7 +210,7 @@ namespace io
     void reset_resource(resource*);
 
     // io operation dispatching
-    status::error dispatch_socket_io();
+    status::error dispatch_socket_io(std::list<resource*>&, void*&);
 
     // Set of resources
     std::list<resource*> m_resources;

@@ -5,13 +5,15 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Thu Jan 26 20:47:15 2006 texane
+// Last update Sat Jan 28 15:51:37 2006 texane
 //
 
 
 #include <string>
 #include <sys/sysapi.hh>
 #include <core/ziafs_io.hh>
+#include <core/ziafs_net.hh>
+#include <core/ziafs_debug.hh>
 #include <core/ziafs_status.hh>
 
 
@@ -87,25 +89,41 @@ status::error io::res_insock::io_on_close()
 }
 
 
-status::error io::res_insock::io_on_read(void*& pdata)
+status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
 {
+  net::server* srv;
+  net::session* sess_client;
+  net::protocol* proto;
   sysapi::insock::handle_t hsock;
   resource* res;
   stmask omode;
   unsigned int nread;
   int addrlen;
 
+  ziafs_debug_msg("read request: %d\n", m_rd_buf.size());
+
+  srv = (net::server*&)aux;
+
   // This is an accepting socket,
   // reading means accetping an
   // incoming connection.
   if (m_accepting == true)
     {
+      ziafs_debug_msg("handling incoming connection %s\n", "");
+
+      // Create the new resource
       pdata = 0;
       addrlen = sizeof(struct sockaddr_in);
       sysapi::insock::accept(hsock, m_foreign_addr, m_hsock);
       omode = (stmask)((int)ST_FETCHING & (int)ST_FEEDING);
       res = new res_insock(omode, m_foreign_addr, hsock);
       pdata = (void*)res;
+
+      // Create a new session
+      proto = new net::http;
+      ziafs_debug_msg("[!] if you see this, tell %s", "texane@gmail.com");
+      sess_client = new net::session(res, srv->conf(), proto);
+      srv->add_session(sess_client);
     }
   // This is NOT an accepting
   // socket, reading means
@@ -134,17 +152,18 @@ status::error io::res_insock::io_on_read(void*& pdata)
 }
 
 
-status::error io::res_insock::io_on_write(void*& pdata)
+status::error io::res_insock::io_on_write(void*& pdata, void*& aux)
 {
-  buffer* buf;
+  buffer* buf = (buffer*)pdata;
   unsigned int nsent;
   sysapi::error::handle_t herr;
+
+  ziafs_debug_msg("write request: %d\n", buf->size());
 
   // Not supported for an accepting socket.
   if (m_accepting == true)
     return status::BADMODE;
 
-  buf = (buffer*)pdata;
   herr = sysapi::insock::send(m_hsock, buf->bufptr(), (unsigned int)buf->size(), nsent);
   if (herr != sysapi::error::SUCCESS)
     {
@@ -153,6 +172,8 @@ status::error io::res_insock::io_on_write(void*& pdata)
       ziafs_return_status( CANNOT_WRITE );
     }
 
+  ziafs_debug_msg("has written %d bytes\n", nsent);
+  buf->remove_front(nsent);
   ziafs_return_status( SUCCESS );
 }
 

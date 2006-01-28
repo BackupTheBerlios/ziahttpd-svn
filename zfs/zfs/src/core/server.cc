@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Thu Jan 26 22:38:29 2006 texane
+// Last update Sat Jan 28 15:52:09 2006 texane
 //
 
 
@@ -20,6 +20,11 @@
 // todo list
 // + get resource from the connection module
 // + integrate created connections to the iomanager
+// + create a server for each port in the list(?).
+// + add the resource to res_manager
+// -> at creation time, place the resource into
+// a list
+// + add checks in add session
 
 
 using std::string;
@@ -101,44 +106,64 @@ net::server::~server()
 }
 
 
+net::config* net::server::conf()
+{
+  return m_config;
+}
+
+
+status::error net::server::add_session(session* sess)
+{
+  m_sessions.push_front(sess);
+  ziafs_return_status( SUCCESS );
+}
+
+
 status::error net::server::process_requests()
 {
+  list<session*>::iterator cur;
+  list<session*>::iterator last;
   list<config::protocol*>::iterator it;
-  list<session*>::iterator sess_current;
-  list<session*>::iterator sess_last;
-  net::session* sess_client;
-  net::protocol* proto_client;
-  io::resource* res_serv;
-  io::resource* res_client;
+  list<io::resource*> res_queue;
+  io::resource* res;
+  void* aux = reinterpret_cast<void*>(this);
 
   // Create a resource foreach port
   m_config->get_protocol(it);
   while (!m_config->end_protocol(it))
     {
-      res_serv = new io::res_insock(io::ST_FETCHING, "localhost", 40000);
-      proto_client = new http;
-      ziafs_print_object( *res_serv );
+      m_resman->create(res, io::ST_FETCHING, "localhost", 40000);
+      // res = new io::res_insock(io::ST_FETCHING, "localhost", 40000);
+      ziafs_print_object( *res );
       ++it;
     }
 
-  // Get incoming connections
-  res_serv->io_on_open();
-  res_serv->io_on_read((void*&)res_client);
-
-  // Create a new session
-  sess_client = new session(res_client, m_config, proto_client);
-  m_sessions.push_front(sess_client);
+  // ! resource manager should handle
+  res->io_on_open();
 
   // Serve incoming requests
   while (m_done == false)
     {
-      sess_current = m_sessions.begin();
-      sess_last = m_sessions.end();
-      while (sess_current != sess_last)
+      // Get resources on which activity
+      // has been seen.
+      m_resman->dispatch_io(res_queue, aux);
+      while (res_queue.size())
 	{
-	  (*sess_current)->process();
-	  ++sess_current;
+	  // Here try to match the session
+	  // associated with the resource
+	  // that has triggered activity.
+	  res = res_queue.front();
+	  res_queue.pop_front();
+	  cur = m_sessions.begin();
+	  last = m_sessions.end();
+	  while (cur != last)
+	    {
+	      if ((*cur)->m_client == res)
+		(*cur)->process();
+	      ++cur;
+	    }
 	}
+      
     }
 
   ziafs_return_status( SUCCESS );

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Thu Jan 26 19:54:55 2006 texane
+// Last update Sat Jan 28 13:09:59 2006 texane
 //
 
 
@@ -14,6 +14,11 @@
 #include <sstream>
 #include <cstring>
 #include <core/ziafs_buffer.hh>
+
+
+// Todo list
+// + test the case on resize, remove_front
+// + make unit tests and regression tests
 
 
 using std::setfill;
