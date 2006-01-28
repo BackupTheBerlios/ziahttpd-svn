@@ -32,7 +32,7 @@ status::error net::http::first_stage(session* s)
 {
 	buffer*	buf;
 
-	if (s->m_client->io_on_read((void*&)buf) == status::SUCCESS)
+	if (s->m_server->m_resmanger()->fetch(s->m_client, (void*&)buf) == status::SUCCESS)
 	{
 		if (buf)
 		{
