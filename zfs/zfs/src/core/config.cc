@@ -5,10 +5,10 @@
 
 net::config::config(const std::string &config_file)
 {
-	load_default();
 	if (!m_xmldoc.LoadFile(config_file.c_str(), TIXML_DEFAULT_ENCODING))
 	{
 		ziafs_debug_msg("File not found :%s\n", config_file.c_str());
+		load_default();
 		return ;
 	}
 	parse();
