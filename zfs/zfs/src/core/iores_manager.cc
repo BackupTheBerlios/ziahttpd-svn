@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Sat Jan 28 17:33:52 2006 texane
+// Last update Sat Jan 28 17:47:12 2006 texane
 //
 
 
@@ -246,10 +246,6 @@ status::error io::res_manager::close(resource*)
 }
 
 
-#include <iostream>
-using namespace std;
-
-
 status::error io::res_manager::fetch(resource* res, void*& pdata)
 {
   buffer* buf;
@@ -262,9 +258,6 @@ status::error io::res_manager::fetch(resource* res, void*& pdata)
   buf = new buffer(res->m_rd_buf);
   pdata = buf;
   res->m_rd_buf.reset();
-
-  cout << "toto le buffer" << endl;
-  cout << buf->tostring() << endl;
 
   ziafs_return_status( SUCCESS );
 }
