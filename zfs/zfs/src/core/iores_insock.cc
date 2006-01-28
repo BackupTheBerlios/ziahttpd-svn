@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Sat Jan 28 17:31:41 2006 texane
+// Last update Sat Jan 28 17:46:11 2006 texane
 //
 
 
@@ -130,7 +130,7 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   // getting data from the descriptor
   else
     {
-# define BUFSZ 256
+# define BUFSZ 1
       buffer* buf = new buffer;
       sysapi::error::handle_t herr;
       buf->resize(BUFSZ);
