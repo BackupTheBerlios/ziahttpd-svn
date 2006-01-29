@@ -1,5 +1,7 @@
 #!c:\bin\ruby -w
 
+require 'net/http'
+
 TestDirectory="./test/"
 PsconDirectory="../pscon/"
 RunFile="run"
@@ -38,12 +40,35 @@ class UnitTest
             @templateStatus = "UNKNOW"
           end
           templateGenerate(path)
+          sendtoberlios(path)
         }
       else
         return false
       end
   end
 
+  def sendtoberlios(path)
+    to = ""
+    h = Net::HTTP.new('localhost', 80)
+    query = "tbegin=" + @timeb.to_i().to_s() + "&";
+    query += "tend=" + @timea.to_i().to_s() + "&";
+    query += "status=" + @templateStatus + "&";
+    @templateReason.each_line {|line|
+      to += line.chomp() + "<br>"
+    }
+    @templateReason = to
+    query += "reason=" +@templateReason + "&";
+    @templateDesc.each_line {|line|
+      to += line.chomp() + "<br>"
+    }
+    @templateDesc = to
+    query += "desc=" + @templateDesc + "&";
+    query += "directory=" + path;
+    puts query
+    data = h.get('/posttest.php?' + query);
+    
+  end
+  
   def   fileexist(file)
     begin
       File.open( file , aModeString="r" )
