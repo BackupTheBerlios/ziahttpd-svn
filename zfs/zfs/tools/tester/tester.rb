@@ -24,18 +24,18 @@ class UnitTest
           @timea = Time.now
           if ($?.exitstatus.to_i() == 255) 
             @templateReason = t.to_s()
-            @templateStatus = "FALSE"
+            @templateStatus = "FAILED"
             if (File.exist?(path + DescFile))
               IO.foreach(path + DescFile){ |lineD|
                 @templateDesc += lineD + "<br>"
               }
             end
           elsif ($?.exitstatus.to_i() == 0) 
-            @templateStatus = "OK"
+            @templateStatus = "SUCCESS"
           elsif ($?.exitstatus.to_i() == 1) 
             @templateStatus = "NOT RUNNING"
           else
-            @templateStatus = "UNKNOW EXITSTATUS"
+            @templateStatus = "UNKNOW"
           end
           templateGenerate(path)
         }
@@ -55,16 +55,31 @@ class UnitTest
   end
 
   def   templateGenerate(path)
+    if (@templateStatus == "SUCCESS")
+      templateStatusColor = "#99FF99"
+    end
+    if (@templateStatus == "FAILED")
+      templateStatusColor = "#FF9999"
+    end
+    if (@templateStatus == "UNKNOW")
+      templateStatusColor = "yellow"
+    end
+    if (@templateStatus == "NOT RUNNING")
+      templateStatusColor = "silver"
+    end
+    dur = @timea.to_i() - @timeb.to_i()
     puts "TEST: " + path + " " + @templateStatus
     @html = <<END_OF_STRING
-<div>
-        TEST: #{path}<br>
-        TEMPS DE DEBUT: #{@timeb.to_i()}<br>
-        TEMPS DE FIN: #{@timea.to_i()}<br>
-        STATUS: #@templateStatus<br>
-        RAISON: #@templateReason<br>
-        DESC: #@templateDesc<br>
-</div>
+    <tr>
+      <td align=center>#{path}</td>
+      <td align=center>#{@timeb.to_i()}</td>
+      <td align=center>#{@timea.to_i()}</td>
+      <td align=center>#{dur.to_i()}</td>
+      <td align=center bgcolor="#{templateStatusColor}">#@templateStatus</td>
+      <td align=center>#@templateReason</td>
+      <td align=center>#@templateDesc</td>
+    </tr>
+
 END_OF_STRING
     $templateHTML += @html
   end
@@ -100,9 +115,21 @@ $templateHTML = <<END_OF_STRING
       <head>
         <title>LALALA <title>
       </head>
+      <table border=1>
+      <caption>Date : #{Time.now}</caption>
+      <tr>
+        <th>Test Directory</th>
+        <th>Begin</th>
+        <th>Stop</th>
+        <th>Duration</th>
+        <th>Status</th>
+        <th>Reason</th>
+        <th>Description</th>
+      </tr>
 END_OF_STRING
 s = Scroll.new(TestDirectory)
 $templateHTML += <<END_OF_STRING
+    </table>
   </body>
 </html>
 END_OF_STRING
