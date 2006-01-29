@@ -6,6 +6,9 @@ TestDirectory="./test/"
 PsconDirectory="../pscon/"
 RunFile="run"
 DescFile = "desc"
+HTTPHostTarget="localhost"
+HTTPFileTarget="posttest.php"
+$Ctime = Time.now
 $templateHTML=""
 
 class UnitTest
@@ -40,7 +43,7 @@ class UnitTest
             @templateStatus = "UNKNOW"
           end
           templateGenerate(path)
-          sendtoberlios(path)
+#          sendtoberlios(path)
         }
       else
         return false
@@ -49,9 +52,10 @@ class UnitTest
 
   def sendtoberlios(path)
     to = ""
-    h = Net::HTTP.new('localhost', 80)
+    h = Net::HTTP.new(HTTPHostTarget, 80)
     query = "tbegin=" + @timeb.to_i().to_s() + "&";
     query += "tend=" + @timea.to_i().to_s() + "&";
+    query = "ctime=" + $Ctime.to_i().to_s() + "&";
     query += "status=" + @templateStatus + "&";
     @templateReason.each_line {|line|
       to += line.chomp() + "<br>"
@@ -65,7 +69,7 @@ class UnitTest
     query += "desc=" + @templateDesc + "&";
     query += "directory=" + path;
 #    puts query
-    data = h.get('/posttest.php?' + query);
+    data = h.get('/' + HTTPFileTarget + '?' + query);
     
   end
   
