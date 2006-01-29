@@ -5,7 +5,7 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 20:52:31 2006 texane
-** Last update Sun Jan 29 14:03:33 2006 texane
+** Last update Sun Jan 29 19:16:06 2006 texane
 */
 
 
@@ -243,7 +243,7 @@ static int ps_monitor(ps_mon_t* psmon)
     pi->mm_usage = 0;
   get_cpu_usage(psmon, pi);
   get_handle_count(psmon, pi);
-  proc_info_push_back(&psmon->head, pi);
+/*   proc_info_push_back(&psmon->head, pi); */
   proc_info_report(psmon, pi);
   return 0;
 }
