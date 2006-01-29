@@ -5,12 +5,15 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 23:12:20 2006 texane
-** Last update Sun Jan 29 00:45:31 2006 texane
+** Last update Sun Jan 29 04:01:04 2006 texane
 */
 
 
 #ifndef PSMON_H
 # define PSMON_H
+
+
+#include <windows.h>
 
 
 typedef unsigned long ps_id_t;
@@ -50,8 +53,14 @@ typedef struct
   unsigned long ps_retval;
   ps_id_t ps_id;
   ps_handle_t ps_hdl;
-  
+
+  /* Output stream */
   FILE* outstrm;
+
+  /* Cache data */
+  ULARGE_INTEGER tm_cpu_usage;
+  ULARGE_INTEGER tm_last_time;
+  ULARGE_INTEGER load_cpu;
 
   /* Flag */
   bool_t done;

@@ -5,7 +5,7 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 20:52:31 2006 texane
-** Last update Sun Jan 29 01:00:25 2006 texane
+** Last update Sun Jan 29 11:34:24 2006 texane
 */
 
 
@@ -35,7 +35,7 @@ static void proc_info_push_back(proc_info_t** head, proc_info_t* tail)
 static void proc_info_reset(proc_info_t* pi)
 {
   pi->tmstp = 0;
-  pi->proc_usage = 0;
+  pi->cpu_usage = 0;
   pi->mm_usage = 0;
   pi->tmstp = 0;
   pi->next = 0;
@@ -57,25 +57,24 @@ static void proc_info_release(proc_info_t* pi)
   free(pi);
 }
 
-static void get_cpu_usage(ps_mon_t* psmon, proc_info_t* pi, proc_info_t* prev)
+static void get_cpu_usage(ps_mon_t* psmon, proc_info_t* pi)
 {
-  ULARGE_INTEGER uli1;
-  ULARGE_INTEGER uli2;
-  ULARGE_INTEGER uli1_tot;
-  ULARGE_INTEGER uli2_tot;
+  ULARGE_INTEGER cpu_usage;
+  ULARGE_INTEGER old_cpu_usage;
+  ULARGE_INTEGER delta_cpu_usage;
+  ULARGE_INTEGER current_time;
+  ULARGE_INTEGER old_time;
+  ULARGE_INTEGER delta_time;
+  ULARGE_INTEGER tmp;
+  SYSTEMTIME tm_current;
+  FILETIME tm_cur_time;
   FILETIME tm_create;
   FILETIME tm_exit;
   FILETIME tm_kernel;
   FILETIME tm_user;
-
-  SYSTEMTIME tm_current;
-  FILETIME tm_old_time;
-  FILETIME tm_cur_time;
-  FILETIME tm_delta_consumed;
-
   BOOL ret;
 
-  ret = GetProcessTimes(psmon->ps_handle,
+  ret = GetProcessTimes(psmon->ps_hdl,
 			&tm_create,
 			&tm_exit,
 			&tm_kernel,
@@ -83,16 +82,48 @@ static void get_cpu_usage(ps_mon_t* psmon, proc_info_t* pi, proc_info_t* prev)
   if (ret == FALSE)
     return ;
 
-  memcpy(&uli1, &tm_kernel, sizeof(ULARGE_INTEGER));
-  memcpy(&uli2, &tm_user, sizeof(ULARGE_INTEGER));
-  uli2.QuadPart += uli1.QuadPart;
 
+  /* Get the total cpu time consumed until now */
+  cpu_usage.QuadPart = 0;
+  memcpy(&tmp, &tm_kernel, sizeof(ULARGE_INTEGER));
+  cpu_usage.QuadPart += tmp.QuadPart;
+  memcpy(&tmp, &tm_user, sizeof(ULARGE_INTEGER));
+  cpu_usage.QuadPart += tmp.QuadPart;
+
+  printf("times: %d\n", cpu_usage.QuadPart); fflush(stdout);
+
+  /* Get the current time */
   GetSystemTime(&tm_current);
-  SystemToFileTime(&tm_current, &tm_cur_time);
-  memcpy(&uli1_tot, &tm_cur_time, sizeof(ULARGE_INTEGER));
-  memcpy(&uli2_tot, &tm_old_time, sizeof(ULARGE_INTEGER));
-  uli1_tot.QuadPart -= uli2_tot.QuadPart;
-  uli1_tot.QuadPart /= uli2.QuadPart;
+  SystemTimeToFileTime(&tm_current, &tm_cur_time);
+  memcpy(&current_time, &tm_cur_time, sizeof(FILETIME));
+
+  /* This is the first time we come here */
+  if (psmon->tm_last_time.QuadPart == 0)
+    {
+      psmon->tm_cpu_usage.QuadPart = cpu_usage.QuadPart;
+      psmon->tm_last_time.QuadPart = current_time.QuadPart;
+      psmon->load_cpu.QuadPart = 0;
+      return ;
+    }
+
+  /* Save the current time for later use and compute delta */
+  old_time.QuadPart = psmon->tm_last_time.QuadPart;
+  psmon->tm_last_time.QuadPart = current_time.QuadPart;
+  delta_time.QuadPart = current_time.QuadPart - old_time.QuadPart;
+
+  /* Save the current cpu and compute delta */
+  old_cpu_usage.QuadPart = psmon->tm_cpu_usage.QuadPart;
+  psmon->tm_cpu_usage.QuadPart = cpu_usage.QuadPart;
+  delta_cpu_usage.QuadPart = cpu_usage.QuadPart - old_cpu_usage.QuadPart;
+  if (delta_cpu_usage.QuadPart == 0)
+    {
+      psmon->load_cpu.QuadPart = 0;
+    }
+  else
+    {
+      psmon->load_cpu.QuadPart = (delta_time.QuadPart / delta_cpu_usage.QuadPart) * 100;
+    }
+  printf("-> got %lu%%\n", psmon->load_cpu.QuadPart); fflush(stdout);
   
 }
 
@@ -150,6 +181,7 @@ static int ps_monitor(ps_mon_t* psmon)
     pi->mm_usage = (unsigned long)mem_counters.WorkingSetSize;
   else
     pi->mm_usage = 0;
+  get_cpu_usage(psmon, pi);
   proc_info_push_back(&psmon->head, pi);
   proc_info_report(psmon, pi);
   return 0;
@@ -194,6 +226,7 @@ static bool_t ps_mon_init(ps_mon_t* psmon, char* cmdline)
       return false;
     }
 
+  psmon->tm_last_time.QuadPart = 0;
   psmon->head = 0;
   psmon->done = false;
   psmon->ps_id = pi.dwProcessId;
