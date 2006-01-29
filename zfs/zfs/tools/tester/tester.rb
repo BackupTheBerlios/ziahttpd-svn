@@ -64,7 +64,7 @@ class UnitTest
     @templateDesc = to
     query += "desc=" + @templateDesc + "&";
     query += "directory=" + path;
-    puts query
+#    puts query
     data = h.get('/posttest.php?' + query);
     
   end
