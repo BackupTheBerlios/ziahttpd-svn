@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Sat Jan 28 16:56:46 2006 texane
+// Last update Sun Jan 29 18:02:28 2006 texane
 //
 
 
@@ -37,6 +37,8 @@ namespace net
 {
   class server
   {
+    friend class io::res_manager;
+
   public:
     server(config*);
     server(char**);
@@ -45,6 +47,8 @@ namespace net
 
     status::error process_requests();
     status::error add_session(session*);
+    status::error remove_session(session*);
+    status::error remove_session_byresource(io::resource*);
 
     // accessor, should be changed
     io::res_manager* res_manager();

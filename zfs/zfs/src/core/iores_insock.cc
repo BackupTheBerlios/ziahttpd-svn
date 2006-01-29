@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Sat Jan 28 18:00:47 2006 texane
+// Last update Sun Jan 29 18:49:13 2006 texane
 //
 
 
@@ -70,7 +70,7 @@ status::error io::res_insock::io_on_open()
   // This function performs the actual
   // resource opening.
 
-  if (m_accepting)
+  if (m_accepting == true)
     {
       if (sysapi::insock::p_to_inaddr(m_local_addr, m_my_addr, m_my_port) != sysapi::error::SUCCESS)
 	ziafs_return_status( CANNOT_OPEN );
@@ -82,10 +82,10 @@ status::error io::res_insock::io_on_open()
 }
 
 
-status::error io::res_insock::io_on_close()
+status::error io::res_insock::io_on_close(void*& aux)
 {
   sysapi::insock::close(m_hsock);
-  ziafs_return_status( PARTIALIMPL );
+  ziafs_return_status( SUCCESS );
 }
 
 
@@ -100,8 +100,6 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   unsigned int nread;
   int addrlen;
 
-  ziafs_debug_msg("read request: %d\n", m_rd_buf.size());
-
   srv = (net::server*&)aux;
 
   // This is an accepting socket,
@@ -109,19 +107,17 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   // incoming connection.
   if (m_accepting == true)
     {
-      ziafs_debug_msg("handling incoming connection %s\n", "");
-
       // Create the new resource
       pdata = 0;
       addrlen = sizeof(struct sockaddr_in);
       sysapi::insock::accept(hsock, m_foreign_addr, m_hsock);
       omode = (stmask)((int)ST_FETCHING & (int)ST_FEEDING);
       srv->res_manager()->create(res, omode, m_foreign_addr, hsock);
+      srv->res_manager()->open(res);
       pdata = (void*)res;
 
       // Create a new session
       proto = new net::http;
-      ziafs_debug_msg("[!] if you see this, tell %s", "texane@gmail.com");
       sess_client = new net::session(res, srv->conf(), proto);
       srv->add_session(sess_client);
     }
@@ -130,14 +126,14 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   // getting data from the descriptor
   else
     {
-# define BUFSZ 3
+# define BUFSZ 512
       buffer* buf = new buffer;
       sysapi::error::handle_t herr;
       buf->resize(BUFSZ);
       herr = sysapi::insock::recv(m_hsock, buf->bufptr(), (unsigned int)buf->size(), nread);
       if (herr != sysapi::error::SUCCESS)
 	{
-	  if (herr == sysapi::error::CONNECTION_CLOSED)
+  	  if (herr == sysapi::error::CONNECTION_CLOSED)
 	    m_expired = true;
 	  ziafs_return_status( CANNOT_READ );
 	}
@@ -179,8 +175,6 @@ status::error io::res_insock::io_on_write(void*& pdata, void*& aux)
 }
 
 
-#include <iostream>
-using namespace std;
 status::error io::res_insock::io_on_expire()
 {
   // This function is called when
@@ -188,7 +182,7 @@ status::error io::res_insock::io_on_expire()
   // the resource has expired,
   // before releasing it.
 
-  cout << "the resource expired!" << endl;
+  ziafs_debug_msg("resource has expired: %s\n", "");
   ziafs_return_status( SUCCESS );
 }
 

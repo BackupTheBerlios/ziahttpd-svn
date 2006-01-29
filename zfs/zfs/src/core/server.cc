@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Sat Jan 28 16:56:23 2006 texane
+// Last update Sun Jan 29 18:50:38 2006 texane
 //
 
 
@@ -14,6 +14,7 @@
 #include <core/ziafs_io.hh>
 #include <core/ziafs_net.hh>
 #include <core/ziafs_status.hh>
+#include <core/ziafs_debug.hh>
 #include <sys/sysapi.hh>
 
 
@@ -126,6 +127,39 @@ status::error net::server::add_session(session* sess)
 }
 
 
+status::error net::server::remove_session_byresource(io::resource* res)
+{
+  // Remove all the session whose
+  // resource is res
+
+  list<session*>::iterator cur = m_sessions.begin();
+  list<session*>::iterator last = m_sessions.end();
+  list<session*>::iterator prev;
+
+  while (cur != last)
+    {
+      prev = cur;
+      ++cur;
+      if ((*prev)->m_client == res ||
+	  (*prev)->m_target == res)
+	{
+	  remove_session(*prev);
+	}
+    }
+
+  ziafs_return_status( SUCCESS );
+}
+
+status::error net::server::remove_session(session* sess)
+{
+  // Remove the given session
+  ziafs_debug_msg("removing session %s\n", "");
+  m_sessions.remove(sess);
+  delete sess;
+  ziafs_return_status( SUCCESS );
+}
+
+
 status::error net::server::process_requests()
 {
   list<session*>::iterator cur;
@@ -138,22 +172,26 @@ status::error net::server::process_requests()
   // Create a resource foreach port
   m_config->get_protocol(it);
   while (!m_config->end_protocol(it))
-    {
+    {      
       m_resman->create(res, io::ST_FETCHING, "localhost", 40000);
-      // res = new io::res_insock(io::ST_FETCHING, "localhost", 40000);
+      m_resman->open(res);
       ziafs_print_object( *res );
       ++it;
     }
 
-  // ! resource manager should handle
-  res->io_on_open();
-
   // Serve incoming requests
   while (m_done == false)
     {
+      ziafs_debug_msg("session count %d\n", m_sessions.size());
+
       // Get resources on which activity
       // has been seen.
+
+      ziafs_debug_msg("reaping the resource %s\n", "");
+      m_resman->reap_resources(this);
+
       m_resman->dispatch_io(res_queue, aux);
+
       while (res_queue.size())
 	{
 	  // Here try to match the session
@@ -165,7 +203,8 @@ status::error net::server::process_requests()
 	  last = m_sessions.end();
 	  while (cur != last)
 	    {
-	      if ((*cur)->m_client == res)
+	      if ((*cur)->m_client == res ||
+		  (*cur)->m_target == res)
 		(*cur)->process();
 	      ++cur;
 	    }

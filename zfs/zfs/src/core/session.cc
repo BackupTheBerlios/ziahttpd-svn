@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 02:59:38 2006 texane
-// Last update Thu Jan 26 00:11:01 2006 texane
+// Last update Sun Jan 29 18:01:17 2006 texane
 //
 
 
@@ -33,12 +33,15 @@ session::session(resource* client, config* config, protocol* proto)
 
 session::~session()
 {
-  // Config is global, so
-  // don't release it here.
+  // The session hasnot to delete
+  // the resource, since the io
+  // manager will do so.
+  // Just flag them as removed...
+
   if (m_client)
-    delete m_client;
+    m_client = 0;
   if (m_target)
-    delete m_target;
+    m_target = 0;
   if (m_proto)
     delete m_proto;
 }

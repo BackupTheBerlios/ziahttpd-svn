@@ -71,7 +71,6 @@ status::error net::http::second_stage(session* s)
 status::error net::http::third_stage(session* s)
 {
 	ziafs_debug_msg("entering in stage 3 wow%s\n", "");
-	getchar();
 	ziafs_return_status(status::NOTIMPL);
 }
 
@@ -97,7 +96,6 @@ status::error	net::http::consume(net::session *s, buffer &buf)
 	while (m_line.from_buffer(ln, buf) == true)
 	{
 		ziafs_debug_msg("line : %s\n", ln.c_str());
-		getchar();
 		if (ln.empty())
 		{
 			process_stage_fn = http::second_stage;

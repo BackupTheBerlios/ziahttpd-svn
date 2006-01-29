@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 20:39:38 2005 texane
-## Last update Sat Jan 28 12:49:58 2006 texane
+## Last update Sun Jan 29 14:57:42 2006 texane
 ##
 
 # ! Always include this file
@@ -43,7 +43,8 @@ trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \
 	  Makefile~
 
-CCDEFS	= $(CCDEFS) -DZIAFS_DUMP_OBJECTS -DZIAFS_PRINT_OBJECTS -DZIAFS_DEBUG_MSG
+CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_MSG
+# CCDEFS	= $(CCDEFS) -DZIAFS_DUMP_OBJECTS -DZIAFS_PRINT_OBJECTS -DZIAFS_DEBUG_MSG
 
 # Override default variables here
 

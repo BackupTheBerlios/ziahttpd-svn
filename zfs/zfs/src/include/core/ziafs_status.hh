@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:22:54 2006 texane
-// Last update Thu Jan 26 21:28:37 2006 texane
+// Last update Sun Jan 29 17:12:56 2006 texane
 //
 
 
@@ -44,6 +44,7 @@ namespace status
       CANNOT_CLOSE,
       NOT_FOUND,
       EXPIRED,
+      ISNT_OPENED,
 
       //http
       STATUSLINE_FAILED,

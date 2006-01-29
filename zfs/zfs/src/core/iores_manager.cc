@@ -5,13 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Sat Jan 28 18:26:40 2006 texane
+// Last update Sun Jan 29 19:09:54 2006 texane
 //
 
 
 #include <list>
 #include <string>
 #include <core/ziafs_io.hh>
+#include <core/ziafs_net.hh>
 #include <core/ziafs_debug.hh>
 #include <core/ziafs_status.hh>
 
@@ -20,6 +21,12 @@
 // + check error code from io operation
 // -> success, ok
 // -> would block, don't make the resource expire...
+// + reque should be in the iomanager, so that it
+// can check if present are valid or not (in the resource)
+// set
+// + sessions should be removed by the server,
+// so code a function that does the removal by the
+// server, according to a resource address
 
 
 using std::list;
@@ -59,6 +66,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 
   list<resource*>::iterator cur;
   list<resource*>::iterator last;
+  list<resource*>::iterator prev;
   status::error err;
   fd_set rdset;
   fd_set wrset;
@@ -83,7 +91,6 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
  	  if (is_bitset(insock->m_pending, IO_READ) == true || insock->m_accepting == true)
 	    {
 	      ziafs_debug_msg("putting new resource in set %s\n", "");
-	      // clrbit((*cur)->m_pending, IO_READ);
 	      FD_SET(insock->m_hsock, &rdset);
 	    }
 	  if (is_bitset(insock->m_pending, IO_WRITE) == true)
@@ -94,27 +101,26 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 
   // -
   // Dispatch pending io
-
-  ziafs_debug_msg("blocked in select %s\n", "");
   nev = select(0, &rdset, &wrset, 0, 0);
-  ziafs_debug_msg("returned from select: %d\n", nev);
-//   getchar();
-
   if (nev == -1)
     ziafs_return_status( FAILED );
+
   cur = m_resources.begin();
   last = m_resources.end();
-  while (cur != last && nev > 0)
+  while ((cur != last) && nev > 0)
     {
-      activio = true;
+      activio = false;
       closeme = false;
       pushme = false;
       insock = reinterpret_cast<res_insock*>(*cur);
 
+      prev = cur;
+      ++cur;
+
       if (FD_ISSET(insock->m_hsock, &rdset))
 	{
 	  activio = true;
-	  buf = &(*cur)->m_rd_buf;
+	  buf = &(*prev)->m_rd_buf;
 	  err = insock->io_on_read((void*&)buf, aux);
 	  if (err != status::SUCCESS)
 	    closeme = true;
@@ -124,7 +130,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 
       if (FD_ISSET(insock->m_hsock, &wrset))
 	{
-	  buf = &(*cur)->m_wr_buf;
+	  buf = &(*prev)->m_wr_buf;
 	  activio = true;
 	  err = insock->io_on_write((void*&)buf, aux);
 	  if (err != status::SUCCESS)
@@ -137,7 +143,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 	      if (buf->size())
 		{
 		  // There are no more data to write
-		  clrbit((*cur)->m_pending, IO_WRITE);
+		  clrbit((*prev)->m_pending, IO_WRITE);
 		}
 	      else
 		{
@@ -148,13 +154,13 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 
       if (closeme == true)
 	{
-	  // mark the resource as having expired
-	  insock->io_on_close();
-	  insock->m_expired = true;
+	  ziafs_debug_msg("!!!!!!!!!! %s\n", "");
+	  close(*prev);
 	}
-      else if (pushme)
+      else if (pushme == true)
 	{
-	  q.push_front(*cur);
+	  ziafs_debug_msg("!!!!!!!!!! 2 %s\n", "");
+	  q.push_front(*prev);
 	}
 
       if (activio == true)
@@ -187,6 +193,7 @@ void io::res_manager::reset_resource(resource* res)
   res->m_openmod = ST_NONE;
   res->m_refcount = 0;
   res->m_expired = false;
+  res->m_opened = false;
 }
 
 
@@ -195,10 +202,10 @@ status::error io::res_manager::create(resource*& res, stmask omask, const std::s
   // Instanciate an accepting socket
 
   res = new res_insock(omask, local_addr, local_port);
+  reset_resource(res);
   res->m_typeid = TYPEID_INSOCK;
   res->m_pending = IO_READ;
   setbit(res->m_openmod, ST_FETCHING);
-  res->m_refcount = 1;
   m_resources.push_front(res);
   ziafs_return_status( status::SUCCESS );
 }
@@ -207,13 +214,12 @@ status::error io::res_manager::create(resource*& res, stmask omask, const std::s
 status::error io::res_manager::create(resource*& res, stmask omask, const struct sockaddr_in& inaddr, const sysapi::insock::handle_t& hsrv)
 {
   // Instanciate a client socket
-
   res = new res_insock(omask, inaddr, hsrv);
+  reset_resource(res);
   res->m_pending = IO_READ;
   setbit(res->m_openmod, ST_FETCHING);
   setbit(res->m_openmod, ST_FEEDING);
   res->m_typeid = TYPEID_INSOCK;
-  res->m_refcount = 1;
   m_resources.push_front(res);
   ziafs_return_status( status::SUCCESS );
 }
@@ -225,33 +231,45 @@ status::error io::res_manager::create(resource*&, stmask, const std::string&)
 }
 
 
-status::error io::res_manager::destruct(resource*)
-{
-  ziafs_return_status( status::NOTIMPL );
-}
-
-
 status::error io::res_manager::open(resource* res)
 {
   // Call the resource open method
   // Mark the resource as opened
   // There should be io_add_manager method
 
-  res->m_opened = true;
-
+  if (res->m_opened == false)
+    {
+      res->io_on_open();
+      res->m_opened = true;
+    }
+  ++res->m_refcount;
   ziafs_return_status( SUCCESS );
 }
 
 
-status::error io::res_manager::close(resource*)
+status::error io::res_manager::close(resource* res)
 {
-  ziafs_return_status( NOTIMPL );
+  // This is the only part in
+  // the code that should release
+  // resources.
+
+  if (res->m_opened == false)
+    ziafs_return_status( ISNT_OPENED );
+
+  --res->m_refcount;
+  if (res->m_refcount == 0)
+    res->m_opened = false;
+
+  ziafs_return_status( SUCCESS );
 }
 
 
 status::error io::res_manager::fetch(resource* res, void*& pdata)
 {
   buffer* buf;
+
+  if (res->m_opened == false)
+    ziafs_return_status( ISNT_OPENED );
 
   if ((res->m_openmod & ST_FETCHING) == false)
     ziafs_return_status( BADMODE );
@@ -270,6 +288,9 @@ status::error io::res_manager::feed(resource* res, void*& pdata)
 {
   buffer* buf = (buffer*&)pdata;
 
+  if (res->m_opened == false)
+    ziafs_return_status( ISNT_OPENED );
+
   if ((res->m_openmod & ST_FEEDING) == false)
     ziafs_return_status( BADMODE );
 
@@ -285,10 +306,58 @@ status::error io::res_manager::feed(resource* res, void*& pdata)
 
 status::error io::res_manager::dispatch_io(list<resource*>& q, void*& aux)
 {
-  // should get a list of sessions
-  // that will be ready to be processed
-
+  // First process all the close requests
+  // Dispatch io operation on sockets
   dispatch_socket_io(q, aux);
+  ziafs_return_status( SUCCESS );
+}
+
+
+status::error io::res_manager::reap_resources(void* aux)
+{
+  // !
+  // At this point, its safe to do
+  // a lot of things concerning resource
+  // releasing.
+  // DO ALL THIS PART HERE, don't spread
+  // code that release resource, remove session..
+  net::server* srv;
+  list<resource*>::iterator cur_res = m_resources.begin();
+  list<resource*>::iterator last_res = m_resources.end();
+  list<resource*>::iterator prev_res;
+  list<net::session*>::iterator cur_sess;
+  list<net::session*>::iterator last_sess;
+  list<net::session*>::iterator prev_sess;
+
+  srv = (net::server*)aux;
+  while (cur_res != last_res)
+    {
+      prev_res = cur_res;
+      ++cur_res;
+      if ((*prev_res)->m_refcount == 0)
+	{
+	  // remove closed resources
+	  cur_sess = srv->m_sessions.begin();
+	  last_sess = srv->m_sessions.end();
+
+	  // remove associated sessions
+	  while (cur_sess != last_sess)
+	    {
+	      prev_sess = cur_sess;
+	      ++cur_sess;
+	      if ((*prev_sess)->m_client == *prev_res ||
+		  (*prev_sess)->m_target == *prev_res)
+		{
+		  srv->m_sessions.erase(prev_sess);
+		  delete *prev_sess;
+		}
+	    }
+
+	  (*prev_res)->io_on_close(aux);
+	  m_resources.erase(prev_res);
+	  delete *prev_res;
+	}
+    }
   ziafs_return_status( SUCCESS );
 }
 

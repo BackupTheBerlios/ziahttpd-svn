@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Sat Jan 28 15:40:03 2006 texane
+// Last update Sun Jan 29 17:22:59 2006 texane
 //
 
 
@@ -72,7 +72,7 @@ namespace io
 
     // Interface
     virtual status::error io_on_open() = 0;
-    virtual status::error io_on_close() = 0;
+    virtual status::error io_on_close(void*&) = 0;
     virtual status::error io_on_read(void*&, void*&) = 0;
     virtual status::error io_on_write(void*&, void*&) = 0;
     virtual status::error io_on_expire() = 0;
@@ -109,7 +109,7 @@ namespace io
     res_file(stmask, const std::string&);
     ~res_file();
     status::error io_on_open();
-    status::error io_on_close();
+    status::error io_on_close(void*&);
     status::error io_on_read(void*&, void*&);
     status::error io_on_write(void*&, void*&);
     status::error io_on_expire();
@@ -140,7 +140,7 @@ namespace io
 
     // resouce interface implementation
     status::error io_on_open();
-    status::error io_on_close();
+    status::error io_on_close(void*&);
     status::error io_on_read(void*&, void*&);
     status::error io_on_write(void*&, void*&);
     status::error io_on_expire();
@@ -203,6 +203,7 @@ namespace io
 
     // resource processing
     status::error dispatch_io(std::list<resource*>&, void*&);
+    status::error reap_resources(void*);
 
   private:
     // internal management routines
