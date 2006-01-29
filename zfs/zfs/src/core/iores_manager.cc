@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Sat Jan 28 17:47:12 2006 texane
+// Last update Sat Jan 28 18:26:40 2006 texane
 //
 
 
@@ -197,6 +197,7 @@ status::error io::res_manager::create(resource*& res, stmask omask, const std::s
   res = new res_insock(omask, local_addr, local_port);
   res->m_typeid = TYPEID_INSOCK;
   res->m_pending = IO_READ;
+  setbit(res->m_openmod, ST_FETCHING);
   res->m_refcount = 1;
   m_resources.push_front(res);
   ziafs_return_status( status::SUCCESS );
@@ -209,6 +210,8 @@ status::error io::res_manager::create(resource*& res, stmask omask, const struct
 
   res = new res_insock(omask, inaddr, hsrv);
   res->m_pending = IO_READ;
+  setbit(res->m_openmod, ST_FETCHING);
+  setbit(res->m_openmod, ST_FEEDING);
   res->m_typeid = TYPEID_INSOCK;
   res->m_refcount = 1;
   m_resources.push_front(res);
@@ -250,8 +253,8 @@ status::error io::res_manager::fetch(resource* res, void*& pdata)
 {
   buffer* buf;
 
-//   if ((res->m_openmod & ST_FETCHING) == false)
-//     ziafs_return_status( BADMODE );
+  if ((res->m_openmod & ST_FETCHING) == false)
+    ziafs_return_status( BADMODE );
 
   // Fetch the user buffer
   setbit(res->m_state, ST_FETCHING);
