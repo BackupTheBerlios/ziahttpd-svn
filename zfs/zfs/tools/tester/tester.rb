@@ -1,15 +1,38 @@
 #!c:\bin\ruby -w
 
 require 'net/http'
-
+require 'win32ole'
+    
 TestDirectory="./test/"
 PsconDirectory="../pscon/"
 RunFile="run"
 DescFile = "desc"
-HTTPHostTarget="localhost"
+HTTPHostTarget="ziahttpd.berlios.de"
 HTTPFileTarget="posttest.php"
 $Ctime = Time.now
 $templateHTML=""
+ev = ""
+
+def navigate
+  puts "IE has exited..."
+  throw :done
+end
+
+def gourl(url)
+
+    ie = WIN32OLE.new('InternetExplorer.Application')
+    ev = WIN32OLE_EVENT.new(ie, 'DWebBrowserEvents')
+    ev.on_event("NavigateComplete"){
+      navigate()
+    }
+    ie.Navigate(url)
+    catch(:done) {
+    loop {
+       WIN32OLE_EVENT.message_loop
+    }
+  }
+
+end
 
 class UnitTest
   @templateStatus = ""
@@ -43,7 +66,7 @@ class UnitTest
             @templateStatus = "UNKNOW"
           end
           templateGenerate(path)
-#          sendtoberlios(path)
+          sendtoberlios(path)
         }
       else
         return false
@@ -52,10 +75,9 @@ class UnitTest
 
   def sendtoberlios(path)
     to = ""
-    h = Net::HTTP.new(HTTPHostTarget, 80)
     query = "tbegin=" + @timeb.to_i().to_s() + "&";
     query += "tend=" + @timea.to_i().to_s() + "&";
-    query = "ctime=" + $Ctime.to_i().to_s() + "&";
+    query += "ctime=" + $Ctime.to_i().to_s() + "&";
     query += "status=" + @templateStatus + "&";
     @templateReason.each_line {|line|
       to += line.chomp() + "<br>"
@@ -69,8 +91,8 @@ class UnitTest
     query += "desc=" + @templateDesc + "&";
     query += "directory=" + path;
 #    puts query
-    data = h.get('/' + HTTPFileTarget + '?' + query);
-    
+    url = "http://" + HTTPHostTarget + '/' + HTTPFileTarget + '?' + query
+    gourl(url)
   end
   
   def   fileexist(file)
