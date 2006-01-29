@@ -5,7 +5,7 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 23:12:20 2006 texane
-** Last update Sun Jan 29 04:01:04 2006 texane
+** Last update Sun Jan 29 13:29:00 2006 texane
 */
 
 
@@ -28,7 +28,12 @@ typedef struct proc_info
   ps_timestp_t tmstp;
 
   /* processor load */
-  unsigned long cpu_usage;
+  double cpu_usage;
+  double kcpu_usage;
+  double ucpu_usage;
+
+  /* Handle count */
+  unsigned long hdl_count;
 
   /* memory related */
   unsigned long mm_usage;
@@ -59,8 +64,10 @@ typedef struct
 
   /* Cache data */
   ULARGE_INTEGER tm_cpu_usage;
+  ULARGE_INTEGER tm_kcpu_usage;
+  ULARGE_INTEGER tm_ucpu_usage;
   ULARGE_INTEGER tm_last_time;
-  ULARGE_INTEGER load_cpu;
+  double load_cpu;
 
   /* Flag */
   bool_t done;

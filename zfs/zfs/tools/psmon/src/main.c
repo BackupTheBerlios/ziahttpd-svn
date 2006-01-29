@@ -5,10 +5,11 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 20:52:31 2006 texane
-** Last update Sun Jan 29 11:34:24 2006 texane
+** Last update Sun Jan 29 14:03:33 2006 texane
 */
 
 
+#define _WIN32_WINNT 0x0501
 #include <windows.h>
 #include <psapi.h>
 #include <stdio.h>
@@ -36,7 +37,10 @@ static void proc_info_reset(proc_info_t* pi)
 {
   pi->tmstp = 0;
   pi->cpu_usage = 0;
+  pi->kcpu_usage = 0;
+  pi->ucpu_usage = 0;
   pi->mm_usage = 0;
+  pi->hdl_count = 0;
   pi->tmstp = 0;
   pi->next = 0;
   pi->prev = 0;
@@ -60,8 +64,14 @@ static void proc_info_release(proc_info_t* pi)
 static void get_cpu_usage(ps_mon_t* psmon, proc_info_t* pi)
 {
   ULARGE_INTEGER cpu_usage;
+  ULARGE_INTEGER kcpu_usage;
+  ULARGE_INTEGER ucpu_usage;
   ULARGE_INTEGER old_cpu_usage;
+  ULARGE_INTEGER old_kcpu_usage;
+  ULARGE_INTEGER old_ucpu_usage;
   ULARGE_INTEGER delta_cpu_usage;
+  ULARGE_INTEGER delta_kcpu_usage;
+  ULARGE_INTEGER delta_ucpu_usage;
   ULARGE_INTEGER current_time;
   ULARGE_INTEGER old_time;
   ULARGE_INTEGER delta_time;
@@ -90,7 +100,13 @@ static void get_cpu_usage(ps_mon_t* psmon, proc_info_t* pi)
   memcpy(&tmp, &tm_user, sizeof(ULARGE_INTEGER));
   cpu_usage.QuadPart += tmp.QuadPart;
 
-  printf("times: %d\n", cpu_usage.QuadPart); fflush(stdout);
+  kcpu_usage.QuadPart = 0;
+  memcpy(&tmp, &tm_kernel, sizeof(ULARGE_INTEGER));
+  kcpu_usage.QuadPart += tmp.QuadPart;
+
+  ucpu_usage.QuadPart = 0;
+  memcpy(&tmp, &tm_user, sizeof(ULARGE_INTEGER));
+  ucpu_usage.QuadPart += tmp.QuadPart;
 
   /* Get the current time */
   GetSystemTime(&tm_current);
@@ -101,8 +117,10 @@ static void get_cpu_usage(ps_mon_t* psmon, proc_info_t* pi)
   if (psmon->tm_last_time.QuadPart == 0)
     {
       psmon->tm_cpu_usage.QuadPart = cpu_usage.QuadPart;
+      psmon->tm_ucpu_usage.QuadPart = ucpu_usage.QuadPart;
+      psmon->tm_kcpu_usage.QuadPart = kcpu_usage.QuadPart;
       psmon->tm_last_time.QuadPart = current_time.QuadPart;
-      psmon->load_cpu.QuadPart = 0;
+      psmon->load_cpu = 0;
       return ;
     }
 
@@ -113,18 +131,36 @@ static void get_cpu_usage(ps_mon_t* psmon, proc_info_t* pi)
 
   /* Save the current cpu and compute delta */
   old_cpu_usage.QuadPart = psmon->tm_cpu_usage.QuadPart;
+  old_kcpu_usage.QuadPart = psmon->tm_kcpu_usage.QuadPart;
+  old_ucpu_usage.QuadPart = psmon->tm_ucpu_usage.QuadPart;
   psmon->tm_cpu_usage.QuadPart = cpu_usage.QuadPart;
+  psmon->tm_ucpu_usage.QuadPart = ucpu_usage.QuadPart;
+  psmon->tm_kcpu_usage.QuadPart = kcpu_usage.QuadPart;
   delta_cpu_usage.QuadPart = cpu_usage.QuadPart - old_cpu_usage.QuadPart;
+  delta_ucpu_usage.QuadPart = ucpu_usage.QuadPart - old_ucpu_usage.QuadPart;
+  delta_kcpu_usage.QuadPart = kcpu_usage.QuadPart - old_kcpu_usage.QuadPart;
   if (delta_cpu_usage.QuadPart == 0)
     {
-      psmon->load_cpu.QuadPart = 0;
+      psmon->load_cpu = 0;
     }
   else
     {
-      psmon->load_cpu.QuadPart = (delta_time.QuadPart / delta_cpu_usage.QuadPart) * 100;
+      double res;
+      res = (double)delta_cpu_usage.LowPart / (double)delta_time.LowPart;
+      res *= 100;
+      psmon->load_cpu = res;
+      pi->cpu_usage = res;
+
+      res = (double)delta_kcpu_usage.LowPart / (double)delta_time.LowPart;
+      res *= 100;
+      pi->kcpu_usage = res;
+
+      res = (double)delta_ucpu_usage.LowPart / (double)delta_time.LowPart;
+      res *= 100;
+      pi->ucpu_usage = res;
+/*       printf("delta cpu usage: %d\n", delta_cpu_usage.LowPart); */
+/*       printf("delta time usage: %d\n", delta_time.LowPart); */
     }
-  printf("-> got %lu%%\n", psmon->load_cpu.QuadPart); fflush(stdout);
-  
 }
 
 static ps_timestp_t time_from_epoch(void)
@@ -150,10 +186,28 @@ static ps_timestp_t time_from_epoch(void)
   return nsec;
 }
 
+static unsigned long color_from_delta(unsigned long load)
+{
+  unsigned long res = 0xffffff;
+  unsigned short tmp;
+  unsigned char n;
+  n = (unsigned char)((0xff * load) / 100) & 0xf0;
+  tmp = n + (n << 8);
+  return res - tmp;
+}
+
 static void proc_info_report(ps_mon_t* psmon, proc_info_t* pi)
 {
-  fprintf(psmon->outstrm, "<tr><td>memory</td><td>%8ld</td></tr>\n", pi->mm_usage / 1024);
-  fprintf(psmon->outstrm, "<tr><td>processor</td><td>%8ld</td></tr>\n", pi->cpu_usage);
+/*   fprintf(psmon->outstrm, "<table frame=\"box\" border=\"1\" align=right">\n"); */
+  fprintf(psmon->outstrm, "<tr>\n");
+  fprintf(psmon->outstrm, "<td align=\"right\">%8lu</td>\n", pi->tmstp);
+  fprintf(psmon->outstrm, "<td align=\"right\">%8ldKb</td>\n", pi->mm_usage / 1024);
+  fprintf(psmon->outstrm, "<td align=\"right\">%8ld</td>\n", pi->hdl_count);
+  fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->cpu_usage), pi->cpu_usage);
+  fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->kcpu_usage), pi->kcpu_usage);
+  fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->ucpu_usage), pi->ucpu_usage);
+  fprintf(psmon->outstrm, "</tr>\n");
+/*   fprintf(psmon->outstrm, "</table>\n"); */
 
 /*   printf("%lu\n", nsec); */
 
@@ -170,6 +224,12 @@ static void proc_info_report(ps_mon_t* psmon, proc_info_t* pi)
 }
 
 
+static void get_handle_count(ps_mon_t* psmon, proc_info_t* pi)
+{
+  if (GetProcessHandleCount(psmon->ps_hdl, (PDWORD)&pi->hdl_count) == FALSE)
+    pi->hdl_count = 0;
+}
+
 static int ps_monitor(ps_mon_t* psmon)
 {
   PROCESS_MEMORY_COUNTERS mem_counters;
@@ -182,6 +242,7 @@ static int ps_monitor(ps_mon_t* psmon)
   else
     pi->mm_usage = 0;
   get_cpu_usage(psmon, pi);
+  get_handle_count(psmon, pi);
   proc_info_push_back(&psmon->head, pi);
   proc_info_report(psmon, pi);
   return 0;
@@ -227,6 +288,9 @@ static bool_t ps_mon_init(ps_mon_t* psmon, char* cmdline)
     }
 
   psmon->tm_last_time.QuadPart = 0;
+  psmon->tm_cpu_usage.QuadPart = 0;
+  psmon->tm_ucpu_usage.QuadPart = 0;
+  psmon->tm_kcpu_usage.QuadPart = 0;
   psmon->head = 0;
   psmon->done = false;
   psmon->ps_id = pi.dwProcessId;
@@ -241,19 +305,22 @@ static bool_t ps_mon_init(ps_mon_t* psmon, char* cmdline)
       return false;
     }
   fprintf(psmon->outstrm, "<html><body>\n");
-  fprintf(psmon->outstrm, "<table>\n");
-  fprintf(psmon->outstrm, "<tr><td>%u</td><td>%s</td></tr>\n", psmon->ps_id, psmon->cmdline);
-  fprintf(psmon->outstrm, "<tr><td>time</td><td>%ul</td></tr>\n", psmon->tmstart);
+  fprintf(psmon->outstrm, "/* Report generated for (%lu, \"%s\")</br>", psmon->ps_id, psmon->cmdline);
+  fprintf(psmon->outstrm, " * Started at time %lu</br>", psmon->tmstart);
+  fprintf(psmon->outstrm, " */</br>");
+  fprintf(psmon->outstrm, "<table frame=\"box\">\n");
+  fprintf(psmon->outstrm, "<tr><th>Timestamp</th><th>MmWrkSet</th><th>HandleCount</th><th>CpuLoad</th><th>KernelLoad</th><th>UserLoad</th></tr>");
 
   return true;
 }
 
 static bool_t ps_mon_release(ps_mon_t* psmon)
-{
-  fprintf(psmon->outstrm, "<tr><td>retval</td><td>%u</td></tr>\n", psmon->ps_retval);
-  fprintf(psmon->outstrm, "<tr><td>time</td><td>%ul</td></tr>\n", psmon->tmend);
+{ 
   fprintf(psmon->outstrm, "</table>\n");
-  fprintf(psmon->outstrm, "</body></html>");
+  fprintf(psmon->outstrm, "/* Done at time %lu</br>\n", psmon->tmend);
+  fprintf(psmon->outstrm, " * Process exit code: %d</br>\n", psmon->ps_retval);
+  fprintf(psmon->outstrm, " */</br>\n");
+  fprintf(psmon->outstrm, "</body></html>\n");
   fclose(psmon->outstrm);
   CloseHandle(psmon->outstrm);
   CloseHandle(psmon->ps_hdl);
@@ -266,7 +333,7 @@ static bool_t ps_mon_waitfor(ps_mon_t* psmon)
 
   while (psmon->done == false)
     {
-      ret = WaitForSingleObject(psmon->ps_hdl, 500);
+      ret = WaitForSingleObject(psmon->ps_hdl, 1000);
       ps_monitor(psmon);
       if (ret != WAIT_TIMEOUT)
 	{
