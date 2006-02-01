@@ -5,7 +5,7 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 23:12:20 2006 texane
-** Last update Sun Jan 29 13:29:00 2006 texane
+** Last update Wed Feb 01 17:03:42 2006 texane
 */
 
 
@@ -34,7 +34,7 @@ typedef struct proc_info
 
   /* Handle count */
   unsigned long hdl_count;
-
+  
   /* memory related */
   unsigned long mm_usage;
 
@@ -68,6 +68,22 @@ typedef struct
   ULARGE_INTEGER tm_ucpu_usage;
   ULARGE_INTEGER tm_last_time;
   double load_cpu;
+
+  /* delta io counters */
+  unsigned char iocounters_init;
+  unsigned long long ioread_count_delta;
+  unsigned long long ioread_transfert_delta;
+  unsigned long long ioread_count;
+  unsigned long long ioread_nbytes;
+  unsigned long long iowrite_count_delta;
+  unsigned long long iowrite_transfert_delta;
+  unsigned long long iowrite_count;
+  unsigned long long iowrite_nbytes;
+  unsigned long long ioother_count_delta;
+  unsigned long long ioother_transfert_delta;
+  unsigned long long ioother_count;
+  unsigned long long ioother_nbytes;
+
 
   /* Flag */
   bool_t done;

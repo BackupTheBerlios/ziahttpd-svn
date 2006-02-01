@@ -5,7 +5,7 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 20:52:31 2006 texane
-** Last update Wed Feb 01 04:03:23 2006 texane
+** Last update Wed Feb 01 17:34:41 2006 texane
 */
 
 
@@ -163,6 +163,46 @@ static void get_cpu_usage(ps_mon_t* psmon, proc_info_t* pi)
     }
 }
 
+static void get_io_counters(ps_mon_t* psmon, proc_info_t* pi)
+{
+  IO_COUNTERS ioCounters;
+
+  if (GetProcessIoCounters(psmon->ps_hdl, &ioCounters) == FALSE)
+    {
+      printf("cannot get io counters\n");
+      fflush(stdout);
+    }
+
+  /* Compute delta from previous pass */
+  if (psmon->iocounters_init == 0)
+    {
+      psmon->iocounters_init = 1;
+      psmon->ioread_count_delta = 0;
+      psmon->iowrite_count_delta = 0;
+      psmon->ioother_count_delta = 0;
+      psmon->ioread_transfert_delta = 0;
+      psmon->iowrite_transfert_delta = 0;
+      psmon->ioother_transfert_delta = 0;
+    }
+  else
+    {
+      psmon->ioread_count_delta = ioCounters.ReadOperationCount - psmon->ioread_count;
+      psmon->iowrite_count_delta = ioCounters.WriteOperationCount - psmon->iowrite_count;
+      psmon->ioother_count_delta = ioCounters.OtherOperationCount - psmon->ioother_count;
+      psmon->ioread_transfert_delta = ioCounters.ReadTransferCount - psmon->ioread_nbytes;
+      psmon->iowrite_transfert_delta = ioCounters.WriteTransferCount - psmon->iowrite_nbytes;
+      psmon->ioother_transfert_delta = ioCounters.OtherTransferCount - psmon->ioother_nbytes;
+    }
+
+  /* Save for next usage */
+  psmon->ioread_count = ioCounters.ReadOperationCount;
+  psmon->iowrite_count = ioCounters.WriteOperationCount;
+  psmon->ioother_count = ioCounters.OtherOperationCount;
+  psmon->ioread_nbytes = ioCounters.ReadTransferCount;
+  psmon->iowrite_nbytes = ioCounters.WriteTransferCount;
+  psmon->ioother_nbytes = ioCounters.OtherTransferCount;
+}
+
 static ps_timestp_t time_from_epoch(void)
 {
   SYSTEMTIME stm;
@@ -217,9 +257,26 @@ static void proc_info_report(ps_mon_t* psmon, proc_info_t* pi)
   fprintf(psmon->outstrm, "<td align=\"right\">%8lu</td>\n", pi->tmstp);
   fprintf(psmon->outstrm, "<td align=\"right\">%8ldKb</td>\n", pi->mm_usage / 1024);
   fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%8ld</td>\n", color_from_handle_delta(pi->hdl_count), pi->hdl_count);
+
   fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->cpu_usage), pi->cpu_usage);
   fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->kcpu_usage), pi->kcpu_usage);
   fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->ucpu_usage), pi->ucpu_usage);
+
+  if (psmon->ioread_count_delta)
+    fprintf(psmon->outstrm, "<td align=\"right\" >%.2lf Kb</td>\n", ((double)psmon->ioread_transfert_delta / (double)psmon->ioread_count_delta) / 1024);
+  else
+    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#dddddd\" ></td>\n");
+  
+  if (psmon->iowrite_count_delta)
+    fprintf(psmon->outstrm, "<td align=\"right\" >%.2lf Kb</td>\n", ((double)psmon->iowrite_transfert_delta / (double)psmon->iowrite_count_delta) / 1024);
+  else
+    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#dddddd\" ></td>\n");
+
+  if (psmon->ioother_count_delta)
+    fprintf(psmon->outstrm, "<td align=\"right\" >%.2lf Kb</td>\n", ((double)psmon->ioother_transfert_delta / (double)psmon->ioother_count_delta) / 1024);
+  else
+    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#dddddd\" ></td>\n");
+
   fprintf(psmon->outstrm, "</tr>\n");
 /*   fprintf(psmon->outstrm, "</table>\n"); */
 
@@ -257,6 +314,7 @@ static int ps_monitor(ps_mon_t* psmon)
     pi->mm_usage = 0;
   get_cpu_usage(psmon, pi);
   get_handle_count(psmon, pi);
+  get_io_counters(psmon, pi);
 /*   proc_info_push_back(&psmon->head, pi); */
   proc_info_report(psmon, pi);
   return 0;
@@ -305,6 +363,7 @@ static bool_t ps_mon_init(ps_mon_t* psmon, char* cmdline)
   psmon->tm_cpu_usage.QuadPart = 0;
   psmon->tm_ucpu_usage.QuadPart = 0;
   psmon->tm_kcpu_usage.QuadPart = 0;
+  psmon->iocounters_init = 0;
   psmon->head = 0;
   psmon->done = false;
   psmon->ps_id = pi.dwProcessId;
@@ -323,7 +382,7 @@ static bool_t ps_mon_init(ps_mon_t* psmon, char* cmdline)
   fprintf(psmon->outstrm, " * Started at time %lu</br>", psmon->tmstart);
   fprintf(psmon->outstrm, " */</br>");
   fprintf(psmon->outstrm, "<table frame=\"box\">\n");
-  fprintf(psmon->outstrm, "<tr><th>Timestamp</th><th>MmWrkSet</th><th>HandleCount</th><th>CpuLoad</th><th>KernelLoad</th><th>UserLoad</th></tr>");
+  fprintf(psmon->outstrm, "<tr><th>Timestamp</th><th>MmWrkSet</th><th>HandleCount</th><th>CpuLoad</th><th>KernelLoad</th><th>UserLoad</th><th>DeltaReadsAvg</th><th>DeltaWritesAvg</th><th>DeltaOthersAvg</th></tr>");
 
   return true;
 }
