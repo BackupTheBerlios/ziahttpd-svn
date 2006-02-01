@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:22:54 2006 texane
-// Last update Sun Jan 29 17:12:56 2006 texane
+// Last update Wed Feb 01 01:05:00 2006 texane
 //
 
 
@@ -51,7 +51,7 @@ namespace status
       STATUSLINE_SUCCESS,
       HEADERLINE_FAILED,
       HEADERLINE_SUCCESS,
-			ENDOFREQUEST,
+      ENDOFREQUEST,
       INIT_FAILED,
       UNKOWN
     } error;

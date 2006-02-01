@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Sun Jan 29 17:22:59 2006 texane
+// Last update Wed Feb 01 03:56:17 2006 texane
 //
 
 
@@ -161,6 +161,9 @@ namespace io
     // inet addresses of the connection
     struct sockaddr_in m_local_addr;
     struct sockaddr_in m_foreign_addr;
+
+    // Io timing, expiration
+    unsigned long long m_tm_lastio;
   };
 }
 
@@ -178,6 +181,7 @@ namespace io
   class res_manager
   {
     friend class net::server;
+    friend class io::res_insock;
 
   public:
     // Construction/destruction
@@ -202,6 +206,8 @@ namespace io
     status::error feed(resource*, void*&);
 
     // resource processing
+    // select based multiplexing, to remove
+    enum { NR_MAX_CONNECTIONS = 4096};
     status::error dispatch_io(std::list<resource*>&, void*&);
     status::error reap_resources(void*);
 
@@ -215,6 +221,9 @@ namespace io
 
     // Set of resources
     std::list<resource*> m_resources;
+
+    // Available connections
+    int m_nr_connections;
   };
 }
 

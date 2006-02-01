@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Sun Jan 29 19:09:54 2006 texane
+// Last update Wed Feb 01 04:54:54 2006 texane
 //
 
 
@@ -55,6 +55,22 @@ inline static bool is_bitset(T val, T bit)
 }
 
 
+#include <windows.h>
+#include <string.h>
+#include <stdio.h>
+static unsigned long long get_current_time(void)
+{
+  SYSTEMTIME tm_now;
+  FILETIME fltm_now;
+  ULARGE_INTEGER ul_now;
+
+  GetSystemTime(&tm_now);
+  SystemTimeToFileTime(&tm_now, &fltm_now);
+  memcpy((void*)&ul_now, (const void*)&fltm_now, sizeof(unsigned long long));
+  return ul_now.QuadPart;
+}
+
+
 status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux)
 {
   // Important notes:
@@ -76,6 +92,9 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   bool pushme;
   buffer* buf;
   int nev;
+  unsigned long long tm_current;
+
+  tm_current = get_current_time();
 
   // -
   // Prepare the sets
@@ -90,11 +109,12 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 	  insock = reinterpret_cast<res_insock*>(*cur);
  	  if (is_bitset(insock->m_pending, IO_READ) == true || insock->m_accepting == true)
 	    {
-	      ziafs_debug_msg("putting new resource in set %s\n", "");
 	      FD_SET(insock->m_hsock, &rdset);
 	    }
 	  if (is_bitset(insock->m_pending, IO_WRITE) == true)
 	    FD_SET(insock->m_hsock, &wrset);
+	  if (insock->m_tm_lastio == 0)
+	    insock->m_tm_lastio = get_current_time();
 	}
       ++cur;
     }
@@ -104,6 +124,10 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   nev = select(0, &rdset, &wrset, 0, 0);
   if (nev == -1)
     ziafs_return_status( FAILED );
+
+  // here reap all dead resources
+  // so that we can accept connections
+  reap_resources(aux);
 
   cur = m_resources.begin();
   last = m_resources.end();
@@ -152,19 +176,18 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 	    }
 	}
 
-      if (closeme == true)
+      if (activio == true)
 	{
-	  ziafs_debug_msg("!!!!!!!!!! %s\n", "");
-	  close(*prev);
-	}
-      else if (pushme == true)
-	{
-	  ziafs_debug_msg("!!!!!!!!!! 2 %s\n", "");
-	  q.push_front(*prev);
+	  --nev;
+
+	  // Set the last io field to this resource
+	  insock->m_tm_lastio = tm_current;
 	}
 
-      if (activio == true)
-	--nev;
+      if (closeme == true)
+	close(*prev);
+      else if (pushme == true)
+	q.push_front(*prev);
     }
 
   ziafs_return_status( status::SUCCESS );
@@ -177,6 +200,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 
 io::res_manager::res_manager()
 {
+  m_nr_connections = NR_MAX_CONNECTIONS;
 }
 
 
@@ -322,6 +346,8 @@ status::error io::res_manager::reap_resources(void* aux)
   // DO ALL THIS PART HERE, don't spread
   // code that release resource, remove session..
   net::server* srv;
+  bool has_expired;
+  bool to_reap;
   list<resource*>::iterator cur_res = m_resources.begin();
   list<resource*>::iterator last_res = m_resources.end();
   list<resource*>::iterator prev_res;
@@ -332,9 +358,24 @@ status::error io::res_manager::reap_resources(void* aux)
   srv = (net::server*)aux;
   while (cur_res != last_res)
     {
+      to_reap = false;
       prev_res = cur_res;
       ++cur_res;
+
+      // Do we have to reap the resource?
       if ((*prev_res)->m_refcount == 0)
+	{
+	  to_reap = true;
+	}
+      else
+	{
+	  (*prev_res)->io_has_expired(has_expired);
+	  if (has_expired == true)
+	    to_reap = true;
+	}
+
+      // Reap the resource
+      if (to_reap == true)
 	{
 	  // remove closed resources
 	  cur_sess = srv->m_sessions.begin();
@@ -352,7 +393,6 @@ status::error io::res_manager::reap_resources(void* aux)
 		  delete *prev_sess;
 		}
 	    }
-
 	  (*prev_res)->io_on_close(aux);
 	  m_resources.erase(prev_res);
 	  delete *prev_res;

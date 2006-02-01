@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Sun Jan 29 18:02:28 2006 texane
+// Last update Wed Feb 01 03:14:00 2006 texane
 //
 
 
@@ -24,6 +24,7 @@
 
 // Forward declarations
 namespace io { class resource; }
+namespace io { class res_insock; }
 namespace io { class res_manager; }
 namespace net { class protocol; }
 namespace net { class config; }
@@ -38,6 +39,7 @@ namespace net
   class server
   {
     friend class io::res_manager;
+    friend class io::res_insock;
 
   public:
     server(config*);
@@ -65,7 +67,7 @@ namespace net
 
     // internal state
     bool m_done;
-
+    
     // internal management routines
     void reset();
     void init();

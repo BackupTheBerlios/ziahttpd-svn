@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Sun Jan 29 18:49:13 2006 texane
+// Last update Wed Feb 01 04:38:22 2006 texane
 //
 
 
@@ -34,6 +34,7 @@ io::res_insock::res_insock(stmask openmod, const string& local_addr, unsigned sh
   // The socket descriptor should be set to
   // SOCKET_ERROR like code
 
+  m_tm_lastio = 0;
   m_accepting = true;
   m_my_addr = local_addr;
   m_my_port = local_port;
@@ -51,6 +52,7 @@ io::res_insock::res_insock(stmask openmod, const struct sockaddr_in& foreign_add
   // in both ST_FETCHING and ST_FEEDING
   // modes.
 
+  m_tm_lastio = 0;
   m_accepting = false;
   m_hsock = hsock;
   m_foreign_addr = foreign_addr;
@@ -70,11 +72,17 @@ status::error io::res_insock::io_on_open()
   // This function performs the actual
   // resource opening.
 
+  // In this function is the first bottle neck.
+  // Actually, launching a test with threads sleeping
+  // during 1 second, then disconnecting cause the backlog
+  // queue to be flooded.
+  // Solvable by adding a thread to handle incoming connectioon
+
   if (m_accepting == true)
     {
       if (sysapi::insock::p_to_inaddr(m_local_addr, m_my_addr, m_my_port) != sysapi::error::SUCCESS)
 	ziafs_return_status( CANNOT_OPEN );
-      if (sysapi::insock::create_listening(m_hsock, m_local_addr, 10) != sysapi::error::SUCCESS)
+      if (sysapi::insock::create_listening(m_hsock, m_local_addr, 100) != sysapi::error::SUCCESS)
 	ziafs_return_status( CANNOT_OPEN );
     }
 
@@ -82,8 +90,16 @@ status::error io::res_insock::io_on_open()
 }
 
 
+#include <stdio.h>
+
+
 status::error io::res_insock::io_on_close(void*& aux)
 {
+  net::server* srv;
+
+  srv = (net::server*)aux;
+
+  ++srv->m_resman->m_nr_connections;
   sysapi::insock::close(m_hsock);
   ziafs_return_status( SUCCESS );
 }
@@ -95,10 +111,12 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   net::session* sess_client;
   net::protocol* proto;
   sysapi::insock::handle_t hsock;
+  sysapi::error::handle_t err;
   resource* res;
   stmask omode;
   unsigned int nread;
   int addrlen;
+  bool done;
 
   srv = (net::server*&)aux;
 
@@ -108,18 +126,33 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   if (m_accepting == true)
     {
       // Create the new resource
-      pdata = 0;
-      addrlen = sizeof(struct sockaddr_in);
-      sysapi::insock::accept(hsock, m_foreign_addr, m_hsock);
-      omode = (stmask)((int)ST_FETCHING & (int)ST_FEEDING);
-      srv->res_manager()->create(res, omode, m_foreign_addr, hsock);
-      srv->res_manager()->open(res);
-      pdata = (void*)res;
+      done = false;
+      
+      while (done == false && srv->m_resman->m_nr_connections > 0)
+	{
+	  pdata = 0;
+	  addrlen = sizeof(struct sockaddr_in);
+	  err = sysapi::insock::accept(hsock, m_foreign_addr, m_hsock);
+	  if (err != sysapi::error::SUCCESS)
+	    {
+	      done = true;
+	    }
+	  else
+	    {
+	      // Decrement the connection count
+	      --srv->m_resman->m_nr_connections;
 
-      // Create a new session
-      proto = new net::http;
-      sess_client = new net::session(res, srv->conf(), proto);
-      srv->add_session(sess_client);
+	      omode = (stmask)((int)ST_FETCHING & (int)ST_FEEDING);
+	      srv->res_manager()->create(res, omode, m_foreign_addr, hsock);
+	      srv->res_manager()->open(res);
+	      pdata = (void*)res;
+
+	      // Create a new session
+	      proto = new net::http;
+	      sess_client = new net::session(res, srv->conf(), proto);
+	      srv->add_session(sess_client);
+	    }
+	}
     }
   // This is NOT an accepting
   // socket, reading means
@@ -187,8 +220,37 @@ status::error io::res_insock::io_on_expire()
 }
 
 
+#include <windows.h>
+#include <string.h>
+
+# define DEMI_SECOND	5000000
 status::error io::res_insock::io_has_expired(bool& has_expired) const
 {
+  SYSTEMTIME tm_now;
+  FILETIME fltm_now;
+  ULARGE_INTEGER ul_now;
+  unsigned long long diff;
+
+  // Get the current tme, should be cached
+  if (m_accepting == false)
+    {
+      GetSystemTime(&tm_now);
+      SystemTimeToFileTime(&tm_now, &fltm_now);
+      memcpy((void*)&ul_now, (const void*)&fltm_now, sizeof(unsigned long long));
+      if (m_tm_lastio != 0)
+	{
+	  // An io resource is considered as expired when
+	  // there havn't been activities for more than
+	  // 500 msc.
+	  diff = (ul_now.QuadPart - m_tm_lastio);
+	  if (diff > DEMI_SECOND)
+	    {
+	      has_expired = true;
+	      ziafs_return_status( SUCCESS );
+	    }
+	}
+    }
+
   has_expired = m_expired;
   ziafs_return_status( SUCCESS );
 }

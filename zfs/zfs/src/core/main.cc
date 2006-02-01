@@ -5,8 +5,12 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 00:16:46 2006 texane
-// Last update Sun Jan 29 14:58:42 2006 texane
+// Last update Wed Feb 01 02:38:36 2006 texane
 //
+
+
+// on protocl designs
+// http://www.itamarst.org/
 
 
 #include <iostream>

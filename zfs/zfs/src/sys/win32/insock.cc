@@ -5,11 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 10:35:30 2006 texane
-// Last update Wed Jan 25 18:58:14 2006 texane
+// Last update Wed Feb 01 03:25:28 2006 texane
 //
 
 
 #include <string>
+#ifndef FD_SETSIZE
+# define FD_SETSIZE 4096
+#endif
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <windows.h>
@@ -84,7 +87,9 @@ static inline bool inaddr_tobuf(unsigned long* buf, const char* addr)
 static inline bool set_insock_basic_opts(SOCKET hsock)
 {
   char optval = TRUE;
+  unsigned long nonblocking = 1;
   setsockopt(hsock, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+  ioctlsocket(hsock, FIONBIO, &nonblocking);
   return true;
 }
 
@@ -170,7 +175,10 @@ sysapi::error::handle_t sysapi::insock::accept(handle_t& hsock, struct sockaddr_
   addrlen = sizeof(struct sockaddr_in);
   hsock = ::accept(hbound, reinterpret_cast<struct sockaddr*>(&inaddr), &addrlen);
   if (hsock == SOCKET_ERROR)
-    return error::OPEN_FAILED;
+    {
+      // This could be a blocking operation.
+      return error::OPEN_FAILED;
+    }
   return error::SUCCESS;
 }
 
