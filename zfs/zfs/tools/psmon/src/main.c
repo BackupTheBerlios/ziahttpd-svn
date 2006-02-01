@@ -5,7 +5,7 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 20:52:31 2006 texane
-** Last update Wed Feb 01 17:34:41 2006 texane
+** Last update Wed Feb 01 17:37:35 2006 texane
 */
 
 
@@ -265,17 +265,17 @@ static void proc_info_report(ps_mon_t* psmon, proc_info_t* pi)
   if (psmon->ioread_count_delta)
     fprintf(psmon->outstrm, "<td align=\"right\" >%.2lf Kb</td>\n", ((double)psmon->ioread_transfert_delta / (double)psmon->ioread_count_delta) / 1024);
   else
-    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#dddddd\" ></td>\n");
+    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#efefef\" ></td>\n");
   
   if (psmon->iowrite_count_delta)
     fprintf(psmon->outstrm, "<td align=\"right\" >%.2lf Kb</td>\n", ((double)psmon->iowrite_transfert_delta / (double)psmon->iowrite_count_delta) / 1024);
   else
-    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#dddddd\" ></td>\n");
+    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#efefef\" ></td>\n");
 
   if (psmon->ioother_count_delta)
     fprintf(psmon->outstrm, "<td align=\"right\" >%.2lf Kb</td>\n", ((double)psmon->ioother_transfert_delta / (double)psmon->ioother_count_delta) / 1024);
   else
-    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#dddddd\" ></td>\n");
+    fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#efefef\" ></td>\n");
 
   fprintf(psmon->outstrm, "</tr>\n");
 /*   fprintf(psmon->outstrm, "</table>\n"); */
