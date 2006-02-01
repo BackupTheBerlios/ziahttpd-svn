@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Wed Feb 01 23:35:19 2006 texane
+// Last update Thu Feb 02 00:50:27 2006 texane
 //
 
 
@@ -422,6 +422,9 @@ status::error io::res_manager::reap_resources(void* aux)
 	  cur_sess = srv->m_sessions.begin();
 	  last_sess = srv->m_sessions.end();
 
+	  // Here is a leak -> cannot delete
+	  // between m_target and m_clients....
+
 	  // remove associated sessions
 	  while (cur_sess != last_sess)
 	    {
@@ -430,13 +433,13 @@ status::error io::res_manager::reap_resources(void* aux)
 	      if ((*prev_sess)->m_client == *prev_res ||
 		  (*prev_sess)->m_target == *prev_res)
 		{
-		  srv->m_sessions.erase(prev_sess);
 		  delete *prev_sess;
+		  srv->m_sessions.erase(prev_sess);
 		}
 	    }
 	  (*prev_res)->io_on_close(aux);
-	  m_resources.erase(prev_res);
 	  delete *prev_res;
+	  m_resources.erase(prev_res);
 	}
     }
   ziafs_return_status( SUCCESS );

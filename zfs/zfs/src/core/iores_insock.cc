@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Wed Feb 01 23:22:26 2006 texane
+// Last update Wed Feb 01 23:48:05 2006 texane
 //
 
 
@@ -168,6 +168,7 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
 	{
   	  if (herr == sysapi::error::CONNECTION_CLOSED)
 	    m_expired = true;
+	  delete buf;
 	  ziafs_return_status( CANNOT_READ );
 	}
       else

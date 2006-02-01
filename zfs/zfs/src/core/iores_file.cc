@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 03:10:24 2006 texane
-// Last update Wed Feb 01 23:17:35 2006 texane
+// Last update Thu Feb 02 00:37:28 2006 texane
 //
 
 
@@ -86,7 +86,10 @@ error res_file::io_on_read(void*& pdata, void*& aux)
   
   herr = sysapi::file::read(m_hfile, buf->bufptr(), BUFSZ, nread);
   if (herr != sysapi::error::SUCCESS)
-    ziafs_return_status(status::CANNOT_READ);
+    {
+      delete buf;
+      ziafs_return_status(status::CANNOT_READ);
+    }
 
   m_nrtoread -= nread;
   buf->resize(nread);
@@ -106,9 +109,10 @@ error res_file::io_on_expire()
   ziafs_return_status(NOTIMPL);
 }
 
-error res_file::io_has_expired(bool&) const
+error res_file::io_has_expired(bool& has_expired) const
 {
-  ziafs_return_status(NOTIMPL);
+  has_expired = false;
+  ziafs_return_status(SUCCESS);
 }
 
 error res_file::dump(buffer&) const
