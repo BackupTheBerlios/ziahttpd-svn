@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Dec 06 12:35:58 2005 texane
-// Last update Wed Dec 07 21:45:34 2005 texane
+// Last update Wed Feb 01 00:13:21 2006 texane
 //
 
 
@@ -99,6 +99,7 @@ void	zt::client::report() const
 {
   unsigned long tmDiff;
   const char* rqstStatus;
+  static unsigned int nr_not_connected = 0;
 
   systemtimeDiffToMillisecond(tmDiff, m_tmEnd, m_tmStart);
   switch (m_rqstStatus)
@@ -107,7 +108,9 @@ void	zt::client::report() const
       rqstStatus = "not_started";
       break;
     case NOTCONNECTED:
+      ++nr_not_connected;
       rqstStatus = "not_connected";
+      cout << "not connected: " << nr_not_connected << endl;
       break;
     case ABORTED:
       rqstStatus = "aborted";

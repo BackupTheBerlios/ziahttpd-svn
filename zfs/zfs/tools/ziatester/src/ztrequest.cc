@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Dec 06 22:41:13 2005 texane
-// Last update Wed Dec 07 22:06:27 2005 texane
+// Last update Wed Feb 01 04:56:55 2006 texane
 //
 
 
@@ -83,6 +83,7 @@ bool	zt::client::requestServer()
     return false;
   sendToServer();
   recvFromServer();
+  Sleep(1000);
   closeServer();
   return true;
 }

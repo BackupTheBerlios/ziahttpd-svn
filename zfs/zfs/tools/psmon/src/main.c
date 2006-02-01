@@ -5,7 +5,7 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 20:52:31 2006 texane
-** Last update Sun Jan 29 19:16:06 2006 texane
+** Last update Wed Feb 01 04:03:23 2006 texane
 */
 
 
@@ -196,13 +196,27 @@ static unsigned long color_from_delta(unsigned long load)
   return res - tmp;
 }
 
+/* Here the base is 28, as a hint... max should be 128, but... */
+static unsigned long color_from_handle_delta(unsigned long nhandle)
+{
+  unsigned long res = 0xffffff;
+  unsigned short tmp;
+  unsigned char n;
+
+  /* normalize */
+  nhandle -= 28;
+  n = (unsigned char)((0xff * nhandle) / 3000) & 0xf0;
+  tmp = n + (n << 8);
+  return res - tmp;
+}
+
 static void proc_info_report(ps_mon_t* psmon, proc_info_t* pi)
 {
 /*   fprintf(psmon->outstrm, "<table frame=\"box\" border=\"1\" align=right">\n"); */
   fprintf(psmon->outstrm, "<tr>\n");
   fprintf(psmon->outstrm, "<td align=\"right\">%8lu</td>\n", pi->tmstp);
   fprintf(psmon->outstrm, "<td align=\"right\">%8ldKb</td>\n", pi->mm_usage / 1024);
-  fprintf(psmon->outstrm, "<td align=\"right\">%8ld</td>\n", pi->hdl_count);
+  fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%8ld</td>\n", color_from_handle_delta(pi->hdl_count), pi->hdl_count);
   fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->cpu_usage), pi->cpu_usage);
   fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->kcpu_usage), pi->kcpu_usage);
   fprintf(psmon->outstrm, "<td align=\"right\" bgcolor=\"#%06x\">%.2lf%%</td>\n", color_from_delta((unsigned long)pi->ucpu_usage), pi->ucpu_usage);
@@ -333,7 +347,7 @@ static bool_t ps_mon_waitfor(ps_mon_t* psmon)
 
   while (psmon->done == false)
     {
-      ret = WaitForSingleObject(psmon->ps_hdl, 1000);
+      ret = WaitForSingleObject(psmon->ps_hdl, 50);
       ps_monitor(psmon);
       if (ret != WAIT_TIMEOUT)
 	{
