@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Dec 06 12:35:58 2005 texane
-// Last update Wed Feb 01 00:13:21 2006 texane
+// Last update Wed Feb 01 19:06:17 2006 texane
 //
 
 
@@ -35,6 +35,7 @@ void	zt::client::reset()
   m_renew = false;
   m_conf.clear();
   m_rqstStatus = NOTSTARTED;
+  m_nread = 0;
 }
 
 
@@ -122,7 +123,7 @@ void	zt::client::report() const
       rqstStatus = "unknown";
       break;
     }
-  cout << "\t" << idToString() << " <" << setw(15) << rqstStatus << ">: " << millisecondToString(tmDiff) << endl;
+  cout << "\t" << idToString() << " <" << setw(15) << rqstStatus << ">: " << millisecondToString(tmDiff) << ", " << m_nread << endl;
 }
 
 

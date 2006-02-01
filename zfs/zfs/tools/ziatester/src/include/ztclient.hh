@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Dec 06 12:07:39 2005 texane
-// Last update Wed Dec 07 21:45:03 2005 texane
+// Last update Wed Feb 01 19:05:05 2006 texane
 //
 
 
@@ -78,6 +78,7 @@ namespace zt
     sysapi::socket_in::handle_t m_sockHandle;
     unsigned char* m_ptrMapping;
     DWORD m_fileLength;
+    sysapi::socket_in::size_t m_nread;
 
     // Threading related
     static sysapi::thread::retcode_t thrEntry(sysapi::thread::param_t);

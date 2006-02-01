@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Wed Feb 01 04:38:22 2006 texane
+// Last update Wed Feb 01 23:22:26 2006 texane
 //
 
 
@@ -82,7 +82,7 @@ status::error io::res_insock::io_on_open()
     {
       if (sysapi::insock::p_to_inaddr(m_local_addr, m_my_addr, m_my_port) != sysapi::error::SUCCESS)
 	ziafs_return_status( CANNOT_OPEN );
-      if (sysapi::insock::create_listening(m_hsock, m_local_addr, 100) != sysapi::error::SUCCESS)
+      if (sysapi::insock::create_listening(m_hsock, m_local_addr, 500) != sysapi::error::SUCCESS)
 	ziafs_return_status( CANNOT_OPEN );
     }
 
@@ -188,8 +188,6 @@ status::error io::res_insock::io_on_write(void*& pdata, void*& aux)
   unsigned int nsent;
   sysapi::error::handle_t herr;
 
-  ziafs_debug_msg("write request: %d\n", buf->size());
-
   // Not supported for an accepting socket.
   if (m_accepting == true)
     return status::BADMODE;
@@ -202,7 +200,6 @@ status::error io::res_insock::io_on_write(void*& pdata, void*& aux)
       ziafs_return_status( CANNOT_WRITE );
     }
 
-  ziafs_debug_msg("has written %d bytes\n", nsent);
   buf->remove_front(nsent);
   ziafs_return_status( SUCCESS );
 }

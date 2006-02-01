@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Wed Feb 01 03:02:40 2006 texane
+// Last update Wed Feb 01 22:13:33 2006 texane
 //
 
 
@@ -205,9 +205,19 @@ status::error net::server::process_requests()
 	    {
 	      if ((*cur)->m_client == res ||
 		  (*cur)->m_target == res)
-		(*cur)->process();
+		{
+		  // Here should send a file
+		  // to the client for btesting
+		  // purposes
+
+		  // Uncomment this one
+		  // (*cur)->process();
+		  if ((*cur)->send_file() == status::SUCCESS)
+		    ziafs_debug_msg("end of file reached %s!", "");
+		}
 	      ++cur;
 	    }
+
 	}
       
     }

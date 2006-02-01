@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Wed Feb 01 03:25:20 2006 texane
+// Last update Wed Feb 01 23:28:23 2006 texane
 //
 
 
@@ -26,8 +26,8 @@ sysapi::error::handle_t sysapi::file::open(handle_t& hfile, const std::string& p
   DWORD shmode;
 
   herr = error::SUCCESS;
-  shmode = FILE_SHARE_WRITE;
-  hfile = CreateFile(path.c_str(), 0, shmode, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  shmode = FILE_SHARE_WRITE | FILE_SHARE_READ;
+  hfile = CreateFile(path.c_str(), GENERIC_READ | GENERIC_WRITE, shmode, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
   if (hfile == INVALID_HANDLE_VALUE)
     herr = error::OPEN_FAILED;
     // herr = GetLastError();
@@ -38,5 +38,33 @@ sysapi::error::handle_t sysapi::file::open(handle_t& hfile, const std::string& p
 sysapi::error::handle_t sysapi::file::close(handle_t& hfile)
 {
   CloseHandle(hfile);
+  return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::file::read(handle_t& hfile, unsigned char* buf, unsigned int nbytes, unsigned int& nread)
+{
+  DWORD nr_bytes;
+  BOOL ret;
+
+  nread = 0;
+  ret = ReadFile(hfile, static_cast<LPVOID>(buf), nbytes, &nr_bytes, NULL);
+  if (ret == FALSE)
+    return error::READ_FAILED;
+  nread = (unsigned int)nr_bytes;
+  return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::file::write(handle_t& hfile, unsigned char* buf, unsigned int nbytes, unsigned int& nwritten)
+{
+  DWORD nr_bytes;
+  BOOL ret;
+
+  ret = WriteFile(hfile, reinterpret_cast<LPVOID>((void*)buf), nbytes, &nr_bytes, NULL);
+  if (ret == FALSE)
+    return error::WRITE_FAILED;
+
+  nwritten = nr_bytes;
   return error::SUCCESS;
 }

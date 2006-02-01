@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Dec 06 22:41:13 2005 texane
-// Last update Wed Feb 01 04:56:55 2006 texane
+// Last update Wed Feb 01 19:15:41 2006 texane
 //
 
 
@@ -73,6 +73,33 @@ bool	zt::client::sendToServer()
 
 bool	zt::client::recvFromServer()
 {
+  // The server will disconnect you
+  // when your inactivity time will
+  // be too long
+
+  bool done;
+  sysapi::socket_in::size_t nread;
+  sysapi::socket_in::size_t ntot;
+  char buf[42];
+
+  done = false;
+  ntot = 0;
+  while (done == false)
+    {
+      if (sysapi::socket_in::recv(m_sockHandle,
+				  (unsigned char*)buf,
+				  sizeof(buf),
+				  &nread) == true)
+	ntot += nread;
+      else
+	done = true;
+
+      if (nread == 0)
+	done = true;
+    }
+
+  m_nread = ntot;
+
   return true;
 }
 
@@ -83,7 +110,6 @@ bool	zt::client::requestServer()
     return false;
   sendToServer();
   recvFromServer();
-  Sleep(1000);
   closeServer();
   return true;
 }

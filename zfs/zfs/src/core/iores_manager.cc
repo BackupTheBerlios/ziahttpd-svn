@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Wed Feb 01 04:54:54 2006 texane
+// Last update Wed Feb 01 23:35:19 2006 texane
 //
 
 
@@ -68,6 +68,39 @@ static unsigned long long get_current_time(void)
   SystemTimeToFileTime(&tm_now, &fltm_now);
   memcpy((void*)&ul_now, (const void*)&fltm_now, sizeof(unsigned long long));
   return ul_now.QuadPart;
+}
+
+
+status::error io::res_manager::dispatch_file_io(list<resource*>& q, void*& aux)
+{
+  buffer* buf;
+  list<resource*>::iterator cur;
+  list<resource*>::iterator last;
+  status::error err;
+
+  cur = m_resources.begin();
+  last = m_resources.end();
+  while (cur != last)
+    {
+      if ((*cur)->m_typeid == io::TYPEID_FILE)
+	{
+	  // Process write operations first
+	  if (is_bitset((*cur)->m_pending, IO_WRITE) == true)
+	    {
+	      buf = &(*cur)->m_wr_buf;
+	      err = (*cur)->io_on_write((void*&)buf, aux);
+	    }
+
+	  // Read operation
+	  buf = &(*cur)->m_rd_buf;
+	  err = (*cur)->io_on_read((void*&)buf, aux);
+	  if (err != status::SUCCESS)
+	    close(*cur);
+	}
+      ++cur;
+    }
+
+  ziafs_return_status( status::SUCCESS );  
 }
 
 
@@ -249,9 +282,14 @@ status::error io::res_manager::create(resource*& res, stmask omask, const struct
 }
 
 
-status::error io::res_manager::create(resource*&, stmask, const std::string&)
+status::error io::res_manager::create(resource*& res, stmask omask, const std::string& path)
 {
-  ziafs_return_status( status::NOTIMPL );
+  res = new res_file(omask, path);
+  reset_resource(res);
+  setbit(res->m_openmod, ST_FETCHING);
+  res->m_typeid = TYPEID_FILE;
+  m_resources.push_front(res);
+  ziafs_return_status( status::SUCCESS );
 }
 
 
@@ -318,6 +356,8 @@ status::error io::res_manager::feed(resource* res, void*& pdata)
   if ((res->m_openmod & ST_FEEDING) == false)
     ziafs_return_status( BADMODE );
 
+  ziafs_debug_msg("feeding the resource %s\n", "(does it work?)");
+
   // Tell the iomanager about
   // the feeding operation
   setbit(res->m_state, ST_FEEDING);
@@ -333,6 +373,7 @@ status::error io::res_manager::dispatch_io(list<resource*>& q, void*& aux)
   // First process all the close requests
   // Dispatch io operation on sockets
   dispatch_socket_io(q, aux);
+  dispatch_file_io(q, aux);
   ziafs_return_status( SUCCESS );
 }
 

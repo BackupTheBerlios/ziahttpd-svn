@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Wed Feb 01 03:56:17 2006 texane
+// Last update Wed Feb 01 22:43:17 2006 texane
 //
 
 
@@ -119,9 +119,10 @@ namespace io
 
   private:
     std::string m_path;
-    unsigned int m_nrtoread;
+    long m_nrtoread;
     unsigned long m_filesz;
-    sysapi::file::handle_t m_hfile;
+    HANDLE m_hfile;
+    HANDLE m_hmapping;
   };
 }
 
@@ -218,6 +219,7 @@ namespace io
 
     // io operation dispatching
     status::error dispatch_socket_io(std::list<resource*>&, void*&);
+    status::error dispatch_file_io(std::list<resource*>&, void*&);
 
     // Set of resources
     std::list<resource*> m_resources;

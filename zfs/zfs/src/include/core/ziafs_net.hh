@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:44:51 2006 texane
-// Last update Wed Feb 01 03:14:00 2006 texane
+// Last update Wed Feb 01 18:01:39 2006 texane
 //
 
 
@@ -87,6 +87,7 @@ namespace net
     session(io::resource* client, config*, protocol*);
     ~session();
     status::error process();
+    status::error send_file();
 
     // attributes
     io::resource* m_client;
