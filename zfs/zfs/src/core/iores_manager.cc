@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Thu Feb 02 00:50:27 2006 texane
+// Last update Thu Feb 02 17:05:25 2006 texane
 //
 
 
@@ -147,7 +147,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 	  if (is_bitset(insock->m_pending, IO_WRITE) == true)
 	    FD_SET(insock->m_hsock, &wrset);
 	  if (insock->m_tm_lastio == 0)
-	    insock->m_tm_lastio = get_current_time();
+	    insock->m_tm_lastio = tm_current;
 	}
       ++cur;
     }

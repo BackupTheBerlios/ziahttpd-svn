@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Feb 01 17:57:06 2006 texane
-// Last update Thu Feb 02 00:52:43 2006 texane
+// Last update Thu Feb 02 15:06:37 2006 texane
 //
 
 
@@ -29,7 +29,8 @@ status::error net::session::send_file()
 
   if (m_target == 0)
     {
-      err = m_server->res_manager()->create(m_target, io::ST_FETCHING, "Makefile");
+      err = m_server->res_manager()->create(m_target, io::ST_FETCHING, "test\\article.asp.htm");
+//       err = m_server->res_manager()->create(m_target, io::ST_FETCHING, "Makefile");
       err = m_server->res_manager()->open(m_target);
     }
   else

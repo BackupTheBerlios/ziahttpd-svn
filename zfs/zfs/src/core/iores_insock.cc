@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Wed Feb 01 23:48:05 2006 texane
+// Last update Thu Feb 02 14:59:37 2006 texane
 //
 
 
@@ -82,15 +82,12 @@ status::error io::res_insock::io_on_open()
     {
       if (sysapi::insock::p_to_inaddr(m_local_addr, m_my_addr, m_my_port) != sysapi::error::SUCCESS)
 	ziafs_return_status( CANNOT_OPEN );
-      if (sysapi::insock::create_listening(m_hsock, m_local_addr, 500) != sysapi::error::SUCCESS)
+      if (sysapi::insock::create_listening(m_hsock, m_local_addr, SOMAXCONN) != sysapi::error::SUCCESS)
 	ziafs_return_status( CANNOT_OPEN );
     }
 
   ziafs_return_status( SUCCESS );
 }
-
-
-#include <stdio.h>
 
 
 status::error io::res_insock::io_on_close(void*& aux)
@@ -114,8 +111,8 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
   sysapi::error::handle_t err;
   resource* res;
   stmask omode;
-  unsigned int nread;
   int addrlen;
+  unsigned int nread;
   bool done;
 
   srv = (net::server*&)aux;
@@ -127,7 +124,13 @@ status::error io::res_insock::io_on_read(void*& pdata, void*& aux)
     {
       // Create the new resource
       done = false;
-      
+
+      // connection number is used to keep track
+      // of the number of connections
+      // accepted so far.
+      // It should not be more than 100 or 200,
+      // else there will be resource
+      // starvation.
       while (done == false && srv->m_resman->m_nr_connections > 0)
 	{
 	  pdata = 0;

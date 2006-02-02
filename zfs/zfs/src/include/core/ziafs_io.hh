@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Wed Feb 01 22:43:17 2006 texane
+// Last update Thu Feb 02 14:59:14 2006 texane
 //
 
 
@@ -208,7 +208,7 @@ namespace io
 
     // resource processing
     // select based multiplexing, to remove
-    enum { NR_MAX_CONNECTIONS = 4096};
+    enum { NR_MAX_CONNECTIONS = 1000};
     status::error dispatch_io(std::list<resource*>&, void*&);
     status::error reap_resources(void*);
 

@@ -5,15 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Wed Feb 01 23:28:23 2006 texane
+// Last update Thu Feb 02 14:12:21 2006 texane
 //
 
 
 #include <string>
-#ifndef FD_SETSIZE
-# define FD_SETSIZE 4096
-#endif
-#include <windows.h>
 #include <sys/sysapi.hh>
 
 

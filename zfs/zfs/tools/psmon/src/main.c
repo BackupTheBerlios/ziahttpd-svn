@@ -5,7 +5,7 @@
 ** Login   <texane@gmail.com>
 ** 
 ** Started on  Sat Jan 28 20:52:31 2006 texane
-** Last update Wed Feb 01 17:37:35 2006 texane
+** Last update Thu Feb 02 14:19:23 2006 texane
 */
 
 
@@ -245,7 +245,7 @@ static unsigned long color_from_handle_delta(unsigned long nhandle)
 
   /* normalize */
   nhandle -= 28;
-  n = (unsigned char)((0xff * nhandle) / 3000) & 0xf0;
+  n = (unsigned char)((0xff * nhandle) / 6000) & 0xf0;
   tmp = n + (n << 8);
   return res - tmp;
 }
