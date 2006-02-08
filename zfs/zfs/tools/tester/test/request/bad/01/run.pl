@@ -12,7 +12,7 @@ my	$port_sv = 40000;
 my	$addr_sv = "localhost";
 my	$socket;
 my	$request;
-my	$nbr_req = 5000;
+my	$nbr_req = 10;
 my	$first = 0;
 my	$i = 0;
 
