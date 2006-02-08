@@ -157,6 +157,9 @@
 					RelativePath="..\src\core\server.cc">
 				</File>
 				<File
+					RelativePath="..\src\core\server_sendfile.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\session.cc">
 				</File>
 				<File
