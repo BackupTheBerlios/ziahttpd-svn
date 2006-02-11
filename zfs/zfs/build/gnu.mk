@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Wed Oct 19 19:31:12 2005 
+## Last update Sat Feb 11 17:37:04 2006 
 ##
 
 
@@ -26,7 +26,7 @@ CCDEFS	:=	-D_SYSAPI=1 -D_REENTRANT
 CCGEN	:=	-O2
 CCWARNS	:=	-Wall
 CCOUT	:=	-c
-CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS)
+CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS) -DTIXML_USE_STL
 
 # .linker
 LD	:=	g++

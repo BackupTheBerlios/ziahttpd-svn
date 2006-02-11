@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:09:36 2006 texane
-// Last update Thu Feb 02 14:59:14 2006 texane
+// Last update Sat Feb 11 18:04:08 2006 
 //
 
 
@@ -119,10 +119,10 @@ namespace io
 
   private:
     std::string m_path;
-    long m_nrtoread;
-    unsigned long m_filesz;
-    HANDLE m_hfile;
-    HANDLE m_hmapping;
+    unsigned long long m_nrtoread;
+    unsigned long long m_filesz;
+    sysapi::file::handle_t m_hfile;
+    sysapi::file::handle_t m_hmapping;
   };
 }
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Thu Feb 02 17:05:25 2006 texane
+// Last update Sat Feb 11 17:54:13 2006 
 //
 
 
@@ -52,22 +52,6 @@ template<typename T>
 inline static bool is_bitset(T val, T bit)
 {
   return ((unsigned int)val & (unsigned int)bit) ? true : false;
-}
-
-
-#include <windows.h>
-#include <string.h>
-#include <stdio.h>
-static unsigned long long get_current_time(void)
-{
-  SYSTEMTIME tm_now;
-  FILETIME fltm_now;
-  ULARGE_INTEGER ul_now;
-
-  GetSystemTime(&tm_now);
-  SystemTimeToFileTime(&tm_now, &fltm_now);
-  memcpy((void*)&ul_now, (const void*)&fltm_now, sizeof(unsigned long long));
-  return ul_now.QuadPart;
 }
 
 
@@ -127,7 +111,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   int nev;
   unsigned long long tm_current;
 
-  tm_current = get_current_time();
+  sysapi::time::current(tm_current);
 
   // -
   // Prepare the sets

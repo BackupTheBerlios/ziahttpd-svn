@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 03:10:24 2006 texane
-// Last update Thu Feb 02 00:37:28 2006 texane
+// Last update Sat Feb 11 18:01:48 2006 
 //
 
 
@@ -44,17 +44,14 @@ error res_file::io_on_open()
   // Think about reseting all
   // Windows specific code
 
-  BY_HANDLE_FILE_INFORMATION info;
   sysapi::error::handle_t herr;
 
   herr = sysapi::file::open(m_hfile, m_path);
   if (herr != sysapi::error::SUCCESS)
     ziafs_return_status(status::CANNOT_OPEN);
 
-  if (GetFileInformationByHandle(m_hfile, &info) == FALSE)
+  if (sysapi::file::size(m_hfile, m_filesz) != sysapi::error::SUCCESS)
     ziafs_return_status(status::CANNOT_OPEN);
-
-  m_filesz = (unsigned long)info.nFileSizeLow;
   m_nrtoread = (int)m_filesz;
 
   ziafs_return_status(status::CANNOT_OPEN);

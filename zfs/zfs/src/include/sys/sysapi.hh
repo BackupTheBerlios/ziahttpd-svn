@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:56:18 2006 texane
-// Last update Thu Feb 02 14:36:22 2006 texane
+// Last update Sat Feb 11 17:28:56 2006 
 //
 
 #ifndef SYS_API_HH
@@ -21,11 +21,20 @@
 # include <sys/win32_api.hh>
 # include <sys/common_api.hh>
 namespace sysapi = sys::win32_api;
-#else
+
+#else // POSIX
+# include <unistd.h>
+# include <stdlib.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <stdio.h>
 # include <sys/posix_api.hh>
 # include <sys/common_api.hh>
 namespace sysapi = sys::posix_api;
-#endif
+#endif // _WIN32
 
 
 

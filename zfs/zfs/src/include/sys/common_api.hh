@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Wed Feb 01 21:51:37 2006 texane
+// Last update Sat Feb 11 17:49:21 2006 
 //
 
 
@@ -59,6 +59,7 @@ namespace sys
       error::handle_t close(handle_t&);
       error::handle_t read(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t write(handle_t&, unsigned char*, unsigned int, unsigned int&);
+      error::handle_t size(handle_t&, unsigned long long&);
     }
 
 
@@ -83,6 +84,13 @@ namespace sys
       error::handle_t load(handle_t&, const std::string&);
       error::handle_t unload(handle_t&);
       error::handle_t resolve(void*&, handle_t&, const std::string&);
+    }
+
+
+    // time related
+    namespace time
+    {
+      error::handle_t current(handle_t&);
     }
   }
 

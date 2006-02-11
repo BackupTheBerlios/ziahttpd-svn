@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 20:39:38 2005 texane
-## Last update Wed Feb 01 23:26:39 2006 texane
+## Last update Sat Feb 11 17:51:04 2006 
 ##
 
 # ! Always include this file
-!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+# !include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= ziafs.x
@@ -28,10 +28,11 @@ srcs	= src$(SLASH)core$(SLASH)main.cc \
 	  src$(SLASH)core$(SLASH)mod_manager.cc \
 	  src$(SLASH)core$(SLASH)http.cc \
 	  src$(SLASH)core$(SLASH)zia_stringmanager.cc \
-	  src$(SLASH)sys$(SLASH)win32$(SLASH)file.cc \
-	  src$(SLASH)sys$(SLASH)win32$(SLASH)error.cc \
-	  src$(SLASH)sys$(SLASH)win32$(SLASH)insock.cc \
-	  src$(SLASH)sys$(SLASH)win32$(SLASH)module.cc \
+	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
+	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)time.cc \
+	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc \
+	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)insock.cc \
+	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)module.cc \
 	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxmlparser.cc \
 	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxmlerror.cc \
 	  src$(SLASH)lib$(SLASH)tinyxml$(SLASH)tinyxml.cc \

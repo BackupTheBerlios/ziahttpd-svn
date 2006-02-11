@@ -224,7 +224,7 @@ status::error				net::http::chunked::decode(net::session*, utils::line& m_line, 
 	if (m_state == BODYDATA)
 	{
 		m_buf += buf;
-		if (m_chunk_size == m_buf.size())
+		if (m_chunk_size == (int)m_buf.size())
 		{
 			m_done = true;
 			ziafs_debug_msg("FINI CHUNK %s", "");
@@ -245,7 +245,7 @@ status::error				net::http::unchunked::decode(net::session* s,utils::line& m_lin
 		m_state = OTHERTIME;
 	}
 	m_buf += buf;
-	if (m_size == m_buf.size())
+	if (m_size == (int)m_buf.size())
 	{
 		m_done = true;
 //		std::cout << "SIZE :" << m_buf.size() << "\n" << m_buf.tostring();

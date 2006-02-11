@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:59:25 2006 texane
-// Last update Thu Feb 02 14:10:55 2006 texane
+// Last update Sat Feb 11 17:50:43 2006 
 //
 
 
@@ -33,6 +33,11 @@ namespace sys
     {
       // module loading, unloading, resolving
       typedef HMODULE handle_t;
+    }
+
+    namespace time
+    {
+      typedef unsigned long long handle_t;
     }
   }
 }

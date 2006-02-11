@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Thu Feb 02 14:12:21 2006 texane
+// Last update Sat Feb 11 18:02:01 2006 
 //
 
 
@@ -62,5 +62,15 @@ sysapi::error::handle_t sysapi::file::write(handle_t& hfile, unsigned char* buf,
     return error::WRITE_FAILED;
 
   nwritten = nr_bytes;
+  return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::file::size(handle_t& hfile, unsigned long long& sz)
+{
+  BY_HANDLE_FILE_INFORMATION info;
+
+  if (GetFleInformationByHandle(hfile, &info) == FALSE)
+    return error::UNKOWN;
   return error::SUCCESS;
 }

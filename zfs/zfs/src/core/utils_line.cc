@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:28:42 2006 texane
-// Last update Thu Jan 26 20:47:44 2006 texane
+// Last update Sat Feb 11 18:14:12 2006 
 //
 
 
@@ -27,14 +27,14 @@ static char* strcpy_norewind(char *dst, const char *src)
 
 }
 
-static char* strcat_norewind(char *dst, const char *src)
-{
-  while (*dst++);
-  while (*src)
-    *dst++ = *src++;
-  *dst = 0;
-  return (dst);
-}
+// static char* strcat_norewind(char *dst, const char *src)
+// {
+//   while (*dst++);
+//   while (*src)
+//     *dst++ = *src++;
+//   *dst = 0;
+//   return (dst);
+// }
 
 static bool inline is_endof_line(const unsigned char* ptr)
 {

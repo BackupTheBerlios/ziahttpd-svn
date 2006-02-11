@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:01:21 2006 texane
-// Last update Sun Jan 22 14:02:04 2006 texane
+// Last update Sat Feb 11 17:50:20 2006 
 //
 
 
@@ -16,6 +16,26 @@ namespace sys
 {
   namespace posix_api
   {
+    namespace file
+    {
+      typedef int handle_t;
+    }
+
+    namespace insock
+    {
+      typedef int handle_t;
+    }
+
+    namespace module
+    {
+      typedef void* handle_t;
+    }
+
+    namespace time
+    {
+      typedef unsigned long long handle_t;
+    }
+
   }
 }
 

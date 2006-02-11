@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Jan 24 21:08:13 2006 texane
-// Last update Thu Feb 02 14:59:37 2006 texane
+// Last update Sat Feb 11 18:08:46 2006 
 //
 
 
@@ -221,29 +221,22 @@ status::error io::res_insock::io_on_expire()
 }
 
 
-#include <windows.h>
-#include <string.h>
-
 # define DEMI_SECOND	5000000
 status::error io::res_insock::io_has_expired(bool& has_expired) const
 {
-  SYSTEMTIME tm_now;
-  FILETIME fltm_now;
-  ULARGE_INTEGER ul_now;
+  unsigned long long ul_now;
   unsigned long long diff;
 
   // Get the current tme, should be cached
   if (m_accepting == false)
     {
-      GetSystemTime(&tm_now);
-      SystemTimeToFileTime(&tm_now, &fltm_now);
-      memcpy((void*)&ul_now, (const void*)&fltm_now, sizeof(unsigned long long));
+      sysapi::time::current(ul_now);
       if (m_tm_lastio != 0)
 	{
 	  // An io resource is considered as expired when
 	  // there havn't been activities for more than
 	  // 500 msc.
-	  diff = (ul_now.QuadPart - m_tm_lastio);
+	  diff = ul_now - m_tm_lastio;
 	  if (diff > DEMI_SECOND)
 	    {
 	      has_expired = true;
