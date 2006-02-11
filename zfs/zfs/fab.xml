@@ -1,0 +1,5 @@
+<protocol>
+  <id>1</id>
+  <modulename>http</modulename>
+  <port>40000</port>
+</protocol>
