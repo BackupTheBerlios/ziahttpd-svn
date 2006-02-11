@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Sat Feb 11 20:22:44 2006 
+// Last update Sat Feb 11 19:28:53 2006 texane
 //
 
 
@@ -139,8 +139,8 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 	    }
 	  if (insock->m_tm_lastio == 0)
 	    insock->m_tm_lastio = tm_current;
-	  if (pushme == true && insock->m_hsock > nfds)
-	    nfds = insock->m_hsock;
+	  if (pushme == true && insock->m_hsock > (unsigned int)nfds)
+	    nfds = (unsigned int)insock->m_hsock;
 	}
       ++cur;
     }
