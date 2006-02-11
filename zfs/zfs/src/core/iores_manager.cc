@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Sat Feb 11 17:54:13 2006 
+// Last update Sat Feb 11 20:22:44 2006 
 //
 
 
@@ -103,6 +103,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   status::error err;
   fd_set rdset;
   fd_set wrset;
+  int nfds;
   res_insock* insock;
   bool activio;
   bool closeme;
@@ -117,28 +118,42 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   // Prepare the sets
   FD_ZERO(&rdset);
   FD_ZERO(&wrset);
+  nfds = 0;
   cur = m_resources.begin();
   last = m_resources.end();
   while (cur != last)
     {
       if ((*cur)->m_typeid == io::TYPEID_INSOCK || (*cur)->m_typeid == io::TYPEID_INSOCK_SSL)
 	{
+	  pushme = false;
 	  insock = reinterpret_cast<res_insock*>(*cur);
  	  if (is_bitset(insock->m_pending, IO_READ) == true || insock->m_accepting == true)
 	    {
 	      FD_SET(insock->m_hsock, &rdset);
+	      pushme = true;
 	    }
 	  if (is_bitset(insock->m_pending, IO_WRITE) == true)
-	    FD_SET(insock->m_hsock, &wrset);
+	    {
+	      FD_SET(insock->m_hsock, &wrset);
+	      pushme = true;
+	    }
 	  if (insock->m_tm_lastio == 0)
 	    insock->m_tm_lastio = tm_current;
+	  if (pushme == true && insock->m_hsock > nfds)
+	    nfds = insock->m_hsock;
 	}
       ++cur;
     }
 
   // -
   // Dispatch pending io
+
+#ifndef NetBSD
   nev = select(0, &rdset, &wrset, 0, 0);
+#else
+  nev = select(nfds + 1, &rdset, &wrset, 0, 0);
+#endif // !NetBSD
+
   if (nev == -1)
     ziafs_return_status( FAILED );
 
@@ -339,8 +354,6 @@ status::error io::res_manager::feed(resource* res, void*& pdata)
 
   if ((res->m_openmod & ST_FEEDING) == false)
     ziafs_return_status( BADMODE );
-
-  ziafs_debug_msg("feeding the resource %s\n", "(does it work?)");
 
   // Tell the iomanager about
   // the feeding operation

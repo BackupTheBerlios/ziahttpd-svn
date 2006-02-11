@@ -1,8 +1,13 @@
 [] implement the omode in the file opening
 [] insock
 [] process
-[>] impelement the sysapi
+[] impelement the sysapi
 [] implement the file resource
 [] commit
 [] make compil on windows
 [] port the insock resource with kqueue
+[] care about the DEMI_SECOND delay, it should change since we work in microsecond on unix (not nano)
+[] implement the io manager with kqueue on unix
+	+ fetch and feed routines -> done for the routine, they are the same
+	+ kqueue instead of select -> compare the iores_manager::dispatch_socket_io
+	+ 
