@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 10:35:30 2006 texane
-// Last update Wed Feb 01 03:25:28 2006 texane
+// Last update Sun Feb 05 11:12:53 2006 texane
 //
 
 
@@ -179,6 +179,7 @@ sysapi::error::handle_t sysapi::insock::accept(handle_t& hsock, struct sockaddr_
       // This could be a blocking operation.
       return error::OPEN_FAILED;
     }
+  set_insock_basic_opts(hsock);
   return error::SUCCESS;
 }
 

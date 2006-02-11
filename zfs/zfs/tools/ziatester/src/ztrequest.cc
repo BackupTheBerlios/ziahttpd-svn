@@ -5,11 +5,12 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Dec 06 22:41:13 2005 texane
-// Last update Wed Feb 01 19:15:41 2006 texane
+// Last update Sun Feb 05 14:13:35 2006 texane
 //
 
 
 #include <string>
+#include <stdlib.h>
 #include <sstream>
 #include <iomanip>
 #include <iostream>
@@ -51,21 +52,59 @@ bool	zt::client::closeServer()
 
 bool	zt::client::sendToServer()
 {
-  unsigned char* ptr;
+//   unsigned char* ptr;
   unsigned int nSent;
-  unsigned int nToSend;
+  bool done;
+//   unsigned int nToSend;
 
-  nToSend = m_fileLength;
-  ptr = m_ptrMapping;
-  while (nToSend)
+//   nToSend = m_fileLength;
+//   ptr = m_ptrMapping;
+//   while (nToSend)
+//     {
+//       sysapi::socket_in::send(m_sockHandle,
+// 			      ptr,
+// 			      nToSend,
+// 			      (sysapi::socket_in::size_t*)&nSent);
+//       ptr += nToSend;
+//       nToSend -= nSent;
+//     }
+
+  static char* megabuf = 0;
+  static char* buf = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2";
+  static int sz = 0;
+  char* ptr;
+  int i;
+
+  // Won't be freed
+  if (megabuf == 0)
     {
-      sysapi::socket_in::send(m_sockHandle,
-			      ptr,
-			      nToSend,
-			      (sysapi::socket_in::size_t*)&nSent);
-      ptr += nToSend;
-      nToSend -= nSent;
+      sz = ((int)strlen(buf) + 1) * 100;
+      megabuf = (char*)malloc(sz);
+      *megabuf = 0;
+      for (i = 0; i < 100; ++i)
+	strcat(megabuf, buf);
+      sz = strlen(megabuf);
     }
+
+  done = false;
+  m_fileLength = 0;
+  ptr = megabuf;
+  while (done == false)
+    {
+      if (sysapi::socket_in::send(m_sockHandle,
+				  (unsigned char*)ptr,
+				  sz,
+				  (sysapi::socket_in::size_t*)&nSent))
+// 	done = true;
+	;
+      ptr += nSent;
+      sz -= nSent;
+//       if (sz <= 0)
+// 	done = true;
+      m_fileLength += nSent;
+    }
+
+  printf("nr sent == %d\n", m_fileLength);
 
   return true;
 }
@@ -82,6 +121,7 @@ bool	zt::client::recvFromServer()
   sysapi::socket_in::size_t ntot;
   char buf[42];
 
+  m_nread = 0;
   done = false;
   ntot = 0;
   while (done == false)
@@ -90,11 +130,20 @@ bool	zt::client::recvFromServer()
 				  (unsigned char*)buf,
 				  sizeof(buf),
 				  &nread) == true)
-	ntot += nread;
+	{
+	  printf("ngot -- %d\n", nread);
+	  ntot += nread;
+	}
       else
-	done = true;
+	{
+	  printf("closeed\n"); fflush(stdout);
+	  done = true;
+	}
 
       if (nread == 0)
+	done = true;
+
+      if (ntot >= m_fileLength)
 	done = true;
     }
 

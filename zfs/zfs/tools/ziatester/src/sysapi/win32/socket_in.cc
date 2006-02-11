@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Oct 12 17:46:27 2005 texane
-// Last update Wed Feb 01 19:11:43 2006 texane
+// Last update Sun Feb 05 11:19:57 2006 texane
 //
 
 
@@ -85,8 +85,11 @@ static void inline fill_inaddr(unsigned short local_port,
 
 static void inline set_nonblocking_mode(win32::socket_in::handle_t hdl)
 {
-  char optval = (char)TRUE;
+  char optval = TRUE;
+  unsigned long nonblocking = 1;
+
   setsockopt(hdl, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+  ioctlsocket(hdl, FIONBIO, &nonblocking);
 }
 
 bool win32::socket_in::create_listening(win32::socket_in::handle_t* hdl,
@@ -101,7 +104,6 @@ bool win32::socket_in::create_listening(win32::socket_in::handle_t* hdl,
   if ((sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == SOCKET_ERROR)
     return false;
 
-  set_nonblocking_mode(sock);
   fill_inaddr(htons(local_port), htonl(local_addr), &sa);
   if (bind(sock, reinterpret_cast<struct sockaddr*>(&sa), sizeof(struct sockaddr_in)) == SOCKET_ERROR)
     {
@@ -113,6 +115,8 @@ bool win32::socket_in::create_listening(win32::socket_in::handle_t* hdl,
     listen(sock, nr_listen);
   else
     listen(sock, 10);
+
+  set_nonblocking_mode(sock);
 
   *hdl = sock;
   return true;
@@ -150,13 +154,17 @@ bool win32::socket_in::create_client(win32::socket_in::handle_t* hdl,
   if ((sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == SOCKET_ERROR)
     return false;
 
-  set_nonblocking_mode(sock);
   fill_inaddr(htons(distport), addr, &sa);
   if (connect(sock, (const struct sockaddr*)&sa, sizeof(struct sockaddr)) != 0)
     {
       // error::stringify("Cannot connect to host: ");
       return false;
     }
+  
+  {
+    char optval = TRUE;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+  }
 
   *hdl = sock;
 
@@ -179,6 +187,7 @@ bool win32::socket_in::accept(win32::socket_in::handle_t* hdl_con,
       return false;
     }
 
+  set_nonblocking_mode(res);
   *hdl_con = res;
 
   return true;

@@ -5,12 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Sat Feb 11 18:02:01 2006 
+// Last update Sat Feb 11 17:23:54 2006 texane
 //
 
 
 #include <string>
 #include <sys/sysapi.hh>
+#include <windows.h>
 
 
 using std::string;
@@ -70,7 +71,7 @@ sysapi::error::handle_t sysapi::file::size(handle_t& hfile, unsigned long long& 
 {
   BY_HANDLE_FILE_INFORMATION info;
 
-  if (GetFleInformationByHandle(hfile, &info) == FALSE)
-    return error::UNKOWN;
+  if (GetFileInformationByHandle(hfile, &info) == FALSE)
+    return error::UNKNOWN;
   return error::SUCCESS;
 }
