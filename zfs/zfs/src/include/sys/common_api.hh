@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Sat Feb 11 17:49:21 2006 
+// Last update Sat Feb 11 18:57:34 2006 
 //
 
 
@@ -39,6 +39,7 @@ namespace sys
 	  INVALID_NAME,
 	  INVALID_DESCRIPTOR,
 
+	  CONNECTION_ABORTED,
 	  CONNECTION_CLOSED,
 
 	  // unknown error

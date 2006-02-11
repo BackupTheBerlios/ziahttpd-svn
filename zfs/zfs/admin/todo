@@ -1,4 +1,7 @@
-[] impelement the sysapi
+[] implement the omode in the file opening
+[] insock
+[] process
+[>] impelement the sysapi
 [] implement the file resource
 [] commit
 [] make compil on windows
