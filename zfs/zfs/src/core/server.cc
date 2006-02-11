@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 13:33:25 2006 texane
-// Last update Wed Feb 01 22:13:33 2006 texane
+// Last update Sat Feb 11 20:50:22 2006 
 //
 
 
@@ -172,7 +172,7 @@ status::error net::server::process_requests()
   // Create a resource foreach port
   m_config->get_protocol(it);
   while (!m_config->end_protocol(it))
-    {      
+    {
       m_resman->create(res, io::ST_FETCHING, "localhost", 40000);
       m_resman->open(res);
       ziafs_print_object( *res );
@@ -211,9 +211,9 @@ status::error net::server::process_requests()
 		  // purposes
 
 		  // Uncomment this one
-		  // (*cur)->process();
-		  if ((*cur)->send_file() == status::SUCCESS)
-		    ziafs_debug_msg("end of file reached %s!", "");
+		  (*cur)->process();
+// 		  if ((*cur)->send_file() == status::SUCCESS)
+// 		    ziafs_debug_msg("end of file reached %s!", "");
 		}
 	      ++cur;
 	    }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 19:11:31 2006 texane
-// Last update Sat Feb 11 19:28:53 2006 texane
+// Last update Sat Feb 11 20:49:28 2006 
 //
 
 
@@ -88,6 +88,8 @@ status::error io::res_manager::dispatch_file_io(list<resource*>& q, void*& aux)
 }
 
 
+#include <stdio.h>
+
 status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux)
 {
   // Important notes:
@@ -103,7 +105,11 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   status::error err;
   fd_set rdset;
   fd_set wrset;
+#ifdef __NetBSD__
   int nfds;
+#else
+  unsigned int nfds;
+#endif // NetBSD
   res_insock* insock;
   bool activio;
   bool closeme;
@@ -139,8 +145,8 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
 	    }
 	  if (insock->m_tm_lastio == 0)
 	    insock->m_tm_lastio = tm_current;
-	  if (pushme == true && insock->m_hsock > (unsigned int)nfds)
-	    nfds = (unsigned int)insock->m_hsock;
+	  if (pushme == true && (insock->m_hsock > nfds))
+	    nfds = insock->m_hsock;
 	}
       ++cur;
     }
@@ -148,7 +154,7 @@ status::error io::res_manager::dispatch_socket_io(list<resource*>& q, void*& aux
   // -
   // Dispatch pending io
 
-#ifndef NetBSD
+#ifndef __NetBSD__
   nev = select(0, &rdset, &wrset, 0, 0);
 #else
   nev = select(nfds + 1, &rdset, &wrset, 0, 0);
