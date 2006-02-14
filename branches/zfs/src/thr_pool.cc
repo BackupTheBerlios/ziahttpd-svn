@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 02:00:09 2006 texane
-// Last update Tue Feb 14 23:29:59 2006 texane
+// Last update Tue Feb 14 23:46:08 2006 texane
 //
 
 
@@ -21,14 +21,14 @@ void* pool_cache_entry(void* param)
 
   p_slot = (thr::pool::slot_t*)param;
 
-  // Lock the mutex
-  err = 1;
-  while (err)
-    err = pthread_mutex_lock(&p_slot->mtx_start);
-
   // Execute the task
   while (p_slot->thr_done == false)
     {
+      // Lock the mutex
+      err = 1;
+      while (err)
+	err = pthread_mutex_lock(&p_slot->mtx_start);
+
       p_slot->thr_ready = true;
       err = pthread_cond_wait(&p_slot->cond_start, &p_slot->mtx_start);
       p_slot->thr_ready = false;
@@ -42,7 +42,6 @@ void* pool_cache_entry(void* param)
 	}
       p_slot->locked = 0;
     }
-  pthread_mutex_unlock(&p_slot->mtx_start);
   return 0;
 }
 
@@ -140,8 +139,9 @@ bool thr::pool::execute_task(thr::pool::slot_t& slot)
   ntry = 0;
   while (slot.thr_ready == false)
     ++ntry;
-  Sleep(0);
+  pthread_mutex_lock(&slot.mtx_start);
   err = pthread_cond_signal(&slot.cond_start);
+  pthread_mutex_unlock(&slot.mtx_start);
   if (err)
     return false;
   return true;
