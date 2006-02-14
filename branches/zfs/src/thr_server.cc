@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Feb 14 18:36:19 2006 texane
+// Last update Tue Feb 14 18:39:29 2006 texane
 //
 
 
@@ -43,7 +43,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   insock::accept(cli_sock, cli_addr, srv->srv_sock);
   thr_slot->pool->assign_task(server_entry, (void*)srv);
 
-  // Handle the client
+  // Handle the client session
   printf("client is now connected\n");
   Sleep(100000);
 //   insock::close(cli_sock);

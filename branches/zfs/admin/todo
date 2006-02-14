@@ -1,12 +1,14 @@
 [ ] implement the lock function on unix
-[ ] implement the system thread
+[>] implement the system thread
 	-> should at least be able to unblock threads
-[ ] implement the net::server class
+[x] implement the net::server class
 [ ] make the servers reapable
 [ ] correct the debug_msg bug (when thread id and others...)
 [ ] implement <system></system> in the config file, for
 	all balise related to the system config
-[ ] implement ONE SERVER
+[x] implement ONE SERVER
 	-> implement the core, handling pool, srvlist...
 	-> implement one server
-[ ] implement the run method
+[x] implement the run method
+[>] check on failure wether how the server behaves(leaks, connections not closed...)
+[>] try to reap all the resource that are older than <timeout>
