@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use IO::Socket::INET;
+use threads;
 
 #########################################################
 #							#
@@ -13,7 +14,7 @@ my	$addr_sv = "localhost";
 my	$socket;
 my	$request;
 my	$reponse;
-my	$nbr_req = 10;
+my	$nbr_req = 300;
 my	$first = 0;
 my	$i = 0;
 
@@ -72,16 +73,33 @@ sub	create_request_get()
 
 #########################################################
 #							#
+#		     Create Threads			#
+#							#
+#########################################################
+
+sub	makeall()
+{
+    serv_connection();
+    create_request_get();
+    send_request();
+    close($socket);
+}
+
+sub	create_thread()
+{
+    $thr = threads->new(\&makeall);
+    $thr->join;
+}
+
+#########################################################
+#							#
 #		     Program start			#
 #							#
 #########################################################
 
 while ($i < $nbr_req)
 {
-    serv_connection();
-    create_request_get();
-    send_request();
-    close($socket);
+    create_thread();
     $i++;
 }
 exit(0);
