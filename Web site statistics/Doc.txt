@@ -1,0 +1,2 @@
+Pour l'instant ca se passe sur http://ziahttpd.berlios.de/test/ (pas pour longtemps)
+ensuite les stats serront sur http://ziahttpd.berlios.de/
