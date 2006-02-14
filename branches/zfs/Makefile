@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Feb 14 22:34:08 2006 texane
+## Last update Tue Feb 14 22:57:01 2006 texane
 ##
 
 # ! Always include this file
@@ -18,6 +18,7 @@ srcs	= src$(SLASH)main.cc			\
 	  src$(SLASH)core.cc			\
 	  src$(SLASH)net_server.cc		\
 	  src$(SLASH)thr_pool.cc		\
+	  src$(SLASH)thr_io.cc			\
 	  src$(SLASH)thr_system.cc		\
 	  src$(SLASH)thr_server.cc		\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc	\
