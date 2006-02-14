@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 02:00:09 2006 texane
-// Last update Tue Feb 14 22:49:26 2006 texane
+// Last update Tue Feb 14 23:29:59 2006 texane
 //
 
 
@@ -140,6 +140,7 @@ bool thr::pool::execute_task(thr::pool::slot_t& slot)
   ntry = 0;
   while (slot.thr_ready == false)
     ++ntry;
+  Sleep(0);
   err = pthread_cond_signal(&slot.cond_start);
   if (err)
     return false;
@@ -199,6 +200,7 @@ thr::pool::pool(unsigned int nslots = 10)
 {
   unsigned int n;
 
+  nr_ticks = 0;
   nr_slots = nslots;
   thr_slots = new slot_t[nr_slots];
   for (n = 0; n < nslots; ++n)

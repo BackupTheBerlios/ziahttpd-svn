@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 22:56:37 2006 texane
-// Last update Tue Feb 14 23:00:06 2006 texane
+// Last update Tue Feb 14 23:07:56 2006 texane
 //
 
 
@@ -21,13 +21,17 @@ void thr::io_info_reset(thr::io_info_t& io_info)
 }
 
 
-int thr::recv(thr::pool::slot_t&, unsigned char*, unsigned int)
+int thr::recv(thr::pool::slot_t& slot, unsigned char*, unsigned int)
 {
+  slot.curr_io.in_progress = true;
+  slot.curr_io.in_progress = false;
   return 0;
 }
 
 
-int thr::send(thr::pool::slot_t&, unsigned char*, unsigned int)
+int thr::send(thr::pool::slot_t& slot, unsigned char*, unsigned int)
 {
+  slot.curr_io.in_progress = true;
+  slot.curr_io.in_progress = false;
   return 0;
 }

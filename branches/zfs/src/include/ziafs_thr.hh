@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Tue Feb 14 22:59:48 2006 texane
+// Last update Tue Feb 14 23:04:30 2006 texane
 //
 
 
@@ -157,8 +157,12 @@ namespace thr
     static void* system_entry(slot_t*);
 
   private:
+    // Thread slots
     slot_t* thr_slots;
     unsigned int nr_slots;
+
+    // Number of ticks since system
+    unsigned long nr_ticks;
 
     // Internals
     void reset_slot(slot_t&);
