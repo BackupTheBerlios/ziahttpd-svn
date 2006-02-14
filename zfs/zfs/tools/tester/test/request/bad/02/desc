@@ -1,4 +1,4 @@
 Petit script perl qui test les mauvaises requetes sur le serveur.
-5000 Connections l'une apres l'autres.
+1000 Connections l'une apres l'autres.
 
 Installer Active perl sur windows.

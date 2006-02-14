@@ -12,7 +12,7 @@ my	$port_sv = 40000;
 my	$addr_sv = "localhost";
 my	$socket;
 my	$request;
-my	$nbr_req = 5000;
+my	$nbr_req = 1000;
 my	$first = 0;
 my	$i = 0;
 
@@ -46,7 +46,7 @@ sub	serv_connection()
 
 sub	send_request()
 {
-    print $socket $request."\r\n";
+    print $socket $request;
 }
 
 #########################################################
@@ -55,16 +55,9 @@ sub	send_request()
 #							#
 #########################################################
 
-sub	create_request_post()
-{
-    $request = "POST /cgi-bin/script.cgi HTTP/1.0";
-    $request = $request."\nContent-Type: application/x-www-form-urlencoded";
-    $request = $request."\nContent-Length: 35";
-}
-
 sub	create_request_bad()
 {
-    $request = "j'envoie de la merde !!";
+    $request = "test !!\r\n";
 }
 
 #########################################################
@@ -76,7 +69,6 @@ sub	create_request_bad()
 while ($i < $nbr_req)
 {
     serv_connection();
-#    create_request_post();
     create_request_bad();
     send_request();
     close($socket);
