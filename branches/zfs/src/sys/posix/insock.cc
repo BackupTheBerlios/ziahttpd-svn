@@ -29,7 +29,7 @@ static void set_basic_sockopts(int fd)
 {
   static char optval = 1;
 
-  fcntl(fd, F_SETFL, O_NONBLOCK);
+  // fcntl(fd, F_SETFL, O_NONBLOCK);
   setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
 #ifdef SO_REUSEPORT
   setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval));

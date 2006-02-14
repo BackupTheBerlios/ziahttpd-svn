@@ -31,7 +31,7 @@ CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS) -DTIXML_USE_STL
 # .linker
 LD	:=	g++
 LDPATHS	:=
-LDLIBS	:=	-lpthread
+LDLIBS	:=	-lpthread -ldl
 LDGEN	:=
 LIBOUT	:=
 DLLOUT	:=	-shared
