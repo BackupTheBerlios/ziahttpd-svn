@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Tue Feb 14 15:51:56 2006 texane
+// Last update Tue Feb 14 16:40:15 2006 texane
 //
 
 
@@ -137,6 +137,10 @@ namespace thr
     // assign task to cached thread
     bool assign_task(void* (*)(slot_t*), void*);
 
+    // Thread entry points
+    static void* server_entry(slot_t*);
+    static void* system_entry(slot_t*);
+
   private:
     slot_t* thr_slots;
     unsigned int nr_slots;
@@ -147,14 +151,6 @@ namespace thr
     bool release_slot(slot_t&);
     bool execute_task(slot_t&);
   };
-}
-
-
-namespace thr
-{
-  // thread entry points
-  void* server_entry(pool::slot_t*);
-  void* system_entry(pool::slot_t*);
 }
 
 
