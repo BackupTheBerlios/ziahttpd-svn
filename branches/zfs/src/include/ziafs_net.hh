@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Tue Feb 14 16:51:17 2006 texane
+// Last update Tue Feb 14 17:28:54 2006 texane
 //
 
 
@@ -13,10 +13,21 @@
 # define ZIAFS_NET_HH
 
 
+// forward declarations
+struct core;
+
 namespace net
 {
   class server
   {
+  public:
+    server(struct core*);
+
+    bool reload_config();
+    bool run();
+
+  private:
+    core* core;
   };
 }
 

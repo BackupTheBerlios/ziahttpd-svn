@@ -6,3 +6,7 @@
 [ ] correct the debug_msg bug (when thread id and others...)
 [ ] implement <system></system> in the config file, for
 	all balise related to the system config
+[ ] implement ONE SERVER
+	-> implement the core, handling pool, srvlist...
+	-> implement one server
+[ ] implement the run method
