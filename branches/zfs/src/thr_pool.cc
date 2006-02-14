@@ -5,21 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 02:00:09 2006 texane
-// Last update Tue Feb 14 15:20:16 2006 texane
+// Last update Tue Feb 14 18:13:04 2006 texane
 //
 
 
-#include <iostream>
 #include <pthread.h>
 #include <ziafs_thr.hh>
-#include <ziafs_debug.hh>
 #include <windows.h>
-
-using std::cout;
-using std::endl;
-
-
-// Apparently, the pslot is not ok!
 
 
 // thread cache function

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:26 2006 texane
-// Last update Tue Feb 14 16:35:28 2006 texane
+// Last update Tue Feb 14 17:36:52 2006 texane
 //
 
 
@@ -37,7 +37,7 @@ void* thr::pool::system_entry(thr::pool::slot_t* thr_slot)
   while (1)
     {
       // Iterate over the slots
-      Sleep(100);
+      Sleep(500);
       slots = thr_slot->pool->thr_slots;
       for (n = 0; n < thr_slot->pool->nr_slots; ++n)
 	{

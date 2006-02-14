@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Tue Feb 14 16:40:15 2006 texane
+// Last update Tue Feb 14 18:13:17 2006 texane
 //
 
 
@@ -113,7 +113,6 @@ namespace thr
 // 	  st_snd_data
 // 	} state_t;
 //       state_t st_server;
-
 
       // blocking operations
       time_t tm_started;

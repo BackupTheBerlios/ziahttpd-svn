@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Feb 14 17:08:07 2006 texane
+## Last update Tue Feb 14 17:51:58 2006 texane
 ##
 
 # ! Always include this file
@@ -14,12 +14,17 @@
 
 # Give your own variables here
 name	= zfs.x
-srcs	= src\main.cc		\
-	  src\core.cc		\
-	  src\net_server.cc	\
-	  src\thr_pool.cc	\
-	  src\thr_system.cc	\
-	  src\thr_server.cc
+srcs	= src\main.cc			\
+	  src\core.cc			\
+	  src\net_server.cc		\
+	  src\thr_pool.cc		\
+	  src\thr_system.cc		\
+	  src\thr_server.cc		\
+	  src\sys\$(PROJ_SYSAPI)\error.cc	\
+	  src\sys\$(PROJ_SYSAPI)\file.cc	\
+	  src\sys\$(PROJ_SYSAPI)\insock.cc	\
+	  src\sys\$(PROJ_SYSAPI)\module.cc	\
+	  src\sys\$(PROJ_SYSAPI)\time.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \

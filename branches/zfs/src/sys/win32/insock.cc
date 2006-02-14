@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 10:35:30 2006 texane
-// Last update Sun Feb 05 11:12:53 2006 texane
+// Last update Tue Feb 14 18:05:37 2006 texane
 //
 
 
@@ -89,7 +89,7 @@ static inline bool set_insock_basic_opts(SOCKET hsock)
   char optval = TRUE;
   unsigned long nonblocking = 1;
   setsockopt(hsock, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
-  ioctlsocket(hsock, FIONBIO, &nonblocking);
+  // ioctlsocket(hsock, FIONBIO, &nonblocking);
   return true;
 }
 
