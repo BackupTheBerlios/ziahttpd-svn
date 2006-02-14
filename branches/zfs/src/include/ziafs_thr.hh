@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Tue Feb 14 18:13:17 2006 texane
+// Last update Tue Feb 14 22:59:48 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 
 // This file covers threads
 
+#include <sys/sysapi.hh>
 
 #ifdef _WIN32
 # include <time.h>
@@ -80,7 +81,15 @@ namespace thr
   // terminate, just it should give up the current operation.
   // What should be done after that is left to implemententor
 
+  // Information about the inprogress io
+  typedef struct
+  {
+    unsigned int sz;
+    unsigned long long tm_start;
+    bool in_progress;
+  } io_info_t;
 
+  // Thread pool
   class pool
   {
   public:
@@ -98,6 +107,9 @@ namespace thr
       void* (*entry_fn)(struct slot*);
       void* uparam;
       thr::pool* pool;
+
+      // current io information
+      io_info_t curr_io;
 
       // ?? should be moved in net::server
       // connection related
@@ -154,6 +166,12 @@ namespace thr
     bool release_slot(slot_t&);
     bool execute_task(slot_t&);
   };
+
+
+  // io related operations
+  void io_info_reset(io_info_t&);
+  int recv(pool::slot_t&, unsigned char*, unsigned int);
+  int send(pool::slot_t&, unsigned char*, unsigned int);
 }
 
 

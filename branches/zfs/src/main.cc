@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:04:58 2006 texane
-// Last update Tue Feb 14 18:06:42 2006 texane
+// Last update Tue Feb 14 22:41:26 2006 texane
 //
 
 
@@ -24,8 +24,8 @@ int main(int, char**)
   core.thr_pool->assign_task(thr::pool::system_entry, 0);
   srv = new net::server(&core);
   srv->reload_config();
-  srv->run();
   core.srv_list.push_front(srv);
+  srv->run();
 
   // Main loop
   while (1)

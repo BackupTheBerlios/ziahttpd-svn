@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Feb 14 18:39:29 2006 texane
+// Last update Tue Feb 14 22:41:53 2006 texane
 //
 
 
@@ -42,8 +42,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   // Handle the client session
   printf("client is now connected\n");
-  Sleep(100000);
-//   insock::close(cli_sock);
+  insock::close(cli_sock);
 
   return 0;
 }
