@@ -5,68 +5,190 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 02:00:09 2006 texane
-// Last update Tue Feb 14 02:51:50 2006 texane
+// Last update Tue Feb 14 15:20:16 2006 texane
 //
 
 
+#include <iostream>
 #include <pthread.h>
 #include <ziafs_thr.hh>
+#include <ziafs_debug.hh>
+#include <windows.h>
+
+using std::cout;
+using std::endl;
 
 
-// Internal
+// Apparently, the pslot is not ok!
+
+
+// thread cache function
+
+void* pool_cache_entry(void* param)
+{
+  thr::pool::slot_t* p_slot;
+  int err;
+
+  p_slot = (thr::pool::slot_t*)param;
+
+  // Lock the mutex
+  err = 1;
+  while (err)
+    err = pthread_mutex_lock(&p_slot->mtx_start);
+
+  // Execute the task
+  while (p_slot->thr_done == false)
+    {
+      p_slot->thr_ready = true;
+      err = pthread_cond_wait(&p_slot->cond_start, &p_slot->mtx_start);
+      p_slot->thr_ready = false;
+      if (err)
+	{
+	  p_slot->thr_ready = true;
+	}
+      else if (p_slot->entry_fn)
+	{
+	  p_slot->entry_fn(p_slot);
+	}
+      p_slot->locked = 0;
+    }
+  pthread_mutex_unlock(&p_slot->mtx_start);
+  return 0;
+}
+
+
+// Internal pool slot management
 
 void thr::pool::reset_slot(thr::pool::slot_t& slot)
 {
   slot.locked = 0;
   slot.allocated = false;
-//   slot.thr_id = ;
+  slot.thr_done = false;
+  slot.thr_ready = false;
+  slot.thr_blocked = false;
+  slot.thr_lasterr = slot_t::e_success;
+  slot.pool = this;
+  slot.cond_start = 0;
+  slot.mtx_start = 0;
+  slot.entry_fn = 0;
+  slot.uparam = 0;
 }
 
-void thr::pool::enter()
-{}
-
-void thr::pool::leave()
-{}
-
-static inline bool lock_the_slot(int* lock)
+bool thr::pool::allocate_slot(thr::pool::slot_t& slot)
 {
-  if (*lock == 0)
+  // Create a thread that's
+  // blocked on a condition
+  // variable.
+
+  bool ret;
+  int err;
+
+  ret = true;
+
+  slot.cond_start = 0;
+  slot.mtx_start = 0;
+
+  err = pthread_mutex_init(&slot.mtx_start, 0);
+  if (err)
     {
-      *lock = 1;
-      return true;
+      ret = false;
+      goto end_of_allocate;
     }
+
+  err = pthread_cond_init(&slot.cond_start, 0);
+  if (err)
+    {
+      ret = false;
+      goto end_of_allocate;
+    }
+  slot.allocated = true;
+
+  err = pthread_create(&slot.thr_id, 0, pool_cache_entry, (void*)&slot);
+  if (err)
+    {
+      ret = false;
+      goto end_of_allocate;
+    }
+
+ end_of_allocate:
+  if (ret == false)
+    {
+      release_slot(slot);
+      reset_slot(slot);
+    }
+
+  return ret;
+}
+
+bool thr::pool::release_slot(thr::pool::slot_t& slot)
+{
+  int ret;
+  int* p_ret = &ret;
+
+  if (slot.allocated == false)
+    return false;
+
+  if (slot.mtx_start)
+    pthread_mutex_destroy(&slot.mtx_start);
+
+  if (slot.cond_start)
+    pthread_cond_destroy(&slot.cond_start);
+
+  // ??
+  // pthread_detach(slot.thr_id);
+  pthread_join(slot.thr_id, (void**)&p_ret);
+  return true;
+}
+
+bool thr::pool::execute_task(thr::pool::slot_t& slot)
+{
+  unsigned int ntry;
+  int err;
+
+  // Wait for the thread
+  ntry = 0;
+  while (slot.thr_ready == false)
+    ++ntry;
+  err = pthread_cond_signal(&slot.cond_start);
+  if (err)
+    return false;
+  return true;
+}
+
+static inline bool lock_the_slot(int* the_lock)
+{
+  __asm
+    {
+      mov edx, dword ptr[the_lock]
+      xor eax, eax
+      xor ecx, ecx
+      inc ecx
+      lock cmpxchg dword ptr[edx], ecx
+      jnz already_locked
+    }
+  return true;
+ already_locked:
   return false;
 }
 
 static inline bool unlock_the_slot(int* lock)
 {
-  if (*lock == 1)
-    {
-      *lock = 0;
-      return true;
-    }
-  return false;
+  *lock = 0;
+  return true;
 }
 
-static inline void allocate_the_slot(thr::pool::slot_t& slot)
-{
-  slot.locked = 1;
-  slot.allocated = true;
-}
-
-static inline void release_the_slot(thr::pool::slot_t& slot)
-{
-  slot.allocated = false;
-  slot.locked = 0;
-}
 
 
 // Exported
 
 thr::pool::pool(unsigned int nslots = 10)
 {
+  unsigned int n;
+
   nr_slots = nslots;
   thr_slots = new slot_t[nr_slots];
+  for (n = 0; n < nslots; ++n)
+    reset_slot(thr_slots[n]);
 }
 
 thr::pool::~pool()
@@ -74,7 +196,7 @@ thr::pool::~pool()
   delete[] thr_slots;
 }
 
-bool thr::pool::assign_task(void* (*task_fn)(struct param&), struct param& p)
+bool thr::pool::assign_task(void* (*entry_fn)(slot_t*), void* uparam)
 {
   unsigned int nslot;
   slot_t* p_slot;
@@ -85,32 +207,40 @@ bool thr::pool::assign_task(void* (*task_fn)(struct param&), struct param& p)
   done = false;
   for (nslot = 0; done == false && nslot < nr_slots; ++nslot)
     {
-      if (thr_slots[nslot].allocated == true &&
-	  lock_the_slot(&thr_slots[nslot].locked))
+      if (lock_the_slot(&thr_slots[nslot].locked) == true)
 	{
-	  // a slot has been previously locked
-	  if (p_slot)
-	    unlock_the_slot(&thr_slots[nslot].locked);
-	  p_slot = &thr_slots[nslot];
-	  done = true;
-	}
-      else if (p_slot == 0 && thr_slots[nslot].allocated == false)
-	{
-	  if (lock_the_slot(&thr_slots[nslot].locked))
-	    p_slot = &thr_slots[nslot];
+	  if (thr_slots[nslot].allocated == true)
+	    {
+	      if (p_slot)
+		unlock_the_slot(&p_slot->locked);
+	      p_slot = &thr_slots[nslot];
+	      done = true;
+	    }
+	  else if (p_slot == 0)
+	    {
+	      p_slot = &thr_slots[nslot];
+	    }
+	  else
+	    {
+	      unlock_the_slot(&thr_slots[nslot].locked);
+	    }
 	}
     }
 
+  // no more slot available
+  if (done == false && p_slot == 0)
+    return false;
+
   // No slot has been found, allocate one
-  if (done == false && p_slot)
-    {
-      allocate_the_slot(*p_slot);
-    }
-  // No slot has been found, no more available
-  else
-    {
-      return false;
-    }
+  if (done == false)
+    allocate_slot(*p_slot);
+
+  // Fill the slot
+  p_slot->entry_fn = entry_fn;
+  p_slot->uparam = uparam;
+
+  // Start the thread
+  execute_task(*p_slot);
 
   return true;
 }

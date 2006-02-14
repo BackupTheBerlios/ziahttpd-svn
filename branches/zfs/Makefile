@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Feb 14 02:02:49 2006 texane
+## Last update Tue Feb 14 15:22:58 2006 texane
 ##
 
 # ! Always include this file
@@ -15,13 +15,15 @@
 # Give your own variables here
 name	= zfs.x
 srcs	= src\main.cc		\
-	  src\thr_pool.cc
+	  src\thr_pool.cc	\
+	  src\thr_system.cc	\
+	  src\thr_server.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \
 	  Makefile~
 
-# CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_MSG
+CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_MSG
 # CCDEFS	= $(CCDEFS) -DZIAFS_DUMP_OBJECTS -DZIAFS_PRINT_OBJECTS -DZIAFS_DEBUG_MSG
 # CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_ERROR
 
