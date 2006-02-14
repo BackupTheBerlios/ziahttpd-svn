@@ -23,9 +23,7 @@
 // allowed to deallocated them.
 
 
-#include <ziafs_debug.hh>
-#include <ziafs_thr.hh>
-#include <windows.h>
+#include <ziafs.hh>
 #include <cstdio>
 
 

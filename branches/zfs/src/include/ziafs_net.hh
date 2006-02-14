@@ -33,7 +33,7 @@ namespace net
 
   private:
     // Data related
-    core* core;
+    struct core* core;
 
     // Network related
     bool is_bound;

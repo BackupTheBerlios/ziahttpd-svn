@@ -31,7 +31,9 @@ static void set_basic_sockopts(int fd)
 
   fcntl(fd, F_SETFL, O_NONBLOCK);
   setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+#ifdef SO_REUSEPORT
   setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval));
+#endif // SO_REUSEPORT
 }
 
 static bool getinaddr_tobuf(unsigned int* buf, const char* addr)

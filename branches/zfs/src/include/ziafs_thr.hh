@@ -16,8 +16,12 @@
 // This file covers threads
 
 
-#include <time.h>
-#include <pthread.h>
+#ifdef _WIN32
+# include <time.h>
+# include <sys/pthread.h>
+#else
+# include <pthread.h>
+#endif //_WIN32
 
 
 namespace thr
@@ -93,7 +97,7 @@ namespace thr
       pthread_mutex_t mtx_start;
       void* (*entry_fn)(struct slot*);
       void* uparam;
-      pool* pool;
+      thr::pool* pool;
 
       // ?? should be moved in net::server
       // connection related

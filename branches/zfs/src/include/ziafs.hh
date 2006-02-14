@@ -18,7 +18,17 @@
 #include <ziafs_core.hh>
 #include <ziafs_debug.hh>
 #include <sys/sysapi.hh>
-#include <pthread.h>
+
+#ifndef _WIN32
+# define Sleep( n ) usleep(n)
+#endif // ! _WIN32
+
+#ifdef _WIN32
+# include <sys/pthread.h>
+# include <windows.h>
+#else
+# include <pthread.h>
+#endif // _WIN32
 
 
 #endif // ! ZIAFS_HH

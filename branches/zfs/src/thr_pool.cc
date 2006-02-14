@@ -9,9 +9,7 @@
 //
 
 
-#include <pthread.h>
-#include <ziafs_thr.hh>
-#include <windows.h>
+#include <ziafs.hh>
 
 
 // thread cache function
@@ -60,8 +58,8 @@ void thr::pool::reset_slot(thr::pool::slot_t& slot)
   slot.thr_blocked = false;
   slot.thr_lasterr = slot_t::e_success;
   slot.pool = this;
-  slot.cond_start = 0;
-  slot.mtx_start = 0;
+//   slot.cond_start = 0;
+//   slot.mtx_start = 0;
   slot.entry_fn = 0;
   slot.uparam = 0;
 }
@@ -77,8 +75,8 @@ bool thr::pool::allocate_slot(thr::pool::slot_t& slot)
 
   ret = true;
 
-  slot.cond_start = 0;
-  slot.mtx_start = 0;
+//   slot.cond_start = 0;
+//   slot.mtx_start = 0;
 
   err = pthread_mutex_init(&slot.mtx_start, 0);
   if (err)
@@ -120,10 +118,10 @@ bool thr::pool::release_slot(thr::pool::slot_t& slot)
   if (slot.allocated == false)
     return false;
 
-  if (slot.mtx_start)
+//   if (slot.mtx_start)
     pthread_mutex_destroy(&slot.mtx_start);
 
-  if (slot.cond_start)
+//   if (slot.cond_start)
     pthread_cond_destroy(&slot.cond_start);
 
   // ??
@@ -147,6 +145,8 @@ bool thr::pool::execute_task(thr::pool::slot_t& slot)
   return true;
 }
 
+
+#ifdef _WIN32
 static inline bool lock_the_slot(int* the_lock)
 {
   __asm
@@ -162,6 +162,27 @@ static inline bool lock_the_slot(int* the_lock)
  already_locked:
   return false;
 }
+#else
+static inline bool lock_the_slot(int* the_lock)
+{
+  unsigned char owner;
+
+  owner = 0;
+  __asm__ __volatile__ ("xorl %%eax, %%eax\n\t"
+			"xorl %%ecx, %%ecx\n\t"
+			"incl %%ecx\n\t"
+ 			"lock cmpxchg %%ecx, %0\n\t"
+			"jnz already_locked\n\t"
+			"incl %1\n\t"
+			"already_locked:\n\t"
+			: "=m"(*the_lock), "=m"(owner)
+			:
+			: "eax", "ecx");
+  if (owner == 1)
+    return true;
+  return false;
+}
+#endif // _WIN32
 
 static inline bool unlock_the_slot(int* lock)
 {

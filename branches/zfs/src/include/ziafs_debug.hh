@@ -13,14 +13,18 @@
 # define ZIAFS_DEBUG_HH
 
 
-#include <pthread.h>
-
-
-#ifdef __NetBSD__
-# include <ziafs_debug_netbsd.hh>
+#ifdef _WIN32
+# include <sys/pthread.h>
 #else
+# include <pthread.h>
+#endif // _WIN32
+
+
+#ifdef _WIN32
 # include <ziafs_debug_win32.hh>
-#endif // __NetBSD__
+#else
+# include <ziafs_debug_netbsd.hh>
+#endif // _WIN32
 
 
 #endif // ! ZIAFS_DEBUG_HH

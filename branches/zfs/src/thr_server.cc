@@ -10,10 +10,7 @@
 
 
 #include <cstdio>
-#include <ziafs_thr.hh>
-#include <ziafs_net.hh>
-#include <sys/sysapi.hh>
-#include <ziafs_debug.hh>
+#include <ziafs.hh>
 
 
 using namespace sysapi;
