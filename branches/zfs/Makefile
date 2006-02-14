@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Feb 14 15:22:58 2006 texane
+## Last update Tue Feb 14 16:50:13 2006 texane
 ##
 
 # ! Always include this file
@@ -15,6 +15,8 @@
 # Give your own variables here
 name	= zfs.x
 srcs	= src\main.cc		\
+	  src\core.cc		\
+	  src\net_server.cc	\
 	  src\thr_pool.cc	\
 	  src\thr_system.cc	\
 	  src\thr_server.cc

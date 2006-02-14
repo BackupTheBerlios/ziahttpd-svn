@@ -4,3 +4,5 @@
 [ ] implement the net::server class
 [ ] make the servers reapable
 [ ] correct the debug_msg bug (when thread id and others...)
+[ ] implement <system></system> in the config file, for
+	all balise related to the system config
