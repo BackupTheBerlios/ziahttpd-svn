@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:03:48 2006 texane
-// Last update Wed Feb 15 22:38:54 2006 
+// Last update Wed Feb 15 13:59:25 2006 texane
 //
 
 
@@ -24,6 +24,8 @@
 #ifndef _WIN32
 # include <unistd.h>
 # define Sleep( n ) usleep(n)
+#else
+# define Sleep( n ) Sleep(n/1000)
 #endif // ! _WIN32
 
 #ifdef _WIN32

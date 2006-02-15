@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 15 23:43:08 2006 
+// Last update Wed Feb 15 14:04:12 2006 texane
 //
 
 
@@ -76,7 +76,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
   if (sess.thr_slot->curr_io.timeouted == true)
     {
-      printf("the session timeouted\n");
+      printf("session timeouted\n"); fflush(stdout);
       sess.done = true;
       return false;
     }
