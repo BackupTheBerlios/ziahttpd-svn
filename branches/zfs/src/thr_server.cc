@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Feb 14 23:14:10 2006 texane
+// Last update Wed Feb 15 01:20:28 2006 texane
 //
 
 
@@ -27,7 +27,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   net::server* srv = (net::server*)thr_slot->uparam;
   insock::handle_t cli_sock;
   struct sockaddr_in cli_addr;
-
+  
   // The sever is not yet bound
   srv = (net::server*)thr_slot->uparam;
   if (srv->is_bound == false)
@@ -37,11 +37,13 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     }
 
   // Accept a new connection, delegate accept
+  printf("accepting connection\n"); fflush(stdout);
   insock::accept(cli_sock, cli_addr, srv->srv_sock);
+  printf("new connection accepted\n"); fflush(stdout);
+
   thr_slot->pool->assign_task(server_entry, (void*)srv);
 
   // Handle the client session
-  printf("client is now connected\n");
   insock::close(cli_sock);
 
   return 0;

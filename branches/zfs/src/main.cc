@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:04:58 2006 texane
-// Last update Tue Feb 14 23:17:25 2006 texane
+// Last update Wed Feb 15 00:58:49 2006 texane
 //
 
 
@@ -20,7 +20,8 @@ int main(int, char**)
 
   // Bootstrap the core
   sysapi::insock::init_subsystem();
-  core.thr_pool = new thr::pool(50);
+//   core.thr_pool = new thr::pool(50);
+  core.thr_pool = new thr::pool(3);
   core.thr_pool->assign_task(thr::pool::system_entry, 0);
   srv = new net::server(&core);
   srv->reload_config();

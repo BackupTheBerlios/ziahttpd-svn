@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 02:00:09 2006 texane
-// Last update Tue Feb 14 23:46:08 2006 texane
+// Last update Wed Feb 15 01:21:53 2006 texane
 //
 
 
@@ -24,22 +24,13 @@ void* pool_cache_entry(void* param)
   // Execute the task
   while (p_slot->thr_done == false)
     {
-      // Lock the mutex
-      err = 1;
-      while (err)
-	err = pthread_mutex_lock(&p_slot->mtx_start);
-
       p_slot->thr_ready = true;
       err = pthread_cond_wait(&p_slot->cond_start, &p_slot->mtx_start);
       p_slot->thr_ready = false;
       if (err)
-	{
-	  p_slot->thr_ready = true;
-	}
+	p_slot->thr_ready = true;
       else if (p_slot->entry_fn)
-	{
-	  p_slot->entry_fn(p_slot);
-	}
+	p_slot->entry_fn(p_slot);
       p_slot->locked = 0;
     }
   return 0;
@@ -79,6 +70,13 @@ bool thr::pool::allocate_slot(thr::pool::slot_t& slot)
 //   slot.mtx_start = 0;
 
   err = pthread_mutex_init(&slot.mtx_start, 0);
+  if (err)
+    {
+      ret = false;
+      goto end_of_allocate;
+    }
+
+  err = pthread_mutex_lock(&slot.mtx_start);
   if (err)
     {
       ret = false;
@@ -132,16 +130,12 @@ bool thr::pool::release_slot(thr::pool::slot_t& slot)
 
 bool thr::pool::execute_task(thr::pool::slot_t& slot)
 {
-  unsigned int ntry;
   int err;
 
   // Wait for the thread
-  ntry = 0;
-  while (slot.thr_ready == false)
-    ++ntry;
   pthread_mutex_lock(&slot.mtx_start);
-  err = pthread_cond_signal(&slot.cond_start);
   pthread_mutex_unlock(&slot.mtx_start);
+  err = pthread_cond_signal(&slot.cond_start);
   if (err)
     return false;
   return true;
