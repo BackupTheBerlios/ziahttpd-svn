@@ -1,5 +1,5 @@
 [ ] implement the lock function on unix
-[>] implement the system thread
+[x] implement the system thread
 	-> should at least be able to unblock threads
 [x] implement the net::server class
 [ ] make the servers reapable

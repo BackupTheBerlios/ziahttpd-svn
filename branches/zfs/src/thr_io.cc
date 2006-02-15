@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 22:56:37 2006 texane
-// Last update Tue Feb 14 23:07:56 2006 texane
+// Last update Wed Feb 15 04:25:08 2006 
 //
 
 
@@ -21,17 +21,23 @@ void thr::io_info_reset(thr::io_info_t& io_info)
 }
 
 
-int thr::recv(thr::pool::slot_t& slot, unsigned char*, unsigned int)
+sysapi::error::handle_t thr::recv(thr::pool::slot_t& slot, sysapi::insock::handle_t& hsock, unsigned char* buf, unsigned int len, unsigned int& nrecv)
 {
+  sysapi::error::handle_t herr;
+
   slot.curr_io.in_progress = true;
+  herr = sysapi::insock::recv(hsock, buf, len, nrecv);
   slot.curr_io.in_progress = false;
-  return 0;
+  return herr;
 }
 
 
-int thr::send(thr::pool::slot_t& slot, unsigned char*, unsigned int)
+sysapi::error::handle_t thr::send(thr::pool::slot_t& slot, sysapi::insock::handle_t& hsock, unsigned char* buf, unsigned int len, unsigned int& nsent)
 {
+  sysapi::error::handle_t herr;
+
   slot.curr_io.in_progress = true;
+  herr = sysapi::insock::send(hsock, buf, len, nsent);
   slot.curr_io.in_progress = false;
-  return 0;
+  return herr;
 }

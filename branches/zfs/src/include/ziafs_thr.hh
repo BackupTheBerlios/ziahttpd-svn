@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Tue Feb 14 23:04:30 2006 texane
+// Last update Wed Feb 15 04:23:10 2006 
 //
 
 
@@ -174,8 +174,8 @@ namespace thr
 
   // io related operations
   void io_info_reset(io_info_t&);
-  int recv(pool::slot_t&, unsigned char*, unsigned int);
-  int send(pool::slot_t&, unsigned char*, unsigned int);
+  sysapi::error::handle_t send(pool::slot_t&, sysapi::insock::handle_t&, unsigned char*, unsigned int, unsigned int&);
+  sysapi::error::handle_t recv(pool::slot_t&, sysapi::insock::handle_t&, unsigned char*, unsigned int, unsigned int&);
 }
 
 
