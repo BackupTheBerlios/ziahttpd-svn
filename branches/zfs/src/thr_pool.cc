@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 02:00:09 2006 texane
-// Last update Wed Feb 15 01:21:53 2006 texane
+// Last update Wed Feb 15 02:39:29 2006 
 //
 
 
@@ -20,11 +20,12 @@ void* pool_cache_entry(void* param)
   int err;
 
   p_slot = (thr::pool::slot_t*)param;
+  pthread_mutex_lock(&p_slot->mtx_start);
+  p_slot->thr_ready = true;
 
   // Execute the task
   while (p_slot->thr_done == false)
     {
-      p_slot->thr_ready = true;
       err = pthread_cond_wait(&p_slot->cond_start, &p_slot->mtx_start);
       p_slot->thr_ready = false;
       if (err)
@@ -70,13 +71,6 @@ bool thr::pool::allocate_slot(thr::pool::slot_t& slot)
 //   slot.mtx_start = 0;
 
   err = pthread_mutex_init(&slot.mtx_start, 0);
-  if (err)
-    {
-      ret = false;
-      goto end_of_allocate;
-    }
-
-  err = pthread_mutex_lock(&slot.mtx_start);
   if (err)
     {
       ret = false;
@@ -133,6 +127,8 @@ bool thr::pool::execute_task(thr::pool::slot_t& slot)
   int err;
 
   // Wait for the thread
+  while (slot.thr_ready == false)
+    ;
   pthread_mutex_lock(&slot.mtx_start);
   pthread_mutex_unlock(&slot.mtx_start);
   err = pthread_cond_signal(&slot.cond_start);
