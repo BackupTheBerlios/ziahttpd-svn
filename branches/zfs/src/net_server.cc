@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:50:30 2006 texane
-// Last update Tue Feb 14 18:32:27 2006 texane
+// Last update Wed Feb 15 03:42:24 2006 
 //
 
 
@@ -26,7 +26,8 @@ net::server::server(core_t* c)
   is_bound = false;
   srv_sock = 0;
   nr_bklog = 10;
-  insock::p_to_inaddr(srv_addr, "localhost", 40000);
+  //   insock::p_to_inaddr(srv_addr, "localhost", 40000);
+  insock::n_to_inaddr(srv_addr, INADDR_ANY, 40000);
 }
 
 bool net::server::reload_config()
