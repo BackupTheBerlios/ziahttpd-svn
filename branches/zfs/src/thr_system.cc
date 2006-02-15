@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:26 2006 texane
-// Last update Wed Feb 15 22:55:00 2006 
+// Last update Wed Feb 15 23:38:01 2006 
 //
 
 
@@ -27,6 +27,9 @@
 #include <cstdio>
 
 
+using namespace sysapi;
+
+
 void* thr::pool::system_entry(thr::pool::slot_t* thr_slot)
 {
   pool::slot_t* slots;
@@ -35,14 +38,26 @@ void* thr::pool::system_entry(thr::pool::slot_t* thr_slot)
   while (1)
     {
       // Iterate over the slots
-      Sleep(100000);
+      Sleep(ZIAFS_STATIC_POLL);
       slots = thr_slot->pool->thr_slots;
       for (n = 0; n < thr_slot->pool->nr_slots; ++n)
 	{
 	  if (slots[n].allocated == true && slots[n].curr_io.in_progress == true)
 	    {
-	      printf("[%u] <io_in_progress since %lu> \n", n, thr_slot->pool->nr_ticks - slots[n].curr_io.tm_start);
-	      fflush(stdout);
+	      if (thr_slot->pool->nr_ticks - slots[n].curr_io.tm_start > ZIAFS_STATIC_EXPIR)
+		{
+		  // Make the thread unlock according
+		  // to the current operation
+		  switch (slots[n].curr_io.id)
+		    {
+		    case IO_RECV:
+		    case IO_SEND:
+		      slots[n].curr_io.timeouted = true;
+		      insock::close(slots[n].curr_io.desc.hsock);
+		    default:
+		      break;
+		    }
+		}
 	    }
 	}
 

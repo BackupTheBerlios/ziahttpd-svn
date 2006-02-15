@@ -12,3 +12,6 @@
 [x] implement the run method
 [>] check on failure wether how the server behaves(leaks, connections not closed...)
 [>] try to reap all the resource that are older than <timeout>
+[ ] system config file
+	poll delay
+	expiration delay

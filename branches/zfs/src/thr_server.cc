@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 15 22:39:17 2006 
+// Last update Wed Feb 15 23:43:08 2006 
 //
 
 
@@ -70,14 +70,22 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
   unsigned int nbytes;
 
+  if (sess.done == true)
+    return false;
+
   herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-  if (herr != error::SUCCESS)
+  if (sess.thr_slot->curr_io.timeouted == true)
+    {
+      printf("the session timeouted\n");
+      sess.done = true;
+      return false;
+    }
+  else if (herr != error::SUCCESS)
     {
       sess.done = true;
       return false;
     }
   buf[nbytes] = 0;
-  printf("got metadata == %s, %u\n", buf, nbytes);
   return true;
 }
 
@@ -87,8 +95,17 @@ bool thr::pool::sess_handle_request(session_t& sess)
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
   unsigned int nbytes;
 
+  if (sess.done == true)
+    return false;
+
   herr = send(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-  if (herr != error::SUCCESS)
+  if (sess.thr_slot->curr_io.timeouted == true)
+    {
+      printf("has timeouted\n");
+      sess.done = true;
+      return false;
+    }
+  else if (herr != error::SUCCESS)
     {
       sess.done = true;
       return false;

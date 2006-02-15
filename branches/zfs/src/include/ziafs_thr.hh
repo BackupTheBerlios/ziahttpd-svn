@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Wed Feb 15 22:48:51 2006 
+// Last update Wed Feb 15 23:34:02 2006 
 //
 
 
@@ -77,11 +77,24 @@ namespace thr
   // What should be done after that is left to implemententor
 
   // Information about the inprogress io
+  typedef enum
+    {
+      IO_NONE = 0,
+      IO_ACCEPT,
+      IO_SEND,
+      IO_RECV,
+    } io_id_t;
   typedef struct
   {
     unsigned int sz;
     unsigned long tm_start;
     bool in_progress;
+    bool timeouted;
+    io_id_t id;
+    union
+    {
+      sysapi::insock::handle_t hsock;
+    } desc;
   } io_info_t;
 
   // Thread pool
@@ -107,25 +120,6 @@ namespace thr
 
       // current io information
       io_info_t curr_io;
-
-      // ?? should be moved in net::server
-      // connection related
-      // struct sockaddr_in local_addr;
-      // struct sockaddr_in remote_addr;
-      // int accept_fd;
-      // int client_fd;
-      // conf_t conf;
-      // net::server* server;
-      // server state
-//       typedef enum
-// 	{
-// 	  st_accepting = 0,
-// 	  st_rcv_metadata,
-// 	  st_snd_metadata,
-// 	  st_rcv_data,
-// 	  st_snd_data
-// 	} state_t;
-//       state_t st_server;
 
       // blocking operations
       time_t tm_started;
