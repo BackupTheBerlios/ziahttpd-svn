@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Wed Feb 15 23:34:02 2006 
+// Last update Thu Feb 16 00:50:01 2006 
 //
 
 
@@ -155,6 +155,7 @@ namespace thr
       sysapi::insock::handle_t cli_sock;
       struct sockaddr_in cli_addr;
       bool done;
+      bool ret_in_cache;
     } session_t;
     static void sess_reset(session_t&);
     static void sess_release(session_t&);

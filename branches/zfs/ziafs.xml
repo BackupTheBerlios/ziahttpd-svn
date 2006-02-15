@@ -1,5 +1,5 @@
 <system>
-  <nb_thread>10</nb_thread>
+  <nb_thread>3</nb_thread>
   <time>500000</time>
   <cgiroot></cgiroot>
   <dirlisting></dirlisting>

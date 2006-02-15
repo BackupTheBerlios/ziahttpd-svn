@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 15 14:04:12 2006 texane
+// Last update Thu Feb 16 00:54:59 2006 
 //
 
 
@@ -13,10 +13,13 @@
 #include <ziafs.hh>
 
 
-// todo
-// size of recv should
-// be configurable.
-
+// @bug
+// There should be a ret_in_cache
+// flag, in case where there are no
+// more thread in the pool for doing
+// accept -> deadlock, since all threads
+// are in the wait function.
+// Thus, the thread doesn't return in cache
 
 using namespace sysapi;
 
@@ -25,13 +28,18 @@ using namespace sysapi;
 
 void thr::pool::sess_reset(session_t& sess)
 {
+  io_info_reset(sess.thr_slot->curr_io);
   sess.done = false;
   sess.srv = 0;
   sess.thr_slot = 0;
+  sess.ret_in_cache = true;
 }
 
 void thr::pool::sess_release(session_t& sess)
 {
+  // Close the session, if not yet done
+  if (sess.thr_slot->curr_io.timeouted == false)
+    insock::close(sess.cli_sock);
 }
 
 
@@ -58,7 +66,8 @@ bool thr::pool::sess_accept_connection(session_t& sess)
 
   // Accept a new connection, delegate accept
   herr = insock::accept(sess.cli_sock, sess.cli_addr, sess.srv->srv_sock);
-  sess.thr_slot->pool->assign_task(server_entry, (void*)sess.srv);
+  if (sess.thr_slot->pool->assign_task(server_entry, (void*)sess.srv) == false)
+    sess.ret_in_cache = false;
   if (herr == error::SUCCESS)
     return true;
   return false;
@@ -123,6 +132,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   session_t sess;
 
+ serve_another:
   sess_reset(sess);
   sess.thr_slot = thr_slot;
   sess.srv = (net::server*)thr_slot->uparam;
@@ -130,13 +140,19 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   // session pipeline
   sess_bind_server(sess);
   sess_accept_connection(sess);
+  printf("---> new session\n");
   while (sess.done == false)
     {
       sess_read_metadata(sess);
       sess_handle_request(sess);
     }
   sess_release(sess);
-  insock::close(sess.cli_sock);
+
+  if (sess.ret_in_cache == false)
+    {
+      printf("not returning in cache!!!\n");
+      goto serve_another;
+    }
 
   return 0;
 }

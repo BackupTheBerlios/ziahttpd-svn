@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:04:58 2006 texane
-// Last update Wed Feb 15 04:07:32 2006 
+// Last update Thu Feb 16 00:26:51 2006 
 //
 
 
@@ -32,7 +32,7 @@ int main(int, char**)
 
   // Main loop
   while (1)
-    Sleep(5000000);
+    Sleep(999999);
 
   // Release (?)
   delete core.config;
