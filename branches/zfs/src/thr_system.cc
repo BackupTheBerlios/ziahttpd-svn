@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:26 2006 texane
-// Last update Wed Feb 15 04:10:34 2006 
+// Last update Wed Feb 15 22:55:00 2006 
 //
 
 
@@ -39,9 +39,9 @@ void* thr::pool::system_entry(thr::pool::slot_t* thr_slot)
       slots = thr_slot->pool->thr_slots;
       for (n = 0; n < thr_slot->pool->nr_slots; ++n)
 	{
-	  if (slots[n].allocated == true)
+	  if (slots[n].allocated == true && slots[n].curr_io.in_progress == true)
 	    {
-	      printf("#%lu [%u] -> \n", thr_slot->pool->nr_ticks, n);
+	      printf("[%u] <io_in_progress since %lu> \n", n, thr_slot->pool->nr_ticks - slots[n].curr_io.tm_start);
 	      fflush(stdout);
 	    }
 	}

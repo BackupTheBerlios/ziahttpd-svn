@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 15 03:47:28 2006 
+// Last update Wed Feb 15 22:39:17 2006 
 //
 
 
@@ -13,8 +13,88 @@
 #include <ziafs.hh>
 
 
+// todo
+// size of recv should
+// be configurable.
+
+
 using namespace sysapi;
 
+
+// session management
+
+void thr::pool::sess_reset(session_t& sess)
+{
+  sess.done = false;
+  sess.srv = 0;
+  sess.thr_slot = 0;
+}
+
+void thr::pool::sess_release(session_t& sess)
+{
+}
+
+
+// Basic processing stages
+
+bool thr::pool::sess_bind_server(session_t& sess)
+{
+  error::handle_t herr;
+
+  herr = error::SUCCESS;
+  if (sess.srv->is_bound == false)
+    {
+      sess.srv->is_bound = true;
+      herr = insock::create_listening(sess.srv->srv_sock, sess.srv->srv_addr, sess.srv->nr_bklog);
+    }
+  if (herr == error::SUCCESS)
+    return true;
+  return false;
+}
+
+bool thr::pool::sess_accept_connection(session_t& sess)
+{
+  error::handle_t herr;
+
+  // Accept a new connection, delegate accept
+  herr = insock::accept(sess.cli_sock, sess.cli_addr, sess.srv->srv_sock);
+  sess.thr_slot->pool->assign_task(server_entry, (void*)sess.srv);
+  if (herr == error::SUCCESS)
+    return true;
+  return false;
+}
+
+bool thr::pool::sess_read_metadata(session_t& sess)
+{
+  error::handle_t herr;
+  unsigned char buf[ZIAFS_STATIC_BUFSZ];
+  unsigned int nbytes;
+
+  herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+  if (herr != error::SUCCESS)
+    {
+      sess.done = true;
+      return false;
+    }
+  buf[nbytes] = 0;
+  printf("got metadata == %s, %u\n", buf, nbytes);
+  return true;
+}
+
+bool thr::pool::sess_handle_request(session_t& sess)
+{
+  error::handle_t herr;
+  unsigned char buf[ZIAFS_STATIC_BUFSZ];
+  unsigned int nbytes;
+
+  herr = send(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+  if (herr != error::SUCCESS)
+    {
+      sess.done = true;
+      return false;
+    }
+  return true;
+}
 
 void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 {
@@ -24,27 +104,22 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   // If the server is not yet
   // bound, bind it.
 
-  net::server* srv = (net::server*)thr_slot->uparam;
-  insock::handle_t cli_sock;
-  struct sockaddr_in cli_addr;
-  
-  // The sever is not yet bound
-  srv = (net::server*)thr_slot->uparam;
-  if (srv->is_bound == false)
+  session_t sess;
+
+  sess_reset(sess);
+  sess.thr_slot = thr_slot;
+  sess.srv = (net::server*)thr_slot->uparam;
+
+  // session pipeline
+  sess_bind_server(sess);
+  sess_accept_connection(sess);
+  while (sess.done == false)
     {
-      srv->is_bound = true;
-      insock::create_listening(srv->srv_sock, srv->srv_addr, srv->nr_bklog);
+      sess_read_metadata(sess);
+      sess_handle_request(sess);
     }
-
-  // Accept a new connection, delegate accept
-  insock::accept(cli_sock, cli_addr, srv->srv_sock);
-  thr_slot->pool->assign_task(server_entry, (void*)srv);
-
-  // Here handle the request
-  Sleep(1000);
-
-  // Handle the client session
-  insock::close(cli_sock);
+  sess_release(sess);
+  insock::close(sess.cli_sock);
 
   return 0;
 }

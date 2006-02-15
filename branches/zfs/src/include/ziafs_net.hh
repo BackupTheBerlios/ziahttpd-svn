@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Wed Feb 15 04:05:03 2006 
+// Last update Wed Feb 15 22:21:05 2006 
 //
 
 
@@ -19,12 +19,13 @@
 // forward declarations
 struct core;
 namespace net { class config; }
+namespace thr { class pool; };
 
 namespace net
 {
   class server
   {
-    friend void* thr::pool::server_entry(thr::pool::slot_t*);
+    friend class thr::pool;
 
   public:
     server(struct core*);

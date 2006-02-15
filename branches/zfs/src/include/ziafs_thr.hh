@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Wed Feb 15 04:23:10 2006 
+// Last update Wed Feb 15 22:48:51 2006 
 //
 
 
@@ -24,6 +24,9 @@
 # include <pthread.h>
 #endif //_WIN32
 
+
+// Forward declarations
+namespace net { class server; }
 
 namespace thr
 {
@@ -44,9 +47,6 @@ namespace thr
   // implement the thr_printf macro
   // debug
 
-  // see for the initial attributes
-  // (scheduling policy, stack size...)
-
   // Concerning reaper:
   // All possible blocking operations
   // are wrapped into a thr_alterable_read(slot, buffer);
@@ -66,11 +66,6 @@ namespace thr
   // if pthread_detach is called, then pthread_join will
   // fail
 
-  // Server struct should be disassociated from the thread
-  // one: a thread has a server, not is a server
-
-  // Think about caching optimization
-
   // only the system thread is allowed to remove a thread,
   // so deallocating a thread slot, to tell a thread giving
   // up a resource, a client... by closing descriptors...
@@ -85,7 +80,7 @@ namespace thr
   typedef struct
   {
     unsigned int sz;
-    unsigned long long tm_start;
+    unsigned long tm_start;
     bool in_progress;
   } io_info_t;
 
@@ -95,6 +90,8 @@ namespace thr
   public:
     pool(unsigned int);
     ~pool();
+
+    unsigned long tm_now() { return nr_ticks; }
 
     typedef struct slot
     {
@@ -155,6 +152,22 @@ namespace thr
     // Thread entry points
     static void* server_entry(slot_t*);
     static void* system_entry(slot_t*);
+
+    // session management
+    typedef struct
+    {
+      net::server* srv;
+      slot_t* thr_slot;
+      sysapi::insock::handle_t cli_sock;
+      struct sockaddr_in cli_addr;
+      bool done;
+    } session_t;
+    static void sess_reset(session_t&);
+    static void sess_release(session_t&);
+    static bool sess_bind_server(session_t&);
+    static bool sess_accept_connection(session_t&);
+    static bool sess_read_metadata(session_t&);
+    static bool sess_handle_request(session_t&);
 
   private:
     // Thread slots
