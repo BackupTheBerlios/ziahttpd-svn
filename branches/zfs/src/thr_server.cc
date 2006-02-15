@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 16 00:54:59 2006 
+// Last update Thu Feb 16 01:03:24 2006 
 //
 
 
@@ -13,7 +13,7 @@
 #include <ziafs.hh>
 
 
-// @bug
+// @info
 // There should be a ret_in_cache
 // flag, in case where there are no
 // more thread in the pool for doing
