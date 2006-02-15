@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:03:48 2006 texane
-// Last update Tue Feb 14 16:48:01 2006 texane
+// Last update Wed Feb 15 03:45:35 2006 
 //
 
 
@@ -20,6 +20,7 @@
 #include <sys/sysapi.hh>
 
 #ifndef _WIN32
+# include <unistd.h>
 # define Sleep( n ) usleep(n)
 #endif // ! _WIN32
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 15 01:20:28 2006 texane
+// Last update Wed Feb 15 03:47:28 2006 
 //
 
 
@@ -37,11 +37,11 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     }
 
   // Accept a new connection, delegate accept
-  printf("accepting connection\n"); fflush(stdout);
   insock::accept(cli_sock, cli_addr, srv->srv_sock);
-  printf("new connection accepted\n"); fflush(stdout);
-
   thr_slot->pool->assign_task(server_entry, (void*)srv);
+
+  // Here handle the request
+  Sleep(1000);
 
   // Handle the client session
   insock::close(cli_sock);
