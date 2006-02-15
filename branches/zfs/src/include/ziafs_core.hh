@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:42:56 2006 texane
-// Last update Tue Feb 14 17:27:32 2006 texane
+// Last update Wed Feb 15 03:52:35 2006 
 //
 
 
@@ -23,12 +23,14 @@
 // Forward declarations
 namespace thr { class pool; }
 namespace net { class server; }
+namespace net { class config; }
 
 // Core
 typedef struct core
 {
   thr::pool* thr_pool;
   std::list<net::server*> srv_list;
+  net::config* config;
 } core_t;
 
 

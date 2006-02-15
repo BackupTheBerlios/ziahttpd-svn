@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Feb 14 22:57:01 2006 texane
+## Last update Wed Feb 15 04:01:37 2006 
 ##
 
 # ! Always include this file
-!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+# !include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= zfs.x
@@ -21,6 +21,13 @@ srcs	= src$(SLASH)main.cc			\
 	  src$(SLASH)thr_io.cc			\
 	  src$(SLASH)thr_system.cc		\
 	  src$(SLASH)thr_server.cc		\
+	  src$(SLASH)config.cc			\
+	  src$(SLASH)buffer.cc			\
+	  src$(SLASH)error.cc			\
+	  src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinystr.cc		\
+	  src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxmlerror.cc	\
+	  src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxmlparser.cc	\
+	  src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxml.cc		\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc	\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc	\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)insock.cc	\

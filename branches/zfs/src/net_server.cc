@@ -5,13 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:50:30 2006 texane
-// Last update Wed Feb 15 03:42:24 2006 
+// Last update Wed Feb 15 04:06:21 2006 
 //
 
 
 #include <ziafs_thr.hh>
 #include <ziafs_core.hh>
 #include <ziafs_net.hh>
+#include <ziafs_config.hh>
 #include <sys/sysapi.hh>
 
 
@@ -30,7 +31,7 @@ net::server::server(core_t* c)
   insock::n_to_inaddr(srv_addr, INADDR_ANY, 40000);
 }
 
-bool net::server::reload_config()
+bool net::server::reload_config(config*)
 {
   return true;
 }

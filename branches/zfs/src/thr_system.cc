@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:26 2006 texane
-// Last update Wed Feb 15 03:48:23 2006 
+// Last update Wed Feb 15 04:10:34 2006 
 //
 
 
@@ -41,7 +41,7 @@ void* thr::pool::system_entry(thr::pool::slot_t* thr_slot)
 	{
 	  if (slots[n].allocated == true)
 	    {
-	      printf("#%u [%u] -> \n", thr_slot->pool->nr_ticks, n);
+	      printf("#%lu [%u] -> \n", thr_slot->pool->nr_ticks, n);
 	      fflush(stdout);
 	    }
 	}

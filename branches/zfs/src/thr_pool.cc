@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 02:00:09 2006 texane
-// Last update Wed Feb 15 03:15:54 2006 
+// Last update Wed Feb 15 04:10:18 2006 
 //
 
 
@@ -26,9 +26,7 @@ void* pool_cache_entry(void* param)
   // Execute the task
   while (p_slot->thr_done == false)
     {
-      printf("%x >\n", pthread_self());
       err = pthread_cond_wait(&p_slot->cond_start, &p_slot->mtx_start);
-      printf("%x <\n", pthread_self());
       if (err)
 	p_slot->thr_ready = true;
       else if (p_slot->entry_fn)

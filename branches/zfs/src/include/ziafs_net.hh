@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Tue Feb 14 18:31:54 2006 texane
+// Last update Wed Feb 15 04:05:03 2006 
 //
 
 
@@ -18,6 +18,7 @@
 
 // forward declarations
 struct core;
+namespace net { class config; }
 
 namespace net
 {
@@ -28,7 +29,7 @@ namespace net
   public:
     server(struct core*);
 
-    bool reload_config();
+    bool reload_config(config*);
     bool run();
 
   private:

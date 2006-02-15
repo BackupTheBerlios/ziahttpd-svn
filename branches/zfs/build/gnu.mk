@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Sat Feb 11 17:37:04 2006 
+## Last update Wed Feb 15 02:34:20 2006 
 ##
 
 
@@ -31,7 +31,7 @@ CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS) -DTIXML_USE_STL
 # .linker
 LD	:=	g++
 LDPATHS	:=
-LDLIBS	:=	-lpthread -ldl
+LDLIBS	:=	-lpthread
 LDGEN	:=
 LIBOUT	:=
 DLLOUT	:=	-shared
