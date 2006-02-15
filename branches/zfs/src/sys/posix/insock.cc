@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:50 2006 
-// Last update Wed Feb 15 02:50:32 2006 
+// Last update Wed Feb 15 03:24:02 2006 
 //
 
 
@@ -165,6 +165,6 @@ sysapi::error::handle_t sysapi::insock::send(handle_t& hsock, unsigned char* buf
 sysapi::error::handle_t sysapi::insock::close(handle_t& hsock)
 {
   shutdown(hsock, SHUT_RDWR);
-  // on close, the process segfault
+  ::close(hsock);
   return error::SUCCESS;
 }
