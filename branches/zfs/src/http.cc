@@ -74,7 +74,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 	while (m_line.from_buffer(ln, buf) == true)
 	{
 		ziafs_debug_msg("line : %s\n", ln.c_str());
-		if (ln.empty())
+		if (ln.empty() && (m_state != STUSLINES))
 		{
 //			process_stage_fn = http::second_stage;
 			ziafs_debug_msg("end of header, go to second stage ;)%s\n", "");
@@ -97,6 +97,9 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		}
 		if (m_state == STUSLINES)
 		{
+			if (ln.empty())
+				return (true);
+			ziafs_debug_msg("line size ;)%i\n", ln.size());
 			if (parse_status_line(ln) == status::STATUSLINE_FAILED)
 			{
 				ziafs_debug_msg("STATUS LINE INCORRECT%s\n", "");
