@@ -26,6 +26,7 @@ namespace net
 		{
 			std::list<int>		id;
 			int								port;
+			unsigned int			nr_bklog;
 			std::list<std::string>	modulename;
 		};
 		struct directory

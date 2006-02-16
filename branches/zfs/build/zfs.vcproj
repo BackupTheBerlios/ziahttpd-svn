@@ -20,11 +20,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../src/include/;../src/include/sys/"
+				AdditionalIncludeDirectories="../src/include/;../src/include/sys/;../src/lib/src/tinyxml"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;TIXML_USE_STL;ZIAFS_DEBUG_MSG"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tinyxmld_STL.lib Ws2_32.lib pthreadVSE1.lib"
+				AdditionalOptions="-defaultlib:Ws2_32.lib -defaultlib:pthreadVSE1.lib"
 				OutputFile="$(OutDir)../../../zfs_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\src\lib"
@@ -72,7 +72,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../src/include/;../src/include/sys/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;TIXML_USE_STL;ZIA_DEBUG_MSG"
-				RuntimeLibrary="4"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tinyxml_STL.lib  Ws2_32.lib pthreadVSE1.lib"
+				AdditionalOptions="-defaultlib:Ws2_32.lib -defaultlib:pthreadVSE1.lib"
 				OutputFile="$(OutDir)../../../zfs.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\src\lib"
@@ -144,6 +144,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\src\http.cc">
+			</File>
+			<File
 				RelativePath="..\src\main.cc">
 			</File>
 			<File
@@ -164,6 +167,15 @@
 			<File
 				RelativePath="..\src\thr_system.cc">
 			</File>
+			<File
+				RelativePath="..\src\uri.cc">
+			</File>
+			<File
+				RelativePath="..\src\utils_line.cc">
+			</File>
+			<File
+				RelativePath="..\src\zia_stringmanager.cc">
+			</File>
 			<Filter
 				Name="sys"
 				Filter="">
@@ -181,6 +193,22 @@
 				</File>
 				<File
 					RelativePath="..\src\sys\win32\time.cc">
+				</File>
+			</Filter>
+			<Filter
+				Name="config"
+				Filter="">
+				<File
+					RelativePath="..\src\lib\src\tinyxml\tinystr.cc">
+				</File>
+				<File
+					RelativePath="..\src\lib\src\tinyxml\tinyxml.cc">
+				</File>
+				<File
+					RelativePath="..\src\lib\src\tinyxml\tinyxmlerror.cc">
+				</File>
+				<File
+					RelativePath="..\src\lib\src\tinyxml\tinyxmlparser.cc">
 				</File>
 			</Filter>
 		</Filter>
@@ -208,6 +236,9 @@
 			</File>
 			<File
 				RelativePath="..\src\include\ziafs_debug_win32.hh">
+			</File>
+			<File
+				RelativePath="..\src\include\ziafs_http.hh">
 			</File>
 			<File
 				RelativePath="..\src\include\ziafs_net.hh">
