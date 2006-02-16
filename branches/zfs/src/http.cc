@@ -153,10 +153,18 @@ status::error					net::http::parse_header_line(std::string& ln)
 		val = ln.substr(i + 1, ln.length() - i - 1);
 		stringmanager::remove_space(val);
 		stringmanager::normalize(key);
+		if (key.empty())
+		{
+			m_uri.status_code() = 400;
+			ziafs_return_status(status::HEADERLINE_FAILED);
+		}
 		m_hdrlines[key] = val;
 	}
 	else
-    ziafs_return_status(status::HEADERLINE_FAILED);
+	{
+		m_uri.status_code() = 400;
+		ziafs_return_status(status::HEADERLINE_FAILED);
+	}
 	ziafs_return_status(status::HEADERLINE_SUCCESS);
 }
 
@@ -175,6 +183,11 @@ status::error					net::http::dump(buffer& buf)
 }
 status::error					net::http::handle_metadata()
 {
+	if (m_data_enco_req)
+	{
+		ziafs_debug_msg("Ecncoding already defined ... %s\n", "");
+		ziafs_return_status(status::FAILED);
+	}
 	if (m_hdrlines["transfer-encoding"] == "chunked")
 	{
 		m_data_enco_req = new chunked;
