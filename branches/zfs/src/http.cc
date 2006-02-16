@@ -55,6 +55,8 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 	finished = false;
 	if (m_state == BODYDATA)
 	{
+		if (!m_data_enco_req)
+			return false;
 		if (m_data_enco_req->decode(this, m_line, buf) == status::ENDOFREQUEST)
 		{
 //			s->m_proto->process_stage_fn = http::third_stage;
