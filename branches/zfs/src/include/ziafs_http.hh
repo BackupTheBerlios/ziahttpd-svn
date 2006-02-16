@@ -1,3 +1,6 @@
+#ifndef ZIAFS_HTTP_HH
+# define ZIAFS_HTTP_HH
+
 #include <vector>
 #include <map>
 #include <ziafs_utils.hh>
@@ -121,3 +124,5 @@ namespace net
   };
 
 }
+
+#endif
