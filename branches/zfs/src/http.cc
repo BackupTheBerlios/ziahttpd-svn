@@ -65,6 +65,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		}
 		return true;
 	}
+
 	while (m_line.from_buffer(ln, buf) == true)
 	{
 		ziafs_debug_msg("line : %s\n", ln.c_str());
@@ -79,6 +80,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 			finished = true;
 			return true;
 		}
+
 		if (m_state == HDRLINES)
 		{
 			if (parse_header_line(ln) == status::HEADERLINE_FAILED)
@@ -92,12 +94,12 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 			if (parse_status_line(ln) == status::STATUSLINE_FAILED)
 			{
 				ziafs_debug_msg("STATUS LINE INCORRECT%s\n", "");
+				return false;
 			}
 			m_state = HDRLINES;
 			//ziafs_return_status(status::SUCCESS);
 		}
 		buf.reset();
-		//ln.clear();
 	}
 	return true;
 }
@@ -240,3 +242,4 @@ bool	net::http::data_enco::done()
 		return false;
 	}
 }
+

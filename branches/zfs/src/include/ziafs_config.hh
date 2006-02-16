@@ -15,8 +15,8 @@ namespace net
 		struct system
 		{
 			int					nb_thread;
-			int					poll_delay;
-			int					expiration_delay;
+			unsigned long				poll_delay;
+			unsigned long				expiration_delay;
 		};
 		struct module
 		{

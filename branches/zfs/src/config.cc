@@ -97,9 +97,9 @@ bool	net::config::parse_system()
 		if (xmltmp->ValueStr() == "nb_thread")
 			m_system.nb_thread =  atoi(xmltmp->GetText());
 		if (xmltmp->ValueStr() == "poll_delay")
-			m_system.poll_delay = atoi(xmltmp->GetText());
+			m_system.poll_delay = atol(xmltmp->GetText());
 		if (xmltmp->ValueStr() == "expiration_delay")
-			m_system.expiration_delay = atoi(xmltmp->GetText());
+			m_system.expiration_delay = atol(xmltmp->GetText());
 	}
 	return (true);
 }
