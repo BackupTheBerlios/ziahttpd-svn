@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:04:58 2006 texane
-// Last update Thu Feb 16 12:29:35 2006 texane
+// Last update Thu Feb 16 22:20:23 2006 texane
 //
 
 
@@ -27,7 +27,7 @@ int main(int, char**)
   sysapi::insock::init_subsystem();
   core.config = new net::config("ziafs.xml");
   core.thr_pool = new thr::pool(core.config->get_system()->nb_thread);
-  core.thr_pool->assign_task(thr::pool::system_entry, 0);
+  core.thr_pool->assign_task(thr::pool::system_entry, (void*)&core);
 
   // Create the servers
   core.config->get_server(curr_server);

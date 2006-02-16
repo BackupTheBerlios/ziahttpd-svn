@@ -14,11 +14,12 @@
 [x] problem when the thread implementing the last client timeouts
 
 // two thread config
-[0] system config file
+[x] system config file
 	poll delay
 	expiration delay
 	size of the backlog queue
-[1] implement reset on http
+[x] implement reset on http
 [2] test leaks + on failure, on client deconnection
 [3] implement file/resource management
+	+
 [4] try to guess rush from the clients

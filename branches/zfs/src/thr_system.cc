@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:26 2006 texane
-// Last update Thu Feb 16 00:35:57 2006 
+// Last update Thu Feb 16 22:22:50 2006 texane
 //
 
 
@@ -32,19 +32,26 @@ using namespace sysapi;
 
 void* thr::pool::system_entry(thr::pool::slot_t* thr_slot)
 {
+  core_t* core;
   pool::slot_t* slots;
   unsigned int n;
+  unsigned long poll_delay;
+  unsigned long expir_delay;
+
+  core = (core_t*)thr_slot->uparam;
+  expir_delay = core->config->get_system()->expiration_delay;
+  poll_delay = core->config->get_system()->poll_delay;
 
   while (1)
     {
       // Iterate over the slots
-      Sleep(ZIAFS_STATIC_POLL);
+      Sleep(poll_delay);
       slots = thr_slot->pool->thr_slots;
       for (n = 0; n < thr_slot->pool->nr_slots; ++n)
 	{
 	  if (slots[n].allocated == true && slots[n].curr_io.in_progress == true)
 	    {
-	      if (thr_slot->pool->nr_ticks - slots[n].curr_io.tm_start > ZIAFS_STATIC_EXPIR)
+	      if (thr_slot->pool->nr_ticks - slots[n].curr_io.tm_start > expir_delay)
 		{
 		  // Make the thread unlock according
 		  // to the current operation
