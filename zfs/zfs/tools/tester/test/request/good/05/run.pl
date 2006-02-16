@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 
 use IO::Socket::INET;
-use threads;
 
 #########################################################
 #							#
@@ -14,7 +13,7 @@ my	$addr_sv = "localhost";
 my	$socket;
 my	$request;
 my	$reponse;
-my	$nbr_req = 300;
+my	$nbr_req = 100;
 my	$first = 0;
 my	$i = 0;
 
@@ -63,35 +62,11 @@ sub	listen_request()
 #							#
 #########################################################
 
-sub	create_request_post()
+sub	create_request_get()
 {
-    $request = "POST /index.php HTTP/1.1\r\n";
-    $request = $request."Host: localhost\r\n";
-    $request = $request."Content-Type: application/x-www-form-urlencoded\r\n";
-    $request = $request."Content-Length: 42\r\n";
+    $request = "HEAD / HTTP/1.0\r\n";
+    $request = $request."Host : 127.0.0.1:40000\r\n";
     $request = $request."\r\n";
-#    $request = $request."test=toto\r\n";
-#    $request = $request."btnOK=OK\r\n";
-}
-
-#########################################################
-#							#
-#		     Create Threads			#
-#							#
-#########################################################
-
-sub	makeall()
-{
-    serv_connection();
-    create_request_post();
-    send_request();
-    close($socket);
-}
-
-sub	create_thread()
-{
-    $thr = threads->new(\&makeall);
-    $thr->join;
 }
 
 #########################################################
@@ -102,7 +77,10 @@ sub	create_thread()
 
 while ($i < $nbr_req)
 {
-    create_thread();
+    serv_connection();
+    create_request_get();
+    send_request();
+    close($socket);
     $i++;
 }
 exit(0);

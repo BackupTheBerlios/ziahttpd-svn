@@ -68,6 +68,7 @@ sub	create_request_get()
     $request = $request."Accept : text/html\r\n";
     $request = $request."if-Modified-Since : Saturday, 15-January-2000 14:37:11 GMT\r\n";
     $request = $request."User-Agent : Mozilla/5.0 (compatible; MSIE 6.0; Windows NT)\r\n";
+    $request = $request."\r\n";
 }
 
 #########################################################

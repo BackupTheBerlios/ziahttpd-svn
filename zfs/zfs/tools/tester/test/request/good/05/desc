@@ -1,0 +1,4 @@
+Script perl qui test les bonnes requetes HEAD sur le serveur.
+100 Connections l'une apres l'autres.
+
+Installer Active perl sur windows.
