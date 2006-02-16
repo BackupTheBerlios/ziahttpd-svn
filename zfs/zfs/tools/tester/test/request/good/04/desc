@@ -1,0 +1,4 @@
+Script perl qui test les bonnes requetes POST sur le serveur avec des threads.
+300 Threads.
+
+Installer Active perl 5.8 sur windows.
