@@ -6,6 +6,7 @@
 </system>
 
 <server>
+  <nr_bklog>10</nr_bklog>
   <id>1</id>
   <modulename>HTTP</modulename>
   <port>40000</port>
