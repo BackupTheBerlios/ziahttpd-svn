@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 16 11:53:25 2006 texane
+// Last update Thu Feb 16 11:56:10 2006 texane
 //
 
 
@@ -152,8 +152,8 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
  serve_another:
   sess_reset(sess);
   sess.thr_slot = thr_slot;
-  io_info_reset(sess.thr_slot->curr_io);
   sess.srv = (net::server*)thr_slot->uparam;
+  io_info_reset(sess.thr_slot->curr_io);
 
   // session pipeline
   sess_bind_server(sess);

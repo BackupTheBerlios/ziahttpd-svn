@@ -5,51 +5,13 @@
   <dirlisting></dirlisting>
 </system>
 
-<module name="HTTP">
-  <file>./lala/lala.lo</file>
-</module>
-
 <server>
   <id>1</id>
   <modulename>HTTP</modulename>
-  <port>80</port>
-</server>
-
-<server>
-  <id>2</id>
-  <modulename>HTTP</modulename>
-  <port>800</port>
+  <port>40000</port>
 </server>
 
 <directory id=1>
   <servername></servername>
   <docroot>test/www/</docroot>
 </directory>
-
-<directory id=2>
-  <servername></servername>
-  <docroot>test/www/2</docroot>
-</directory>
-
-<mime extension="html">
-  <type>text/html</type>
-  <cgi></cgi>
-  <image></image>
-</mime>
-
-<mime extension="htm">
-  <type>text/html</type>
-  <cgi></cgi>
-  <image></image>
-</mime>
-
-<mime extension="gif">
-  <type>image/gif</type>
-  <cgi></cgi>
-  <image></image>
-</mime>
-
-<error code="404">
-  <page actif=0></page>
-  <code actif=0></code>
-</error>

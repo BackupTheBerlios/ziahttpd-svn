@@ -5,10 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:50:30 2006 texane
-// Last update Wed Feb 15 04:06:21 2006 
+// Last update Thu Feb 16 12:30:32 2006 texane
 //
 
 
+#include <list>
 #include <ziafs_thr.hh>
 #include <ziafs_core.hh>
 #include <ziafs_net.hh>
@@ -16,6 +17,7 @@
 #include <sys/sysapi.hh>
 
 
+using std::list;
 using namespace sysapi;
 
 
@@ -26,13 +28,20 @@ net::server::server(core_t* c)
   core = c;
   is_bound = false;
   srv_sock = 0;
-  nr_bklog = 10;
-  //   insock::p_to_inaddr(srv_addr, "localhost", 40000);
-  insock::n_to_inaddr(srv_addr, INADDR_ANY, 40000);
+  nr_bklog = 0;
 }
 
-bool net::server::reload_config(config*)
+bool net::server::reload_config(config* config)
 {
+  list<net::config::server*>::iterator curr_srv;
+  unsigned short port;
+
+  // destroy the current conf
+
+  config->get_server(curr_srv);
+  nr_bklog = (*curr_srv)->nr_bklog;
+  port = (*curr_srv)->port;
+  insock::n_to_inaddr(srv_addr, INADDR_ANY, port);
   return true;
 }
 

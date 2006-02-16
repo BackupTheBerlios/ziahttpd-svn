@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Wed Feb 15 22:21:05 2006 
+// Last update Thu Feb 16 12:24:14 2006 texane
 //
 
 
@@ -42,6 +42,10 @@ namespace net
     sysapi::insock::handle_t srv_sock;
     struct sockaddr_in srv_addr;
     unsigned int nr_bklog;
+
+    // Http related
+
+    // Module related
   };
 }
 
