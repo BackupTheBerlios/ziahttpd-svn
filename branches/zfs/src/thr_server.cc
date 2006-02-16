@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 16 22:48:43 2006 texane
+// Last update Thu Feb 16 23:41:52 2006 texane
 //
 
 
@@ -32,6 +32,7 @@ void thr::pool::sess_reset(session_t& sess)
   sess.srv = 0;
   sess.thr_slot = 0;
   sess.ret_in_cache = true;
+//   printf("reseting\n"); fflush(stdout);
   sess.proto.reset();
 }
 
@@ -87,7 +88,9 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   end_of_metadata = false;
   while (end_of_metadata == false)
     {
+//       printf("1\n"); fflush(stdout);
       herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+//       printf("2\n"); fflush(stdout);
       if (sess.thr_slot->curr_io.timeouted == true)
 	{
 	  // printf("session timeouted\n"); fflush(stdout);
@@ -100,16 +103,19 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	  return false;
 	}
 
+//       printf("3 --> %d\n", nbytes); fflush(stdout);
       valid = sess.proto.consume(buf, nbytes, end_of_metadata);
+//       printf("4\n"); fflush(stdout);
       if (valid == false)
 	{
+// 	  printf("this is not valid"); fflush(stdout);
 	  end_of_metadata = true;
 	  sess.done = true;
 	}
-//       else
-// 	{
-	  
-// 	}
+      else if (end_of_metadata == true)
+	{
+// 	  printf("end of medat\n"); fflush(stdout);
+	}
 
     }
   return true;
@@ -159,11 +165,11 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   sess_bind_server(sess);
   // printf("entering server\n"); fflush(stdout);
   sess_accept_connection(sess);
-  // printf("---> new session\n");fflush(stdout);
+  // printf("---> new session\n"); fflush(stdout);
   while (sess.done == false)
     {
       sess_read_metadata(sess);
-      sess_handle_request(sess);
+      // sess_handle_request(sess);
     }
   sess_release(sess);
 

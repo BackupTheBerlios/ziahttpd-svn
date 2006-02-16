@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:28:42 2006 texane
-// Last update Thu Feb 16 12:49:12 2006 texane
+// Last update Fri Feb 17 00:48:44 2006 texane
 //
 
 
@@ -104,6 +104,8 @@ bool utils::line::get_from_normal_case()
   // append the line to m_line
   len = n + m_line.size() - 1;
   line = new unsigned char[len + 1];
+  printf("allocating %u\n", len);
+  fflush(stdout);
   memcpy((void*)strcpy_norewind((char*)line, (const char*)m_line.bufptr()), (const void*)m_buf.bufptr(), n);
   line[len] = 0;
 
@@ -143,6 +145,7 @@ utils::line::~line()
 bool utils::line::from_buffer(string& ln, buffer& buf)
 {
   bool ret = false;
+  char* c_str;
 
   // Append to the buffer
   m_buf += buf;
@@ -151,7 +154,9 @@ bool utils::line::from_buffer(string& ln, buffer& buf)
   ret = get_from_normal_case();
   if (ret == true)
     {
-      ln = string(m_line.c_str());
+      c_str = m_line.c_str();
+      ln = string(c_str);
+      delete[] c_str;
       m_line.clear();
       ret = true;
     }

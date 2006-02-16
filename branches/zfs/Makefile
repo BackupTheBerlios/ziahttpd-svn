@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Thu Feb 16 11:23:20 2006 texane
+## Last update Thu Feb 16 22:50:16 2006 texane
 ##
 
 # ! Always include this file
@@ -42,7 +42,7 @@ trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \
 	  Makefile~
 
-CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_MSG
+# CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_MSG
 # CCDEFS	= $(CCDEFS) -DZIAFS_DUMP_OBJECTS -DZIAFS_PRINT_OBJECTS -DZIAFS_DEBUG_MSG
 # CCDEFS	= $(CCDEFS) -DZIAFS_DEBUG_ERROR
 
