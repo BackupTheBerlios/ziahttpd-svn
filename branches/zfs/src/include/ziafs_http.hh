@@ -52,7 +52,7 @@ namespace net
 //    static status::error	third_stage(session*);
     status::error					dump(buffer&);
     std::string						method() { return m_method; };
-
+		bool									reset() {};
   private:
 
     class data_enco
