@@ -17,8 +17,10 @@ bool				net::http::reset()
 	m_version.clear();
 	m_query.clear();
 	m_hdrlines.clear();
-	delete m_data_enco_req;
-	delete m_data_enco_res;
+	if (m_data_enco_req)
+		delete m_data_enco_req;
+	if (m_data_enco_res)
+		delete m_data_enco_res;
 	m_data_enco_req = NULL;
 	m_data_enco_res = NULL;
 	m_line.reset();
@@ -85,6 +87,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		{
 			if (parse_header_line(ln) == status::HEADERLINE_FAILED)
 			{
+				ziafs_debug_msg("HEADER LINE INCORRECT%s\n", "");
 				return false;
 			}
 			//ziafs_return_status(status::SUCCESS);

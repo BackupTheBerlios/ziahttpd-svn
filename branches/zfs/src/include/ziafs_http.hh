@@ -121,8 +121,6 @@ namespace net
     uri					m_uri;
     data_enco		*m_data_enco_req;
 		data_enco		*m_data_enco_res;
-  public:
-//    data_enco*	dataenco(){ return m_data_enco; };
   };
 
 }
