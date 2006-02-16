@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 16 22:12:06 2006 texane
+// Last update Thu Feb 16 22:48:43 2006 texane
 //
 
 
@@ -90,7 +90,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
       herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
       if (sess.thr_slot->curr_io.timeouted == true)
 	{
-	  printf("session timeouted\n"); fflush(stdout);
+	  // printf("session timeouted\n"); fflush(stdout);
 	  sess.done = true;
 	  return false;
 	}
@@ -127,7 +127,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
   herr = send(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
   if (sess.thr_slot->curr_io.timeouted == true)
     {
-      printf("has timeouted\n");
+      // printf("has timeouted\n"); fflush(stdout);
       sess.done = true;
       return false;
     }
@@ -157,9 +157,9 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   // session pipeline
   sess_bind_server(sess);
-  printf("entering server\n"); fflush(stdout);
+  // printf("entering server\n"); fflush(stdout);
   sess_accept_connection(sess);
-  printf("---> new session\n");fflush(stdout);
+  // printf("---> new session\n");fflush(stdout);
   while (sess.done == false)
     {
       sess_read_metadata(sess);
@@ -169,7 +169,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   if (sess.ret_in_cache == false)
     {
-      printf("not returning in cache!!!\n");
+      // printf("not returning in cache!!!\n");
       goto serve_another;
     }
 

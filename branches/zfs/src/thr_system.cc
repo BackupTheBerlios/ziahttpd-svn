@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:26 2006 texane
-// Last update Thu Feb 16 22:22:50 2006 texane
+// Last update Thu Feb 16 22:49:26 2006 texane
 //
 
 
@@ -59,7 +59,7 @@ void* thr::pool::system_entry(thr::pool::slot_t* thr_slot)
 		    {
 		    case IO_RECV:
 		    case IO_SEND:
-		      printf("[%d] has timeouted\n", n);
+		      // printf("[%d] has timeouted\n", n); fflush(stdout);
 		      slots[n].curr_io.timeouted = true;
 		      insock::close(slots[n].curr_io.desc.hsock);
 		    default:
