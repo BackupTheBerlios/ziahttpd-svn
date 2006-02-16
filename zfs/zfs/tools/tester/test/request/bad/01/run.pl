@@ -58,6 +58,7 @@ sub	send_request()
 sub	create_request_bad()
 {
     $request = "test !!\r\n";
+    $request = $request."\r\n";
 }
 
 #########################################################
