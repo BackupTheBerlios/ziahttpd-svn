@@ -199,6 +199,9 @@
 				<File
 					RelativePath="..\src\sys\win32\module.cc">
 				</File>
+				<File
+					RelativePath="..\src\sys\win32\time.cc">
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
