@@ -1,3 +1,6 @@
+#ifndef ZIAFS_CONFIG_HH
+# define ZIAFS_CONFIG_HH
+
 #include <list>
 #include <ziafs_status.hh>
 #include <config/tinyxml.hh>
@@ -78,3 +81,5 @@ namespace net
 		system								m_system;
 	};
 }
+
+#endif
