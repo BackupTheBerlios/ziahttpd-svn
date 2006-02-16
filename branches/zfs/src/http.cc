@@ -12,6 +12,7 @@ net::http::http()
 
 bool				net::http::reset()
 {
+	ziafs_debug_msg("\nHTTP Reset %s\n", "");
 	m_state = STUSLINES;
 	m_method.clear();
 	m_version.clear();
@@ -50,6 +51,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 	buffer	buf(data, nbytes);
 	std::string	ln;
 
+
 	finished = false;
 	if (m_state == BODYDATA)
 	{
@@ -67,6 +69,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		}
 		return true;
 	}
+
 
 	while (m_line.from_buffer(ln, buf) == true)
 	{
@@ -245,4 +248,3 @@ bool	net::http::data_enco::done()
 		return false;
 	}
 }
-
