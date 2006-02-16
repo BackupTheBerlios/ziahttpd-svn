@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:03:48 2006 texane
-// Last update Wed Feb 15 13:59:25 2006 texane
+// Last update Thu Feb 16 11:24:30 2006 texane
 //
 
 
@@ -19,6 +19,7 @@
 #include <ziafs_config.hh>
 #include <ziafs_debug.hh>
 #include <ziafs_static.hh>
+#include <ziafs_http.hh>
 #include <sys/sysapi.hh>
 
 #ifndef _WIN32

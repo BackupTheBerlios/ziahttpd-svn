@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 16 01:03:24 2006 
+// Last update Thu Feb 16 11:53:25 2006 texane
 //
 
 
@@ -28,11 +28,11 @@ using namespace sysapi;
 
 void thr::pool::sess_reset(session_t& sess)
 {
-  io_info_reset(sess.thr_slot->curr_io);
   sess.done = false;
   sess.srv = 0;
   sess.thr_slot = 0;
   sess.ret_in_cache = true;
+  sess.proto.reset();
 }
 
 void thr::pool::sess_release(session_t& sess)
@@ -75,6 +75,8 @@ bool thr::pool::sess_accept_connection(session_t& sess)
 
 bool thr::pool::sess_read_metadata(session_t& sess)
 {
+  bool valid;
+  bool end_of_metadata;
   error::handle_t herr;
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
   unsigned int nbytes;
@@ -82,19 +84,34 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   if (sess.done == true)
     return false;
 
-  herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-  if (sess.thr_slot->curr_io.timeouted == true)
+  end_of_metadata = false;
+  while (end_of_metadata == false)
     {
-      printf("session timeouted\n"); fflush(stdout);
-      sess.done = true;
-      return false;
+      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+      if (sess.thr_slot->curr_io.timeouted == true)
+	{
+	  printf("session timeouted\n"); fflush(stdout);
+	  sess.done = true;
+	  return false;
+	}
+      else if (herr != error::SUCCESS)
+	{
+	  sess.done = true;
+	  return false;
+	}
+
+      valid = sess.proto.consume(buf, nbytes, end_of_metadata);
+      if (valid == false)
+	{
+	  end_of_metadata = true;
+	  sess.done = true;
+	}
+//       else
+// 	{
+	  
+// 	}
+
     }
-  else if (herr != error::SUCCESS)
-    {
-      sess.done = true;
-      return false;
-    }
-  buf[nbytes] = 0;
   return true;
 }
 
@@ -135,12 +152,14 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
  serve_another:
   sess_reset(sess);
   sess.thr_slot = thr_slot;
+  io_info_reset(sess.thr_slot->curr_io);
   sess.srv = (net::server*)thr_slot->uparam;
 
   // session pipeline
   sess_bind_server(sess);
+  printf("entering server\n"); fflush(stdout);
   sess_accept_connection(sess);
-  printf("---> new session\n");
+  printf("---> new session\n");fflush(stdout);
   while (sess.done == false)
     {
       sess_read_metadata(sess);

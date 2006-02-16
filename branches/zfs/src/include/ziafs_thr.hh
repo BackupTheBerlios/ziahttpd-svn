@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Thu Feb 16 00:50:01 2006 
+// Last update Thu Feb 16 11:41:00 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 
 // This file covers threads
 
+#include <ziafs_http.hh>
 #include <sys/sysapi.hh>
 
 #ifdef _WIN32
@@ -156,6 +157,7 @@ namespace thr
       struct sockaddr_in cli_addr;
       bool done;
       bool ret_in_cache;
+      net::http proto;
     } session_t;
     static void sess_reset(session_t&);
     static void sess_release(session_t&);
