@@ -96,8 +96,10 @@ bool	net::config::parse_system()
 	{
 		if (xmltmp->ValueStr() == "nb_thread")
 			m_system.nb_thread =  atoi(xmltmp->GetText());
-		if (xmltmp->ValueStr() == "time")
-			m_system.time = atoi(xmltmp->GetText());
+		if (xmltmp->ValueStr() == "poll_delay")
+			m_system.poll_delay = atoi(xmltmp->GetText());
+		if (xmltmp->ValueStr() == "expiration_delay")
+			m_system.expiration_delay = atoi(xmltmp->GetText());
 	}
 	return (true);
 }
@@ -278,7 +280,8 @@ status::error	net::config::dump(buffer &buf)
 
 	buf += "<system>\n";
 	stream << "  NB THREAD :" << m_system.nb_thread << "\n";
-	stream << "  TIME :" << m_system.time << "\n";
+	stream << "  poll_delay :" << m_system.poll_delay << "\n";
+	stream << "  expiration_delay :" << m_system.expiration_delay << "\n";
 	buf += stream.str();
 	buf += "</system>\n";
 	

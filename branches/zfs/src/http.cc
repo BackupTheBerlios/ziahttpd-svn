@@ -1,25 +1,27 @@
 #include <ziafs_http.hh>
 #include <ziafs_debug.hh>
 #include <zia_stringmanager.hh>
-//#include <vector>
 #include <sstream>
 
 net::http::http()
 {
 	m_state = STUSLINES;
-	m_data_enco = NULL;
+	m_data_enco_req = NULL;
+	m_data_enco_res = NULL;
 }
 
 bool				net::http::reset()
 {
 	m_state = STUSLINES;
-	m_data_enco = NULL;
 	m_method.clear();
 	m_version.clear();
 	m_query.clear();
 	m_hdrlines.clear();
-	delete m_data_enco;
-	//m_line.reset();
+	delete m_data_enco_req;
+	delete m_data_enco_res;
+	m_data_enco_req = NULL;
+	m_data_enco_res = NULL;
+	m_line.reset();
 	m_uri.reset();
 
 	return true;
@@ -41,52 +43,6 @@ std::string&			net::http::operator=(const std::string& val)
 	return ((std::string&)val);
 }
 
-//status::error net::http::first_stage(session* s)
-//{
-	//buffer*	buf;
-
-	//if (s->m_server->res_manager()->fetch(s->m_client, (void*&)buf) == status::SUCCESS)
-	//{
-	//	if (buf)
-	//	{
-	//		s->m_proto->consume(s, *buf);
-	//		// proto->consum(session, buffer);
-	//		// session->target = new io::res...
-	//		// cout << buf->tostring() << endl;
-	//		delete buf;
-	//	}
-	//}
-//	ziafs_return_status(status::SUCCESS);
-//}
-
-//status::error net::http::second_stage(session* s)
-//{
-	//buffer*	buf;
-
-	//if (((net::http*)s->m_proto)->method() == "GET")
-	//{
-	//	ziafs_debug_msg("No need for this method :%s, walk to the third stage\n",((net::http*)s->m_proto)->method().c_str());
-	//	s->m_proto->process_stage_fn = http::third_stage;
-	//	s->m_proto->process_stage_fn(s);
-	//	ziafs_return_status(status::NOTIMPL);
-	//}
-	//if (s->m_server->res_manager()->fetch(s->m_client, (void*&)buf) == status::SUCCESS)
-	//{
-	//	if (buf)
-	//	{
-	//		s->m_proto->consume(s, *buf);
-	//		delete buf;
-	//	}
-	//}
-//	ziafs_return_status(status::NOTIMPL);
-//}
-
-//status::error net::http::third_stage(session* s)
-//{
-//	ziafs_debug_msg("entering in stage 3 wow%s\n", "");
-//	ziafs_return_status(status::NOTIMPL);
-//}
-
 bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished)
 {
 	buffer	buf(data, nbytes);
@@ -95,16 +51,16 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 	finished = false;
 	if (m_state == BODYDATA)
 	{
-		if (m_data_enco->decode(this, m_line, buf) == status::ENDOFREQUEST)
+		if (m_data_enco_req->decode(this, m_line, buf) == status::ENDOFREQUEST)
 		{
 //			s->m_proto->process_stage_fn = http::third_stage;
 			finished = true;
 			return true;
 		}
-		if (m_data_enco->done() == true)
+		if (m_data_enco_req->done() == true)
 		{
-			delete m_data_enco;
-			m_data_enco = NULL;
+			delete m_data_enco_req;
+			m_data_enco_req = NULL;
 			handle_metadata();
 		}
 		return true;
@@ -119,6 +75,8 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 			handle_metadata();
 			m_state = BODYDATA;
 //			process_stage_fn(s);
+//		End of metadata
+			finished = true;
 			return true;
 		}
 		if (m_state == HDRLINES)
@@ -206,12 +164,12 @@ status::error					net::http::handle_metadata()
 {
 	if (m_hdrlines["transfer-encoding"] == "chunked")
 	{
-		m_data_enco = new chunked;
+		m_data_enco_req = new chunked;
 		ziafs_return_status(status::SUCCESS);
 	}
 	if (atoi(m_hdrlines["content-length"].c_str()) > 0)
 	{
-		m_data_enco = new unchunked;
+		m_data_enco_req = new unchunked;
 		ziafs_return_status(status::SUCCESS);
 	}
 	m_uri.status_code() = 411;
