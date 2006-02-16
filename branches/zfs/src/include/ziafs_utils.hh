@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:25:08 2006 texane
-// Last update Thu Jan 26 19:35:48 2006 texane
+// Last update Thu Feb 16 12:47:47 2006 texane
 //
 
 
@@ -29,6 +29,7 @@ namespace utils
     bool from_buffer(std::string&, buffer&);
     bool get_bytes(buffer&);
     bool get_bytes(buffer&, unsigned int);
+    bool reset();
 
   private:
     // attributes

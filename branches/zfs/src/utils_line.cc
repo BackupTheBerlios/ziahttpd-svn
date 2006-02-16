@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:28:42 2006 texane
-// Last update Sat Feb 11 18:14:12 2006 
+// Last update Thu Feb 16 12:49:12 2006 texane
 //
 
 
@@ -178,5 +178,12 @@ bool utils::line::get_bytes(buffer& buf, unsigned int nbytes)
   buf.resize(bufsz);
   m_buf.remove_front(nbytes);
 
+  return true;
+}
+
+
+bool utils::line::reset()
+{
+  m_line.reset();
   return true;
 }
