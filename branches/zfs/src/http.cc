@@ -10,6 +10,21 @@ net::http::http()
 	m_data_enco = NULL;
 }
 
+bool				net::http::reset()
+{
+	m_state = STUSLINES;
+	m_data_enco = NULL;
+	m_method.clear();
+	m_version.clear();
+	m_query.clear();
+	m_hdrlines.clear();
+	delete m_data_enco;
+	//m_line.reset();
+	m_uri.reset();
+
+	return true;
+
+}
 
 std::string&			net::http::operator[](const std::string& key)
 {

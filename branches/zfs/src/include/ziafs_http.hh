@@ -32,6 +32,7 @@ namespace net
     std::string&		localname() { return m_localname; };
     std::string&		wwwname() { return m_wwwname; };
     int&			status_code() { return m_status_code; };
+		bool			reset();
   private:
     std::string	m_wwwname;
     std::string	m_localname;
@@ -52,7 +53,7 @@ namespace net
 //    static status::error	third_stage(session*);
     status::error					dump(buffer&);
     std::string						method() { return m_method; };
-		bool									reset() { return true; };
+		bool									reset();
   private:
 
     class data_enco

@@ -249,6 +249,9 @@
 			<File
 				RelativePath="..\src\include\ziafs_thr.hh">
 			</File>
+			<File
+				RelativePath="..\src\include\ziafs_utils.hh">
+			</File>
 			<Filter
 				Name="config"
 				Filter="">
