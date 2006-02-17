@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 02:20:56 2006 texane
+// Last update Fri Feb 17 11:52:16 2006 texane
 //
 
 
@@ -36,6 +36,7 @@ void thr::pool::sess_reset(session_t& sess)
   sess.ret_in_cache = true;
 //   printf("reseting\n"); fflush(stdout);
   sess.proto.reset();
+  sess.target = 0;
 }
 
 void thr::pool::sess_release(session_t& sess)

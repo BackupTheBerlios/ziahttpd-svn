@@ -25,6 +25,14 @@
 [x] limit the line size
 
 
+today
+[ ] implement the resource manager
+	-> for in memory resources, the session should have a static buffer
+	-> file should be cache at the fd level
+	-> function to match a file against another one
+	-> function to lock a file
+
+
 @bugs:
 	leaks from the mline(?)
 	don't pass in the get_from_special case function
