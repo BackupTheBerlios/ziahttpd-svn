@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:16:34 2006 texane
-// Last update Fri Feb 17 20:49:23 2006 texane
+// Last update Fri Feb 17 21:38:39 2006 texane
 //
 
 
@@ -21,14 +21,14 @@ using namespace sysapi;
 
 // Internal routines
 
-#define BODY	"<html><body><b>%s</b></body></html>"
+#define BODY	"<html><body><b>%s:<%u></b></body></html>"
 #define STATUS	"ZIAFS_GENERATED_PAGE"
-#define HEADER	"http/1.1 200 OK\r\ncontent-length: %d\r\n\r\n", strlen(BODY)
-static void inline mk_response(unsigned char* buf, unsigned int& nbytes)
+#define HEADER	"http/1.1 %d OK\r\ncontent-length: %d\r\n\r\n", strlen(BODY)
+static void inline mk_status_msg(unsigned int err_code, unsigned char* buf, unsigned int& nbytes)
 {
   nbytes = 0;
-  nbytes += sprintf((char*)buf, HEADER);
-  nbytes += sprintf((char*)buf + nbytes, BODY, STATUS);
+  nbytes += sprintf((char*)buf, HEADER, err_code);
+  nbytes += sprintf((char*)buf + nbytes, BODY, STATUS, err_code);
 }
 
 
@@ -40,7 +40,7 @@ resource::e_error resource::byfly::generate(unsigned int& nbytes)
     return E_ALREADY_GEN;
 
   data.resize(ZIAFS_STATIC_BUFSZ);
-  mk_response(data.bufptr(), nbytes);
+  mk_status_msg(err_code, data.bufptr(), nbytes);
   data.resize(nbytes);
   return E_SUCCESS;
 }

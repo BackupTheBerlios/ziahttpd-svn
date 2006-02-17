@@ -50,6 +50,8 @@ today
 [ ] see for the send file function
 [ ] for all the sending/receiving function, ensure the whole buffer
 	is transmitted before returning
+[ ] see why the cpu bug
+[ ] implement the file transmition, one shot
 
 
 @bugs:
