@@ -22,7 +22,7 @@
 [2] test leaks + on failure, on client deconnection
 [3] implement file/resource management
 [4] try to guess rush from the clients
-[5] limit the line size
+[x] limit the line size
 
 
 @bugs:

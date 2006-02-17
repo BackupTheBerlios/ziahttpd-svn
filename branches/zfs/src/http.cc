@@ -50,6 +50,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 {
 	buffer	buf(data, nbytes);
 	std::string	ln;
+	bool ln_toolong;
 
 
 	finished = false;
@@ -73,7 +74,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 	}
 
 
-	while (m_line.from_buffer(ln, buf) == true)
+	while (m_line.from_buffer(ln, buf, ln_toolong) == true)
 	{
 		ziafs_debug_msg("line : %s\n", ln.c_str());
 		if (ln.empty() && (m_state != STUSLINES))
@@ -112,6 +113,12 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		}
 		buf.reset();
 	}
+
+	if (ln_toolong == true)
+	  {
+	    // Here do the necessary
+	  }
+
 	return true;
 }
 
@@ -204,11 +211,13 @@ status::error					net::http::handle_metadata()
 
 status::error				net::http::chunked::decode(net::protocol*, utils::line& m_line, buffer& buf)
 {
+  bool ln_toolong;
+
 	if (m_state == HDRLINE)
 	{
 		std::string		ln;
 
-		if (m_line.from_buffer(ln, buf) == true)
+		if (m_line.from_buffer(ln, buf, ln_toolong) == true)
 		{
 			stringmanager::hex_to_int((const std::string&)ln, m_chunk_size);
 			if (!m_chunk_size)
@@ -221,6 +230,10 @@ status::error				net::http::chunked::decode(net::protocol*, utils::line& m_line,
 			m_line.get_bytes(m_buf);
 			m_state = BODYDATA;
 		}
+		else if (ln_toolong == true)
+		  {
+		    // here do the necessary
+		  }
 	}
 	if (m_state == BODYDATA)
 	{

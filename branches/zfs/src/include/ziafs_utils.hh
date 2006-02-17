@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:25:08 2006 texane
-// Last update Thu Feb 16 12:47:47 2006 texane
+// Last update Fri Feb 17 01:27:58 2006 texane
 //
 
 
@@ -26,7 +26,7 @@ namespace utils
     ~line();
 
     // Get next line from a buffer
-    bool from_buffer(std::string&, buffer&);
+    bool from_buffer(std::string&, buffer&, bool&);
     bool get_bytes(buffer&);
     bool get_bytes(buffer&, unsigned int);
     bool reset();
