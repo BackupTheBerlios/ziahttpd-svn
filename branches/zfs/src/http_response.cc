@@ -114,7 +114,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 			m_uri.localname() = (*dir)->docroot + "/" + m_uri.wwwname();
 		dir ++;
 	}
-	ziafs_debug_msg("CREATE resource %s", m_uri.localname());
+	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
 	error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
 	if (error != resource::E_SUCCESS)
 	{

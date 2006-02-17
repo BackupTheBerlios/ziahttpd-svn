@@ -54,9 +54,9 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		{
 //			process_stage_fn = http::second_stage;
 			ziafs_debug_msg("end of header, go to second stage ;)%s\n", "");
-			handle_metadata();
+			if (m_method != "GET")
+				handle_metadata();
 			m_state = BODYDATA;
-//			process_stage_fn(s);
 //		End of metadata
 			finished = true;
 			return true;
@@ -93,7 +93,9 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 bool									net::http::consume_body(buffer& dest, buffer* source)
 {
 //	buffer	buf(data, nbytes);
-
+	if (m_method == "GET")
+		return false;
+	
 	if (m_state == BODYDATA)
 	{
 		if (!request.m_data_enco)
@@ -133,6 +135,10 @@ status::error					net::http::parse_status_line(std::string& ln)
 	{
 		m_uri.wwwname() = vec[1].substr(0, i);
 		m_query = vec[1].substr(i + 1, vec[1].length() - i - 1);
+	}
+	else
+	{
+		m_uri.wwwname() = vec[1];
 	}
 	stringmanager::unconvert_hexa(m_uri.wwwname());
 	stringmanager::unconvert_hexa(m_query);
