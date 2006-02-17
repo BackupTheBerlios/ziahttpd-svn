@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 12:29:00 2006 texane
+// Last update Fri Feb 17 12:42:55 2006 texane
 //
 
 
@@ -35,66 +35,69 @@ namespace resource
   class manager
   {
   public:
-    static resource* factory_create(const std::string&);
-    static resource* factory_destroy(const std::string&);
+//     static inf* factory_create(const std::string&);
+//     static inf* factory_destroy(const std::string&);
   };
 
 
-  {
-    factory_create(res);
+//   {
+//     // case of a 4 Go putted file??
+//     factory_create(res);
 
-    // the process recieves input and
-    // env as parameters
-    // Get the size to send
-    if (res->input_resource())
-      {
-	while (res->generate_content(&sz) == true)
-	  {
-	    res->alter(&new_sz);
-	    // the first time, generate http header
-	    // if chunked -> generate chunk header
-	    http->create_header(hdr_buf, chunked);
-	    res->prepend_header(hdr_buf);
-	    res->serve();
-	  }
-      }
-    else if (res->output_resrouce)
-      {
-	while (get_next_body(buf) == true)
-	  {
-	    alter_body();
-	    res->put();
-	  }
-      }
+//     if (request->content_length > static_limit(??))
 
-    factory_close(res);
-  }
+//     // the process recieves input and
+//     // env as parameters
+//     // Get the size to send
+//     if (res->input_resource())
+//       {
+// 	while (res->generate_content(&sz) == true)
+// 	  {
+// 	    res->alter(&new_sz);
+// 	    // the first time, generate http header
+// 	    // if chunked -> generate chunk header
+// 	    http->create_header(hdr_buf, chunked);
+// 	    res->prepend_header(hdr_buf);
+// 	    res->serve();
+// 	  }
+//       }
+//     else if (res->output_resrouce)
+//       {
+// 	while (get_next_body(buf) == true)
+// 	  {
+// 	    alter_body();
+// 	    res->put();
+// 	  }
+//       }
 
-  class interface
+//     factory_close(res);
+//   }
+
+  class inf
   {
   public:
-    // creation
-    bool open();
-    bool close();
+//     // creation
+//     bool open();
+//     bool close();
 
-    // sending
-    bool serve();
+//     // sending
+//     bool serve();
 
-    // resource informations
-    bool dynamic_content();
-    bool size();
+//     // resource informations
+//     bool dynamic_content();
+//     bool size();
 
-    // http headers
-    bool prepend_header();
-    bool prepend_chunk_header();
+//     // http headers
+//     bool prepend_header();
+//     bool prepend_chunk_header();
 
-    // apply some filter on the resource
-    bool alter_content();
-    // feed the resource, if supported
-    bool feed_input();
-    // in the case of get methods...
-    bool serve(sysapi::insock::handle_t&);
-    bool write();
+//     // apply some filter on the resource
+//     bool alter_content();
+//     // feed the resource, if supported
+//     bool feed_input();
+//     // in the case of get methods...
+//     bool serve(sysapi::insock::handle_t&);
+//     bool write();
   };
 }
 
