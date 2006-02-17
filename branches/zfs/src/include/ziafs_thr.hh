@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Thu Feb 16 11:41:00 2006 texane
+// Last update Fri Feb 17 11:51:21 2006 texane
 //
 
 
@@ -28,6 +28,7 @@
 
 // Forward declarations
 namespace net { class server; }
+namespace resource { class interface; }
 
 namespace thr
 {
@@ -158,6 +159,7 @@ namespace thr
       bool done;
       bool ret_in_cache;
       net::http proto;
+      resource::interface* target;
     } session_t;
     static void sess_reset(session_t&);
     static void sess_release(session_t&);

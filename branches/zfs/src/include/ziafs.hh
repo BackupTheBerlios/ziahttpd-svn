@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:03:48 2006 texane
-// Last update Thu Feb 16 11:24:30 2006 texane
+// Last update Fri Feb 17 12:04:47 2006 texane
 //
 
 
@@ -20,13 +20,14 @@
 #include <ziafs_debug.hh>
 #include <ziafs_static.hh>
 #include <ziafs_http.hh>
+#include <ziafs_resource.hh>
 #include <sys/sysapi.hh>
 
 #ifndef _WIN32
 # include <unistd.h>
 # define Sleep( n ) usleep(n)
 #else
-# define Sleep( n ) Sleep(n/1000)
+# define Sleep( n ) Sleep(n / 1000)
 #endif // ! _WIN32
 
 #ifdef _WIN32
