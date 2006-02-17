@@ -282,7 +282,7 @@ bool	net::http::data_enco::done()
 unsigned int net::http::body_size()
 {
 	if (request.m_hdrlines["transfer-encoding"] == "chunked")
-		return (-1);
+		return ((int)-1);
 	else
 		return (atoi(request.m_hdrlines["content-length"].c_str()));
 }
