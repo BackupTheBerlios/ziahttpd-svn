@@ -62,7 +62,7 @@ namespace net
 		bool	valid_host();
 
 		//Response
-		bool									generate_status_line();
+		bool									generate_status_line(std::string&);
 		bool									generate_header_lines(size_t, bool);
 		bool									generate_content_type();
 		bool									generate_header_date();

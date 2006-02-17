@@ -5,9 +5,8 @@
 #include <list>
 #include <map>
 
-bool			net::http::generate_status_line()
+bool			net::http::generate_status_line(std::string& ln)
 {
-	std::string	ln;
 	char				st_code[20];
 	std::string	st_code_str;
 
@@ -83,9 +82,11 @@ bool			net::http::generate_content_length(size_t sz)
 bool			net::http::create_header(buffer& data, size_t sz, bool chunk)
 {
 	std::map<std::string, std::string>::iterator iter;
-	generate_status_line();
+	std::string ln;
+	generate_status_line(ln);
 	generate_header_lines(sz, chunk);
 
+	data += ln;
 	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
 	{
 		data += (*iter).first + ": " + iter->second + "\r\n";
