@@ -44,4 +44,5 @@ bool	net::http::request_header_validation()
 	if (!valid_uri()) return false;
 	if (!valid_version()) return false;
 	if (!valid_host()) return false;
+	return true;
 }
