@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:42:56 2006 texane
-// Last update Wed Feb 15 03:52:35 2006 
+// Last update Fri Feb 17 13:48:17 2006 texane
 //
 
 
@@ -18,6 +18,7 @@
 
 
 #include <list>
+#include <ziafs_resource.hh>
 
 
 // Forward declarations
@@ -31,6 +32,7 @@ typedef struct core
   thr::pool* thr_pool;
   std::list<net::server*> srv_list;
   net::config* config;
+  resource::manager res_manager;
 } core_t;
 
 

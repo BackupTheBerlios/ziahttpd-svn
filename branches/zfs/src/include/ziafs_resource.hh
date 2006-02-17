@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 12:42:55 2006 texane
+// Last update Fri Feb 17 13:49:55 2006 texane
 //
 
 
@@ -15,29 +15,33 @@
 
 #include <string>
 #include <sys/sysapi.hh>
+#include <ziafs_buffer.hh>
 
 
 namespace resource
 {
+  // openimg mode
+  typedef enum
+    {
+      O_INPUT = 0,
+      O_OUTPUT
+    } e_omode;
+
   // type of resource
   typedef enum
     {
       ID_FILE = 0,
       ID_PROCESS,
       ID_BYFLY
-    } id_t;
+    } e_id;
 
   // io completion
   typedef enum
     {
-    } e_compl_t;
-
-  class manager
-  {
-  public:
-//     static inf* factory_create(const std::string&);
-//     static inf* factory_destroy(const std::string&);
-  };
+      E_SUCCESS = 0,
+      E_NOT_IMPL,
+      E_UNKNOWN
+    } e_error;
 
 
 //   {
@@ -58,7 +62,7 @@ namespace resource
 // 	    // if chunked -> generate chunk header
 // 	    http->create_header(hdr_buf, chunked);
 // 	    res->prepend_header(hdr_buf);
-// 	    res->serve();
+// 	    res->flush();
 // 	  }
 //       }
 //     else if (res->output_resrouce)
@@ -73,31 +77,44 @@ namespace resource
 //     factory_close(res);
 //   }
 
-  class inf
+  class handle
   {
   public:
-//     // creation
-//     bool open();
-//     bool close();
+    handle();
+    virtual ~handle() {}
 
-//     // sending
-//     bool serve();
+    // interface
+    // serve the resource current data
+    virtual e_error flush(sysapi::insock::handle_t&) = 0;
+    virtual e_error flush(sysapi::file::handle_t&) = 0;
+    virtual e_error generate(unsigned int&) = 0;
+    virtual e_error size(unsigned int&) = 0;
 
-//     // resource informations
-//     bool dynamic_content();
-//     bool size();
+    // Chunk/data modifications
+    e_error prepend_header(buffer&);
+    e_error alter_content(void (*)(buffer&, void*), void*);
+    bool is_input() const;
+    bool is_output() const;
 
-//     // http headers
-//     bool prepend_header();
-//     bool prepend_chunk_header();
-
-//     // apply some filter on the resource
-//     bool alter_content();
 //     // feed the resource, if supported
 //     bool feed_input();
 //     // in the case of get methods...
-//     bool serve(sysapi::insock::handle_t&);
-//     bool write();
+
+
+  protected:
+    // implement the current chunk
+    buffer data;
+
+  private:
+    e_omode omode;
+    e_id id;
+  };
+
+  class manager
+  {
+  public:
+    e_error factory_create(handle*&, e_id, e_omode, const std::string&);
+    e_error factory_destroy(handle*);
   };
 }
 

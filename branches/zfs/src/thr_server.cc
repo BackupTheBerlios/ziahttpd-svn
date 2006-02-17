@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 11:52:16 2006 texane
+// Last update Fri Feb 17 13:48:50 2006 texane
 //
 
 
@@ -34,14 +34,17 @@ void thr::pool::sess_reset(session_t& sess)
   sess.srv = 0;
   sess.thr_slot = 0;
   sess.ret_in_cache = true;
-//   printf("reseting\n"); fflush(stdout);
   sess.proto.reset();
   sess.target = 0;
 }
 
 void thr::pool::sess_release(session_t& sess)
 {
-  // Close the session, if not yet done
+  core_t* core;
+
+  core = sess.srv->core;
+  if (sess.target)
+    core->res_manager.factory_destroy(sess.target);
   if (sess.thr_slot->curr_io.timeouted == false)
     insock::close(sess.cli_sock);
 }
@@ -94,7 +97,6 @@ bool thr::pool::sess_read_metadata(session_t& sess)
       herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
       if (sess.thr_slot->curr_io.timeouted == true)
 	{
-	  // printf("session timeouted\n"); fflush(stdout);
 	  sess.done = true;
 	  return false;
 	}
@@ -184,7 +186,6 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   if (sess.ret_in_cache == false)
     {
-      // printf("not returning in cache!!!\n");
       goto serve_another;
     }
 

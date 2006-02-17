@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Fri Feb 17 12:43:29 2006 texane
+// Last update Fri Feb 17 13:01:14 2006 texane
 //
 
 
@@ -159,7 +159,7 @@ namespace thr
       bool done;
       bool ret_in_cache;
       net::http proto;
-      resource::inf* target;
+      resource::handle* target;
     } session_t;
     static void sess_reset(session_t&);
     static void sess_release(session_t&);
