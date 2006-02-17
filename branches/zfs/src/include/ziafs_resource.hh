@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 17:02:07 2006 texane
+// Last update Fri Feb 17 21:03:05 2006 texane
 //
 
 
@@ -45,6 +45,14 @@ namespace resource
       E_NOT_SUPP,
       E_NOT_OPENED,
       E_ALREADY_GEN,
+      E_NOT_FOUND,
+
+      dont_exist,
+      cannot_read,
+      
+      
+
+
       E_UNKNOWN
     } e_error;
 
