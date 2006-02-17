@@ -161,7 +161,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 		  return false;
 		}
 	      // Then make http consum/process the buffer(it can be chunked)
- 	      sess.proto.consum_body(raw_buf, &body_buf);
+ 	      sess.proto.consume_body(raw_buf, &body_buf);
 	      // Send the buffer as input to the resource
 	      sess.target->flush_input(*sess.thr_slot, raw_buf);
 	    }

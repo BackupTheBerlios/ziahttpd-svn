@@ -41,9 +41,14 @@ std::string&			net::http::operator[](const std::string& key)
 
 std::string&			net::http::operator=(const std::string& val)
 {
-	std::string t = val;
+//	std::string t = val;
 
 	return ((std::string&)val);
+}
+
+std::string&				net::http::response(const std::string& key)
+{
+	return (m_res_hdrlines[key]);
 }
 
 bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished)
@@ -297,4 +302,9 @@ unsigned int net::http::body_size()
 		return (-1);
 	else
 		return (atoi(m_hdrlines["content-length"].c_str()));
+}
+
+bool			net::http::create_header(buffer& data, bool chunk)
+{
+	return true;
 }

@@ -20,9 +20,6 @@ namespace net
     virtual bool consume(unsigned char *, unsigned int , bool&) = 0;
     virtual status::error	produce(buffer&) = 0;
     virtual status::error	dump(buffer&) = 0;
-    // switch function pointer
-//    status::error (*process_stage_fn)(session*);
-    
   };
 
   class uri
@@ -31,8 +28,8 @@ namespace net
     static status::error	extension(std::string& localname);
     std::string&					localname() { return m_localname; };
     std::string&					wwwname() { return m_wwwname; };
-    int&			status_code() { return m_status_code; };
-		bool			reset();
+    int&									status_code() { return m_status_code; };
+		bool									reset();
   private:
     std::string	m_wwwname;
     std::string	m_localname;
@@ -43,9 +40,13 @@ namespace net
   class http : public protocol
   {
   public:
+		enum e_type
+		{
+			REQUEST = 0,
+			RESPONSE
+		};
     http();
-    std::string& operator[](const std::string&);
-    std::string& operator=(const std::string&);
+
     bool									consume(unsigned char *, unsigned int , bool&);
 		bool									consume_body(buffer& dest, buffer* source);
     status::error					produce(buffer&);
@@ -54,6 +55,14 @@ namespace net
 		bool									reset();
 		bool									request_header_validation();
 		unsigned int					body_size();
+		// Response
+		std::string&					response(const std::string&);
+		bool									create_header(buffer&, bool);
+		bool									generate_status_line(buffer&);
+		bool									error_code_string(std::string&);
+		http_data							resquest;
+		http_data							response;
+
   private:
 		bool	valid_method();
 		bool	valid_uri();
@@ -81,10 +90,10 @@ namespace net
       status::error	decode(net::protocol*, utils::line&, buffer&);
     private:
       enum e_state
-	{
-	  HDRLINE = 0,
-	  BODYDATA
-	};
+			{
+				HDRLINE = 0,
+				BODYDATA
+			};
     private:
       int					m_chunk_size;
       e_state			m_state;
@@ -110,7 +119,7 @@ namespace net
     status::error	parse_header_line(std::string&);
     status::error	handle_metadata();
 
-    std::map<std::string, std::string>	m_hdrlines;
+		//std::map<std::string, std::string>	m_res_hdrlines;
     utils::line													m_line;
     enum e_state
       {
@@ -118,13 +127,20 @@ namespace net
 				HDRLINES,
 				BODYDATA
       };
+		class			http_data
+		{
+		public:
+			std::string& operator[](const std::string&);
+			std::string& operator=(const std::string&);
+			std::string	m_method;
+			std::string	m_version;
+			std::string	m_query;
+			std::map<std::string, std::string>	m_hdrlines;
+			data_enco		*m_data_enco_req;
+		};
     e_state			m_state;
-    std::string	m_method;
-    std::string	m_version;
-    std::string	m_query;
     uri					m_uri;
-    data_enco		*m_data_enco_req;
-		data_enco		*m_data_enco_res;
+    //data_enco		*m_data_enco_res;
   };
 
 }
