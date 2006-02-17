@@ -273,7 +273,7 @@ status::error				net::http::unchunked::decode(net::protocol* s,utils::line& m_li
 
 	if (m_size <= m_size_read)
 	{
-		int diff;
+		size_t diff;
 
 		diff = m_size_read - m_size;
 		m_done = true;
