@@ -14,7 +14,8 @@ bool			net::http::generate_status_line(std::string& ln)
 	char				st_code[20];
 	std::string	st_code_str;
 
-	m_uri.status_code() = 200;
+	if (!m_uri.status_code())
+		m_uri.status_code() = 200;
 	sprintf(st_code, "%i", m_uri.status_code());
 	st_code_str = st_code;
 	ln = request.m_version + " " + st_code_str + " ";
@@ -117,15 +118,16 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 			m_uri.localname() = (*dir)->docroot + "/" + m_uri.wwwname();
 		dir ++;
 	}
-	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
+	
 	if (!file::is_readable(m_uri.localname()))
 		m_uri.status_code() = 403;
 	if (!file::is_path_valid(m_uri.localname()))
 		m_uri.status_code() = 404;
-	if (m_uri.status_code() = 0)
+	ziafs_debug_msg("CREATE resource %s %i", m_uri.localname().c_str(), m_uri.status_code());
+	if (m_uri.status_code() == 0)
 		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
 	else
-		error = resource::E_SUCCESS;
+		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 	if (error != resource::E_SUCCESS)
 	{
 

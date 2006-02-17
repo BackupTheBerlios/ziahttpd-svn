@@ -12,3 +12,8 @@ bool				net::uri::reset()
 	m_status_code = 0;
 	return true;
 }
+
+net::uri::uri()
+{
+	reset();
+}

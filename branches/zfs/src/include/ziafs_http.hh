@@ -26,11 +26,13 @@ namespace net
   class uri
   {
   public:
-    static status::error	extension(std::string& localname);
+		uri();
+		static status::error	extension(std::string& localname);
     std::string&					localname() { return m_localname; };
     std::string&					wwwname() { return m_wwwname; };
     int&									status_code() { return m_status_code; };
 		bool									reset();
+
   private:
     std::string	m_wwwname;
     std::string	m_localname;
