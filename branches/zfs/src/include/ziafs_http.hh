@@ -47,11 +47,13 @@ namespace net
     std::string& operator[](const std::string&);
     std::string& operator=(const std::string&);
     bool									consume(unsigned char *, unsigned int , bool&);
+		bool									consume_body(buffer& dest, buffer* source);
     status::error					produce(buffer&);
     status::error					dump(buffer&);
     std::string						method() { return m_method; };
 		bool									reset();
 		bool									request_header_validation();
+		unsigned int					body_size();
   private:
 		bool	valid_method();
 		bool	valid_uri();
@@ -90,18 +92,18 @@ namespace net
     class unchunked : public data_enco
     {
     public:
-      unchunked() { m_state = FIRSTTIME; };
+      unchunked() { m_state = FIRSTTIME; m_size_read = 0; };
       status::error	encode(buffer&) { ziafs_return_status(status::SUCCESS); };
       status::error	decode(net::protocol*, utils::line&, buffer&);
     private:
       enum e_state
-	{
-	  FIRSTTIME = 0,
-	  OTHERTIME
-	};
-      int					m_size;
+			{
+				FIRSTTIME = 0,
+				OTHERTIME
+			};
+      size_t			m_size;
       e_state			m_state;
-
+			size_t			m_size_read;
     };
 
     status::error	parse_status_line(std::string&);

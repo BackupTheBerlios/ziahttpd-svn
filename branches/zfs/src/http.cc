@@ -54,25 +54,6 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 
 
 	finished = false;
-	if (m_state == BODYDATA)
-	{
-		if (!m_data_enco_req)
-			return false;
-		if (m_data_enco_req->decode(this, m_line, buf) == status::ENDOFREQUEST)
-		{
-//			s->m_proto->process_stage_fn = http::third_stage;
-			finished = true;
-			return true;
-		}
-		if (m_data_enco_req->done() == true)
-		{
-			delete m_data_enco_req;
-			m_data_enco_req = NULL;
-			handle_metadata();
-		}
-		return true;
-	}
-
 
 	while (m_line.from_buffer(ln, buf, ln_toolong) == true)
 	{
@@ -119,8 +100,32 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		buf.reset();
 	}
 
+	return true;
+}
 
+bool									net::http::consume_body(buffer& dest, buffer* source)
+{
+//	buffer	buf(data, nbytes);
 
+	if (m_state == BODYDATA)
+	{
+		if (!m_data_enco_req)
+			return false;
+		if (m_data_enco_req->decode(this, m_line, (*source)) == status::ENDOFREQUEST)
+		{
+			//			s->m_proto->process_stage_fn = http::third_stage;
+			//			finished = true;
+			dest = m_data_enco_req->buff();
+			return true;
+		}
+		if (m_data_enco_req->done() == true)
+		{
+			delete m_data_enco_req;
+			m_data_enco_req = NULL;
+			handle_metadata();
+		}
+		return true;
+	}
 	return true;
 }
 
@@ -194,7 +199,7 @@ status::error					net::http::handle_metadata()
 {
 	if (m_data_enco_req)
 	{
-		ziafs_debug_msg("Ecncoding already defined ... %s\n", "");
+		ziafs_debug_msg("Encoding already defined ... %s\n", "");
 		ziafs_return_status(status::FAILED);
 	}
 	if (m_hdrlines["transfer-encoding"] == "chunked")
@@ -232,10 +237,10 @@ status::error				net::http::chunked::decode(net::protocol*, utils::line& m_line,
 			m_line.get_bytes(m_buf);
 			m_state = BODYDATA;
 		}
-		else if (ln_toolong == true)
-		  {
-		    // here do the necessary
-		  }
+		//else if (ln_toolong == true)
+		//  {
+		//    // here do the necessary
+		//  }
 	}
 	if (m_state == BODYDATA)
 	{
@@ -244,7 +249,7 @@ status::error				net::http::chunked::decode(net::protocol*, utils::line& m_line,
 		{
 			m_done = true;
 			ziafs_debug_msg("FINI CHUNK %s", "");
-//			std::cout << "SIZE :" << m_buf.size() << "\n" <<m_buf.tostring();
+			// std::cout << "SIZE :" << m_buf.size() << "\n" <<m_buf.tostring();
 			// le buffer a 2 caractere en trop
 		}
 	}
@@ -253,16 +258,24 @@ status::error				net::http::chunked::decode(net::protocol*, utils::line& m_line,
 
 status::error				net::http::unchunked::decode(net::protocol* s,utils::line& m_line, buffer& buf)
 {
+	buffer tmp;
+
 	if (m_state == FIRSTTIME)
 	{
 		m_line.get_bytes(m_buf);
-		//const std::string t("lala");
-		m_size = atoi((*(net::http*)s)["content-length"].c_str()) + 2;
+		m_size = atoi((*(net::http*)s)["content-length"].c_str());
 		m_state = OTHERTIME;
+		tmp = m_buf + buf;
+		buf = tmp;
 	}
-	m_buf += buf;
-	if (m_size == (int)m_buf.size())
+	m_size_read += buf.size();
+	m_buf = buf;
+
+	if (m_size <= m_size_read)
 	{
+		int diff;
+
+		diff = m_size_read - m_size;
 		m_done = true;
 //		std::cout << "SIZE :" << m_buf.size() << "\n" << m_buf.tostring();
 		ziafs_return_status(status::ENDOFREQUEST);
@@ -273,12 +286,15 @@ status::error				net::http::unchunked::decode(net::protocol* s,utils::line& m_li
 bool	net::http::data_enco::done()
 {
 	if (m_done)
-	{
 		return true;
-	}
 	else
-	{
 		return false;
-	}
 }
 
+unsigned int net::http::body_size()
+{
+	if (m_hdrlines["transfer-encoding"] == "chunked")
+		return (-1);
+	else
+		return (atoi(m_hdrlines["content-length"].c_str()));
+}

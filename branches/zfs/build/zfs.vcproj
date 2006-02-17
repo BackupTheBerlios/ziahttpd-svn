@@ -156,6 +156,21 @@
 				RelativePath=".\remove_me.cpp">
 			</File>
 			<File
+				RelativePath="..\src\resource_byfly.cc">
+			</File>
+			<File
+				RelativePath="..\src\resource_file.cc">
+			</File>
+			<File
+				RelativePath="..\src\resource_handle.cc">
+			</File>
+			<File
+				RelativePath="..\src\resource_manager.cc">
+			</File>
+			<File
+				RelativePath="..\src\resource_process.cc">
+			</File>
+			<File
 				RelativePath="..\src\thr_io.cc">
 			</File>
 			<File
