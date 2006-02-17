@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 16:57:40 2006 texane
+// Last update Fri Feb 17 17:48:26 2006 texane
 //
 
 
@@ -13,6 +13,10 @@
 #include <string>
 #include <iostream>
 #include <ziafs.hh>
+
+
+using std::cout;
+using std::endl;
 
 
 // @info
@@ -173,8 +177,10 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	  if (sess.target->generate(size) == resource::E_SUCCESS)
 	    {
 // 	      sess.target->alter(size);
-// 	      sess.proto.create_header(hdr_buf, chunked);
+	      sess.proto.create_header(hdr_buf, size, false);
 	      sess.target->prepend_header(hdr_buf);
+	      cout << hdr_buf.tostring() << endl;
+// 	      getchar();
 	      if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
 		{
 		  sess.done = true;

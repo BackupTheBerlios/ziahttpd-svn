@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Fri Feb 17 13:21:18 2006 texane
+## Last update Fri Feb 17 17:20:07 2006 texane
 ##
 
 # ! Always include this file
@@ -32,6 +32,9 @@ srcs	= src$(SLASH)main.cc			\
 	  src$(SLASH)uri.cc			\
 	  src$(SLASH)utils_line.cc		\
 	  src$(SLASH)zia_stringmanager.cc	\
+	  src$(SLASH)http_response.cc		\
+	  src$(SLASH)http_data.cc		\
+	  src$(SLASH)error_code.cc		\
 	  src$(SLASH)error.cc			\
 	  src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinystr.cc		\
 	  src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxmlerror.cc	\

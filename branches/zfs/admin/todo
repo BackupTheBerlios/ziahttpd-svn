@@ -38,15 +38,24 @@ today
 [ ] make test tonight on file resources
 [ ] if omode is input, flush the input, else if
 	omode is output, flush the ouput
-[ ] solve the input problem, case when method is get
+[?] solve the input problem, case when method is get
 	of cgi with large sized body
 [ ] think of releasing the target resource if allocated...
-[ ] for the moment, the resource manager's only role is
+[x] for the moment, the resource manager's only role is
 	to allocate a new resource/delete it
 [x] pass the core to the thread server
 [ ] make the process output be non blocking
+[ ] turn the nbytes unsigned int into unsigned long long
+[ ] implement the file opening in the file::file constructor
+[ ] see for the send file function
+[ ] for all the sending/receiving function, ensure the whole buffer
+	is transmitted before returning
 
 
 @bugs:
 	leaks from the mline(?)
 	don't pass in the get_from_special case function
+
+ 
+@optimization
+	static linking
