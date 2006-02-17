@@ -141,6 +141,7 @@ bool	net::config::parse_modules()
 	module		*m = new module;
 	TiXmlElement*	xmltmp;
 
+	memset((void *)m, 0, sizeof(*m));
 	xmltmp = m_xmlnode->ToElement();
 	m->name = xmltmp->FirstAttribute()->Value();
 	for(xmltmp = m_xmlnode->FirstChildElement();
@@ -160,6 +161,7 @@ bool	net::config::parse_directory()
 	directory		*d = new directory;
 	TiXmlElement*	xmltmp;
 
+	memset((void *)d, 0, sizeof(*d));
 	d->servername = "";
 	d->docroot = "./";
 	xmltmp = m_xmlnode->ToElement();
@@ -198,6 +200,7 @@ bool	net::config::parse_mimes()
 	mime			*m = new mime;
 	TiXmlElement*	xmltmp;
 
+	memset((void *)m, 0, sizeof(*m));
 	xmltmp = m_xmlnode->ToElement();
 	m->extension = xmltmp->FirstAttribute()->Value();
 

@@ -144,7 +144,16 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\src\error_code.cc">
+			</File>
+			<File
 				RelativePath="..\src\http.cc">
+			</File>
+			<File
+				RelativePath="..\src\http_data.cc">
+			</File>
+			<File
+				RelativePath="..\src\http_response.cc">
 			</File>
 			<File
 				RelativePath="..\src\main.cc">

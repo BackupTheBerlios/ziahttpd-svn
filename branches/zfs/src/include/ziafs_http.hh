@@ -53,8 +53,7 @@ namespace net
 
 		// Response
 		bool									create_header(buffer&, bool);
-		bool									generate_status_line();
-		bool									error_code_string(std::string&);
+
 
   private:
 		bool	valid_method();
@@ -62,6 +61,11 @@ namespace net
 		bool	valid_version();
 		bool	valid_host();
 
+		//Response
+		bool									generate_status_line();
+		bool									generate_header_lines();
+		bool									generate_content_type();
+		bool									error_code_string(std::string&);
     class data_enco
     {
     public:
@@ -69,7 +73,7 @@ namespace net
       virtual status::error	encode(buffer&) = 0;
       virtual status::error	decode(net::protocol*, utils::line&, buffer&) = 0;
       buffer&	buff() { return m_buf; };
-      bool	done();
+      bool		done();
       virtual ~data_enco() {}
     protected:
       buffer	m_buf;
@@ -112,7 +116,6 @@ namespace net
     status::error	parse_header_line(std::string&);
     status::error	handle_metadata();
 
-		//std::map<std::string, std::string>	m_res_hdrlines;
     utils::line													m_line;
     enum e_state
       {
@@ -133,12 +136,11 @@ namespace net
 		e_state			m_state;
     uri					m_uri;
 		std::string	m_method;
-		//data_enco		*m_data_enco_res;
+
 	public:
 		http_data							request;
 		http_data							response;
   };
-
 }
 
 #endif
