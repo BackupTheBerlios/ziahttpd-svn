@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 22:35:45 2006 texane
+// Last update Fri Feb 17 23:07:24 2006 texane
 //
 
 
@@ -105,6 +105,7 @@ namespace resource
     e_error size(unsigned int&);
 
   private:
+    bool generated;
     unsigned int err_code;
   };
 }

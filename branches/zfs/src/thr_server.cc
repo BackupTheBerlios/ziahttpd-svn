@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 22:43:42 2006 texane
+// Last update Fri Feb 17 23:08:19 2006 texane
 //
 
 
@@ -29,7 +29,6 @@ using namespace sysapi;
 
 void thr::pool::sess_reset_request(session_t& sess)
 {
-  printf("reseting\n"); fflush(stdout);
   sess.done = false;
   sess.proto.reset();
   sess.target = 0;
@@ -105,17 +104,13 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
   unsigned int nbytes;
 
-  printf("in\n"); fflush(stdout);
-
   if (sess.done == true)
     return false;
 
   end_of_metadata = false;
   while (end_of_metadata == false)
     {
-      printf("in the rad\n"); fflush(stdout);
       herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-      printf("in the rad2\n"); fflush(stdout);
       if (sess.thr_slot->curr_io.timeouted == true)
 	{
 	  sess.done = true;
@@ -168,7 +163,6 @@ bool thr::pool::sess_handle_request(session_t& sess)
       // get / post method
       while (done == false)
 	{
-	  printf("toto\n"); fflush(stdout);
  	  if (sess.proto.body_size())
 	    {
 	      // First read the body next buffer
@@ -183,10 +177,8 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	      // Send the buffer as input to the resource
 	      sess.target->flush_input(*sess.thr_slot, raw_buf);
 	    }
-	  printf("entering generate\n"); fflush(stdout);
 	  if (sess.target->generate(size) == resource::E_SUCCESS)
 	    {
-	      printf("entering generate2\n"); fflush(stdout);
 // 	      sess.target->alter(size);
 	      sess.proto.create_header(hdr_buf, size, false);
 // 	      sess.proto.modify_header(hdr_buf);
@@ -244,12 +236,9 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     {
       sess_reset_request(sess);
       sess_read_metadata(sess);
-      printf(">>\n"); fflush(stdout);
       sess_handle_request(sess);
-      printf("<<\n"); fflush(stdout);
       sess_release_request(sess);
     }
-  printf("releasing session\n"); fflush(stdout);
   sess_release(sess);
 
   if (sess.ret_in_cache == false)

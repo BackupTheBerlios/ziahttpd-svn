@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:16:34 2006 texane
-// Last update Fri Feb 17 21:55:33 2006 texane
+// Last update Fri Feb 17 23:07:00 2006 texane
 //
 
 
@@ -34,8 +34,9 @@ static void inline mk_status_msg(unsigned int err_code, unsigned char* buf, unsi
 
 resource::e_error resource::byfly::generate(unsigned int& nbytes)
 {
-  if (data.size())
+  if (generated == true)
     return E_ALREADY_GEN;
+  generated = true;
 
   data.resize(ZIAFS_STATIC_BUFSZ);
   mk_status_msg(err_code, data.bufptr(), nbytes);
@@ -104,6 +105,7 @@ resource::e_error resource::byfly::size(unsigned int& nbytes)
 resource::byfly::byfly(unsigned int e_code)
 {
   err_code = e_code;
+  generated = false;
 }
 
 resource::byfly::~byfly()
