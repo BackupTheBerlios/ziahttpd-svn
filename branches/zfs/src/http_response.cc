@@ -1,3 +1,4 @@
+#include <ziafs_resource.hh>
 #include <ziafs_http.hh>
 #include <ziafs_debug.hh>
 #include <zia_stringmanager.hh>
@@ -97,3 +98,22 @@ bool			net::http::create_header(buffer& data, size_t sz, bool chunk)
 	return true;
 }
 
+
+bool				net::http::create_resource(resource::handle*& hld, resource::manager& manager, config& conf)
+{
+	resource::e_error error;
+	hld = 0;
+
+	error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
+	if (error != resource::E_SUCCESS)
+	{
+
+		return false;
+	}
+	return true;
+}
+
+//bool			net::http::stringify()
+//{
+//
+//}

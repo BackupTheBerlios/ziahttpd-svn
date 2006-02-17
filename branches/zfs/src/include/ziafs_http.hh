@@ -8,6 +8,7 @@
 #include <ziafs_config.hh>
 #include <ziafs_status.hh>
 
+namespace resource { class handle; class manager; }
 
 namespace net
 {
@@ -50,6 +51,7 @@ namespace net
 		bool									reset();
 		bool									request_header_validation();
 		unsigned int					body_size();
+		bool									create_resource(resource::handle*&, resource::manager&, config&);
 
 		// Response
 		bool									create_header(buffer&, size_t, bool);
