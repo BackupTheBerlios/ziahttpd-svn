@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:40 2006 
-// Last update Fri Feb 17 21:13:38 2006 texane
+// Last update Fri Feb 17 23:29:51 2006 
 //
 
 #include <string>
@@ -82,27 +82,85 @@ sysapi::error::handle_t sysapi::file::size(handle_t& hfile, unsigned long long& 
 }
 
 
+// Query about api
+
+
+enum file_query
+  {
+    EXISTS = 0,
+    DIRECTORY,
+    SIZE,
+    READABLE,
+    WRITTABLE,
+    EXECUTABLE
+  };
+
+static bool file_query_about(const char* filename, enum file_query q, unsigned long* aux)
+{
+  struct stat st;
+  int ret;
+  bool res;
+
+  res = false;
+  ret = stat(filename, &st);
+
+  switch (q)
+    {
+    case EXISTS:
+      if (ret != -1)
+	res = true;
+      break;
+
+    case DIRECTORY:
+      if ((st.st_mode & S_IFMT) == S_IFDIR)
+	res = true;
+      break;
+
+    case SIZE:
+      *aux = (unsigned long)st.st_size;
+      res = true;
+      break;
+
+    case READABLE:
+      res = true;
+      break;
+
+    case WRITTABLE:
+      res = true;
+      break;
+
+    case EXECUTABLE:
+      res = true;
+      break;
+
+    default:
+      break;
+    }
+
+  return res;
+}
+
 bool sysapi::file::is_path_valid(const string& filename)
 {
-  return false;
+  return file_query_about(filename.c_str(), EXISTS, 0);
 }
 
 bool sysapi::file::is_directory(const string& filename)
 {
-  return false;
+  return file_query_about(filename.c_str(), DIRECTORY, 0);
 }
 
 bool sysapi::file::is_readable(const string& filename)
 {
-  return false;
+  return file_query_about(filename.c_str(), READABLE, 0);
 }
 
 bool sysapi::file::is_writable(const string& filename)
 {
-  return false;
+  return file_query_about(filename.c_str(), WRITTABLE, 0);
 }
 
 bool sysapi::file::is_executable(const string& filename)
 {
-  return false;
+  return file_query_about(filename.c_str(), EXECUTABLE, 0);
 }
