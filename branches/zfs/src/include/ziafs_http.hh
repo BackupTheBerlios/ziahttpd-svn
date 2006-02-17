@@ -29,14 +29,14 @@ namespace net
   {
   public:
     static status::error	extension(std::string& localname);
-    std::string&		localname() { return m_localname; };
-    std::string&		wwwname() { return m_wwwname; };
+    std::string&					localname() { return m_localname; };
+    std::string&					wwwname() { return m_wwwname; };
     int&			status_code() { return m_status_code; };
 		bool			reset();
   private:
     std::string	m_wwwname;
     std::string	m_localname;
-    int	m_status_code;
+    int					m_status_code;
   };
 
 
@@ -51,6 +51,7 @@ namespace net
     status::error					dump(buffer&);
     std::string						method() { return m_method; };
 		bool									reset();
+		bool									request_header_validation();
   private:
 		bool	valid_method();
 		bool	valid_uri();

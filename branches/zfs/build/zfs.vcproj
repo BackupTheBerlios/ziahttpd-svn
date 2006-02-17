@@ -176,6 +176,9 @@
 			<File
 				RelativePath="..\src\zia_stringmanager.cc">
 			</File>
+			<File
+				RelativePath="..\src\ziafs_request_header_validation.cc">
+			</File>
 			<Filter
 				Name="sys"
 				Filter="">

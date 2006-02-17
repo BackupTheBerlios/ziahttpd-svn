@@ -38,16 +38,10 @@ bool	net::http::valid_host()
 	return true;
 }
 
-bool	net::http::valid_length()
-{
-	return true;
-}
-
 bool	net::http::request_header_validation()
 {
 	if (!valid_method()) return false;
 	if (!valid_uri()) return false;
 	if (!valid_version()) return false;
 	if (!valid_host()) return false;
-	if (!valid_length()) return false;
 }

@@ -77,6 +77,11 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 	while (m_line.from_buffer(ln, buf, ln_toolong) == true)
 	{
 		ziafs_debug_msg("line : %s\n", ln.c_str());
+		if (ln_toolong == true)
+		{
+			m_uri.status_code() = 400;
+			return false;
+		}
 		if (ln.empty() && (m_state != STUSLINES))
 		{
 //			process_stage_fn = http::second_stage;
@@ -114,10 +119,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		buf.reset();
 	}
 
-	if (ln_toolong == true)
-	  {
-	    // Here do the necessary
-	  }
+
 
 	return true;
 }
@@ -144,7 +146,7 @@ status::error					net::http::parse_status_line(std::string& ln)
 	stringmanager::unconvert_hexa(m_query);
 	m_version = vec[2];
 
-	m_uri.status_code() = 200;
+//	m_uri.status_code() = 200;
 	ziafs_return_status(status::STATUSLINE_SUCCESS);
 }
 
