@@ -5,11 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 16 23:41:52 2006 texane
+// Last update Fri Feb 17 02:20:56 2006 texane
 //
 
 
 #include <cstdio>
+#include <string>
+#include <iostream>
 #include <ziafs.hh>
 
 
@@ -88,9 +90,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   end_of_metadata = false;
   while (end_of_metadata == false)
     {
-//       printf("1\n"); fflush(stdout);
       herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-//       printf("2\n"); fflush(stdout);
       if (sess.thr_slot->curr_io.timeouted == true)
 	{
 	  // printf("session timeouted\n"); fflush(stdout);
@@ -103,12 +103,9 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	  return false;
 	}
 
-//       printf("3 --> %d\n", nbytes); fflush(stdout);
       valid = sess.proto.consume(buf, nbytes, end_of_metadata);
-//       printf("4\n"); fflush(stdout);
       if (valid == false)
 	{
-// 	  printf("this is not valid"); fflush(stdout);
 	  end_of_metadata = true;
 	  sess.done = true;
 	}
@@ -121,19 +118,32 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   return true;
 }
 
+
+#define BODY	"<html><body><b>%s</b></body></html>"
+#define STATUS	"NOT_IMPLEMENTED"
+#define HEADER	"http/1.1 200 OK\r\ncontent-length: %d\r\n\r\n", strlen(BODY)
+static void inline mk_response(unsigned char* buf, unsigned int& nbytes)
+{
+  nbytes = 0;
+  nbytes += sprintf((char*)buf, HEADER);
+  nbytes += sprintf((char*)buf + nbytes, BODY, STATUS);
+}
+
+
 bool thr::pool::sess_handle_request(session_t& sess)
 {
   error::handle_t herr;
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
   unsigned int nbytes;
+  unsigned int nsent;
 
   if (sess.done == true)
     return false;
 
-  herr = send(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+  mk_response((unsigned char*)buf, nbytes);
+  herr = send(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, nbytes, nsent);
   if (sess.thr_slot->curr_io.timeouted == true)
     {
-      // printf("has timeouted\n"); fflush(stdout);
       sess.done = true;
       return false;
     }
@@ -163,13 +173,11 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   // session pipeline
   sess_bind_server(sess);
-  // printf("entering server\n"); fflush(stdout);
   sess_accept_connection(sess);
-  // printf("---> new session\n"); fflush(stdout);
   while (sess.done == false)
     {
       sess_read_metadata(sess);
-      // sess_handle_request(sess);
+      sess_handle_request(sess);
     }
   sess_release(sess);
 

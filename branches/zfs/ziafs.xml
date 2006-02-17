@@ -1,7 +1,7 @@
 <system>
-  <nb_thread>2</nb_thread>
+  <nb_thread>20</nb_thread>
   <poll_delay>100000</poll_delay>
-  <expiration_delay>1000</expiration_delay>
+  <expiration_delay>100</expiration_delay>
   <dirlisting></dirlisting>
 </system>
 
