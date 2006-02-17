@@ -54,7 +54,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		{
 //			process_stage_fn = http::second_stage;
 			ziafs_debug_msg("end of header, go to second stage ;)%s\n", "");
-			if (m_method != "GET")
+			if (method_can_have_body())
 				handle_metadata();
 			m_state = BODYDATA;
 //		End of metadata
@@ -93,7 +93,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 bool									net::http::consume_body(buffer& dest, buffer* source)
 {
 //	buffer	buf(data, nbytes);
-	if (m_method == "GET")
+	if (!method_can_have_body())
 		return false;
 	
 	if (m_state == BODYDATA)
@@ -293,3 +293,11 @@ unsigned int net::http::body_size()
 		return (atoi(request.m_hdrlines["content-length"].c_str()));
 }
 
+bool	net::http::method_can_have_body()
+{
+	std::string method_str(m_method);
+	stringmanager::normalize(method_str);
+	if (method_str == "get" || method_str == "head")
+		return false;
+	return true;
+}

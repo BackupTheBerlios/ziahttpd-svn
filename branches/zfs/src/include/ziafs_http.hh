@@ -62,7 +62,7 @@ namespace net
 		bool	valid_uri();
 		bool	valid_version();
 		bool	valid_host();
-
+		bool	method_can_have_body();
 		//Response
 		bool									generate_status_line(std::string&);
 		bool									generate_header_lines(size_t, bool);
