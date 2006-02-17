@@ -5,6 +5,9 @@
 #include <sstream>
 #include <list>
 #include <map>
+#include <sys/sysapi.hh>
+
+using namespace sysapi;
 
 bool			net::http::generate_status_line(std::string& ln)
 {
@@ -49,7 +52,7 @@ bool	net::http::generate_header_date()
 	time_t t;
 	struct tm *tb;
 
-	t = time(NULL);
+	t = ::time(NULL);
 	tb = localtime(&t);
 	datestr = ctime(&t);
 	datestr[strlen(datestr) - 1] = '\0';
@@ -115,7 +118,14 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		dir ++;
 	}
 	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
-	error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
+	if (!file::is_readable(m_uri.localname()))
+		m_uri.status_code() = 403;
+	if (!file::is_path_valid(m_uri.localname()))
+		m_uri.status_code() = 404;
+	if (m_uri.status_code() = 0)
+		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
+	else
+		error = resource::E_SUCCESS;
 	if (error != resource::E_SUCCESS)
 	{
 
