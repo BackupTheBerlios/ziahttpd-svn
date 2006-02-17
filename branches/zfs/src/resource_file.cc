@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Fri Feb 17 17:07:54 2006 texane
+// Last update Fri Feb 17 22:42:33 2006 texane
 //
 
 
@@ -32,8 +32,10 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
   nbytes = 0;
   if (opened == false)
     return E_NOT_OPENED;
-  if (data.size())
+  if (generated == true)
     return E_ALREADY_GEN;
+
+  generated = true;
       
   // read the whole file into memory
   while (data.size() < file_size)
@@ -116,6 +118,7 @@ resource::file::file(const string& path, e_omode omode)
 
   opened = false;
   file_path = path;
+  generated = false;
 
   if (omode == O_INPUT)
     herr = sysapi::file::open(file_handle, path, sysapi::file::O_READ);
@@ -134,9 +137,5 @@ resource::file::file(const string& path, e_omode omode)
 resource::file::~file()
 {
   if (opened == true)
-    {
-      printf("file is now closed\n");
-      fflush(stdout);
-      sysapi::file::close(file_handle);
-    }
+    sysapi::file::close(file_handle);
 }

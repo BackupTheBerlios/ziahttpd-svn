@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:04:04 2006 texane
-// Last update Fri Feb 17 21:52:47 2006 texane
+// Last update Fri Feb 17 21:59:30 2006 texane
 //
 
 
@@ -58,7 +58,6 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   switch (res_id)
     {
     case ID_FILE:
-      printf("in the reosurce createion %s\n", res_name.c_str()); fflush(stdout);
       res_handle = new file(res_name, res_omode);
       break;
     case ID_BYFLY:

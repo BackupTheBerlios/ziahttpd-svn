@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 21:51:55 2006 texane
+// Last update Fri Feb 17 22:35:45 2006 texane
 //
 
 
@@ -129,6 +129,7 @@ namespace resource
 
   private:
     bool opened;
+    bool generated;
     std::string file_path;
     sysapi::file::handle_t file_handle;
     unsigned long long file_size;

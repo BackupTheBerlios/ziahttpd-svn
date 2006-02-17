@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Fri Feb 17 20:45:54 2006 texane
+// Last update Fri Feb 17 22:24:51 2006 texane
 //
 
 
@@ -161,6 +161,8 @@ namespace thr
       net::http proto;
       resource::handle* target;
     } session_t;
+    static void sess_reset_request(session_t&);
+    static void sess_release_request(session_t&);
     static void sess_reset(session_t&);
     static void sess_release(session_t&);
     static bool sess_bind_server(session_t&);
