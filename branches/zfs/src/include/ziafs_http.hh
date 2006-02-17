@@ -52,7 +52,7 @@ namespace net
 		unsigned int					body_size();
 
 		// Response
-		bool									create_header(buffer&, bool);
+		bool									create_header(buffer&, size_t, bool);
 
 
   private:
@@ -63,9 +63,10 @@ namespace net
 
 		//Response
 		bool									generate_status_line();
-		bool									generate_header_lines();
+		bool									generate_header_lines(size_t);
 		bool									generate_content_type();
 		bool									generate_header_date();
+		bool									generate_content_length(size_t);
 		bool									error_code_string(std::string&);
     class data_enco
     {

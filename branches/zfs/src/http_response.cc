@@ -22,19 +22,19 @@ bool			net::http::generate_status_line()
 bool			net::http::generate_content_type()
 {
 	//Nedd config file 
-	std::list<net::config::mime*>::iterator it;
-//	config.get_mimes(it);
-	std::string	ext;
-
-	m_uri.extension(ext);
-//	while (config.end_mimes(it) == false)
-	{
-		if (ext == (*it)->extension)
-		{
-			response["Content-type"] = (*it)->type;
-			return true;
-		}
-	}
+//	std::list<net::config::mime*>::iterator it;
+////	config.get_mimes(it);
+//	std::string	ext;
+//
+//	m_uri.extension(ext);
+////	while (config.end_mimes(it) == false)
+//	{
+//		if (ext == (*it)->extension)
+//		{
+//			response["Content-type"] = (*it)->type;
+//			return true;
+//		}
+//	}
 	response["Content-type"] = "text/html";
 	return true;
 }
@@ -59,19 +59,29 @@ bool	net::http::generate_header_date()
 	return (true);
 }
 
-bool			net::http::generate_header_lines()
+bool			net::http::generate_header_lines(size_t sz)
 {
 	response["Server"] = "Zfs.";
 	generate_header_date();
 	generate_content_type();
+	generate_content_length(sz);
 	return true;
 }
 
-bool			net::http::create_header(buffer& data, bool chunk)
+bool			net::http::generate_content_length(size_t sz)
+{
+	char	t[20];
+
+	sprintf(t, "%i", sz);
+	response["Server"] = t;
+	return true;
+}
+
+bool			net::http::create_header(buffer& data, size_t sz, bool chunk)
 {
 	std::map<std::string, std::string>::iterator iter;
 	generate_status_line();
-	generate_header_lines();
+	generate_header_lines(sz);
 
 	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
 	{
