@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Sun Feb 12 09:00:34 2006 texane
+// Last update Fri Feb 17 16:55:06 2006 texane
 //
 
 
@@ -85,5 +85,6 @@ sysapi::error::handle_t sysapi::file::size(handle_t& hfile, unsigned long long& 
 
   if (GetFileInformationByHandle(hfile, &info) == FALSE)
     return error::UNKNOWN;
+  sz = info.nFileSizeLow;
   return error::SUCCESS;
 }

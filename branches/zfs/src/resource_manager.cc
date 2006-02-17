@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:04:04 2006 texane
-// Last update Fri Feb 17 14:48:17 2006 texane
+// Last update Fri Feb 17 16:58:45 2006 texane
 //
 
 
@@ -21,8 +21,29 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
 						    resource::e_omode res_omode,
 						    const string& res_name)
 {
-  res_handle = new byfly(200);
-  return E_SUCCESS;
+  resource::e_error err;
+
+  // instanciate the resource
+  err = E_SUCCESS;
+  res_handle = 0;
+  switch (res_id)
+    {
+    case ID_FILE:
+      res_handle = new file("out.html", res_omode);
+      break;
+    case ID_BYFLY:
+      res_handle = new byfly(200);      
+      break;
+    case ID_PROCESS:
+    default:
+      err = E_UNKNOWN;
+      break;
+    }
+
+  // set the infos
+  res_handle->omode = res_omode;
+  res_handle->id = res_id;
+  return err;
 }
 
 

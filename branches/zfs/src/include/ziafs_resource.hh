@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 15:22:33 2006 texane
+// Last update Fri Feb 17 17:02:07 2006 texane
 //
 
 
@@ -42,12 +42,20 @@ namespace resource
       E_SUCCESS = 0,
       E_NOT_IMPL,
       E_OP_ERROR,
+      E_NOT_SUPP,
+      E_NOT_OPENED,
+      E_ALREADY_GEN,
       E_UNKNOWN
     } e_error;
 
 
+  // forward declaration
+  class manager;
+
   class handle
   {
+    friend class manager;
+
   public:
     handle();
     virtual ~handle() {}
@@ -98,6 +106,32 @@ namespace resource
 
   private:
     unsigned int err_code;
+  };
+}
+
+
+namespace resource
+{
+  class file : public handle
+  {
+  public:
+    // construction/destruction
+    file(const std::string&, e_omode);
+    ~file();
+
+    // interface implementation
+    e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&);
+    e_error flush_disk(sysapi::file::handle_t&);
+    e_error flush_environ();
+    e_error flush_input(thr::pool::slot_t&, buffer&);
+    e_error generate(unsigned int&);
+    e_error size(unsigned int&);
+
+  private:
+    bool opened;
+    std::string file_path;
+    sysapi::file::handle_t file_handle;
+    unsigned long long file_size;
   };
 }
 

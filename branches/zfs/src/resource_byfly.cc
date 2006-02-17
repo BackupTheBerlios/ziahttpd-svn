@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:16:34 2006 texane
-// Last update Fri Feb 17 15:23:17 2006 texane
+// Last update Fri Feb 17 16:48:35 2006 texane
 //
 
 
@@ -36,6 +36,9 @@ static void inline mk_response(unsigned char* buf, unsigned int& nbytes)
 
 resource::e_error resource::byfly::generate(unsigned int& nbytes)
 {
+  if (data.size())
+    return E_ALREADY_GEN;
+
   data.resize(ZIAFS_STATIC_BUFSZ);
   mk_response(data.bufptr(), nbytes);
   data.resize(nbytes);
@@ -44,18 +47,39 @@ resource::e_error resource::byfly::generate(unsigned int& nbytes)
 
 resource::e_error resource::byfly::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
 {
+  e_error eerr;
   error::handle_t herr;
   unsigned int nsent;
+  unsigned int nbytes;
+  bool done;
 
-  herr = send(thr_slot, hsock, data.bufptr(), (unsigned int)data.size(), nsent);
-  if (thr_slot.curr_io.timeouted == true)
-    return E_OP_ERROR;
-  else if (herr != error::SUCCESS)
-    return E_OP_ERROR;
-  return E_SUCCESS;
+  done = false;
+  eerr = E_SUCCESS;
+  while (done == false)
+    {
+      nbytes = (unsigned int)data.size();
+      if (nbytes == 0)
+	{
+	  done = true;
+	}
+      else
+	{
+	  herr = send(thr_slot, hsock, data.bufptr(), nbytes, nsent);
+	  if (thr_slot.curr_io.timeouted == true || herr != sysapi::error::SUCCESS)
+	    {
+	      eerr = E_OP_ERROR;
+	      done = true;
+	    }
+	  else
+	    {
+	      data.remove_front(nsent);
+	    }
+	}
+    }
+  return eerr;
 }
 
-resource::e_error resource::byfly::flush_disk(file::handle_t& hsock)
+resource::e_error resource::byfly::flush_disk(sysapi::file::handle_t& hfile)
 {
   return E_NOT_IMPL;
 }
