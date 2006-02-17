@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Fri Feb 17 16:55:06 2006 texane
+// Last update Fri Feb 17 21:17:50 2006 texane
 //
 
 
@@ -87,4 +87,123 @@ sysapi::error::handle_t sysapi::file::size(handle_t& hfile, unsigned long long& 
     return error::UNKNOWN;
   sz = info.nFileSizeLow;
   return error::SUCCESS;
+}
+
+
+
+// Query about api
+
+
+// Query informations about a given file
+
+enum file_query
+  {
+    DOES_EXIST = 0,
+    GET_SIZE,
+    IS_DIRECTORY,
+    IS_READABLE,
+    IS_WRITTABLE,
+    IS_EXECUTABLE
+  };
+
+static bool normalfile_query_about(const char* filename, enum file_query q, unsigned long* aux)
+{
+  HANDLE hfile;
+  BY_HANDLE_FILE_INFORMATION info;
+  bool ret;
+
+  hfile = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+  if (hfile == INVALID_HANDLE_VALUE)
+    {
+      return false;
+    }
+  if (GetFileInformationByHandle(hfile, &info) == FALSE)
+    return false;
+
+  switch (q)
+    {
+    case DOES_EXIST:
+      ret = true;
+      break;
+
+    case IS_DIRECTORY:
+      break;
+
+    case GET_SIZE:
+      *aux = (unsigned long)info.nFileSizeLow;
+      ret = true;
+      break;
+
+    case IS_READABLE:
+      ret = true;
+      break;
+
+    case IS_WRITTABLE:
+      ret = true;
+      break;
+
+    case IS_EXECUTABLE:
+      ret = true;
+      break;
+
+    default:
+      ret = false;
+      break;      
+    }
+
+  CloseHandle(hfile);
+
+  return ret;
+}
+
+static bool directory_query_about(const char* filename, enum file_query q, unsigned long* aux)
+{
+  return true;
+}
+
+static bool file_query_about(const char* filename, enum file_query q, unsigned long* aux)
+{
+  DWORD attr;
+  bool ret;
+
+  attr = GetFileAttributes(filename);
+  if (attr == INVALID_FILE_ATTRIBUTES)
+    return false;
+
+  ret = false;
+
+  if (q == IS_DIRECTORY)
+    {
+      if (attr == FILE_ATTRIBUTE_DIRECTORY)
+	ret = directory_query_about(filename, q, aux);
+    }
+  else
+    ret = normalfile_query_about(filename, q, aux);
+
+  return ret;
+}
+
+bool sysapi::file::is_path_valid(const string& filename)
+{
+  return file_query_about(filename.c_str(), DOES_EXIST, 0);
+}
+
+bool sysapi::file::is_directory(const string& filename)
+{
+  return file_query_about(filename.c_str(), IS_DIRECTORY, 0);
+}
+
+bool sysapi::file::is_readable(const string& filename)
+{
+  return file_query_about(filename.c_str(), IS_READABLE, 0);
+}
+
+bool sysapi::file::is_writable(const string& filename)
+{
+  return file_query_about(filename.c_str(), IS_WRITTABLE, 0);
+}
+
+bool sysapi::file::is_executable(const string& filename)
+{
+  return file_query_about(filename.c_str(), IS_EXECUTABLE, 0);
 }

@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:40 2006 
-// Last update Sun Feb 12 09:03:34 2006 texane
+// Last update Fri Feb 17 21:13:38 2006 texane
 //
 
 #include <string>
@@ -79,4 +79,30 @@ sysapi::error::handle_t sysapi::file::size(handle_t& hfile, unsigned long long& 
     return error::UNKNOWN;
   sz = (unsigned long long)st.st_size;
   return error::SUCCESS;
+}
+
+
+bool sysapi::file::is_path_valid(const string& filename)
+{
+  return false;
+}
+
+bool sysapi::file::is_directory(const string& filename)
+{
+  return false;
+}
+
+bool sysapi::file::is_readable(const string& filename)
+{
+  return false;
+}
+
+bool sysapi::file::is_writable(const string& filename)
+{
+  return false;
+}
+
+bool sysapi::file::is_executable(const string& filename)
+{
+  return false;
 }

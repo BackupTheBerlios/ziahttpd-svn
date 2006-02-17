@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Wed Feb 15 23:33:01 2006 
+// Last update Fri Feb 17 21:12:16 2006 texane
 //
 
 
@@ -69,6 +69,11 @@ namespace sys
       error::handle_t read(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t write(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t size(handle_t&, unsigned long long&);
+      bool is_path_valid(const std::string&);
+      bool is_directory(const std::string&);
+      bool is_readable(const std::string&);
+      bool is_writable(const std::string&);
+      bool is_executable(const std::string&);
     }
 
 
