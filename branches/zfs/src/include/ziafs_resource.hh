@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 21:07:25 2006 texane
+// Last update Fri Feb 17 21:51:55 2006 texane
 //
 
 
@@ -142,6 +142,7 @@ namespace resource
   {
   public:
     e_error factory_create(handle*&, e_id, e_omode, const std::string&);
+    e_error factory_create(handle*&, e_id, e_omode, const unsigned int);
     e_error factory_destroy(handle*);
   };
 }
