@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:21:12 2006 texane
-// Last update Fri Feb 17 14:46:44 2006 texane
+// Last update Fri Feb 17 15:19:07 2006 texane
 //
 
 
@@ -13,15 +13,16 @@
 #include <ziafs_resource.hh>
 
 
-resource::e_error resource::handle::prepend_header(buffer& hdr)
+resource::e_error resource::handle::prepend_header(buffer& hdr_buf)
 {
-  return E_NOT_IMPL;
+  data = hdr_buf + data;
+  return E_SUCCESS;
 }
 
 
 resource::e_error resource::handle::alter_content(void (buffer&, void*), void*)
 {
-  return E_NOT_IMPL;
+  return E_SUCCESS;
 }
 
 

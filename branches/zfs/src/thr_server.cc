@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 14:56:28 2006 texane
+// Last update Fri Feb 17 15:28:50 2006 texane
 //
 
 
@@ -130,18 +130,70 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 
 bool thr::pool::sess_handle_request(session_t& sess)
 {
+  buffer raw_buf;
+  buffer body_buf;
+  buffer hdr_buf;
   unsigned int size;
+  unsigned char buf[ZIAFS_STATIC_BUFSZ];
+  sysapi::error::handle_t herr;
+  unsigned int nbytes;
+  bool done;
 
+  // Basic checks
   if (sess.done == true)
     return false;
   if (sess.target == 0)
     return false;
-  sess.target->generate(size);
-  if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
+
+  done = false;
+  if (sess.target->is_input() == true)
     {
-      sess.done = true;
-      return false;
+      // get / post method
+      while (done == false)
+	{
+ 	  if (sess.proto.body_size())
+	    {
+	      // First read the body next buffer
+	      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+	      if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
+		{
+		  sess.done = true;
+		  return false;
+		}
+	      // Then make http consum/process the buffer(it can be chunked)
+ 	      sess.proto.consum_body(raw_buf, &body_buf);
+	      // Send the buffer as input to the resource
+	      sess.target->flush_input(*sess.thr_slot, raw_buf);
+	    }
+	  if (sess.target->generate(size) == resource::E_SUCCESS)
+	    {
+// 	      sess.target->alter(size);
+// 	      sess.proto.create_header(hdr_buf, chunked);
+	      sess.target->prepend_header(hdr_buf);
+	      if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
+		{
+		  sess.done = true;
+		  return false;
+		}
+	    }
+	}
     }
+  else if (sess.target->is_output() == true)
+    {
+      // This is a put method
+      while (done == false)
+	{
+// 	      if (sess.proto.body_size() == 0)
+	  {
+	    done = true;
+	  }
+// 	      else
+	  {
+		  
+	  }
+	}
+    }
+
   return true;
 }
 

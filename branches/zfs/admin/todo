@@ -44,6 +44,7 @@ today
 [ ] for the moment, the resource manager's only role is
 	to allocate a new resource/delete it
 [x] pass the core to the thread server
+[ ] make the process output be non blocking
 
 
 @bugs:

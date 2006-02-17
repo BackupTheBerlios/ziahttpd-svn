@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:16:34 2006 texane
-// Last update Fri Feb 17 14:52:59 2006 texane
+// Last update Fri Feb 17 15:23:17 2006 texane
 //
 
 
@@ -65,9 +65,9 @@ resource::e_error resource::byfly::flush_environ()
   return E_NOT_IMPL;
 }
 
-resource::e_error resource::byfly::flush_input()
+resource::e_error resource::byfly::flush_input(thr::pool::slot_t& thr_slot, buffer&)
 {
-  return E_NOT_IMPL;
+  return E_SUCCESS;
 }
 
 resource::e_error resource::byfly::size(unsigned int& nbytes)
