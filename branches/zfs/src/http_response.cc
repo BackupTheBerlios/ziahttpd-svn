@@ -13,7 +13,7 @@ bool			net::http::generate_status_line(std::string& ln)
 	m_uri.status_code() = 200;
 	sprintf(st_code, "%i", m_uri.status_code());
 	st_code_str = st_code;
-	ln = response.m_version + " " + st_code_str + " ";
+	ln = request.m_version + " " + st_code_str + " ";
 	error_code_string(st_code_str);
 	ln += st_code_str + "\r\n";
 	return true;
