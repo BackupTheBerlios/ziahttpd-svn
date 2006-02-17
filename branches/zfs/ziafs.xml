@@ -13,6 +13,6 @@
 </server>
 
 <directory id=1>
-  <servername></servername>
+  <servername>*</servername>
   <docroot>test/www/</docroot>
 </directory>
