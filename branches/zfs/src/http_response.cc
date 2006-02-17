@@ -59,12 +59,15 @@ bool	net::http::generate_header_date()
 	return (true);
 }
 
-bool			net::http::generate_header_lines(size_t sz)
+bool			net::http::generate_header_lines(size_t sz, bool chunk)
 {
 	response["Server"] = "Zfs.";
 	generate_header_date();
 	generate_content_type();
-	generate_content_length(sz);
+	if (chunk == false)
+		generate_content_length(sz);
+	else
+		response["Transfer-Encoding"] = "chunked";
 	return true;
 }
 
@@ -73,7 +76,7 @@ bool			net::http::generate_content_length(size_t sz)
 	char	t[20];
 
 	sprintf(t, "%i", sz);
-	response["Server"] = t;
+	response["Content-length"] = t;
 	return true;
 }
 
@@ -81,7 +84,7 @@ bool			net::http::create_header(buffer& data, size_t sz, bool chunk)
 {
 	std::map<std::string, std::string>::iterator iter;
 	generate_status_line();
-	generate_header_lines(sz);
+	generate_header_lines(sz, chunk);
 
 	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
 	{

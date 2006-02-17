@@ -63,7 +63,7 @@ namespace net
 
 		//Response
 		bool									generate_status_line();
-		bool									generate_header_lines(size_t);
+		bool									generate_header_lines(size_t, bool);
 		bool									generate_content_type();
 		bool									generate_header_date();
 		bool									generate_content_length(size_t);
