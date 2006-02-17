@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:04:58 2006 texane
-// Last update Fri Feb 17 13:47:42 2006 texane
+// Last update Fri Feb 17 20:42:16 2006 texane
 //
 
 
@@ -39,7 +39,7 @@ int main(int, char**)
       curr_config->generate_config(*curr_server, *core.config);
       srv->reload_config(curr_config);
       // release the server config list
-      delete curr_config;
+      // delete curr_config;
       core.srv_list.push_front(srv);
       srv->run();
       ++curr_server;

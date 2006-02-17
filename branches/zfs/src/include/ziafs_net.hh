@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Thu Feb 16 12:24:14 2006 texane
+// Last update Fri Feb 17 20:46:06 2006 texane
 //
 
 
@@ -41,6 +41,7 @@ namespace net
     bool is_bound;
     sysapi::insock::handle_t srv_sock;
     struct sockaddr_in srv_addr;
+    net::config* srv_config;
     unsigned int nr_bklog;
 
     // Http related

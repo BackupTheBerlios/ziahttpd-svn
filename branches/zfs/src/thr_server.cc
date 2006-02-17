@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 17:48:26 2006 texane
+// Last update Fri Feb 17 20:47:02 2006 texane
 //
 
 
@@ -123,15 +123,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
     }
 
   // Create the resource
-//   sess.srv->core->res_manager.factory_create(sess.target,
-// 					     resource::ID_BYFLY,
-// 					     resource::O_INPUT,
-// 					     "toto");
-  sess.srv->core->res_manager.factory_create(sess.target,
-					     resource::ID_FILE,
-					     resource::O_INPUT,
-					     "out.html");
-
+  sess.proto.create_resource(sess.target, sess.srv->core->res_manager, *sess.srv->srv_config);
   return true;
 }
 
@@ -161,7 +153,6 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	{
  	  if (sess.proto.body_size())
 	    {
-	      printf("in body size!!!\n"); fflush(stdout);
 	      // First read the body next buffer
 	      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
 	      if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
@@ -178,6 +169,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	    {
 // 	      sess.target->alter(size);
 	      sess.proto.create_header(hdr_buf, size, false);
+// 	      sess.proto.modify_header(hdr_buf);
 	      sess.target->prepend_header(hdr_buf);
 	      cout << hdr_buf.tostring() << endl;
 // 	      getchar();

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:50:30 2006 texane
-// Last update Thu Feb 16 12:30:32 2006 texane
+// Last update Fri Feb 17 20:43:11 2006 texane
 //
 
 
@@ -27,6 +27,7 @@ net::server::server(core_t* c)
 {
   core = c;
   is_bound = false;
+  srv_config = 0;
   srv_sock = 0;
   nr_bklog = 0;
 }
@@ -37,8 +38,8 @@ bool net::server::reload_config(config* config)
   unsigned short port;
 
   // destroy the current conf
-
   config->get_server(curr_srv);
+  srv_config = config;
   nr_bklog = (*curr_srv)->nr_bklog;
   port = (*curr_srv)->port;
   insock::n_to_inaddr(srv_addr, INADDR_ANY, port);
