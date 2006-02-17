@@ -106,7 +106,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	std::list<net::config::directory*>::iterator	dir;
 
 	conf.get_directory(dir);
-	while (!conf.get_directory(dir))
+	while (!conf.end_directory(dir))
 	{
 		if ((*dir)->servername == "*")
 			m_uri.localname() = (*dir)->docroot + "/" + m_uri.wwwname();
@@ -114,6 +114,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 			m_uri.localname() = (*dir)->docroot + "/" + m_uri.wwwname();
 		dir ++;
 	}
+	ziafs_debug_msg("CREATE resource %s", m_uri.localname());
 	error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
 	if (error != resource::E_SUCCESS)
 	{
