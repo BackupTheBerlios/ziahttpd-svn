@@ -3,6 +3,7 @@
 #include <zia_stringmanager.hh>
 #include <sstream>
 #include <list>
+#include <map>
 
 bool			net::http::generate_status_line()
 {
@@ -35,10 +36,47 @@ bool			net::http::generate_content_type()
 		}
 	}
 	response["Content-type"] = "text/html";
+	return true;
+}
+
+bool	net::http::generate_header_date()
+{
+	//	struct tm				*newtime;
+	char					*datestr;
+	std::vector<std::string> v;
+	std::string				tmp;
+	time_t t;
+	struct tm *tb;
+
+	t = time(NULL);
+	tb = localtime(&t);
+	datestr = ctime(&t);
+	datestr[strlen(datestr) - 1] = '\0';
+	stringmanager::split(datestr, " ", v);
+	tmp = v[0] + ", " + v[2] + " " 
+		+ v[1] + " " + v[4] + " " + v[3] + " GMT";
+	response["Date"] = tmp;
+	return (true);
 }
 
 bool			net::http::generate_header_lines()
 {
 	response["Server"] = "Zfs.";
+	generate_header_date();
+	generate_content_type();
+	return true;
+}
+
+bool			net::http::create_header(buffer& data, bool chunk)
+{
+	std::map<std::string, std::string>::iterator iter;
+	generate_status_line();
+	generate_header_lines();
+
+	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
+	{
+		data += (*iter).first + ": " + iter->second + "\r\n";
+	}
+	data += "\r\n";
 	return true;
 }

@@ -3,6 +3,7 @@
 #include <zia_stringmanager.hh>
 #include <sstream>
 
+
 net::http::http()
 {
 	m_state = STUSLINES;
@@ -286,7 +287,3 @@ unsigned int net::http::body_size()
 		return (atoi(request.m_hdrlines["content-length"].c_str()));
 }
 
-bool			net::http::create_header(buffer& data, bool chunk)
-{
-	return true;
-}
