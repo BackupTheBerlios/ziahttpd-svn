@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:16:34 2006 texane
-// Last update Fri Feb 17 21:38:39 2006 texane
+// Last update Fri Feb 17 21:55:33 2006 texane
 //
 
 
@@ -23,11 +23,9 @@ using namespace sysapi;
 
 #define BODY	"<html><body><b>%s:<%u></b></body></html>"
 #define STATUS	"ZIAFS_GENERATED_PAGE"
-#define HEADER	"http/1.1 %d OK\r\ncontent-length: %d\r\n\r\n", strlen(BODY)
 static void inline mk_status_msg(unsigned int err_code, unsigned char* buf, unsigned int& nbytes)
 {
   nbytes = 0;
-  nbytes += sprintf((char*)buf, HEADER, err_code);
   nbytes += sprintf((char*)buf + nbytes, BODY, STATUS, err_code);
 }
 
