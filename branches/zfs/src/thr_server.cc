@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 13:48:50 2006 texane
+// Last update Fri Feb 17 14:56:28 2006 texane
 //
 
 
@@ -118,39 +118,26 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	}
 
     }
+
+  // Create the resource
+  sess.srv->core->res_manager.factory_create(sess.target,
+					     resource::ID_BYFLY,
+					     resource::O_INPUT,
+					     "toto");
   return true;
-}
-
-
-#define BODY	"<html><body><b>%s</b></body></html>"
-#define STATUS	"NOT_IMPLEMENTED"
-#define HEADER	"http/1.1 200 OK\r\ncontent-length: %d\r\n\r\n", strlen(BODY)
-static void inline mk_response(unsigned char* buf, unsigned int& nbytes)
-{
-  nbytes = 0;
-  nbytes += sprintf((char*)buf, HEADER);
-  nbytes += sprintf((char*)buf + nbytes, BODY, STATUS);
 }
 
 
 bool thr::pool::sess_handle_request(session_t& sess)
 {
-  error::handle_t herr;
-  unsigned char buf[ZIAFS_STATIC_BUFSZ];
-  unsigned int nbytes;
-  unsigned int nsent;
+  unsigned int size;
 
   if (sess.done == true)
     return false;
-
-  mk_response((unsigned char*)buf, nbytes);
-  herr = send(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, nbytes, nsent);
-  if (sess.thr_slot->curr_io.timeouted == true)
-    {
-      sess.done = true;
-      return false;
-    }
-  else if (herr != error::SUCCESS)
+  if (sess.target == 0)
+    return false;
+  sess.target->generate(size);
+  if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
     {
       sess.done = true;
       return false;

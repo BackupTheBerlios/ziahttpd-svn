@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:21:12 2006 texane
-// Last update Fri Feb 17 13:40:27 2006 texane
+// Last update Fri Feb 17 14:46:44 2006 texane
 //
 
 
@@ -38,4 +38,9 @@ bool resource::handle::is_output() const
   if (omode == O_OUTPUT)
     return true;
   return false;
+}
+
+
+resource::handle::handle()
+{
 }

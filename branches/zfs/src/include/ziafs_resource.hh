@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 13:49:55 2006 texane
+// Last update Fri Feb 17 14:39:54 2006 texane
 //
 
 
@@ -16,6 +16,7 @@
 #include <string>
 #include <sys/sysapi.hh>
 #include <ziafs_buffer.hh>
+#include <ziafs_thr.hh>
 
 
 namespace resource
@@ -40,6 +41,7 @@ namespace resource
     {
       E_SUCCESS = 0,
       E_NOT_IMPL,
+      E_OP_ERROR,
       E_UNKNOWN
     } e_error;
 
@@ -85,21 +87,19 @@ namespace resource
 
     // interface
     // serve the resource current data
-    virtual e_error flush(sysapi::insock::handle_t&) = 0;
-    virtual e_error flush(sysapi::file::handle_t&) = 0;
+    virtual e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&) = 0;
+    virtual e_error flush_disk(sysapi::file::handle_t&) = 0;
+    virtual e_error flush_environ() = 0;
+    virtual e_error flush_input() = 0;
     virtual e_error generate(unsigned int&) = 0;
     virtual e_error size(unsigned int&) = 0;
 
     // Chunk/data modifications
     e_error prepend_header(buffer&);
     e_error alter_content(void (*)(buffer&, void*), void*);
+    // type of resource
     bool is_input() const;
     bool is_output() const;
-
-//     // feed the resource, if supported
-//     bool feed_input();
-//     // in the case of get methods...
-
 
   protected:
     // implement the current chunk
@@ -109,7 +109,34 @@ namespace resource
     e_omode omode;
     e_id id;
   };
+}
 
+
+namespace resource
+{
+  class byfly : public handle
+  {
+  public:
+    // construction/destruction
+    byfly(unsigned int);
+    ~byfly();
+
+    // interface implementation
+    e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&);
+    e_error flush_disk(sysapi::file::handle_t&);
+    e_error flush_environ();
+    e_error flush_input();
+    e_error generate(unsigned int&);
+    e_error size(unsigned int&);
+
+  private:
+    unsigned int err_code;
+  };
+}
+
+
+namespace resource
+{
   class manager
   {
   public:

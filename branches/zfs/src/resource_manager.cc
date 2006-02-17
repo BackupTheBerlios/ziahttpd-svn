@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:04:04 2006 texane
-// Last update Fri Feb 17 13:49:33 2006 texane
+// Last update Fri Feb 17 14:48:17 2006 texane
 //
 
 
@@ -21,14 +21,13 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
 						    resource::e_omode res_omode,
 						    const string& res_name)
 {
-  res_handle = 0;
-  // res_handle = new...
-  return E_NOT_IMPL;
+  res_handle = new byfly(200);
+  return E_SUCCESS;
 }
 
 
 resource::e_error resource::manager::factory_destroy(resource::handle* res_handle)
 {
-//   delete res_handle;
-  return E_NOT_IMPL;
+  delete res_handle;
+  return E_SUCCESS;
 }
