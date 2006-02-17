@@ -6,10 +6,13 @@
 bool			net::http::generate_status_line()
 {
 	std::string	ln;
-	std::string	st_code;
+	char				st_code[20];
+	std::string	st_code_str;
 
-	ln = response.m_version + " " + "200" + " ";
-	error_code_string(st_code);
-	ln += st_code;
+	sprintf(st_code, "%i", m_uri.status_code());
+	st_code_str = st_code;
+	ln = response.m_version + " " + st_code_str + " ";
+	error_code_string(st_code_str);
+	ln += st_code_str;
 	return true;
 }
