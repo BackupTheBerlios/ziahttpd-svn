@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <ziafs_http.hh>
 
 struct	err_list_s
 {
@@ -58,7 +59,7 @@ bool	net::http::error_code_string(std::string &dest)
 
 	for (int i = 0; err_list[i].err_code; i++)
 	{
-		if (err_list[i].err_code == m_uri->status_code())
+		if (err_list[i].err_code == m_uri.status_code())
 		{
 			dest = err_list[i].str;
 			return (true);

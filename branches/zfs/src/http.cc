@@ -6,8 +6,8 @@
 net::http::http()
 {
 	m_state = STUSLINES;
-	m_data_enco_req = NULL;
-	m_data_enco_res = NULL;
+	response.m_data_enco = NULL;
+	request.m_data_enco = NULL;
 }
 
 bool				net::http::reset()
@@ -15,40 +15,21 @@ bool				net::http::reset()
 	ziafs_debug_msg("\nHTTP Reset %s\n", "");
 	m_state = STUSLINES;
 	m_method.clear();
-	m_version.clear();
+	request.m_version.clear();
+	response.m_version.clear();
 	m_query.clear();
-	m_hdrlines.clear();
-	if (m_data_enco_req)
-		delete m_data_enco_req;
-	if (m_data_enco_res)
-		delete m_data_enco_res;
-	m_data_enco_req = NULL;
-	m_data_enco_res = NULL;
+	request.m_hdrlines.clear();
+	if (request.m_data_enco)
+		delete request.m_data_enco;
+	request.m_data_enco = NULL;
+	if (response.m_data_enco)
+		delete response.m_data_enco;
+	response.m_data_enco = NULL;
 	m_line.reset();
 	m_uri.reset();
 
 	return true;
 
-}
-
-std::string&			net::http::operator[](const std::string& key)
-{
-	std::string str(key);
-
-	stringmanager::normalize(str);
-	return (m_hdrlines[str]);
-}
-
-std::string&			net::http::operator=(const std::string& val)
-{
-//	std::string t = val;
-
-	return ((std::string&)val);
-}
-
-std::string&				net::http::response(const std::string& key)
-{
-	return (m_res_hdrlines[key]);
 }
 
 bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished)
@@ -114,19 +95,19 @@ bool									net::http::consume_body(buffer& dest, buffer* source)
 
 	if (m_state == BODYDATA)
 	{
-		if (!m_data_enco_req)
+		if (!request.m_data_enco)
 			return false;
-		if (m_data_enco_req->decode(this, m_line, (*source)) == status::ENDOFREQUEST)
+		if (request.m_data_enco->decode(this, m_line, (*source)) == status::ENDOFREQUEST)
 		{
 			//			s->m_proto->process_stage_fn = http::third_stage;
 			//			finished = true;
-			dest = m_data_enco_req->buff();
+			dest = request.m_data_enco->buff();
 			return true;
 		}
-		if (m_data_enco_req->done() == true)
+		if (request.m_data_enco->done() == true)
 		{
-			delete m_data_enco_req;
-			m_data_enco_req = NULL;
+			delete request.m_data_enco;
+			request.m_data_enco = NULL;
 			handle_metadata();
 		}
 		return true;
@@ -154,7 +135,7 @@ status::error					net::http::parse_status_line(std::string& ln)
 	}
 	stringmanager::unconvert_hexa(m_uri.wwwname());
 	stringmanager::unconvert_hexa(m_query);
-	m_version = vec[2];
+	request.m_version = vec[2];
 
 //	m_uri.status_code() = 200;
 	ziafs_return_status(status::STATUSLINE_SUCCESS);
@@ -177,7 +158,7 @@ status::error					net::http::parse_header_line(std::string& ln)
 			m_uri.status_code() = 400;
 			ziafs_return_status(status::HEADERLINE_FAILED);
 		}
-		m_hdrlines[key] = val;
+		request.m_hdrlines[key] = val;
 	}
 	else
 	{
@@ -202,19 +183,19 @@ status::error					net::http::dump(buffer& buf)
 }
 status::error					net::http::handle_metadata()
 {
-	if (m_data_enco_req)
+	if (request.m_data_enco)
 	{
 		ziafs_debug_msg("Encoding already defined ... %s\n", "");
 		ziafs_return_status(status::FAILED);
 	}
-	if (m_hdrlines["transfer-encoding"] == "chunked")
+	if (request.m_hdrlines["transfer-encoding"] == "chunked")
 	{
-		m_data_enco_req = new chunked;
+		request.m_data_enco = new chunked;
 		ziafs_return_status(status::SUCCESS);
 	}
-	if (atoi(m_hdrlines["content-length"].c_str()) > 0)
+	if (atoi(request.m_hdrlines["content-length"].c_str()) > 0)
 	{
-		m_data_enco_req = new unchunked;
+		request.m_data_enco = new unchunked;
 		ziafs_return_status(status::SUCCESS);
 	}
 	m_uri.status_code() = 411;
@@ -264,11 +245,12 @@ status::error				net::http::chunked::decode(net::protocol*, utils::line& m_line,
 status::error				net::http::unchunked::decode(net::protocol* s,utils::line& m_line, buffer& buf)
 {
 	buffer tmp;
+	net::http* pr = (net::http*)s;
 
 	if (m_state == FIRSTTIME)
 	{
 		m_line.get_bytes(m_buf);
-		m_size = atoi((*(net::http*)s)["content-length"].c_str());
+		m_size = atoi(pr->request["content-length"].c_str());
 		m_state = OTHERTIME;
 		tmp = m_buf + buf;
 		buf = tmp;
@@ -298,10 +280,10 @@ bool	net::http::data_enco::done()
 
 unsigned int net::http::body_size()
 {
-	if (m_hdrlines["transfer-encoding"] == "chunked")
+	if (request.m_hdrlines["transfer-encoding"] == "chunked")
 		return (-1);
 	else
-		return (atoi(m_hdrlines["content-length"].c_str()));
+		return (atoi(request.m_hdrlines["content-length"].c_str()));
 }
 
 bool			net::http::create_header(buffer& data, bool chunk)

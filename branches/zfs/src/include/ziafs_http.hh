@@ -40,11 +40,6 @@ namespace net
   class http : public protocol
   {
   public:
-		enum e_type
-		{
-			REQUEST = 0,
-			RESPONSE
-		};
     http();
 
     bool									consume(unsigned char *, unsigned int , bool&);
@@ -55,13 +50,11 @@ namespace net
 		bool									reset();
 		bool									request_header_validation();
 		unsigned int					body_size();
+
 		// Response
-		std::string&					response(const std::string&);
 		bool									create_header(buffer&, bool);
-		bool									generate_status_line(buffer&);
+		bool									generate_status_line();
 		bool									error_code_string(std::string&);
-		http_data							resquest;
-		http_data							response;
 
   private:
 		bool	valid_method();
@@ -132,15 +125,18 @@ namespace net
 		public:
 			std::string& operator[](const std::string&);
 			std::string& operator=(const std::string&);
-			std::string	m_method;
 			std::string	m_version;
-			std::string	m_query;
 			std::map<std::string, std::string>	m_hdrlines;
-			data_enco		*m_data_enco_req;
+			data_enco		*m_data_enco;
 		};
-    e_state			m_state;
+		std::string	m_query;
+		e_state			m_state;
     uri					m_uri;
-    //data_enco		*m_data_enco_res;
+		std::string	m_method;
+		//data_enco		*m_data_enco_res;
+	public:
+		http_data							request;
+		http_data							response;
   };
 
 }

@@ -8,8 +8,8 @@ bool			net::http::generate_status_line()
 	std::string	ln;
 	std::string	st_code;
 
-	ln = m_version + " " + m_uri.status_code() + " ";
+	ln = response.m_version + " " + "200" + " ";
 	error_code_string(st_code);
 	ln += st_code;
-
+	return true;
 }
