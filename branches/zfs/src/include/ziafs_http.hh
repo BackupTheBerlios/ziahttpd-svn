@@ -48,13 +48,14 @@ namespace net
     std::string& operator=(const std::string&);
     bool									consume(unsigned char *, unsigned int , bool&);
     status::error					produce(buffer&);
-//    static status::error	first_stage(session*);
-//    static status::error	second_stage(session*);
-//    static status::error	third_stage(session*);
     status::error					dump(buffer&);
     std::string						method() { return m_method; };
 		bool									reset();
   private:
+		bool	valid_method();
+		bool	valid_uri();
+		bool	valid_version();
+		bool	valid_host();
 
     class data_enco
     {
