@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Dec 06 22:41:13 2005 texane
-// Last update Sun Feb 05 14:13:35 2006 texane
+// Last update Fri Feb 17 01:48:52 2006 texane
 //
 
 
@@ -70,7 +70,8 @@ bool	zt::client::sendToServer()
 //     }
 
   static char* megabuf = 0;
-  static char* buf = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2";
+//   static char* buf = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2";
+  static char* buf = "toto\r\n";
   static int sz = 0;
   char* ptr;
   int i;
@@ -157,7 +158,7 @@ bool	zt::client::requestServer()
 {
   if (connectServer() == false)
     return false;
-  sendToServer();
+//   sendToServer();
   recvFromServer();
   closeServer();
   return true;
