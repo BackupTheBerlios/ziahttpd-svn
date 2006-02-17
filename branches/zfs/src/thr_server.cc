@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 15:28:50 2006 texane
+// Last update Fri Feb 17 16:57:40 2006 texane
 //
 
 
@@ -114,16 +114,20 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	}
       else if (end_of_metadata == true)
 	{
-// 	  printf("end of medat\n"); fflush(stdout);
 	}
 
     }
 
   // Create the resource
+//   sess.srv->core->res_manager.factory_create(sess.target,
+// 					     resource::ID_BYFLY,
+// 					     resource::O_INPUT,
+// 					     "toto");
   sess.srv->core->res_manager.factory_create(sess.target,
-					     resource::ID_BYFLY,
+					     resource::ID_FILE,
 					     resource::O_INPUT,
-					     "toto");
+					     "out.html");
+
   return true;
 }
 
@@ -153,6 +157,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	{
  	  if (sess.proto.body_size())
 	    {
+	      printf("in body size!!!\n"); fflush(stdout);
 	      // First read the body next buffer
 	      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
 	      if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
@@ -176,6 +181,10 @@ bool thr::pool::sess_handle_request(session_t& sess)
 		  return false;
 		}
 	    }
+	  else
+	    {
+	      done = true;
+	    }
 	}
     }
   else if (sess.target->is_output() == true)
@@ -183,14 +192,13 @@ bool thr::pool::sess_handle_request(session_t& sess)
       // This is a put method
       while (done == false)
 	{
-// 	      if (sess.proto.body_size() == 0)
-	  {
-	    done = true;
-	  }
-// 	      else
-	  {
-		  
-	  }
+	  if (sess.proto.body_size() == 0)
+	    {
+	      done = true;
+	    }
+	  else
+	    {
+	    }
 	}
     }
 
