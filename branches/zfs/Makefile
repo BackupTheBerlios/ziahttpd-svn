@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Thu Feb 16 22:50:16 2006 texane
+## Last update Fri Feb 17 13:21:18 2006 texane
 ##
 
 # ! Always include this file
@@ -21,6 +21,11 @@ srcs	= src$(SLASH)main.cc			\
 	  src$(SLASH)thr_io.cc			\
 	  src$(SLASH)thr_system.cc		\
 	  src$(SLASH)thr_server.cc		\
+	  src$(SLASH)resource_manager.cc	\
+	  src$(SLASH)resource_handle.cc		\
+	  src$(SLASH)resource_file.cc		\
+	  src$(SLASH)resource_byfly.cc		\
+	  src$(SLASH)resource_process.cc	\
 	  src$(SLASH)config.cc			\
 	  src$(SLASH)buffer.cc			\
 	  src$(SLASH)http.cc			\

@@ -26,11 +26,24 @@
 
 
 today
+[ ] implement a kind of static limit for the body
+[ ] impelement by fly resources
+[ ] impelement file resources
+[ ] implement process resource
 [ ] implement the resource manager
 	-> for in memory resources, the session should have a static buffer
 	-> file should be cache at the fd level
 	-> function to match a file against another one
 	-> function to lock a file
+[ ] make test tonight on file resources
+[ ] if omode is input, flush the input, else if
+	omode is output, flush the ouput
+[ ] solve the input problem, case when method is get
+	of cgi with large sized body
+[ ] think of releasing the target resource if allocated...
+[ ] for the moment, the resource manager's only role is
+	to allocate a new resource/delete it
+[x] pass the core to the thread server
 
 
 @bugs:
