@@ -109,6 +109,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	hld = 0;
 	std::list<net::config::directory*>::iterator	dir;
 
+	//
 	conf.get_directory(dir);
 	while (!conf.end_directory(dir))
 	{
@@ -118,12 +119,12 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 			m_uri.localname() = (*dir)->docroot + "/" + m_uri.wwwname();
 		dir ++;
 	}
-	
+
 	if (!file::is_readable(m_uri.localname()))
 		m_uri.status_code() = 403;
 	if (!file::is_path_valid(m_uri.localname()))
 		m_uri.status_code() = 404;
-//	ziafs_debug_msg("CREATE resource %s %i", m_uri.localname().c_str(), m_uri.status_code());
+	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
 	if (m_uri.status_code() == 0)
 		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
 	else

@@ -16,10 +16,12 @@ bool				net::http::reset()
 	ziafs_debug_msg("\nHTTP Reset %s\n", "");
 	m_state = STUSLINES;
 	m_method.clear();
+	
 	request.m_version.clear();
 	response.m_version.clear();
 	m_query.clear();
 	request.m_hdrlines.clear();
+	response.m_hdrlines.clear();
 	if (request.m_data_enco)
 		delete request.m_data_enco;
 	request.m_data_enco = NULL;
