@@ -95,6 +95,31 @@ bool			net::http::modify_header(config& conf)
 	return true;
 }
 
+bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r)
+{
+		std::list<net::config::mime*>::iterator it;
+
+		if (m_uri.status_code())
+		{
+			type_r = IS_FLY;
+			return true;
+		}
+		conf.get_mimes(it);
+		std::string	ext;
+	
+		m_uri.extension(ext);
+		while (conf.end_mimes(it) == false)
+		{
+			if (ext == (*it)->extension && !(*it)->cgi.empty())
+			{
+				type_r = IS_CGI;
+				return true;
+			}
+		}
+	type_r = IS_FILE;
+	return true;
+}
+
 bool				net::http::create_resource(resource::handle*& hld, resource::manager& manager, config& conf)
 {
 	resource::e_error error;
@@ -117,13 +142,18 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	if (!file::is_path_valid(m_uri.localname()))
 		m_uri.status_code() = 404;
 	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
-	if (m_uri.status_code() == 0)
-	{
-		//what kind of resource
+
+	resouce_type_t r_type;
+
+	get_type_of_resource(conf, r_type);
+	if (r_type == IS_FILE)
 		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
-	}
-	else
+	else if (r_type == IS_CGI)
+		;
+		//error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
+	else if (r_type == IS_FLY)
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
+
 	if (error != resource::E_SUCCESS)
 	{
 

@@ -73,12 +73,19 @@ namespace net
 		bool	valid_host();
 		bool	method_can_have_body();
 		//Response
+		enum resouce_type_t
+		{
+			IS_FILE,
+			IS_CGI,
+			IS_FLY
+		};
 		bool									stringify_status_line(std::string&);
 		bool									generate_header_lines(size_t, bool);
 		bool									generate_content_type();
 		bool									generate_header_date();
 		bool									generate_content_length(size_t);
 		bool									error_code_string(std::string&);
+		bool									get_type_of_resource(net::config&, resouce_type_t&);
     class data_enco
     {
     public:
