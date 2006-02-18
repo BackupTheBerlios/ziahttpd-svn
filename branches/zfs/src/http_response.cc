@@ -92,7 +92,8 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 		stringify_header(data);
 	}
 	response.m_data_enco->encode(data, sz);
-
+	if ((chunk == CHUNK_LAST) && (response.is_chunk == true))
+		data += "\r\n";
 return true;
 }
 
