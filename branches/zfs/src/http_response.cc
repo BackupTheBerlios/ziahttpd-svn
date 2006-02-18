@@ -80,14 +80,20 @@ bool			net::http::generate_content_length(size_t sz)
 
 bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 {
-	response["Server"] = "Zfs.";
-	generate_header_date();
-	generate_content_type();
-	if (response.is_chunk == false)
-		generate_content_length(sz);
-	else
-		response["Transfer-Encoding"] = "chunked";
-	return true;
+	if (chunk == CHUNK_FIRST)
+	{
+		response["Server"] = "Zfs.";
+		generate_header_date();
+		generate_content_type();
+		if (response.is_chunk == false)
+			generate_content_length(sz);
+		else
+			response["Transfer-Encoding"] = "chunked";
+		stringify_header(data);
+	}
+	response.m_data_enco->encode(data, sz);
+
+return true;
 }
 
 bool			net::http::modify_header(config& conf)
@@ -110,11 +116,19 @@ bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r
 		m_uri.extension(ext);
 		while (conf.end_mimes(it) == false)
 		{
-			if (ext == (*it)->extension && !(*it)->cgi.empty())
+			if ((ext == (*it)->extension) && (*it)->is_cgi)
 			{
 				type_r = IS_CGI;
+				response.is_chunk = true;
 				return true;
 			}
+			if ((ext == (*it)->extension) && !(*it)->cgi.empty())
+			{
+				type_r = EXEC_BY_CGI;
+				response.is_chunk = true;
+				return true;
+			}
+			it++;
 		}
 	type_r = IS_FILE;
 	return true;
@@ -123,9 +137,11 @@ bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r
 bool				net::http::create_resource(resource::handle*& hld, resource::manager& manager, config& conf)
 {
 	resource::e_error error;
-	hld = 0;
+
 	std::list<net::config::directory*>::iterator	dir;
 
+	hld = 0;
+	error = resource::E_SUCCESS;
 	//
 	conf.get_directory(dir);
 	while (!conf.end_directory(dir))
@@ -146,19 +162,35 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	resouce_type_t r_type;
 
 	get_type_of_resource(conf, r_type);
+
 	if (r_type == IS_FILE)
 		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
 	else if (r_type == IS_CGI)
-		;
-		//error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
+	{
+		int ac = 1;
+		const char *tab[] = { m_uri.localname().c_str(), 0};
+		const char *env[] = {0};
+		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
+	}
+	else if (r_type == EXEC_BY_CGI)
+	{
+		// split du fichier CGI de conf
+
+//		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
+//		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, m_uri.localname());
+	}
 	else if (r_type == IS_FLY)
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 
 	if (error != resource::E_SUCCESS)
 	{
 
-		return false;
+//		return false;
 	}
+	if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI))
+		response.m_data_enco = new chunked;
+	else
+		response.m_data_enco = new unchunked;
 	return true;
 }
 
@@ -175,4 +207,14 @@ bool			net::http::stringify_header(buffer& data)
 	}
 	data += "\r\n";
 	return true;
+}
+
+status::error		net::http::chunked::encode(buffer& data, size_t sz)
+{
+	std::string	chunk_hex;
+
+	stringmanager::dec_to_hex((int)sz, chunk_hex);
+	data += chunk_hex;
+	data += "\r\n";
+	ziafs_return_status(status::SUCCESS);
 }

@@ -18,26 +18,30 @@
 </directory>
 
 <mime extension="html">
+  <is_cgi>0</is_cgi>
   <type>text/html</type>
   <cgi></cgi>
   <image></image>
 </mime>
 
 <mime extension="htm">
+  <is_cgi>0</is_cgi>
   <type>text/html</type>
   <cgi></cgi>
   <image></image>
 </mime>
 
 <mime extension="gif">
+  <is_cgi>0</is_cgi>
   <type>image/gif</type>
   <cgi></cgi>
   <image></image>
 </mime>
 
 <mime extension="exe">
+  <is_cgi>1</is_cgi>
   <type>text/html</type>
-  <cgi>toto.exe</cgi>
+  <cgi></cgi>
   <image></image>
 </mime>
 

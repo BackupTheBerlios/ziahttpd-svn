@@ -216,6 +216,8 @@ bool	net::config::parse_mimes()
 			m->image = xmltmp->GetText();
 		if (xmltmp->ValueStr() == "cgi" && xmltmp->GetText())
 			m->cgi = xmltmp->GetText();
+		if (xmltmp->ValueStr() == "is_cgi" && xmltmp->GetText())
+			m->is_cgi = atoi(xmltmp->GetText());
 	}
 	m_lmimes.push_front(m);	
 	return (true);

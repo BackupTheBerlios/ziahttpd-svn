@@ -43,6 +43,7 @@ namespace net
 			std::string	type;
 			std::string	image;
 			std::string	cgi;
+			int					is_cgi;
 		};
 	public:
 		config(const std::string &);

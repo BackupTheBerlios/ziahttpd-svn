@@ -22,6 +22,8 @@ bool				net::http::reset()
 	m_query.clear();
 	request.m_hdrlines.clear();
 	response.m_hdrlines.clear();
+	response.is_chunk = false;
+	request.is_chunk = false;
 	if (request.m_data_enco)
 		delete request.m_data_enco;
 	request.m_data_enco = NULL;
