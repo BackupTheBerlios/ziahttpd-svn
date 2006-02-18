@@ -185,7 +185,6 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	      sess.target->prepend_header(hdr_buf);
 	      if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
 		{
-		  printf("an eror occured sending the resource\n"); fflush(stdout);
 		  sess.done = true;
 		  return false;
 		}

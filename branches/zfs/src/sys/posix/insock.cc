@@ -16,7 +16,9 @@
 #include <signal.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/sendfile.h>
 #include <sys/sysapi.hh>
 
 
@@ -106,7 +108,7 @@ sysapi::error::handle_t sysapi::insock::create_listening(handle_t& hsock, struct
   ret = bind(hsock, (struct sockaddr*)&inaddr, sizeof(struct sockaddr_in));
   if (ret == -1)
     {
-      close(hsock);
+      ::close(hsock);
       return error::OPEN_FAILED;
     }
   listen(hsock, nbklog);
@@ -158,6 +160,42 @@ sysapi::error::handle_t sysapi::insock::send(handle_t& hsock, unsigned char* buf
   if (nret <= -1)
     return error::UNKNOWN;
   nsent = (unsigned int)nret;
+  return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::insock::send_file(insock::handle_t& sock_handle, file::handle_t& file_handle, unsigned int file_size, unsigned char* buf, unsigned int nbytes)
+{
+  unsigned int nsent;
+  off_t off;
+  int nret;
+  bool done;
+
+  // First send the buffer
+  nsent = 0;
+  while (nsent < nbytes)
+    {
+      nret = ::send(sock_handle, (const char*)buf, nbytes - nsent, 0);
+      if (nret <= -1)
+	return error::UNKNOWN;
+      nsent += (unsigned int)nret;
+    }
+
+  // Send the file
+  nbytes = file_size;
+  nsent = 0;
+  off = 0;
+  done = false;
+  while (done == false)
+    {
+      nret = sendfile(sock_handle, file_handle, &off, nbytes);
+      if (nret == -1)
+	return error::WRITE_FAILED;
+      nbytes -= (unsigned int)nret;
+      if (nbytes == 0)
+	done = true;
+    }
+
   return error::SUCCESS;
 }
 

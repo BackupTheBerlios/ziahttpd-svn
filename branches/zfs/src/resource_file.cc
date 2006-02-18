@@ -69,14 +69,14 @@ resource::e_error resource::file::flush_network(thr::pool::slot_t& thr_slot, ins
 
   // initiate the io operation
   io_info_reset(thr_slot.curr_io);
-  thr_slot.curr_io.sz = (unsigned int)data.size();
+  thr_slot.curr_io.sz = (unsigned int)data.size() + file_size;
   thr_slot.curr_io.id = thr::IO_SENDFILE;
   thr_slot.curr_io.desc.hsock = hsock;
   thr_slot.curr_io.tm_start = thr_slot.pool->tm_now();
   thr_slot.curr_io.in_progress = true;
 
   // send the whole file
-  sys_err = insock::send_file(hsock, file_handle, data.bufptr(), (unsigned int)data.size());
+  sys_err = insock::send_file(hsock, file_handle, file_size, data.bufptr(), (unsigned int)data.size());
   thr_slot.curr_io.in_progress = true;
 
   // post process

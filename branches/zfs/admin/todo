@@ -55,6 +55,7 @@ today
 [ ] reset the request
 [x] see for the send file function
 [>] segfault on the release function, destructing the file
+	-> probleme in the close function
 [>] implement the process resouce
 
 

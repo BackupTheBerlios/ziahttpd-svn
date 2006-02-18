@@ -42,7 +42,7 @@ sysapi::error::handle_t sysapi::file::open(handle_t& hfile, const std::string& p
 
 sysapi::error::handle_t sysapi::file::close(handle_t& hfile)
 {
-  close(hfile);
+  ::close(hfile);
   return error::SUCCESS;
 }
 

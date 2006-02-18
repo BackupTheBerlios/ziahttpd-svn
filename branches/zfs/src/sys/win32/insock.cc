@@ -249,7 +249,7 @@ sysapi::error::handle_t sysapi::insock::send(handle_t& hsock, unsigned char* buf
 }
 
 
-sysapi::error::handle_t sysapi::insock::send_file(insock::handle_t& sock_handle, file::handle_t& file_handle, unsigned char* buf, unsigned int nbytes)
+sysapi::error::handle_t sysapi::insock::send_file(insock::handle_t& sock_handle, file::handle_t& file_handle, unsigned int, unsigned char* buf, unsigned int nbytes)
 {
   TRANSMIT_FILE_BUFFERS bufs;
 

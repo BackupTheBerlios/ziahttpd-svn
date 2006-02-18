@@ -1,6 +1,6 @@
 <system>
   <nb_thread>10</nb_thread>
-  <poll_delay>100000</poll_delay>
+  <poll_delay>1000000</poll_delay>
   <expiration_delay>3</expiration_delay>
   <nr_bklog>10</nr_bklog>
 </system>

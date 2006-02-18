@@ -88,7 +88,7 @@ namespace sys
       error::handle_t accept(handle_t&, struct sockaddr_in&, handle_t&);
       error::handle_t recv(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t send(handle_t&, unsigned char*, unsigned int, unsigned int&);
-      error::handle_t send_file(insock::handle_t&, file::handle_t&, unsigned char*, unsigned int);
+      error::handle_t send_file(insock::handle_t&, file::handle_t&, unsigned int, unsigned char*, unsigned int);
       error::handle_t close(handle_t&);
     }
 
