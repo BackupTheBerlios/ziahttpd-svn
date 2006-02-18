@@ -187,7 +187,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	if (error != resource::E_SUCCESS)
 	{
 		m_uri.status_code() = 500;
-		r_type == IS_FLY;
+		r_type = IS_FLY;
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 	}
 	if (!m_uri.status_code())
