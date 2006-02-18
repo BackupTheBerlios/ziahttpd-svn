@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sun Feb 19 00:15:56 2006 texane
+// Last update Sun Feb 19 00:44:20 2006 texane
 //
 
 
@@ -198,6 +198,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	    }
 	  else if (e_err == resource::E_ALREADY_GEN)
 	    {
+	      printf("xxx\n"); fflush(stdout);
 	      // Send the last chunk
 	      if (sess.proto.response.is_chunk == true)
 		{
