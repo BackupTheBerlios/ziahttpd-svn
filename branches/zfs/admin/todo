@@ -54,15 +54,20 @@ today
 [ ] see why the cpu bug
 [ ] reset the request
 [x] see for the send file function
-[>] segfault on the release function, destructing the file
+[x] segfault on the release function, destructing the file
 	-> probleme in the close function
 [>] implement the process resouce
+[>] mark the process output as non blocking, or
+	find a scheme to read from the process output
+	without blocking (sysapi wrapper?)
+		-> windows: waitforsingleobject/timeout_read
+		-> unix: non blocking fd
+[>] flush_environ should take a (key_string, val_string) parameter
 
 
 
 @bugs:
 	leaks from the mline(?)
-	don't pass in the get_from_special case function
 
  
 @optimization

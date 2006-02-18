@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:01:21 2006 texane
-// Last update Sat Feb 11 17:50:20 2006 
+// Last update Sat Feb 18 11:25:52 2006 texane
 //
 
 
@@ -36,6 +36,10 @@ namespace sys
       typedef unsigned long long handle_t;
     }
 
+    namespace process
+    {
+      typedef pid_t handle_t;
+    }
   }
 }
 

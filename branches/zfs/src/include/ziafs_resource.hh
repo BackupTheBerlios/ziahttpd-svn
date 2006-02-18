@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Fri Feb 17 23:07:24 2006 texane
+// Last update Sat Feb 18 11:18:57 2006 texane
 //
 
 
@@ -25,7 +25,8 @@ namespace resource
   typedef enum
     {
       O_INPUT = 0,
-      O_OUTPUT
+      O_OUTPUT,
+      O_BOTH
     } e_omode;
 
   // type of resource
@@ -134,6 +135,35 @@ namespace resource
     std::string file_path;
     sysapi::file::handle_t file_handle;
     unsigned long long file_size;
+  };
+}
+
+
+namespace resource
+{
+  class process
+  {
+  public:
+    // construction/destruction
+    process(int, char**, char**, e_omode);
+    ~process();
+
+    // interface implementation
+    e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&);
+    e_error flush_disk(sysapi::file::handle_t&);
+    e_error flush_environ();
+    e_error flush_input(thr::pool::slot_t&, buffer&);
+    e_error generate(unsigned int&);
+    e_error size(unsigned int&);
+
+
+  private:
+    sysapi::process::handle_t proc_handle;
+    int proc_ac;
+    char** proc_av;
+    char** proc_env;
+    bool generated;
+
   };
 }
 

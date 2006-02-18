@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Fri Feb 17 21:40:46 2006 texane
+## Last update Sat Feb 18 10:48:20 2006 texane
 ##
 
 # ! Always include this file
-# !include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= zfs.x
@@ -44,7 +44,8 @@ srcs	= src$(SLASH)main.cc			\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc	\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)insock.cc	\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)module.cc	\
-	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)time.cc
+	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)time.cc	\
+	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)process.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \
