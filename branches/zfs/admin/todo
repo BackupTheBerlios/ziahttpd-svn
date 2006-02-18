@@ -77,6 +77,12 @@ today
 [?] wrap the http request so that it is cleaner for the api
 	-> wait for the api?
 [!] defines an invalid value for each closable handle
+[>] code chunked, for process
+[x] port on unix for the process
+[ ] code various cgi script, for testing purposes:
+	-> test blocking on in
+	-> test no writing at all
+	-> ...
 
 
 @bugs:

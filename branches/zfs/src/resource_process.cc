@@ -5,18 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Sat Feb 18 12:48:57 2006 texane
+// Last update Sat Feb 18 14:43:54 2006 texane
 //
 
 
-// #include <iostream>
 #include <sys/sysapi.hh>
 #include <ziafs_resource.hh>
 #include <ziafs_static.hh>
-
-
-// using namespace std;
-using namespace sysapi;
 
 
 // resource api implementation
@@ -43,7 +38,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   e_err = E_SUCCESS;
   data.resize(ZIAFS_STATIC_BUFSZ);
   sys_err = sysapi::file::read(write_handle, data.bufptr(), (unsigned int)data.size(), nbytes);
-  if (sys_err == sysapi::error::SUCCESS)
+  if (sys_err != sysapi::error::SUCCESS)
     {
       // check non blocking mode here
       e_err = E_OP_ERROR;
@@ -52,6 +47,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   else
     {
       data.resize(nbytes);
+      generated = true;
     }
   return e_err;
 }
@@ -76,7 +72,6 @@ resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, 
 	}
       else
 	{
-	  // cout << data.tostring() << endl;
 	  herr = send(thr_slot, hsock, data.bufptr(), nbytes, nsent);
 	  if (thr_slot.curr_io.timeouted == true || herr != sysapi::error::SUCCESS)
 	    {
@@ -125,7 +120,7 @@ resource::process::process(int ac, char** av, char** env, e_omode omode)
   sysapi::error::handle_t sys_err;
 
   generated = false;
-  sys_err = sysapi::process::create_inoutredir_and_loadexec(proc_handle, read_handle, write_handle, ac, (const char**)av, (const char**)env);
+  sys_err = sysapi::process::create_inoutredir_and_loadexec(proc_handle, write_handle, read_handle, ac, (const char**)av, (const char**)env);
   if (sys_err != sysapi::error::SUCCESS)
     generated = true;
 }
