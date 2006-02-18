@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:04:04 2006 texane
-// Last update Fri Feb 17 21:59:30 2006 texane
+// Last update Sat Feb 18 01:46:21 2006 texane
 //
 
 
@@ -28,11 +28,9 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   res_handle = 0;
   switch (res_id)
     {
-    case ID_FILE:
     case ID_BYFLY:
       res_handle = new byfly(st_code);
       break;
-    case ID_PROCESS:
     default:
       err = E_UNKNOWN;
       break;
@@ -60,10 +58,6 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
     case ID_FILE:
       res_handle = new file(res_name, res_omode);
       break;
-    case ID_BYFLY:
-      res_handle = new byfly(200);      
-      break;
-    case ID_PROCESS:
     default:
       err = E_UNKNOWN;
       break;

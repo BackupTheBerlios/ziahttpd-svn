@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Feb 17 23:08:19 2006 texane
+// Last update Sat Feb 18 02:16:16 2006 texane
 //
 
 
@@ -185,6 +185,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	      sess.target->prepend_header(hdr_buf);
 	      if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
 		{
+		  printf("an eror occured sending the resource\n"); fflush(stdout);
 		  sess.done = true;
 		  return false;
 		}

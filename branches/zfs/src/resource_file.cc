@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Fri Feb 17 22:42:33 2006 texane
+// Last update Sat Feb 18 02:30:44 2006 texane
 //
 
 
@@ -22,34 +22,43 @@ using namespace sysapi;
 using std::string;
 
 
+// resource::e_error resource::file::generate(unsigned int& nbytes)
+// {
+//   sysapi::error::handle_t herr;
+//   unsigned int nread;
+//   unsigned char buf[ZIAFS_STATIC_BUFSZ];
+
+//   // basic checks
+//   nbytes = 0;
+//   if (opened == false)
+//     return E_NOT_OPENED;
+//   if (generated == true)
+//     return E_ALREADY_GEN;
+
+//   generated = true;
+      
+//   // read the whole file into memory
+//   while (data.size() < file_size)
+//     {
+//       herr = sysapi::file::read(file_handle, (unsigned char*)buf, sizeof(buf), nread);
+//       if (herr != sysapi::error::SUCCESS)
+// 	{
+// 	  data.reset();
+// 	  return E_OP_ERROR;
+// 	}
+//       data += buffer((unsigned char*)buf, nread);
+//       nbytes += nread;
+//     }
+//   nbytes = (unsigned int)data.size();
+//   return E_SUCCESS;
+// }
+
 resource::e_error resource::file::generate(unsigned int& nbytes)
 {
-  sysapi::error::handle_t herr;
-  unsigned int nread;
-  unsigned char buf[ZIAFS_STATIC_BUFSZ];
-
-  // basic checks
-  nbytes = 0;
-  if (opened == false)
-    return E_NOT_OPENED;
   if (generated == true)
     return E_ALREADY_GEN;
-
   generated = true;
-      
-  // read the whole file into memory
-  while (data.size() < file_size)
-    {
-      herr = sysapi::file::read(file_handle, (unsigned char*)buf, sizeof(buf), nread);
-      if (herr != sysapi::error::SUCCESS)
-	{
-	  data.reset();
-	  return E_OP_ERROR;
-	}
-      data += buffer((unsigned char*)buf, nread);
-      nbytes += nread;
-    }
-  nbytes = (unsigned int)data.size();
+  nbytes = (unsigned int)file_size;
   return E_SUCCESS;
 }
 
@@ -63,6 +72,8 @@ resource::e_error resource::file::flush_network(thr::pool::slot_t& thr_slot, ins
 
   done = false;
   eerr = E_SUCCESS;
+
+  // There are data in the buffer to be sent
   while (done == false)
     {
       nbytes = (unsigned int)data.size();
@@ -83,6 +94,15 @@ resource::e_error resource::file::flush_network(thr::pool::slot_t& thr_slot, ins
 	      data.remove_front(nsent);
 	    }
 	}
+    }
+
+  // Send the file
+  if (eerr == E_SUCCESS)
+    {
+      if (TransmitFile(hsock, file_handle,
+		       file_size, 0,
+		       0, 0, TF_USE_DEFAULT_WORKER) == FALSE)
+	eerr = E_OP_ERROR;
     }
   return eerr;
 }
