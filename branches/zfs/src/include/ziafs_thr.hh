@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Sat Feb 18 22:27:48 2006 texane
+// Last update Sat Feb 18 22:46:30 2006 texane
 //
 
 
@@ -151,12 +151,6 @@ namespace thr
     static void* system_entry(slot_t*);
 
     // session management
-    typedef enum
-      {
-	CHUNK_FIRST = 0,
-	CHUNK_MIDDLE,
-	CHUNK_LAST
-      } chunk_pos_t;
     typedef struct
     {
       net::server* srv;
@@ -166,7 +160,7 @@ namespace thr
       bool done;
       bool ret_in_cache;
       net::http proto;
-      chunk_pos_t chunk_pos;
+      net::http::chunk_pos_t chunk_pos;
       resource::handle* target;
     } session_t;
     static void sess_reset_request(session_t&);
