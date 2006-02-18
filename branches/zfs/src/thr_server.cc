@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sat Feb 18 02:16:16 2006 texane
+// Last update Sat Feb 18 22:29:24 2006 texane
 //
 
 
@@ -31,6 +31,7 @@ void thr::pool::sess_reset_request(session_t& sess)
 {
   sess.done = false;
   sess.proto.reset();
+  sess.chunk_pos = CHUNK_FIRST;
   sess.target = 0;
 }
 
@@ -180,7 +181,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	  if (sess.target->generate(size) == resource::E_SUCCESS)
 	    {
 // 	      sess.target->alter(size);
-	      sess.proto.create_header(hdr_buf, size, false);
+	      sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
 // 	      sess.proto.modify_header(hdr_buf);
 	      sess.target->prepend_header(hdr_buf);
 	      if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
