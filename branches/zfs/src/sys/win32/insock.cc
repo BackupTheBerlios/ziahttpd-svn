@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 10:35:30 2006 texane
-// Last update Tue Feb 14 18:05:37 2006 texane
+// Last update Sat Feb 18 02:56:19 2006 texane
 //
 
 
@@ -245,6 +245,20 @@ sysapi::error::handle_t sysapi::insock::send(handle_t& hsock, unsigned char* buf
     }
     
   nsent = n;
+  return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::insock::send_file(insock::handle_t& sock_handle, file::handle_t& file_handle, unsigned char* buf, unsigned int nbytes)
+{
+  TRANSMIT_FILE_BUFFERS bufs;
+
+  bufs.Head = (PVOID)buf;
+  bufs.HeadLength = (DWORD)nbytes;
+  bufs.Tail = (PVOID)0;
+  bufs.TailLength = 0;
+  if (TransmitFile(sock_handle, file_handle, 0, 0, 0, &bufs, TF_USE_DEFAULT_WORKER) == FALSE)
+    return error::WRITE_FAILED;
   return error::SUCCESS;
 }
 

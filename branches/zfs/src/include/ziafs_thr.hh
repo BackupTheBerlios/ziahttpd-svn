@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Fri Feb 17 22:24:51 2006 texane
+// Last update Sat Feb 18 02:47:54 2006 texane
 //
 
 
@@ -84,6 +84,7 @@ namespace thr
       IO_NONE = 0,
       IO_ACCEPT,
       IO_SEND,
+      IO_SENDFILE,
       IO_RECV,
     } io_id_t;
   typedef struct

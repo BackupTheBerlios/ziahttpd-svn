@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Sat Feb 18 02:30:44 2006 texane
+// Last update Sat Feb 18 02:58:45 2006 texane
 //
 
 
@@ -64,47 +64,25 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
 
 resource::e_error resource::file::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
 {
-  e_error eerr;
-  error::handle_t herr;
-  unsigned int nsent;
-  unsigned int nbytes;
-  bool done;
-
-  done = false;
-  eerr = E_SUCCESS;
-
-  // There are data in the buffer to be sent
-  while (done == false)
-    {
-      nbytes = (unsigned int)data.size();
-      if (nbytes == 0)
-	{
-	  done = true;
-	}
-      else
-	{
-	  herr = send(thr_slot, hsock, data.bufptr(), nbytes, nsent);
-	  if (thr_slot.curr_io.timeouted == true || herr != sysapi::error::SUCCESS)
-	    {
-	      eerr = E_OP_ERROR;
-	      done = true;
-	    }
-	  else
-	    {
-	      data.remove_front(nsent);
-	    }
-	}
-    }
-
   // Send the file
-  if (eerr == E_SUCCESS)
-    {
-      if (TransmitFile(hsock, file_handle,
-		       file_size, 0,
-		       0, 0, TF_USE_DEFAULT_WORKER) == FALSE)
-	eerr = E_OP_ERROR;
-    }
-  return eerr;
+  sysapi::error::handle_t sys_err;
+
+  // initiate the io operation
+  io_info_reset(thr_slot.curr_io);
+  thr_slot.curr_io.sz = (unsigned int)data.size();
+  thr_slot.curr_io.id = thr::IO_SENDFILE;
+  thr_slot.curr_io.desc.hsock = hsock;
+  thr_slot.curr_io.tm_start = thr_slot.pool->tm_now();
+  thr_slot.curr_io.in_progress = true;
+
+  // send the whole file
+  sys_err = insock::send_file(hsock, file_handle, data.bufptr(), (unsigned int)data.size());
+  thr_slot.curr_io.in_progress = true;
+
+  // post process
+  if (thr_slot.curr_io.timeouted == true || sys_err != sysapi::error::SUCCESS)
+    return E_OP_ERROR;
+  return E_SUCCESS;
 }
 
 
