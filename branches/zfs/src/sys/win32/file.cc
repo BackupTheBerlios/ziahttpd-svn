@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Sat Feb 18 02:37:22 2006 texane
+// Last update Sat Feb 18 23:22:22 2006 texane
 //
 
 
@@ -15,6 +15,18 @@
 
 
 using std::string;
+
+
+void sysapi::file::reset_handle(handle_t& file_handle)
+{
+  file_handle = INVALID_HANDLE_VALUE;
+}
+
+
+bool sysapi::file::handle_isset(handle_t& file_handle)
+{
+  return !(file_handle == INVALID_HANDLE_VALUE);
+}
 
 
 sysapi::error::handle_t sysapi::file::open(handle_t& hfile, const std::string& path, omode_t omode)

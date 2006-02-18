@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:40 2006 
-// Last update Fri Feb 17 23:29:51 2006 
+// Last update Sat Feb 18 23:28:55 2006 texane
 //
 
 #include <string>
@@ -17,6 +17,18 @@
 
 
 using std::string;
+
+
+void sysapi::file::reset_handle(handle_t& file_handle)
+{
+  file_handle = -1;
+}
+
+
+bool sysapi::file::handle_isset(handle_t& file_handle)
+{
+  return !(file_handle == -1);
+}
 
 
 sysapi::error::handle_t sysapi::file::open(handle_t& hfile, const std::string& path, omode_t omode)

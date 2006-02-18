@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:50 2006 
-// Last update Sun Feb 19 00:15:10 2006 
+// Last update Sat Feb 18 23:29:35 2006 texane
 //
 
 
@@ -66,6 +66,18 @@ static void fill_inaddr(unsigned short local_port,
 
 
 // Exported
+
+void sysapi::insock::reset_handle(handle_t& sock_handle)
+{
+  sock_handle = -1;
+}
+
+
+bool sysapi::insock::handle_isset(handle_t& sock_handle)
+{
+  return !(sock_handle == -1);
+}
+
 
 sysapi::error::handle_t sysapi::insock::init_subsystem()
 {

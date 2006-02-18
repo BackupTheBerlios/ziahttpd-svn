@@ -5,11 +5,23 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 10:56:19 2006 texane
-// Last update Sat Feb 18 11:12:16 2006 texane
+// Last update Sat Feb 18 23:30:09 2006 texane
 //
 
 
 #include <sys/sysapi.hh>
+
+
+void sysapi::process::reset_handle(handle_t& proc_handle)
+{
+  proc_handle = -1;
+}
+
+
+bool sysapi::process::handle_isset(handle_t& proc_handle)
+{
+  return !(proc_handle == -1);
+}
 
 
 sysapi::error::handle_t sysapi::process::create_and_loadexec(handle_t& child_hdl, int ac, const char** av, const char** env)

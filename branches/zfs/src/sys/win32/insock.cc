@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 10:35:30 2006 texane
-// Last update Sat Feb 18 02:56:19 2006 texane
+// Last update Sat Feb 18 23:27:36 2006 texane
 //
 
 
@@ -96,6 +96,19 @@ static inline bool set_insock_basic_opts(SOCKET hsock)
 
 
 // Api implementation
+
+
+void sysapi::insock::reset_handle(handle_t& sock_handle)
+{
+  sock_handle = SOCKET_ERROR;
+}
+
+
+bool sysapi::insock::handle_isset(handle_t& sock_handle)
+{
+  return !(sock_handle == SOCKET_ERROR);
+}
+
 
 static bool g_winsock_initialized = false;
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 10:47:48 2006 texane
-// Last update Sat Feb 18 11:15:20 2006 texane
+// Last update Sat Feb 18 23:25:55 2006 texane
 //
 
 
@@ -50,6 +50,18 @@ static char* av_to_cmdline(int ac, const char** av)
 
 
 // exported
+
+void sysapi::process::reset_handle(handle_t& proc_handle)
+{
+  proc_handle = INVALID_HANDLE_VALUE;
+}
+
+
+bool sysapi::process::handle_isset(handle_t& proc_handle)
+{
+  return !(proc_handle == INVALID_HANDLE_VALUE);
+}
+
 
 sysapi::error::handle_t sysapi::process::create_and_loadexec(handle_t& hdl, int ac, const char** av, const char** env)
 {
