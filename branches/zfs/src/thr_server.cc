@@ -5,13 +5,16 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sat Feb 18 23:45:47 2006 texane
+// Last update Sun Feb 19 00:15:56 2006 texane
 //
 
 
 #include <cstdio>
 #include <string>
 #include <ziafs.hh>
+#include <iostream>
+
+using namespace std;
 
 
 // @info
@@ -198,6 +201,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	      // Send the last chunk
 	      if (sess.proto.response.is_chunk == true)
 		{
+		  sess.chunk_pos = net::http::CHUNK_LAST;
 		  sess.proto.create_header(hdr_buf, 0, net::http::CHUNK_LAST);
 		  sess.target->prepend_header(hdr_buf);
 		  sess.target->flush_network(*sess.thr_slot, sess.cli_sock);

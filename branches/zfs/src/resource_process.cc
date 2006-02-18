@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Sat Feb 18 15:07:08 2006 texane
+// Last update Sun Feb 19 00:25:42 2006 texane
 //
 
 
@@ -50,10 +50,13 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   else
     {
       data.resize(nbytes);
-      generated = true;
     }
   return e_err;
 }
+
+
+#include <iostream>
+using namespace std;
 
 
 resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
@@ -75,6 +78,7 @@ resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, 
 	}
       else
 	{
+	  cout << data.tostring() << endl;
 	  herr = send(thr_slot, hsock, data.bufptr(), nbytes, nsent);
 	  if (thr_slot.curr_io.timeouted == true || herr != sysapi::error::SUCCESS)
 	    {
