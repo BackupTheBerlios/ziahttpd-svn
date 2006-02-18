@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Sat Feb 18 11:18:57 2006 texane
+// Last update Sat Feb 18 11:50:16 2006 texane
 //
 
 
@@ -141,7 +141,7 @@ namespace resource
 
 namespace resource
 {
-  class process
+  class process : public handle
   {
   public:
     // construction/destruction
@@ -159,6 +159,8 @@ namespace resource
 
   private:
     sysapi::process::handle_t proc_handle;
+    sysapi::file::handle_t read_handle;
+    sysapi::file::handle_t write_handle;
     int proc_ac;
     char** proc_av;
     char** proc_env;
@@ -173,6 +175,7 @@ namespace resource
   class manager
   {
   public:
+    e_error factory_create(handle*&, e_id, e_omode, int, char**, char**);
     e_error factory_create(handle*&, e_id, e_omode, const std::string&);
     e_error factory_create(handle*&, e_id, e_omode, const unsigned int);
     e_error factory_destroy(handle*);

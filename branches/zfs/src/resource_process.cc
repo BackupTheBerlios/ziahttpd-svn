@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Sat Feb 18 11:24:56 2006 texane
+// Last update Sat Feb 18 11:52:15 2006 texane
 //
 
 
@@ -59,6 +59,11 @@ resource::e_error resource::process::size(unsigned int& nbytes)
 
 resource::process::process(int ac, char** av, char** env, e_omode omode)
 {
+  sysapi::process::create_inoutredir_and_loadexec(proc_handle, read_handle, write_handle, ac, (const char**)av, (const char**)env);
+  proc_ac = ac;
+  proc_av = av;
+  proc_env = env;
+  generated = false;
 }
 
 

@@ -38,21 +38,18 @@ today
 [ ] make test tonight on file resources
 [ ] if omode is input, flush the input, else if
 	omode is output, flush the ouput
-[?] solve the input problem, case when method is get
-	of cgi with large sized body
-[ ] think of releasing the target resource if allocated...
+[x] think of releasing the target resource if allocated...
 [x] for the moment, the resource manager's only role is
 	to allocate a new resource/delete it
 [x] pass the core to the thread server
-[ ] make the process output be non blocking
 [ ] turn the nbytes unsigned int into unsigned long long
 [x] implement the file opening in the file::file constructor
 [x] for all the sending/receiving function, ensure the whole buffer
 	is transmitted before returning
-[ ] change the factory resource, cleaner
-[ ] bug when refreshing
-[ ] see why the cpu bug
-[ ] reset the request
+[x] change the resource factory, cleaner
+[x] bug when refreshing
+[x] see why the cpu bug
+[x] reset the request
 [x] see for the send file function
 [x] segfault on the release function, destructing the file
 	-> probleme in the close function
@@ -63,6 +60,11 @@ today
 		-> windows: waitforsingleobject/timeout_read
 		-> unix: non blocking fd
 [>] flush_environ should take a (key_string, val_string) parameter
+[x] implement the resource_process in manager
+[ ] cleaner way to get error from resource creation
+[ ] solve the input problem, case when method is get
+	of cgi with large sized body
+[ ] in the process resource: take the omode into account(minimizing fds used)
 
 
 
