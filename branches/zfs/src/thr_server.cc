@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sat Feb 18 22:47:27 2006 texane
+// Last update Sat Feb 18 23:45:47 2006 texane
 //
 
 
@@ -49,6 +49,7 @@ void thr::pool::sess_release_request(session_t& sess)
 
 void thr::pool::sess_reset(session_t& sess)
 {
+// +  sysapi::insock::reset_handle(sess.cli_sock);
   sess.done = false;
   sess.srv = 0;
   sess.thr_slot = 0;
@@ -197,7 +198,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	      // Send the last chunk
 	      if (sess.proto.response.is_chunk == true)
 		{
-		  sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
+		  sess.proto.create_header(hdr_buf, 0, net::http::CHUNK_LAST);
 		  sess.target->prepend_header(hdr_buf);
 		  sess.target->flush_network(*sess.thr_slot, sess.cli_sock);
 		}

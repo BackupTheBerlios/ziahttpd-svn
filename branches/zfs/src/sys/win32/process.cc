@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 10:47:48 2006 texane
-// Last update Sat Feb 18 23:25:55 2006 texane
+// Last update Sat Feb 18 23:42:19 2006 texane
 //
 
 
@@ -141,6 +141,7 @@ sysapi::error::handle_t sysapi::process::create_outredir_and_loadexec(handle_t& 
 
   // Close the parent write part of the pipe
   CloseHandle(write_hdl);
+// +  reset_handle(write_hdl);
   // Reset the parent stdout
   SetStdHandle(STD_OUTPUT_HANDLE, stdout_hdl);
 
@@ -171,6 +172,7 @@ sysapi::error::handle_t sysapi::process::create_inoutredir_and_loadexec(handle_t
   if (hstdin == INVALID_HANDLE_VALUE)
     {
       CloseHandle(hstdin);
+// + reset_handle(hstdin);
       return error::OPEN_FAILED;
     }
 

@@ -26,17 +26,16 @@
 
 
 today
-[ ] implement a kind of static limit for the body
-[ ] impelement by fly resources
-[ ] impelement file resources
-[ ] implement process resource
-[ ] implement the resource manager
+[x] impelement by fly resources
+[x] impelement file resources
+[x] implement process resource
+[~] implement the resource manager
 	-> for in memory resources, the session should have a static buffer
 	-> file should be cache at the fd level
 	-> function to match a file against another one
 	-> function to lock a file
 [ ] make test tonight on file resources
-[ ] if omode is input, flush the input, else if
+[x] if omode is input, flush the input, else if
 	omode is output, flush the ouput
 [x] think of releasing the target resource if allocated...
 [x] for the moment, the resource manager's only role is
@@ -76,7 +75,6 @@ today
 	-> ...
 [?] wrap the http request so that it is cleaner for the api
 	-> wait for the api?
-[!] defines an invalid value for each closable handle
 [>] code chunked, for process
 [x] port on unix for the process
 [ ] code various cgi script, for testing purposes:
@@ -84,6 +82,10 @@ today
 	-> test no writing at all
 	-> ...
 [ ] check the sendfile on netbsd
+[ ] defines an invalid value for each closable handle
+	functions have been defined in the sysapi,
+	use it after the current implementation is stable
+[ ] implement a kind of static limit for the body
 
 
 @bugs:
