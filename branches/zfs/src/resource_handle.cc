@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:21:12 2006 texane
-// Last update Fri Feb 17 15:19:07 2006 texane
+// Last update Sat Feb 18 12:41:33 2006 texane
 //
 
 
@@ -28,7 +28,7 @@ resource::e_error resource::handle::alter_content(void (buffer&, void*), void*)
 
 bool resource::handle::is_input() const
 {
-  if (omode == O_INPUT)
+  if (omode == O_INPUT || omode == O_BOTH)
     return true;
   return false;
 }
@@ -36,7 +36,7 @@ bool resource::handle::is_input() const
 
 bool resource::handle::is_output() const
 {
-  if (omode == O_OUTPUT)
+  if (omode == O_OUTPUT || omode == O_BOTH)
     return true;
   return false;
 }
