@@ -115,6 +115,8 @@ bool	net::config::parse_server()
 	{
 		if (xmltmp->ValueStr() == "id")
 			p->id.push_back(atoi(xmltmp->GetText()));
+		if (xmltmp->ValueStr() == "cgi_id")
+			p->cgi_id.push_back(atoi(xmltmp->GetText()));
 		if (xmltmp->ValueStr() == "port")
 			p->port = atoi(xmltmp->GetText());
 		if (xmltmp->ValueStr() == "nr_bklog")

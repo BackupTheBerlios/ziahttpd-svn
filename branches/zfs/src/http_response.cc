@@ -9,13 +9,11 @@
 
 using namespace sysapi;
 
-bool			net::http::generate_status_line(std::string& ln)
+bool			net::http::stringify_status_line(std::string& ln)
 {
 	char				st_code[20];
 	std::string	st_code_str;
 
-	if (!m_uri.status_code())
-		m_uri.status_code() = 200;
 	sprintf(st_code, "%i", m_uri.status_code());
 	st_code_str = st_code;
 	ln = request.m_version + " " + st_code_str + " ";
@@ -66,13 +64,7 @@ bool	net::http::generate_header_date()
 
 bool			net::http::generate_header_lines(size_t sz, bool chunk)
 {
-	response["Server"] = "Zfs.";
-	generate_header_date();
-	generate_content_type();
-	if (chunk == false)
-		generate_content_length(sz);
-	else
-		response["Transfer-Encoding"] = "chunked";
+
 	return true;
 }
 
@@ -87,21 +79,20 @@ bool			net::http::generate_content_length(size_t sz)
 
 bool			net::http::create_header(buffer& data, size_t sz, bool chunk)
 {
-	std::map<std::string, std::string>::iterator iter;
-	std::string ln;
-
-	generate_status_line(ln);
-	generate_header_lines(sz, chunk);
-
-	data += ln;
-	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
-	{
-		data += (*iter).first + ": " + iter->second + "\r\n";
-	}
-	data += "\r\n";
+	response["Server"] = "Zfs.";
+	generate_header_date();
+	generate_content_type();
+	if (chunk == false)
+		generate_content_length(sz);
+	else
+		response["Transfer-Encoding"] = "chunked";
 	return true;
 }
 
+bool			net::http::modify_header(config& conf)
+{
+	return true;
+}
 
 bool				net::http::create_resource(resource::handle*& hld, resource::manager& manager, config& conf)
 {
@@ -126,7 +117,10 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		m_uri.status_code() = 404;
 	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
 	if (m_uri.status_code() == 0)
+	{
+		//what kind of resource
 		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
+	}
 	else
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 	if (error != resource::E_SUCCESS)
@@ -137,7 +131,17 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	return true;
 }
 
-//bool			net::http::stringify()
-//{
-//
-//}
+bool			net::http::stringify_header(buffer& data)
+{
+	std::string ln;
+	std::map<std::string, std::string>::iterator iter;
+	stringify_status_line(ln);
+
+	data += ln;
+	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
+	{
+		data += (*iter).first + ": " + iter->second + "\r\n";
+	}
+	data += "\r\n";
+	return true;
+}

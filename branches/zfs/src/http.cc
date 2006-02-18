@@ -200,11 +200,13 @@ status::error					net::http::handle_metadata()
 	if (request.m_hdrlines["transfer-encoding"] == "chunked")
 	{
 		request.m_data_enco = new chunked;
+		request.is_chunk = true;
 		ziafs_return_status(status::SUCCESS);
 	}
 	if (atoi(request.m_hdrlines["content-length"].c_str()) > 0)
 	{
 		request.m_data_enco = new unchunked;
+		request.is_chunk = false;
 		ziafs_return_status(status::SUCCESS);
 	}
 	m_uri.status_code() = 411;

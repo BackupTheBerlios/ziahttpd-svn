@@ -7,6 +7,7 @@
 
 <server>
   <id>1</id>
+  <cgi_id>1</cgi_id>
   <port>40000</port>
 </server>
 
@@ -15,3 +16,28 @@
   <servername>*</servername>
   <docroot>./</docroot>
 </directory>
+
+<mime extension="html">
+  <type>text/html</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
+<mime extension="htm">
+  <type>text/html</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
+<mime extension="gif">
+  <type>image/gif</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
+<mime extension="exe">
+  <type>text/html</type>
+  <cgi>toto.exe</cgi>
+  <image></image>
+</mime>
+

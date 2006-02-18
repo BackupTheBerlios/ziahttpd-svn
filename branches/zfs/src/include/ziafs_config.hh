@@ -26,6 +26,7 @@ namespace net
 		struct server
 		{
 			std::list<int>		id;
+			std::list<int>		cgi_id;
 			int								port;
 			unsigned int			nr_bklog;
 			std::list<std::string>	modulename;

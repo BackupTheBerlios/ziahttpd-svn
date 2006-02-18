@@ -57,8 +57,8 @@ namespace net
 
 		// Response
 		bool									create_header(buffer&, size_t, bool);
-
-
+		bool									modify_header(config&);
+		bool									stringify_header(buffer&);
   private:
 		bool	valid_method();
 		bool	valid_uri();
@@ -66,7 +66,7 @@ namespace net
 		bool	valid_host();
 		bool	method_can_have_body();
 		//Response
-		bool									generate_status_line(std::string&);
+		bool									stringify_status_line(std::string&);
 		bool									generate_header_lines(size_t, bool);
 		bool									generate_content_type();
 		bool									generate_header_date();
@@ -137,6 +137,7 @@ namespace net
 			std::string	m_version;
 			std::map<std::string, std::string>	m_hdrlines;
 			data_enco		*m_data_enco;
+			bool				is_chunk;
 		};
 		std::string	m_query;
 		e_state			m_state;

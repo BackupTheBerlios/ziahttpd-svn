@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="-defaultlib:Ws2_32.lib -defaultlib:pthreadVSE1.lib"
+				AdditionalOptions="-defaultlib:Ws2_32.lib -defaultlib:pthreadVSE1.lib mswsock.lib"
 				OutputFile="$(OutDir)../../../zfs_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\src\lib"
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="-defaultlib:Ws2_32.lib -defaultlib:pthreadVSE1.lib"
+				AdditionalOptions="-defaultlib:Ws2_32.lib -defaultlib:pthreadVSE1.lib mswsock.lib"
 				OutputFile="$(OutDir)../../../zfs.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\src\lib"
@@ -217,6 +217,9 @@
 				</File>
 				<File
 					RelativePath="..\src\sys\win32\module.cc">
+				</File>
+				<File
+					RelativePath="..\src\sys\win32\process.cc">
 				</File>
 				<File
 					RelativePath="..\src\sys\win32\time.cc">
