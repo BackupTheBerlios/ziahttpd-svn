@@ -43,6 +43,13 @@ namespace net
   class http : public protocol
   {
   public:
+		// session management
+		typedef enum
+		{
+			CHUNK_FIRST = 0,
+			CHUNK_MIDDLE,
+			CHUNK_LAST
+		} chunk_pos_t;
     http();
 
     bool									consume(unsigned char *, unsigned int , bool&);
@@ -56,7 +63,7 @@ namespace net
 		bool									create_resource(resource::handle*&, resource::manager&, config&);
 
 		// Response
-		bool									create_header(buffer&, size_t, bool);
+		bool									create_header(buffer&, size_t, chunk_pos_t);
 		bool									modify_header(config&);
 		bool									stringify_header(buffer&);
   private:

@@ -7,6 +7,7 @@
 #include <map>
 #include <sys/sysapi.hh>
 
+
 using namespace sysapi;
 
 bool			net::http::stringify_status_line(std::string& ln)
@@ -77,12 +78,12 @@ bool			net::http::generate_content_length(size_t sz)
 	return true;
 }
 
-bool			net::http::create_header(buffer& data, size_t sz, bool chunk)
+bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 {
 	response["Server"] = "Zfs.";
 	generate_header_date();
 	generate_content_type();
-	if (chunk == false)
+	if (response.is_chunk == false)
 		generate_content_length(sz);
 	else
 		response["Transfer-Encoding"] = "chunked";
