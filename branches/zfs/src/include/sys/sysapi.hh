@@ -29,6 +29,7 @@ namespace sysapi = sys::win32_api;
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
 # include <fcntl.h>
 # include <errno.h>
 # include <stdio.h>
