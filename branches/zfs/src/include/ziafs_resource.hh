@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Sat Feb 18 11:50:16 2006 texane
+// Last update Sat Feb 18 12:10:07 2006 texane
 //
 
 
@@ -161,9 +161,6 @@ namespace resource
     sysapi::process::handle_t proc_handle;
     sysapi::file::handle_t read_handle;
     sysapi::file::handle_t write_handle;
-    int proc_ac;
-    char** proc_av;
-    char** proc_env;
     bool generated;
 
   };

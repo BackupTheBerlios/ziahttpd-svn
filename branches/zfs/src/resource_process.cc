@@ -5,12 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Sat Feb 18 11:52:15 2006 texane
+// Last update Sat Feb 18 12:09:20 2006 texane
 //
 
 
 #include <sys/sysapi.hh>
 #include <ziafs_resource.hh>
+#include <ziafs_static.hh>
 
 
 using namespace sysapi;
@@ -20,13 +21,62 @@ using namespace sysapi;
 
 resource::e_error resource::process::generate(unsigned int& nbytes)
 {
-  return E_SUCCESS;
+  e_error e_err;
+  sysapi::error::handle_t sys_err;
+
+  if (generated == true)
+    return E_ALREADY_GEN;
+
+  nbytes = 0;
+  e_err = E_SUCCESS;
+  data.resize(ZIAFS_STATIC_BUFSZ);
+  sys_err = sysapi::file::read(read_handle, data.bufptr(), (unsigned int)data.size(), nbytes);
+  if (sys_err != sysapi::error::SUCCESS)
+    {
+      // check non blocking mode here
+      e_err = E_OP_ERROR;
+      generated = true;
+    }
+  else
+    {
+      data.resize(nbytes);
+    }
+  return e_err;
 }
 
 
 resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
 {
-  return E_SUCCESS;
+  e_error eerr;
+  error::handle_t herr;
+  unsigned int nsent;
+  unsigned int nbytes;
+  bool done;
+
+  done = false;
+  eerr = E_SUCCESS;
+  while (done == false)
+    {
+      nbytes = (unsigned int)data.size();
+      if (nbytes == 0)
+	{
+	  done = true;
+	}
+      else
+	{
+	  herr = send(thr_slot, hsock, data.bufptr(), nbytes, nsent);
+	  if (thr_slot.curr_io.timeouted == true || herr != sysapi::error::SUCCESS)
+	    {
+	      eerr = E_OP_ERROR;
+	      done = true;
+	    }
+	  else
+	    {
+	      data.remove_front(nsent);
+	    }
+	}
+    }
+  return eerr;
 }
 
 
@@ -60,13 +110,14 @@ resource::e_error resource::process::size(unsigned int& nbytes)
 resource::process::process(int ac, char** av, char** env, e_omode omode)
 {
   sysapi::process::create_inoutredir_and_loadexec(proc_handle, read_handle, write_handle, ac, (const char**)av, (const char**)env);
-  proc_ac = ac;
-  proc_av = av;
-  proc_env = env;
   generated = false;
 }
 
 
 resource::process::~process()
 {
+  // ! pay attention to already closed handle...
+  sysapi::process::release(proc_handle);
+  sysapi::file::close(read_handle);
+  sysapi::file::close(write_handle);
 }

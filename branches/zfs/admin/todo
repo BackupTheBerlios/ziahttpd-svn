@@ -65,7 +65,17 @@ today
 [ ] solve the input problem, case when method is get
 	of cgi with large sized body
 [ ] in the process resource: take the omode into account(minimizing fds used)
-
+[ ] handle issues such as:
+	-> memory allocation errors
+	-> file too large
+	-> buggy processes
+	-> access permission failure
+	-> strange control paths
+	-> resource leaks on failure control paths
+	-> clients deconnections
+	-> ...
+[?] wrap the http request so that it is cleaner for the api
+	-> wait for the api?
 
 
 @bugs:
