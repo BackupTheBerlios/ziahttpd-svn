@@ -80,6 +80,7 @@ bool			net::http::generate_content_length(size_t sz)
 
 bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 {
+	data.reset();
 	if (chunk == CHUNK_FIRST)
 	{
 		response["Server"] = "Zfs.";
@@ -185,9 +186,11 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 
 	if (error != resource::E_SUCCESS)
 	{
-
-//		return false;
+		m_uri.status_code() = 500;
+		r_type == IS_FLY;
+		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 	}
+
 	if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI))
 		response.m_data_enco = new chunked;
 	else
