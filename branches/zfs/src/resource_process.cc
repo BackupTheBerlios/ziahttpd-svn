@@ -5,13 +5,16 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Sat Feb 18 14:43:54 2006 texane
+// Last update Sat Feb 18 15:07:08 2006 texane
 //
 
 
 #include <sys/sysapi.hh>
 #include <ziafs_resource.hh>
 #include <ziafs_static.hh>
+
+
+using namespace sysapi;
 
 
 // resource api implementation
