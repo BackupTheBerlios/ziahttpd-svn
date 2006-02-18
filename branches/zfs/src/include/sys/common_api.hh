@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Sat Feb 18 02:35:07 2006 texane
+// Last update Sat Feb 18 11:06:32 2006 texane
 //
 
 
@@ -38,6 +38,7 @@ namespace sys
 	  RESOLV_FAILED,
 	  INVALID_NAME,
 	  INVALID_DESCRIPTOR,
+	  OPERATION_TIMEOUTED,
 
 	  CONNECTION_ABORTED,
 	  CONNECTION_CLOSED,
@@ -106,6 +107,31 @@ namespace sys
     namespace time
     {
       error::handle_t current(handle_t&);
+    }
+
+
+    // process related
+    namespace process
+    {
+      typedef enum
+	{
+	  DONTWAIT = 0,
+	  WAITFOREVER
+	} waitopt_t;
+
+      typedef enum
+	{
+	  RUNNING = 0,
+	  BLOCKED,
+	  TERMINATED
+	} state_t;
+
+      error::handle_t create_and_loadexec(handle_t&, int, const char**, const char**);
+      error::handle_t create_outredir_and_loadexec(handle_t&, file::handle_t&, int, const char**, const char**);
+      error::handle_t create_inoutredir_and_loadexec(handle_t&, file::handle_t&, file::handle_t&, int, const char**, const char**);
+      error::handle_t wait_single(handle_t&, state_t&, waitopt_t);
+      error::handle_t terminate(handle_t&);
+      error::handle_t release(handle_t&);
     }
   }
 
