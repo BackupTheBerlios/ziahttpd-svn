@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:50 2006 
-// Last update Wed Feb 15 03:24:02 2006 
+// Last update Sun Feb 19 00:15:10 2006 
 //
 
 
@@ -18,7 +18,6 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/sendfile.h>
 #include <sys/sysapi.hh>
 
 
@@ -163,6 +162,57 @@ sysapi::error::handle_t sysapi::insock::send(handle_t& hsock, unsigned char* buf
   return error::SUCCESS;
 }
 
+
+
+#ifdef __NetBSD__
+#include <sys/mman.h>
+static int sendfile(int sock_handle, int file_handle, off_t* off, unsigned int nbytes)
+{
+  // semantic is as follow: the send file
+  // stores the bytes count written so far
+  // in nbytes, and makes off pointer points
+  // at the bytes following the last we written
+  // On error, -1 is returned
+
+  sysapi::error::handle_t sys_err;
+  unsigned int nsent;
+  unsigned int nr;
+  unsigned char* ptr;
+  bool done;
+
+  // create a mapping of the file
+  ptr = (unsigned char*)mmap(0, nbytes, PROT_READ, MAP_FILE, file_handle, *off);
+  if (ptr == MAP_FAILED)
+    return -1;
+
+  // send the file
+  done = false;
+  nsent = 0;
+  while (done == false)
+    {
+      if (nsent >= nbytes)
+	{
+	  done = true;
+	}
+      else
+	{
+	  sys_err = sysapi::insock::send(sock_handle, ptr + nsent, nbytes - nsent, nr);
+	  if (sys_err != sysapi::error::SUCCESS)
+	    {
+	      *off = 0;
+	      done = true;
+	      nsent = (unsigned int)-1;
+	    }
+	}
+    }
+
+  // release the mapping
+  munmap(ptr, nbytes);
+  return (int)nsent;
+}
+#else
+# include <sys/sendfile.h>
+#endif // __NetBSD__
 
 sysapi::error::handle_t sysapi::insock::send_file(insock::handle_t& sock_handle, file::handle_t& file_handle, unsigned int file_size, unsigned char* buf, unsigned int nbytes)
 {

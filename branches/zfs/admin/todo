@@ -83,6 +83,7 @@ today
 	-> test blocking on in
 	-> test no writing at all
 	-> ...
+[ ] check the sendfile on netbsd
 
 
 @bugs:
