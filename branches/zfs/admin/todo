@@ -76,6 +76,7 @@ today
 	-> ...
 [?] wrap the http request so that it is cleaner for the api
 	-> wait for the api?
+[!] defines an invalid value for each closable handle
 
 
 @bugs:

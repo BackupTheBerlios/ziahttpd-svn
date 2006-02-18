@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Sat Feb 18 12:09:20 2006 texane
+// Last update Sat Feb 18 12:21:10 2006 texane
 //
 
 
@@ -22,16 +22,26 @@ using namespace sysapi;
 resource::e_error resource::process::generate(unsigned int& nbytes)
 {
   e_error e_err;
+  sysapi::process::state_t proc_st;
   sysapi::error::handle_t sys_err;
 
   if (generated == true)
     return E_ALREADY_GEN;
 
+  sys_err = sysapi::process::wait_single(proc_handle, proc_st, sysapi::process::DONTWAIT);
+  if (sys_err == sysapi::error::SUCCESS)
+    {
+      // The process is done. There
+      // may be data in the pipe, so
+      // do the last read.
+      generated = true;
+    }
+
   nbytes = 0;
   e_err = E_SUCCESS;
   data.resize(ZIAFS_STATIC_BUFSZ);
   sys_err = sysapi::file::read(read_handle, data.bufptr(), (unsigned int)data.size(), nbytes);
-  if (sys_err != sysapi::error::SUCCESS)
+  if (sys_err == sysapi::error::SUCCESS)
     {
       // check non blocking mode here
       e_err = E_OP_ERROR;
@@ -109,8 +119,12 @@ resource::e_error resource::process::size(unsigned int& nbytes)
 
 resource::process::process(int ac, char** av, char** env, e_omode omode)
 {
-  sysapi::process::create_inoutredir_and_loadexec(proc_handle, read_handle, write_handle, ac, (const char**)av, (const char**)env);
+  sysapi::error::handle_t sys_err;
+
   generated = false;
+  sys_err = sysapi::process::create_inoutredir_and_loadexec(proc_handle, read_handle, write_handle, ac, (const char**)av, (const char**)env);
+  if (sys_err != sysapi::error::SUCCESS)
+    generated = true;
 }
 
 
