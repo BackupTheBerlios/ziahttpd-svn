@@ -53,7 +53,10 @@ today
 [ ] bug when refreshing
 [ ] see why the cpu bug
 [ ] reset the request
-[>] see for the send file function
+[x] see for the send file function
+[>] segfault on the release function, destructing the file
+[>] implement the process resouce
+
 
 
 @bugs:
