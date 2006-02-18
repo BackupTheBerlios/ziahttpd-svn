@@ -190,7 +190,8 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		r_type == IS_FLY;
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 	}
-
+	if (!m_uri.status_code())
+		m_uri.status_code() = 200;
 	if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI))
 		response.m_data_enco = new chunked;
 	else
@@ -202,8 +203,8 @@ bool			net::http::stringify_header(buffer& data)
 {
 	std::string ln;
 	std::map<std::string, std::string>::iterator iter;
-	stringify_status_line(ln);
 
+	stringify_status_line(ln);
 	data += ln;
 	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
 	{
