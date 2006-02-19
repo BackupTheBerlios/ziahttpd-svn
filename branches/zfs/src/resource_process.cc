@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Sun Feb 19 00:45:53 2006 texane
+// Last update Sun Feb 19 00:52:06 2006 texane
 //
 
 
@@ -44,7 +44,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   if (sys_err != sysapi::error::SUCCESS)
     {
       // check non blocking mode here
-//       e_err = E_OP_ERROR;
+      e_err = E_OP_ERROR;
       generated = true;
     }
   else

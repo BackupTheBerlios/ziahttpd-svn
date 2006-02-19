@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sun Feb 19 00:44:20 2006 texane
+// Last update Sun Feb 19 01:24:01 2006 texane
 //
 
 
@@ -196,9 +196,8 @@ bool thr::pool::sess_handle_request(session_t& sess)
 		  return false;
 		}
 	    }
-	  else if (e_err == resource::E_ALREADY_GEN)
+	  else // if (e_err == resource::E_ALREADY_GEN)
 	    {
-	      printf("xxx\n"); fflush(stdout);
 	      // Send the last chunk
 	      if (sess.proto.response.is_chunk == true)
 		{
@@ -209,27 +208,22 @@ bool thr::pool::sess_handle_request(session_t& sess)
 		}
 	      done = true;
 	    }
-	  else
-	    {
-	      // This is an error
-	      done = true;
-	    }
 	}
     }
-  else if (sess.target->is_output() == true)
-    {
-      // This is a put method
-      while (done == false)
-	{
-	  if (sess.proto.body_size() == 0)
-	    {
-	      done = true;
-	    }
-	  else
-	    {
-	    }
-	}
-    }
+//   else if (sess.target->is_output() == true)
+//     {
+//       // This is a put method
+//       while (done == false)
+// 	{
+// 	  if (sess.proto.body_size() == 0)
+// 	    {
+// 	      done = true;
+// 	    }
+// 	  else
+// 	    {
+// 	    }
+// 	}
+//     }
 
   return true;
 }

@@ -86,6 +86,8 @@ today
 	functions have been defined in the sysapi,
 	use it after the current implementation is stable
 [ ] implement a kind of static limit for the body
+[ ] see the read bug in the process resource generate function!
+	-> only the first chunk is generated
 
 
 @bugs:
