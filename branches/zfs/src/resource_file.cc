@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Sat Feb 18 12:24:10 2006 texane
+// Last update Sun Feb 19 02:13:07 2006 texane
 //
 
 
@@ -62,6 +62,10 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
   return E_SUCCESS;
 }
 
+
+#include <iostream>
+using namespace std;
+
 resource::e_error resource::file::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
 {
   // Send the file
@@ -76,6 +80,7 @@ resource::e_error resource::file::flush_network(thr::pool::slot_t& thr_slot, ins
   thr_slot.curr_io.in_progress = true;
 
   // send the whole file
+  cout << data.tostring() << endl;
   sys_err = insock::send_file(hsock, file_handle, (unsigned int)file_size, data.bufptr(), (unsigned int)data.size());
   thr_slot.curr_io.in_progress = true;
 
