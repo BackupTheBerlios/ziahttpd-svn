@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:50 2006 
-// Last update Sat Feb 18 23:29:35 2006 texane
+// Last update Sun Feb 19 02:54:16 2006 
 //
 
 
@@ -214,6 +214,10 @@ static int sendfile(int sock_handle, int file_handle, off_t* off, unsigned int n
 	      *off = 0;
 	      done = true;
 	      nsent = (unsigned int)-1;
+	    }
+	  else
+	    {
+	      nsent += nr;
 	    }
 	}
     }
