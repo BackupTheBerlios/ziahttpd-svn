@@ -75,6 +75,7 @@ bool			net::http::generate_content_length(size_t sz)
 
 	sprintf(t, "%i", sz);
 	response["Content-Lenght"] = t;
+	//response["Content-Length"] = t;
 	return true;
 }
 
