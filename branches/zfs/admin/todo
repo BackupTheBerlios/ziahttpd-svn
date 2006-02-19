@@ -88,6 +88,9 @@ today
 [ ] implement a kind of static limit for the body
 [ ] see the read bug in the process resource generate function!
 	-> only the first chunk is generated
+[ ] problem of the process resource
+	-> problem with data remaining in the pipe at
+	process exiting
 
 
 @bugs:

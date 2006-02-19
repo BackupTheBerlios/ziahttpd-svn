@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sun Feb 19 01:24:01 2006 texane
+// Last update Sun Feb 19 01:38:10 2006 texane
 //
 
 
@@ -210,20 +210,20 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	    }
 	}
     }
-//   else if (sess.target->is_output() == true)
-//     {
-//       // This is a put method
-//       while (done == false)
-// 	{
-// 	  if (sess.proto.body_size() == 0)
-// 	    {
-// 	      done = true;
-// 	    }
-// 	  else
-// 	    {
-// 	    }
-// 	}
-//     }
+  else if (sess.target->is_output() == true)
+    {
+      // This is a put method
+      while (done == false)
+	{
+	  if (sess.proto.body_size() == 0)
+	    {
+	      done = true;
+	    }
+	  else
+	    {
+	    }
+	}
+    }
 
   return true;
 }
