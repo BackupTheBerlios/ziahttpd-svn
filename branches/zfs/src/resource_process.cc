@@ -5,17 +5,15 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Sun Feb 19 01:39:28 2006 texane
+// Last update Sun Feb 19 02:59:02 2006 
 //
 
 
-#include <iostream>
 #include <sys/sysapi.hh>
 #include <ziafs_resource.hh>
 #include <ziafs_static.hh>
 
 
-using namespace std;
 using namespace sysapi;
 
 
@@ -36,14 +34,13 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
       // The process is done. There
       // may be data in the pipe, so
       // do the last read.
-//       generated = true;
+      // generated = true;
     }
 
   nbytes = 0;
   e_err = E_SUCCESS;
   data.resize(ZIAFS_STATIC_BUFSZ);
   sys_err = sysapi::file::read(write_handle, data.bufptr(), (unsigned int)data.size(), nbytes);
-  cout << data.tostring() << endl;
   if (sys_err != sysapi::error::SUCCESS)
     {
       // check non blocking mode here
