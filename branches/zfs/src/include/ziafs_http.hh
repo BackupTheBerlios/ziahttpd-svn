@@ -66,7 +66,8 @@ namespace net
 		bool									create_header(buffer&, size_t, chunk_pos_t);
 		bool									modify_header(config&);
 		bool									stringify_header(buffer&);
-  private:
+
+	private:
 		bool	valid_method();
 		bool	valid_uri();
 		bool	valid_version();
@@ -87,7 +88,8 @@ namespace net
 		bool									generate_content_length(size_t);
 		bool									error_code_string(std::string&);
 		bool									get_type_of_resource(net::config&, resouce_type_t&);
-    class data_enco
+		bool									pre_create_resource(net::config&);
+		class data_enco
     {
     public:
       data_enco() { m_done = false; };

@@ -7,7 +7,7 @@ std::string&			net::http::http_data::operator[](const std::string& key)
 {
 	std::string str(key);
 
-	stringmanager::normalize(str);
+	//stringmanager::normalize(str);
 	return (m_hdrlines[str]);
 }
 

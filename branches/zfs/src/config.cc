@@ -123,6 +123,8 @@ bool	net::config::parse_server()
 			p->nr_bklog = atoi(xmltmp->GetText());
 		if (xmltmp->ValueStr() == "modulename")
 			p->modulename.push_back(xmltmp->GetText());
+		if (xmltmp->ValueStr() == "directory_index")
+			stringmanager::split(xmltmp->GetText(), " ", p->directory_index);
 	}
 	std::list<server *>::iterator i;
 

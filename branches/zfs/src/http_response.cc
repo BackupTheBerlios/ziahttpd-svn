@@ -74,7 +74,7 @@ bool			net::http::generate_content_length(size_t sz)
 	char	t[20];
 
 	sprintf(t, "%i", sz);
-	response["Content-length"] = t;
+	response["Content-Length"] = t;
 	return true;
 }
 
@@ -136,32 +136,54 @@ bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r
 	return true;
 }
 
-bool				net::http::create_resource(resource::handle*& hld, resource::manager& manager, config& conf)
+bool				net::http::pre_create_resource(net::config& conf)
 {
-	resource::e_error error;
-
 	std::list<net::config::directory*>::iterator	dir;
+	std::list<net::config::server*>::iterator			serv;
+	std::vector<std::string>::iterator						dir_index;
+	std::string																				doc_root;
 
-	hld = 0;
-	error = resource::E_SUCCESS;
-	//
 	conf.get_directory(dir);
 	while (!conf.end_directory(dir))
 	{
 		if ((*dir)->servername == "*")
-			m_uri.localname() = (*dir)->docroot + "/" + m_uri.wwwname();
+			doc_root = (*dir)->docroot + "/";
 		if ((*dir)->servername == request["host"])
-			m_uri.localname() = (*dir)->docroot + "/" + m_uri.wwwname();
+			doc_root = (*dir)->docroot + "/";
 		dir ++;
 	}
 
+	if (m_uri.wwwname()[m_uri.wwwname().size() - 1] == '/')
+	{
+		conf.get_server(serv);
+		for (dir_index = (*serv)->directory_index.begin(); dir_index != (*serv)->directory_index.end(); dir_index++)
+		{
+			std::string	tmp;
+
+			tmp = doc_root + (*dir_index);
+			if (file::is_readable(tmp))
+			{
+				m_uri.wwwname() += (*dir_index);
+				break;
+			}
+		}
+	}
+
+	m_uri.localname() = doc_root + m_uri.wwwname();
 	if (!file::is_readable(m_uri.localname()))
 		m_uri.status_code() = 403;
 	if (!file::is_path_valid(m_uri.localname()))
 		m_uri.status_code() = 404;
-	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
+	return true;
+}
 
+bool				net::http::create_resource(resource::handle*& hld, resource::manager& manager, config& conf)
+{
+	resource::e_error error = resource::E_SUCCESS;
 	resouce_type_t r_type;
+
+	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
+	pre_create_resource(conf);
 
 	get_type_of_resource(conf, r_type);
 

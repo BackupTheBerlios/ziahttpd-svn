@@ -2,9 +2,10 @@
 # define ZIAFS_CONFIG_HH
 
 #include <list>
+#include <vector>
 #include <ziafs_status.hh>
 #include <config/tinyxml.hh>
-
+#include <zia_stringmanager.hh>
 
 namespace net
 {
@@ -25,10 +26,11 @@ namespace net
 		};
 		struct server
 		{
-			std::list<int>		id;
-			std::list<int>		cgi_id;
-			int								port;
-			unsigned int			nr_bklog;
+			std::list<int>					id;
+			std::list<int>					cgi_id;
+			int											port;
+			unsigned int						nr_bklog;
+			std::vector<std::string>			directory_index;
 			std::list<std::string>	modulename;
 		};
 		struct directory

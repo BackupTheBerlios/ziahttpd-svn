@@ -1,7 +1,7 @@
 <system>
   <nb_thread>10</nb_thread>
   <poll_delay>1000000</poll_delay>
-  <expiration_delay>3</expiration_delay>
+  <expiration_delay>10</expiration_delay>
   <nr_bklog>10</nr_bklog>
 </system>
 
@@ -9,6 +9,7 @@
   <id>1</id>
   <cgi_id>1</cgi_id>
   <port>40000</port>
+  <directory_index>index.html index.htm</directory_index>
 </server>
 
 
