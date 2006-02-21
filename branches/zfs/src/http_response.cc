@@ -23,29 +23,29 @@ bool			net::http::stringify_status_line(std::string& ln)
 	return true;
 }
 
-bool			net::http::generate_content_type()
+bool			net::http::generate_content_type(config& conf)
 {
-	//Nedd config file 
-//	std::list<net::config::mime*>::iterator it;
-////	config.get_mimes(it);
-//	std::string	ext;
-//
-//	m_uri.extension(ext);
-////	while (config.end_mimes(it) == false)
-//	{
-//		if (ext == (*it)->extension)
-//		{
-//			response["Content-type"] = (*it)->type;
-//			return true;
-//		}
-//	}
+	//Need config file 
+	std::list<net::config::mime*>::iterator it;
+	conf.get_mimes(it);
+	std::string	ext;
+
+	m_uri.extension(ext);
+	while (conf.end_mimes(it) == false)
+	{
+		if (ext == (*it)->extension)
+		{
+			response["Content-type"] = (*it)->type;
+			return true;
+		}
+		it++;
+	}
 	response["Content-type"] = "text/html";
 	return true;
 }
 
 bool	net::http::generate_header_date()
 {
-	//	struct tm				*newtime;
 	char					*datestr;
 	std::vector<std::string> v;
 	std::string				tmp;
@@ -86,11 +86,13 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 	{
 		response["Server"] = "Zfs.";
 		generate_header_date();
-		generate_content_type();
 		if (response.is_chunk == false)
 			generate_content_length(sz);
 		else
 			response["Transfer-Encoding"] = "chunked";
+//////////////////////////////////////////////////////////////////////////
+		//		modify_header();
+//////////////////////////////////////////////////////////////////////////
 		stringify_header(data);
 	}
 	response.m_data_enco->encode(data, sz);
@@ -99,8 +101,9 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 return true;
 }
 
-bool			net::http::modify_header(config& conf)
+bool			net::http::modify_header(config& conf, chunk_pos_t chunk)
 {
+	generate_content_type(conf);
 	return true;
 }
 
@@ -142,7 +145,7 @@ bool				net::http::pre_create_resource(net::config& conf)
 	std::list<net::config::directory*>::iterator	dir;
 	std::list<net::config::server*>::iterator			serv;
 	std::vector<std::string>::iterator						dir_index;
-	std::string																				doc_root;
+	std::string																		doc_root;
 
 	conf.get_directory(dir);
 	while (!conf.end_directory(dir))
@@ -242,7 +245,7 @@ status::error		net::http::chunked::encode(buffer& data, size_t sz)
 	std::string	chunk_hex;
 
 	stringmanager::dec_to_hex((int)sz, chunk_hex);
-	data += chunk_hex;
+	data += "\r\n" + chunk_hex;
 	data += "\r\n";
 	ziafs_return_status(status::SUCCESS);
 }
