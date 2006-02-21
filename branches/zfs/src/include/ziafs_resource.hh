@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Sat Feb 18 12:10:07 2006 texane
+// Last update Tue Feb 21 21:58:55 2006 texane
 //
 
 
@@ -163,6 +163,29 @@ namespace resource
     sysapi::file::handle_t write_handle;
     bool generated;
 
+  };
+}
+
+
+namespace resource
+{
+  class fake : public handle
+  {
+  public:
+    // construction/destruction
+    fake();
+    ~fake();
+
+    // interface implementation
+    e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&);
+    e_error flush_disk(sysapi::file::handle_t&);
+    e_error flush_environ();
+    e_error flush_input(thr::pool::slot_t&, buffer&);
+    e_error generate(unsigned int&);
+    e_error size(unsigned int&);
+
+  private:
+    bool generated;
   };
 }
 
