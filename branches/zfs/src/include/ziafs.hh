@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:03:48 2006 texane
-// Last update Fri Feb 17 12:04:47 2006 texane
+// Last update Tue Feb 21 19:33:51 2006 
 //
 
 
@@ -25,7 +25,18 @@
 
 #ifndef _WIN32
 # include <unistd.h>
-# define Sleep( n ) usleep(n)
+# define Sleep( n )				\
+do						\
+{						\
+  if (n >= 1000000)				\
+    {						\
+      printf("poll_delay must be < 1000000\n");	\
+      fflush(stdout);				\
+      exit(-1);					\
+    }						\
+  usleep(n);					\
+}						\
+while (0)
 #else
 # define Sleep( n ) Sleep(n / 1000)
 #endif // ! _WIN32

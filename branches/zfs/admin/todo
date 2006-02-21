@@ -93,6 +93,11 @@ today
 	process exiting
 
 
+@test:
+	handle are deallocated
+	memory is not leaking
+	cgi support on  unix, linux
+
 @bugs:
 	leaks from the mline(?)
 	bug: ie doesn't find cgiscripts
@@ -100,7 +105,12 @@ today
 	bug:segfaultoncgi -> possibly from prepend_header
 	bug: no more connection can establisj n
 	bug: makeserver;:runreturn a bool value if it cannot assign a new task
-	bug: reap process->problem connection reused
+	bug: reap process -> problem connection reused
+	bug: metadata loop... -> nust be rrot to start server < 1024
+	bug: the second time a cgi is opened: got as a file
+	bug: bouffe tout le cpu sous unix... normal? -> fichier de conf, poll delay trop grand 1000
+
+	
 
  
 @optimization
