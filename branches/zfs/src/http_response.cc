@@ -186,6 +186,7 @@ bool				net::http::pre_create_resource(net::config& conf, resouce_type_t& r_type
 		if (!have_dir)
 		{
 			r_type = EXEC_DIRECTORY_LISTING;
+			response.is_chunk = true;
 		}
 	}
 	m_uri.localname() = doc_root + m_uri.wwwname();
@@ -253,7 +254,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	}
 	if (!m_uri.status_code())
 		m_uri.status_code() = 200;
-	if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI))
+	if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI)|| (r_type == EXEC_DIRECTORY_LISTING))
 		response.m_data_enco = new chunked;
 	else
 		response.m_data_enco = new unchunked;
