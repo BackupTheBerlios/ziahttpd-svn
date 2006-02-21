@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:04:04 2006 texane
-// Last update Sat Feb 18 12:35:19 2006 texane
+// Last update Tue Feb 21 22:12:24 2006 texane
 //
 
 
@@ -16,6 +16,7 @@
 using std::string;
 
 
+// process resource
 resource::e_error resource::manager::factory_create(resource::handle*& res_handle,
 						    resource::e_id res_id,
 						    resource::e_omode res_omode,
@@ -35,6 +36,7 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
 }
 
 
+// byfly resource
 resource::e_error resource::manager::factory_create(resource::handle*& res_handle,
 						    resource::e_id res_id,
 						    resource::e_omode res_omode,
@@ -54,6 +56,7 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
 }
 
 
+// file resource
 resource::e_error resource::manager::factory_create(resource::handle*& res_handle,
 						    resource::e_id res_id,
 						    resource::e_omode res_omode,
@@ -70,6 +73,17 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   res_handle->omode = res_omode;
   res_handle->id = res_id;
   return err;
+}
+
+
+// fake resource
+resource::e_error resource::manager::factory_create(resource::handle*& res_handle,
+						    resource::e_id res_id)
+{
+  res_handle = new fake();
+  res_handle->omode = O_BOTH;
+  res_handle->id = res_id;
+  return E_SUCCESS;
 }
 
 

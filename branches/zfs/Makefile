@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Feb 21 19:26:14 2006 texane
+## Last update Tue Feb 21 21:55:27 2006 texane
 ##
 
 # ! Always include this file
@@ -26,6 +26,7 @@ srcs	= src$(SLASH)main.cc			\
 	  src$(SLASH)resource_file.cc		\
 	  src$(SLASH)resource_byfly.cc		\
 	  src$(SLASH)resource_process.cc	\
+	  src$(SLASH)resource_fake.cc		\
 	  src$(SLASH)config.cc			\
 	  src$(SLASH)buffer.cc			\
 	  src$(SLASH)http.cc			\

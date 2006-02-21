@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Tue Feb 21 21:58:55 2006 texane
+// Last update Tue Feb 21 22:10:36 2006 texane
 //
 
 
@@ -34,7 +34,8 @@ namespace resource
     {
       ID_FILE = 0,
       ID_PROCESS,
-      ID_BYFLY
+      ID_BYFLY,
+      ID_FAKE
     } e_id;
 
   // io completion
@@ -198,6 +199,7 @@ namespace resource
     e_error factory_create(handle*&, e_id, e_omode, int, char**, char**);
     e_error factory_create(handle*&, e_id, e_omode, const std::string&);
     e_error factory_create(handle*&, e_id, e_omode, const unsigned int);
+    e_error factory_create(handle*&, e_id);
     e_error factory_destroy(handle*);
   };
 }

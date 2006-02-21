@@ -93,6 +93,13 @@ today
 	process exiting
 
 
+
+@tonight:
+	[?] reapthe process.
+	[ ] do the void resource
+	[ ] do the av for the process
+	[ ] test invalid control path, as the failure in opening a file, cretaing  a process
+
 @test:
 	handle are deallocated
 	memory is not leaking
