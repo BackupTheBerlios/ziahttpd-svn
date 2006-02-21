@@ -1,7 +1,7 @@
 <system>
-  <nb_thread>2</nb_thread>
+  <nb_thread>200</nb_thread>
   <poll_delay>500000</poll_delay>
-  <expiration_delay>20</expiration_delay>
+  <expiration_delay>5</expiration_delay>
   <nr_bklog>100</nr_bklog>
 </system>
 

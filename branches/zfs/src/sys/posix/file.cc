@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:40 2006 
-// Last update Sat Feb 18 23:28:55 2006 texane
+// Last update Tue Feb 21 19:56:32 2006 
 //
 
 #include <string>
@@ -64,7 +64,7 @@ sysapi::error::handle_t sysapi::file::read(handle_t& hfile, unsigned char* buf, 
   int nret;
 
   nret = ::read(hfile, buf, nbytes);
-  if (nret == -1)
+  if (nret <= 0)
     return error::READ_FAILED;
   nread = (unsigned int)nret;
   return error::SUCCESS;
@@ -76,7 +76,7 @@ sysapi::error::handle_t sysapi::file::write(handle_t& hfile, unsigned char* buf,
   int nret;
 
   nret = ::write(hfile, buf, nbytes);
-  if (nret == -1)
+  if (nret <= 0)
     return error::WRITE_FAILED;
   nwritten = (unsigned int)nret;
   return error::SUCCESS;

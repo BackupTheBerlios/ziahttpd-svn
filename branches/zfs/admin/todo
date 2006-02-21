@@ -97,6 +97,8 @@ today
 	handle are deallocated
 	memory is not leaking
 	cgi support on  unix, linux
+	verify resources allocated for process, wether or not handle are deallocated...
+	check the timeout function
 
 @bugs:
 	leaks from the mline(?)

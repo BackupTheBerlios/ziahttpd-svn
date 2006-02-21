@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Feb 21 17:36:14 2006 texane
+// Last update Tue Feb 21 19:57:43 2006 
 //
 
 
@@ -85,7 +85,6 @@ bool thr::pool::sess_bind_server(session_t& sess)
     }
   if (herr == error::SUCCESS)
     return true;
-  printf("error binding the server\n"); fflush(stdout);
   return false;
 }
 
@@ -94,9 +93,7 @@ bool thr::pool::sess_accept_connection(session_t& sess)
   error::handle_t herr;
 
   // Accept a new connection, delegate accept
-  printf("acceptingnew fconncetion\n");  fflush(stdout);
   herr = insock::accept(sess.cli_sock, sess.cli_addr, sess.srv->srv_sock);
-  printf("acceptingnew fconncetion2\n");  fflush(stdout);
   if (sess.thr_slot->pool->assign_task(server_entry, (void*)sess.srv) == false)
     sess.ret_in_cache = false;
   if (herr == error::SUCCESS)
@@ -118,9 +115,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   end_of_metadata = false;
   while (end_of_metadata == false)
     {
-//       printf("readingmetadata\n"); fflush(stdout);
       herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-//       printf("readingmetadata2\n"); fflush(stdout);
       if (sess.thr_slot->curr_io.timeouted == true)
 	{
 	  sess.done = true;
@@ -191,22 +186,16 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	  if ((e_err = sess.target->generate(size)) == resource::E_SUCCESS)
 	    {
 // 	      sess.target->alter(size);
-// 	      printf("create header\n");  fflush(stdout);
  	      sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
-// 	      printf("create header2\n");  fflush(stdout);
 	      sess.chunk_pos = net::http::CHUNK_MIDDLE;
 // 	      sess.proto.modify_header(hdr_buf);
-// 	      printf("prepend header\n");  fflush(stdout);
 	      sess.target->prepend_header(hdr_buf);
 // 	      cout << hdr_buf.tostring() << endl;
-// 	      printf("prepend done\n");  fflush(stdout);
 	      if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
 		{
-// 		  printf("flusing done error\n");  fflush(stdout);
 		  sess.done = true;
 		  return false;
 		}
-// 	      printf("flusing done\n");  fflush(stdout);
 	    }
 	  else // if (e_err == resource::E_ALREADY_GEN)
 	    {
