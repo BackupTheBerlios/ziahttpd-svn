@@ -110,6 +110,13 @@ bool			net::http::modify_header(config& conf, chunk_pos_t chunk)
 bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r)
 {
 		std::list<net::config::mime*>::iterator it;
+		std::string method_str(m_method);
+		stringmanager::normalize(method_str);
+		if (method_str == "head")
+		{
+			type_r = IS_FAKE;
+			return true;
+		}
 
 		if (m_uri.status_code())
 		{
@@ -160,6 +167,7 @@ bool				net::http::pre_create_resource(net::config& conf)
 	if (m_uri.wwwname()[m_uri.wwwname().size() - 1] == '/')
 	{
 		// check directory listing
+		int	have_dir = 0;
 		conf.get_server(serv);
 		for (dir_index = (*serv)->directory_index.begin(); dir_index != (*serv)->directory_index.end(); dir_index++)
 		{
@@ -169,11 +177,13 @@ bool				net::http::pre_create_resource(net::config& conf)
 			if (file::is_readable(tmp))
 			{
 				m_uri.wwwname() += (*dir_index);
+				have_dir = 1;
 				break;
 			}
 		}
 		//Listing directory 
-		m_uri.status_code() = 503;
+		if (!have_dir)
+			m_uri.status_code() = 503;
 	}
 	m_uri.localname() = doc_root + m_uri.wwwname();
 	if (m_uri.wwwname()[m_uri.wwwname().size() - 1] != '/')
@@ -221,7 +231,8 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	}
 	else if (r_type == IS_FLY)
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
-
+	else if (r_type == IS_FAKE)
+		error = manager.factory_create(hld, resource::ID_FAKE);
 	if (error != resource::E_SUCCESS)
 	{
 		m_uri.status_code() = 500;

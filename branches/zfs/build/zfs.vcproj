@@ -168,6 +168,9 @@
 				RelativePath="..\src\resource_byfly.cc">
 			</File>
 			<File
+				RelativePath="..\src\resource_fake.cc">
+			</File>
+			<File
 				RelativePath="..\src\resource_file.cc">
 			</File>
 			<File

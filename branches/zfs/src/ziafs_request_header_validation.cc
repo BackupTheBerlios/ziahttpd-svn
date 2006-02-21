@@ -17,8 +17,9 @@ bool	net::http::valid_method()
 	}
 	if (!flag)
 	{
-		m_uri.status_code() = 405;
-		return false;
+		// Perhaps a module is using another method
+		//m_uri.status_code() = 405;
+		//return false;
 	}
 	return true;
 }

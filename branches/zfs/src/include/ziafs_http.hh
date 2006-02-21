@@ -79,7 +79,8 @@ namespace net
 			IS_FILE,
 			IS_CGI,
 			EXEC_BY_CGI,
-			IS_FLY
+			IS_FLY,
+			IS_FAKE
 		};
 		bool									stringify_status_line(std::string&);
 		bool									generate_header_lines(size_t, bool);

@@ -304,7 +304,7 @@ bool	net::http::method_can_have_body()
 {
 	std::string method_str(m_method);
 	stringmanager::normalize(method_str);
-	if (method_str == "get" || method_str == "head")
-		return false;
-	return true;
+	if (method_str == "put" || method_str == "post")
+		return true;
+	return false;
 }
