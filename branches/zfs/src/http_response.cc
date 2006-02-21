@@ -85,6 +85,7 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 	if (chunk == CHUNK_FIRST)
 	{
 		response["Server"] = "Zfs.";
+		response["Content-type"] = "text/html";
 		generate_header_date();
 		if (response.is_chunk == false)
 			generate_content_length(sz);
@@ -147,7 +148,7 @@ bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r
 	return true;
 }
 
-bool				net::http::pre_create_resource(net::config& conf)
+bool				net::http::pre_create_resource(net::config& conf, resouce_type_t& r_type)
 {
 	std::list<net::config::directory*>::iterator	dir;
 	std::list<net::config::server*>::iterator			serv;
@@ -173,7 +174,7 @@ bool				net::http::pre_create_resource(net::config& conf)
 		{
 			std::string	tmp;
 
-			tmp = doc_root + (*dir_index);
+			tmp = doc_root + m_uri.wwwname() + (*dir_index);
 			if (file::is_readable(tmp))
 			{
 				m_uri.wwwname() += (*dir_index);
@@ -183,7 +184,9 @@ bool				net::http::pre_create_resource(net::config& conf)
 		}
 		//Listing directory 
 		if (!have_dir)
-			m_uri.status_code() = 503;
+		{
+			r_type = EXEC_DIRECTORY_LISTING;
+		}
 	}
 	m_uri.localname() = doc_root + m_uri.wwwname();
 	if (m_uri.wwwname()[m_uri.wwwname().size() - 1] != '/')
@@ -206,12 +209,13 @@ bool				net::http::pre_create_resource(net::config& conf)
 bool				net::http::create_resource(resource::handle*& hld, resource::manager& manager, config& conf)
 {
 	resource::e_error error = resource::E_SUCCESS;
-	resouce_type_t r_type;
+	resouce_type_t r_type = IS_NONE;
 
 	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
-	pre_create_resource(conf);
+	pre_create_resource(conf, r_type);
 
-	get_type_of_resource(conf, r_type);
+	if (r_type == IS_NONE)
+		get_type_of_resource(conf, r_type);
 
 	if (r_type == IS_FILE)
 		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
@@ -228,6 +232,14 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 
 //		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
 //		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, m_uri.localname());
+	}
+	else if (r_type == EXEC_DIRECTORY_LISTING)
+	{
+		int ac = 2;
+
+		const char *tab[] = { conf.get_system()->directory_listing.c_str() , m_uri.localname().c_str(), 0};
+		const char *env[] = {0};
+		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
 	}
 	else if (r_type == IS_FLY)
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());

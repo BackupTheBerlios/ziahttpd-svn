@@ -76,9 +76,11 @@ namespace net
 		//Response
 		enum resouce_type_t
 		{
+			IS_NONE,
 			IS_FILE,
 			IS_CGI,
 			EXEC_BY_CGI,
+			EXEC_DIRECTORY_LISTING,
 			IS_FLY,
 			IS_FAKE
 		};
@@ -89,7 +91,7 @@ namespace net
 		bool									generate_content_length(size_t);
 		bool									error_code_string(std::string&);
 		bool									get_type_of_resource(net::config&, resouce_type_t&);
-		bool									pre_create_resource(net::config&);
+		bool									pre_create_resource(net::config&, resouce_type_t&);
 		class data_enco
     {
     public:

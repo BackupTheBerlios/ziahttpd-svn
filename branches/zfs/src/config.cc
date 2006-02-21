@@ -100,6 +100,9 @@ bool	net::config::parse_system()
 			m_system.poll_delay = atol(xmltmp->GetText());
 		if (xmltmp->ValueStr() == "expiration_delay")
 			m_system.expiration_delay = atol(xmltmp->GetText());
+		if (xmltmp->ValueStr() == "directory_listing")
+			m_system.directory_listing = xmltmp->GetText();
+
 	}
 	return (true);
 }

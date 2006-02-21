@@ -18,6 +18,7 @@ namespace net
 			int					nb_thread;
 			unsigned long				poll_delay;
 			unsigned long				expiration_delay;
+			std::string					directory_listing;
 		};
 		struct module
 		{
