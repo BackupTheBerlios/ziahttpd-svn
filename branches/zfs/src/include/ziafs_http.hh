@@ -93,7 +93,7 @@ namespace net
     {
     public:
       data_enco() { m_done = false; };
-      virtual status::error	encode(buffer&, size_t) = 0;
+      virtual status::error	encode(buffer&, size_t, chunk_pos_t) = 0;
       virtual status::error	decode(net::protocol*, utils::line&, buffer&) = 0;
       buffer&	buff() { return m_buf; };
       bool		done();
@@ -106,7 +106,7 @@ namespace net
     {
     public:
       chunked() : data_enco() { m_state = HDRLINE; };
-      status::error	encode(buffer&, size_t);
+      status::error	encode(buffer&, size_t, chunk_pos_t);
       status::error	decode(net::protocol*, utils::line&, buffer&);
     private:
       enum e_state
@@ -122,7 +122,7 @@ namespace net
     {
     public:
       unchunked() { m_state = FIRSTTIME; m_size_read = 0; };
-      status::error	encode(buffer&, size_t) { ziafs_return_status(status::SUCCESS); };
+      status::error	encode(buffer&, size_t, chunk_pos_t) { ziafs_return_status(status::SUCCESS); };
       status::error	decode(net::protocol*, utils::line&, buffer&);
     private:
       enum e_state

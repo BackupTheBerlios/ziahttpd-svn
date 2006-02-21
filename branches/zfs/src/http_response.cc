@@ -95,7 +95,7 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 //////////////////////////////////////////////////////////////////////////
 		stringify_header(data);
 	}
-	response.m_data_enco->encode(data, sz);
+	response.m_data_enco->encode(data, sz, chunk);
 	if ((chunk == CHUNK_LAST) && (response.is_chunk == true))
 		data += "\r\n";
 return true;
@@ -240,12 +240,15 @@ bool			net::http::stringify_header(buffer& data)
 	return true;
 }
 
-status::error		net::http::chunked::encode(buffer& data, size_t sz)
+status::error		net::http::chunked::encode(buffer& data, size_t sz, chunk_pos_t chunk)
 {
 	std::string	chunk_hex;
 
 	stringmanager::dec_to_hex((int)sz, chunk_hex);
-	data += "\r\n" + chunk_hex;
+	if (chunk != CHUNK_FIRST)
+		data += "\r\n" + chunk_hex;
+	else
+		data += chunk_hex;
 	data += "\r\n";
 	ziafs_return_status(status::SUCCESS);
 }
