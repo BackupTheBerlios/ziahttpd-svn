@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 21 21:46:50 2006 texane
-// Last update Tue Feb 21 22:07:21 2006 texane
+// Last update Tue Feb 21 23:30:41 2006 
 //
 
 
@@ -33,8 +33,37 @@ resource::e_error resource::fake::generate(unsigned int& size)
 }
 
 
-resource::e_error resource::fake::flush_network(thr::pool::slot_t&, insock::handle_t&)
+resource::e_error resource::fake::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
 {
+  e_error eerr;
+  error::handle_t herr;
+  unsigned int nsent;
+  unsigned int nbytes;
+  bool done;
+
+  done = false;
+  eerr = E_SUCCESS;
+  while (done == false)
+    {
+      nbytes = (unsigned int)data.size();
+      if (nbytes == 0)
+	{
+	  done = true;
+	}
+      else
+	{
+	  herr = send(thr_slot, hsock, data.bufptr(), nbytes, nsent);
+	  if (thr_slot.curr_io.timeouted == true || herr != sysapi::error::SUCCESS)
+	    {
+	      eerr = E_OP_ERROR;
+	      done = true;
+	    }
+	  else
+	    {
+	      data.remove_front(nsent);
+	    }
+	}
+    }
   return E_SUCCESS;
 }
 

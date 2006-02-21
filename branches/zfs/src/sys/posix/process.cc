@@ -5,10 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 10:56:19 2006 texane
-// Last update Sat Feb 18 23:30:09 2006 texane
+// Last update Tue Feb 21 23:26:14 2006 
 //
 
 
+#include <signal.h>
 #include <sys/sysapi.hh>
 
 
@@ -123,13 +124,15 @@ sysapi::error::handle_t sysapi::process::wait_single(handle_t& hdl, state_t& st,
 }
 
 
-sysapi::error::handle_t sysapi::process::terminate(handle_t& hdl)
+sysapi::error::handle_t sysapi::process::terminate(handle_t& proc_handle)
 {
+  kill(proc_handle, SIGKILL);
   return error::SUCCESS;
 }
 
 
 sysapi::error::handle_t sysapi::process::release(handle_t& proc_handle)
 {
+  terminate(proc_handle);
   return error::SUCCESS;
 }

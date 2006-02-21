@@ -91,6 +91,7 @@ today
 [ ] problem of the process resource
 	-> problem with data remaining in the pipe at
 	process exiting
+[ ] reap the processses on unix
 
 
 
