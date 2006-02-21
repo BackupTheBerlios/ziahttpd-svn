@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:40 2006 
-// Last update Tue Feb 21 19:56:32 2006 
+// Last update Wed Feb 22 00:56:29 2006 
 //
 
 #include <string>
@@ -115,38 +115,39 @@ static bool file_query_about(const char* filename, enum file_query q, unsigned l
 
   res = false;
   ret = stat(filename, &st);
-
-  switch (q)
+  if (ret != -1)
     {
-    case EXISTS:
-      if (ret != -1)
-	res = true;
-      break;
+      switch (q)
+	{
+	case EXISTS:
+	  res = true;
+	  break;
 
-    case DIRECTORY:
-      if ((st.st_mode & S_IFMT) == S_IFDIR)
-	res = true;
-      break;
+	case DIRECTORY:
+	  if ((st.st_mode & S_IFMT) == S_IFDIR)
+	    res = true;
+	  break;
 
-    case SIZE:
-      *aux = (unsigned long)st.st_size;
-      res = true;
-      break;
+	case SIZE:
+	  *aux = (unsigned long)st.st_size;
+	  res = true;
+	  break;
 
-    case READABLE:
-      res = true;
-      break;
+	case READABLE:
+	  res = true;
+	  break;
 
-    case WRITTABLE:
-      res = true;
-      break;
+	case WRITTABLE:
+	  res = true;
+	  break;
 
-    case EXECUTABLE:
-      res = true;
-      break;
+	case EXECUTABLE:
+	  res = true;
+	  break;
 
-    default:
-      break;
+	default:
+	  break;
+	}
     }
 
   return res;

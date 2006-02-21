@@ -101,6 +101,15 @@ today
 	[?] do the av for the process
 	[ ] test invalid control path, as the failure in opening a file, cretaing  a process
 	[ ] play with the size of the line to raise bugs
+	[>] implement directory listing windows
+	[ ] return error in the factory -> catch exception in the new resource
+		-> else segfault
+		-> reset the handle !! else an exeception is raised with invalid handle value
+	[ ] install a new cgi bin directory for testing purpose (netbsd/, linux/, windows/)
+	[ ] install a site directory
+	[ ] chroot
+	[ ] make the server chrooted
+	[ ] handle error from http protocol
 
 @test:
 	handle are deallocated
@@ -113,13 +122,13 @@ today
 	leaks from the mline(?)
 x	bug: ie doesn't find cgiscripts
 	bug: resize from generate() data
-	bug:segfaultoncgi -> possibly from prepend_header
-	bug: no more connection can establisj n
+	bug: segfaultoncgi -> possibly from prepend_header
+x	bug: no more connection can establish n
 	bug: makeserver;:runreturn a bool value if it cannot assign a new task
-	bug: reap process -> problem connection reused
-	bug: metadata loop... -> nust be rrot to start server < 1024
-	bug: the second time a cgi is opened: got as a file
-	bug: bouffe tout le cpu sous unix... normal? -> fichier de conf, poll delay trop grand 1000
+x	bug: reap process -> problem connection reused
+x	bug: metadata loop... -> nust be rrot to start server < 1024
+x	bug: the second time a cgi is opened: got as a file
+x	bug: bouffe tout le cpu sous unix... normal? -> fichier de conf, poll delay trop grand 1000
 
 	
 
