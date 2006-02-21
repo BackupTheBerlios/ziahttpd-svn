@@ -95,10 +95,11 @@ today
 
 
 @tonight:
-	[?] reapthe process.
-	[ ] do the void resource
-	[ ] do the av for the process
+	[x] reap the process.
+	[x] do the fake resource
+	[?] do the av for the process
 	[ ] test invalid control path, as the failure in opening a file, cretaing  a process
+	[ ] play with the size of the line to raise bugs
 
 @test:
 	handle are deallocated
@@ -109,7 +110,7 @@ today
 
 @bugs:
 	leaks from the mline(?)
-	bug: ie doesn't find cgiscripts
+x	bug: ie doesn't find cgiscripts
 	bug: resize from generate() data
 	bug:segfaultoncgi -> possibly from prepend_header
 	bug: no more connection can establisj n

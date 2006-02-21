@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Feb 15 22:37:34 2006 
-// Last update Fri Feb 17 01:21:41 2006 texane
+// Last update Tue Feb 21 22:15:25 2006 texane
 //
 
 
@@ -16,7 +16,8 @@
 // this file contains compile time know values
 
 #define ZIAFS_STATIC_LINESZ	1024
-#define ZIAFS_STATIC_BUFSZ	512
+// #define ZIAFS_STATIC_BUFSZ	512
+#define ZIAFS_STATIC BUFSZ 1
 #define ZIAFS_STATIC_POLL	100000
 #define ZIAFS_STATIC_EXPIR	10
 
