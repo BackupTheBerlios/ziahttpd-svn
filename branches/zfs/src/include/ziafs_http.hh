@@ -64,7 +64,7 @@ namespace net
 
 		// Response
 		bool									create_header(buffer&, size_t, chunk_pos_t);
-		bool									modify_header(config&);
+		bool									modify_header(config&, chunk_pos_t);
 		bool									stringify_header(buffer&);
 
 	private:
@@ -83,7 +83,7 @@ namespace net
 		};
 		bool									stringify_status_line(std::string&);
 		bool									generate_header_lines(size_t, bool);
-		bool									generate_content_type();
+		bool									generate_content_type(config&);
 		bool									generate_header_date();
 		bool									generate_content_length(size_t);
 		bool									error_code_string(std::string&);
