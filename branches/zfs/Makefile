@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Feb 21 18:55:45 2006 
+## Last update Tue Feb 21 19:26:14 2006 texane
 ##
 
 # ! Always include this file
-# !include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= zfs.x
@@ -32,6 +32,7 @@ srcs	= src$(SLASH)main.cc			\
 	  src$(SLASH)uri.cc			\
 	  src$(SLASH)utils_line.cc		\
 	  src$(SLASH)zia_stringmanager.cc	\
+	  src$(SLASH)ziafs_request_header_validation.cc	\
 	  src$(SLASH)http_response.cc		\
 	  src$(SLASH)http_data.cc		\
 	  src$(SLASH)error_code.cc		\
