@@ -159,6 +159,7 @@ bool				net::http::pre_create_resource(net::config& conf)
 
 	if (m_uri.wwwname()[m_uri.wwwname().size() - 1] == '/')
 	{
+		// check directory listing
 		conf.get_server(serv);
 		for (dir_index = (*serv)->directory_index.begin(); dir_index != (*serv)->directory_index.end(); dir_index++)
 		{
@@ -171,13 +172,24 @@ bool				net::http::pre_create_resource(net::config& conf)
 				break;
 			}
 		}
+		//Listing directory 
+		m_uri.status_code() = 503;
+	}
+	m_uri.localname() = doc_root + m_uri.wwwname();
+	if (m_uri.wwwname()[m_uri.wwwname().size() - 1] != '/')
+	{
+		// Move if directory
+		if (file::is_directory(m_uri.localname()))
+		{
+			response["Location"] = "http://" + request["host"] + m_uri.wwwname() + "/";
+			m_uri.status_code() = 301;
+		}
 	}
 
-	m_uri.localname() = doc_root + m_uri.wwwname();
-	if (!file::is_readable(m_uri.localname()))
-		m_uri.status_code() = 403;
-	if (!file::is_path_valid(m_uri.localname()))
+	if (!file::is_path_valid(m_uri.localname()) && !m_uri.status_code())
 		m_uri.status_code() = 404;
+	if (!file::is_readable(m_uri.localname()) && !m_uri.status_code())
+		m_uri.status_code() = 403;
 	return true;
 }
 

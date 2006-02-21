@@ -62,7 +62,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 				handle_metadata();
 			m_state = BODYDATA;
 //		End of metadata
-			//request_header_validation();
+			request_header_validation();
 			finished = true;
 			return true;
 		}

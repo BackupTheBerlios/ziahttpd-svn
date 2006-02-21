@@ -26,20 +26,27 @@ bool	net::http::valid_method()
 bool	net::http::valid_uri()
 {
 	std::string	host;
-	std::string wwwname;
+	std::string wwwname(m_uri.wwwname());
+	std::string tmp;
 
-	wwwname = m_uri.wwwname();
-	if (wwwname[0] == '/')
-		return true;
-
-	host = "http://" + request["host"];
-	if (strncmp(wwwname.c_str(), host.c_str(), host.size()))
+	if (wwwname[0] != '/')
 	{
-		m_uri.status_code() = 400;
-		return false;
+		host = "http://" + request["host"] + "/";
+		if (strncmp(wwwname.c_str(), host.c_str(), host.size()))
+		{
+			m_uri.status_code() = 400;
+			return false;
+		}
+		tmp = wwwname.substr(host.length() - 1, wwwname.length() - host.length() + 1);
+		m_uri.wwwname() = tmp;
 	}
-	m_uri.wwwname() = wwwname.substr(0, host.size());
-	ziafs_debug_msg("->%s\n", m_uri.wwwname());
+
+	char *str;
+
+	str = (char *)m_uri.wwwname().c_str();
+	while ((str[0] == '/') && (str[1] == '/'))
+		str++;
+	m_uri.wwwname() = str;
 	return true;
 }
 
