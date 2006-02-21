@@ -5,12 +5,17 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:21:12 2006 texane
-// Last update Sat Feb 18 12:41:33 2006 texane
+// Last update Tue Feb 21 17:11:30 2006 texane
 //
 
 
 #include <ziafs_buffer.hh>
 #include <ziafs_resource.hh>
+
+
+// either the recopy constructor is not ok
+// either the hdr_buffer is not ok
+// either the + operator  is enot ok
 
 
 resource::e_error resource::handle::prepend_header(buffer& hdr_buf)

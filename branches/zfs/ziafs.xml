@@ -1,14 +1,14 @@
 <system>
-  <nb_thread>200</nb_thread>
+  <nb_thread>2</nb_thread>
   <poll_delay>1000000</poll_delay>
   <expiration_delay>20</expiration_delay>
-  <nr_bklog>10</nr_bklog>
+  <nr_bklog>100</nr_bklog>
 </system>
 
 <server>
   <id>1</id>
   <cgi_id>1</cgi_id>
-  <port>80</port>
+  <port>10000</port>
   <directory_index>index.html index.htm</directory_index>
 </server>
 
