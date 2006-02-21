@@ -95,6 +95,8 @@ today
 
 @bugs:
 	leaks from the mline(?)
+	bug: ie doesn't find cgiscripts
+	bug:segfaultoncgi
 
  
 @optimization

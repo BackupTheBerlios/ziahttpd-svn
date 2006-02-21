@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Sat Feb 18 15:02:29 2006 texane
+## Last update Tue Feb 21 15:16:45 2006 texane
 ##
 
 # ! Always include this file
@@ -13,9 +13,11 @@
 # include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
-name	= cgi_echo.x
+name	= cgi_loop.exe
+#	  cgi_echo.x
 #	  cgi_simple.x
-srcs	= src$(SLASH)main_echo.cc
+srcs	= src$(SLASH)main_loop.cc
+#	src$(SLASH)main_echo.cc
 #	src$(SLASH)main_simple.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \

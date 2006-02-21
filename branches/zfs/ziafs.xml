@@ -14,7 +14,7 @@
 
 <directory id=1>
   <servername>*</servername>
-  <docroot>./web/</docroot>
+  <docroot>./</docroot>
 </directory>
 
 <mime extension="html">
