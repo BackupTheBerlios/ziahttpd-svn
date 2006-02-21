@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Tue Feb 21 19:48:43 2006 texane
+// Last update Tue Feb 21 19:53:08 2006 texane
 //
 
 
@@ -125,7 +125,7 @@ static bool normalfile_query_about(const char* filename, enum file_query q, unsi
   BY_HANDLE_FILE_INFORMATION info;
   bool ret;
 
-  hfile = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+  hfile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
   if (hfile == INVALID_HANDLE_VALUE)
     {
       printf("INVALIDPATH1\n"); fflush(stdout);
