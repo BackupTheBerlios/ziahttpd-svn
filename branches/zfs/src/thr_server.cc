@@ -193,6 +193,11 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	    }
 	  if ((e_err = sess.target->generate(size)) == resource::E_SUCCESS)
 	    {
+
+	      // this is for non blocking mode
+	      // if (size)
+	      // {
+
 // 	      sess.target->alter(size);
  	      sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
 	      sess.chunk_pos = net::http::CHUNK_MIDDLE;
@@ -203,6 +208,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 		  sess.done = true;
 		  return false;
 		}
+	      // }
 	    }
 	  else // if (e_err == resource::E_ALREADY_GEN)
 	    {

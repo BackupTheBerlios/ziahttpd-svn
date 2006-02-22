@@ -38,9 +38,32 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
       // generated = true;
     }
 
+
   nbytes = 0;
   e_err = E_SUCCESS;
+
+#ifdef __linux__
+  {
+    // Dont do that if there is no remaining data
+    // to send to the script input
+    #include <unistd.h>
+    #include <fcntl.h>
+    fcntl(write_handle, F_SETFL, O_NONBLOCK);
+  }
+#endif // __linux__
+
   sys_err = sysapi::file::read(write_handle, buf, sizeof(buf), nbytes);
+
+#ifdef __linux__
+    if (sys_err != sysapi::error::SUCCESS && errno == EAGAIN)
+      {
+	nbytes = 0;
+	data.clear();
+	sys_err = sysapi::error::SUCCESS;
+      }
+    fcntl(write_handle, F_SETFL, ~O_NONBLOCK);
+#endif // __linux__
+
   if (sys_err != sysapi::error::SUCCESS)
     {
       // check non blocking mode here
@@ -67,7 +90,7 @@ resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, 
   unsigned int nbytes;
   bool done;
 
-  printf("flush_network == %d\n", data.size());
+
   cout << data.tostring() << endl;
 
   done = false;
@@ -115,8 +138,6 @@ resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, bu
   unsigned int nsent;
   sysapi::error::handle_t sys_err;
 
-  printf("flush input == %d\n", buf.size());
-
   done = false;
   while (done == false)
     {
@@ -138,7 +159,6 @@ resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, bu
 	    }
 	}
     }
-  printf("flushing input done\n");
   return E_SUCCESS;
 }
 
