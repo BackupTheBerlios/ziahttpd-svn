@@ -126,7 +126,10 @@ sysapi::error::handle_t sysapi::process::wait_single(handle_t& hdl, state_t& st,
 
 sysapi::error::handle_t sysapi::process::terminate(handle_t& proc_handle)
 {
+  int st;
+
   kill(proc_handle, SIGKILL);
+  waitpid(proc_handle, &st, 0);
   return error::SUCCESS;
 }
 
