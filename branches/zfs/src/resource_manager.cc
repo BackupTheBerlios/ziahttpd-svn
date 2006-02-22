@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:04:04 2006 texane
-// Last update Wed Feb 22 16:51:06 2006 texane
+// Last update Wed Feb 22 22:09:16 2006 texane
 //
 
 
@@ -88,12 +88,14 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   res_handle->in_size = 0;
   if (res_omode == O_OUTPUT || res_omode == O_BOTH)
     {
+      printf("creating resource on disk\n");
+      fflush(stdout);
+      res_handle->in_size = res_insz;
       if (res_inbuf)
 	{
-	  res_handle->in_buf = buffer(*res_inbuf, res_insz);
-	  res_inbuf->remove_front(res_insz);
+	  res_handle->in_buf = buffer(*res_inbuf, res_inbuf->size());
+	  res_inbuf->remove_front((unsigned int)res_inbuf->size());
 	}
-      res_handle->in_size = res_insz;
     }
   return err;
 }
