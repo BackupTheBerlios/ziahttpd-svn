@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 22 16:51:11 2006 texane
+// Last update Wed Feb 22 20:22:54 2006 texane
 //
 
 
@@ -193,11 +193,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	    }
 	  if ((e_err = sess.target->generate(size)) == resource::E_SUCCESS)
 	    {
-
 	      // this is for non blocking mode
-	      // if (size)
-	      // {
-
 // 	      sess.target->alter(size);
  	      sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
 	      sess.chunk_pos = net::http::CHUNK_MIDDLE;
@@ -208,7 +204,9 @@ bool thr::pool::sess_handle_request(session_t& sess)
 		  sess.done = true;
 		  return false;
 		}
-	      // }
+	    }
+	  else if (e_err == resource::E_WOULDBLOCK)
+	    {
 	    }
 	  else // if (e_err == resource::E_ALREADY_GEN)
 	    {

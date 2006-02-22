@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Wed Feb 22 21:00:55 2006 texane
+// Last update Wed Feb 22 20:25:20 2006 texane
 //
 
 
@@ -44,18 +44,18 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
 
 
 #ifdef _WIN32
-  {
-    OVERLAPPED overlapped;
-    ReadFile(write_handle, buf, sizeof(buf), nbytes);
-      {
-	nbytes = 0;
-	data.clear();
-	sys_err = sysapi::error::SUCCESS;
-	printf("the operation timeouted\n");
-	fflush(stdout);
-      }
-    else
-      {
+//   {
+//     OVERLAPPED overlapped;
+//     ReadFile(write_handle, buf, sizeof(buf), nbytes);
+//       {
+// 	nbytes = 0;
+// 	data.clear();
+// 	sys_err = sysapi::error::SUCCESS;
+// 	printf("the operation timeouted\n");
+// 	fflush(stdout);
+//       }
+//     else
+//       {
 #else
   {
     // Dont do that if there is no remaining data
@@ -69,11 +69,11 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   sys_err = sysapi::file::read(write_handle, buf, sizeof(buf), nbytes);
 
 #ifdef _WIN32
-      }
-  }
+//       }
+//   }
 #else
-    if (sys_err != sysapi::error::SUCCESS && errno == EAGAIN)
-      {
+  if (sys_err != sysapi::error::SUCCESS && errno == EAGAIN)
+    {
 	nbytes = 0;
 	data.clear();
 	sys_err = sysapi::error::SUCCESS;
@@ -81,7 +81,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
     fcntl(write_handle, F_SETFL, ~O_NONBLOCK);
 #endif // _WIN32
 
-  if (sys_err != sysapi::error::SUCCESS)
+    if (sys_err != sysapi::error::SUCCESS)
     {
       // check non blocking mode here
       e_err = E_OP_ERROR;
@@ -99,7 +99,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
 #include <iostream>
 using namespace std;
 
-resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
+ resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
 {
   e_error eerr;
   error::handle_t herr;
