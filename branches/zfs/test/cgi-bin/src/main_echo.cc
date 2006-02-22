@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 14:51:00 2006 texane
-// Last update Sat Feb 18 15:02:36 2006 texane
+// Last update Wed Feb 22 11:54:37 2006 texane
 //
 
 
@@ -51,8 +51,9 @@ int main(int ac, char** av)
   cout << "hello from the cgi" << endl;
   c.nl();
 
-  while (cin >> s)
+//   while (cin >> s)
     {
+      cin >> s;
       cout << "<from_input>: " << s << endl;
       c.nl();
     }

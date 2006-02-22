@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Tue Feb 21 21:40:04 2006 texane
+// Last update Wed Feb 22 11:58:53 2006 texane
 //
 
 
@@ -108,6 +108,7 @@ resource::e_error resource::process::flush_environ()
 
 resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, buffer&)
 {
+  
   return E_SUCCESS;
 }
 

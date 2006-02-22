@@ -9,7 +9,7 @@
 <server>
   <id>1</id>
   <cgi_id>1</cgi_id>
-  <port>10000</port>
+  <port>40000</port>
   <directory_index>index.html index.htm</directory_index>
 </server>
 

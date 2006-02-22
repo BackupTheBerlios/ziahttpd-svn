@@ -116,6 +116,7 @@ today
 @today
 	[>] test cgi with post
 	[ ] implement the put request
+	[ ] implement the flush_input method of the process resource
 
 @test:
 	handle are deallocated
