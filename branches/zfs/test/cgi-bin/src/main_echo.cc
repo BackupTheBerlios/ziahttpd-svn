@@ -47,20 +47,26 @@ int main(int ac, char** av)
 {
   cgi c;
   int nret;
-  unsigned char buffer[512];
+  unsigned char buffer[4000];
+  int nread;
 
   cout << "hello from the cgi" << endl;
   c.nl();
 
 //   while (cin >> s)
-  nret = read(0, buffer, sizeof(buffer));
-  if (nret <= 0)
+  nread = 0;
+  while (nread < 2000)
     {
-      strcpy((char*)buffer, "cannot read");
-    }
-  else
-    {
-      buffer[nret] = 0;
+      nret = read(0, (unsigned char*)buffer + nread, 1000);
+      if (nret <= 0)
+	{
+	  strcpy((char*)buffer, "cannot read");
+	}
+      else
+	{
+	  buffer[nread + nret] = 0;
+	  nread += nret;
+	}
     }
   cout << "from_input: " << buffer << endl;
   c.nl();

@@ -142,10 +142,6 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 }
 
 
-#include <iostream>
-using namespace std;
-
-
 bool thr::pool::sess_handle_request(session_t& sess)
 {
   buffer raw_buf;

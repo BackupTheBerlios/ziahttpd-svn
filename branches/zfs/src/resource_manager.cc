@@ -15,7 +15,6 @@
 #include <ziafs_resource.hh>
 
 
-using namespace std;
 using std::string;
 
 

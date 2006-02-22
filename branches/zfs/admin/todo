@@ -145,6 +145,8 @@ x	bug: on directory browsing, the directory is prepend to one more time
 ?	bug: linux -> bouffe tout le cpu a l entree...
 	bug: body_buf doesn't return anything
 	bug: the body reception is truncated (case of cgi)
+	bug: process is waiting for input in flush_input -> we are waiting for output in generate
+		---> deadlock!
 
 	
 
@@ -157,6 +159,7 @@ x	bug: on directory browsing, the directory is prepend to one more time
 	[ ] correct the factory -> return error appropriate if process creation  failed
 	[ ] implement the input size for resource
 	[ ] implement the mline
+	[ ] solve the deadlock problem
 
 
 @ideas

@@ -24,6 +24,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   e_error e_err;
   sysapi::process::state_t proc_st;
   sysapi::error::handle_t sys_err;
+  unsigned char buf[ZIAFS_STATIC_BUFSZ];
 
   if (generated == true)
     return E_ALREADY_GEN;
@@ -39,21 +40,24 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
 
   nbytes = 0;
   e_err = E_SUCCESS;
-  data.resize(ZIAFS_STATIC_BUFSZ);
-  sys_err = sysapi::file::read(write_handle, data.bufptr(), (unsigned int)data.size(), nbytes);
+  sys_err = sysapi::file::read(write_handle, buf, sizeof(buf), nbytes);
   if (sys_err != sysapi::error::SUCCESS)
     {
       // check non blocking mode here
       e_err = E_OP_ERROR;
       generated = true;
+      data.clear();
     }
   else
     {
-      data.resize(nbytes);
+      data = buffer(buf, nbytes);
     }
   return e_err;
 }
 
+
+#include <iostream>
+using namespace std;
 
 resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
 {
@@ -62,6 +66,9 @@ resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, 
   unsigned int nsent;
   unsigned int nbytes;
   bool done;
+
+  printf("flush_network == %d\n", data.size());
+  cout << data.tostring() << endl;
 
   done = false;
   eerr = E_SUCCESS;
@@ -108,6 +115,8 @@ resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, bu
   unsigned int nsent;
   sysapi::error::handle_t sys_err;
 
+  printf("flush input == %d\n", buf.size());
+
   done = false;
   while (done == false)
     {
@@ -129,6 +138,7 @@ resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, bu
 	    }
 	}
     }
+  printf("flushing input done\n");
   return E_SUCCESS;
 }
 
