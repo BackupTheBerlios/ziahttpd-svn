@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Wed Feb 22 02:24:48 2006 texane
+// Last update Wed Feb 22 02:49:53 2006 texane
 //
 
 
@@ -125,9 +125,12 @@ static bool normalfile_query_about(const char* filename, enum file_query q, unsi
   BY_HANDLE_FILE_INFORMATION info;
   bool ret;
 
-  hfile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+  ret = false;
+  hfile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
   if (hfile == INVALID_HANDLE_VALUE)
-    return false;
+    {
+      return false;
+    }
   if (GetFileInformationByHandle(hfile, &info) == FALSE)
     {
       CloseHandle(hfile);
@@ -179,24 +182,7 @@ static bool directory_query_about(const char* filename, enum file_query q, unsig
 
 static bool file_query_about(const char* filename, enum file_query q, unsigned long* aux)
 {
-  DWORD attr;
-  bool ret;
-
-  attr = GetFileAttributes(filename);
-  if (attr == INVALID_FILE_ATTRIBUTES)
-    return false;
-
-  ret = false;
-
-  if (q == IS_DIRECTORY)
-    {
-      if (attr == FILE_ATTRIBUTE_DIRECTORY)
-	ret = directory_query_about(filename, q, aux);
-    }
-  else
-    ret = normalfile_query_about(filename, q, aux);
-
-  return ret;
+  return normalfile_query_about(filename, q, aux);
 }
 
 bool sysapi::file::is_path_valid(const string& filename)
