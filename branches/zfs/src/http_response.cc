@@ -142,6 +142,12 @@ bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r
 			return true;
 		}
 
+		if (method_str == "put")
+		{
+			type_r = IS_PUT;
+			return true;
+		}
+
 		if (m_uri.status_code())
 		{
 			type_r = IS_FLY;
@@ -277,6 +283,10 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		av[i] = '\0';
 
 		  error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env, &m_line.m_buf, body_size());
+		// free env + av
+		//		for (i = 0; av[i]; i++)
+		//			delete av[i];
+		delete [] av;
 	}
 	else if (r_type == EXEC_DIRECTORY_LISTING)
 	{
@@ -286,6 +296,8 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		const char *env[] = {0};
 		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
 	}
+	else if (r_type == IS_PUT)
+		error = manager.factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, m_uri.localname(), &m_line.m_buf, body_size());
 	else if (r_type == IS_FLY)
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 	else if (r_type == IS_FAKE)

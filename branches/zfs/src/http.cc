@@ -304,7 +304,10 @@ bool	net::http::method_can_have_body()
 {
 	std::string method_str(m_method);
 	stringmanager::normalize(method_str);
-	if (method_str == "put" || method_str == "post")
+//	if (method_str == "put" || method_str == "post")
+	if (atoi(request.m_hdrlines["content-length"].c_str()) > 0)
+		return true;
+	if (request.m_hdrlines["transfer-encoding"] == "chunked")
 		return true;
 	return false;
 }

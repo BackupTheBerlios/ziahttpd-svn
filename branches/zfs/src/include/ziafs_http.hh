@@ -79,6 +79,7 @@ namespace net
 			IS_NONE,
 			IS_FILE,
 			IS_CGI,
+			IS_PUT,
 			EXEC_BY_CGI,
 			EXEC_DIRECTORY_LISTING,
 			IS_FLY,
