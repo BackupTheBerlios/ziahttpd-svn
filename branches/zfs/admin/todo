@@ -160,6 +160,8 @@ x	bug: on directory browsing, the directory is prepend to one more time
 	[ ] implement the input size for resource
 	[ ] implement the mline
 	[ ] solve the deadlock problem
+		-> non blocking fd on posix system, so that if there are remaining input and no output available, don't block on output reception and go filling the input
+		-> on windows... async io?
 
 
 @ideas
