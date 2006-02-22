@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 22 22:12:25 2006 texane
+// Last update Wed Feb 22 22:14:01 2006 texane
 //
 
 
@@ -161,7 +161,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
     return false;
 
   done = false;
-  if (sess.target->is_input() == true)
+//   if (sess.target->is_input() == true)
     {
       // get / post method
       while (done == false)
