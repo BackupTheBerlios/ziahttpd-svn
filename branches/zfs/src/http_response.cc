@@ -254,7 +254,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	{
 		std::string cgi_path;
 		char **av;
-		const char *env[] = {0};
+		const char *env[] = {"SERVER_PORT=80", 0};
 		int ac;
 		std::vector<std::string> vec;
 		std::vector<std::string>::iterator iter;
@@ -280,13 +280,14 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		int ac = 2;
 
 		const char *tab[] = { conf.get_system()->directory_listing.c_str() , m_uri.localname().c_str(), 0};
-		const char *env[] = {"SERVER_PORT=80", 0};
+		const char *env[] = {0};
 		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
 	}
 	else if (r_type == IS_FLY)
 		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 	else if (r_type == IS_FAKE)
 		error = manager.factory_create(hld, resource::ID_FAKE);
+
 	if (error != resource::E_SUCCESS)
 	{
 		m_uri.status_code() = 500;
