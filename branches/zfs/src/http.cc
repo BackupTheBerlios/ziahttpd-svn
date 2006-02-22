@@ -128,7 +128,7 @@ status::error					net::http::parse_status_line(std::string& ln)
 	std::vector<std::string>	vec;
 
 	stringmanager::split(ln, " ", vec);
-	if (vec.size() != 3)
+	if (vec.size() < 2)
 	{
 		m_uri.status_code() = 400;
 		ziafs_return_status(status::STATUSLINE_FAILED);
@@ -147,9 +147,9 @@ status::error					net::http::parse_status_line(std::string& ln)
 	}
 	stringmanager::unconvert_hexa(m_uri.wwwname());
 	stringmanager::unconvert_hexa(m_query);
-//	if (vec.size() == 2)
-//		request.m_version = "HTTP/1.1";
-//	else
+	if (vec.size() == 2)
+		request.m_version = "HTTP/1.1";
+	else
 		request.m_version = vec[2];
 
 //	m_uri.status_code() = 200;
