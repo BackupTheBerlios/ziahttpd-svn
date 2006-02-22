@@ -47,11 +47,9 @@ void cgi::nl()
 
 // directory listing
 
-static char g_path[1024];
-
 static void report_path(const char* path, struct stat& st, cgi& c)
 {
-  cout << "<a href=" << g_path << ">" << path << "</a>";
+  cout << "<a href=" << path << ">" << path << "</a>";
   c.nl();
 }
 
@@ -61,21 +59,23 @@ static void list_directory_rec(char* path, cgi& c)
   struct stat st;
   DIR* d;
   struct dirent* de;
+  char full_path[1024];
   char* curr;
 
+  strcpy(full_path, path);
   d = opendir(path);
   if (d)
     {
-      curr = path + strlen(path);
+      curr = full_path + strlen(full_path);
       curr[0] = '/';
       curr[1] = 0;
-      curr += 2;
+      curr += 1;
       while ((de = readdir(d)))
 	{
-	  if (stat(g_path, &st) != -1)
+	  if (stat(full_path, &st) != -1)
 	    {
 	      strcpy(curr, de->d_name);
-	      report_path(curr, st, c);
+	      report_path(de->d_name, st, c);
 	    }
 	}
       closedir(d);
@@ -84,7 +84,6 @@ static void list_directory_rec(char* path, cgi& c)
 
 static void list_directory(char* path, cgi& c)
 {
-  strcpy(g_path, path);
   list_directory_rec(path, c);
 }
 

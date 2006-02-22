@@ -111,6 +111,7 @@ today
 	[ ] make the server chrooted
 	[ ] handle error from http protocol
 	[ ] free av, create env and append the get request
+	[ ] the cgi directory segault on will unix, (maybe on windows...), so check it(use the g_path variable)
 
 @test:
 	handle are deallocated
@@ -130,6 +131,8 @@ x	bug: reap process -> problem connection reused
 x	bug: metadata loop... -> nust be rrot to start server < 1024
 x	bug: the second time a cgi is opened: got as a file
 x	bug: bouffe tout le cpu sous unix... normal? -> fichier de conf, poll delay trop grand 1000
+x	bug: on directory browsing, the directory is prepend to one more time
+?	bug: linux -> bouffe tout le cpu a l entree...
 
 	
 

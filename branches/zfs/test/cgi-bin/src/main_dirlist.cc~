@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 14:51:00 2006 texane
-// Last update Wed Feb 22 00:36:30 2006 
+// Last update Wed Feb 22 00:47:47 2006 
 //
 
 
@@ -47,14 +47,14 @@ void cgi::nl()
 
 // directory listing
 
+static char g_path[1024];
+
 static void report_path(const char* path, struct stat& st, cgi& c)
 {
-  cout << "<a href=" << path << ">" << path << "</a>";
+  cout << "<a href=" << g_path << ">" << g_path << "</a>";
   c.nl();
 }
 
-
-static char g_path[1024];
 
 static void list_directory_rec(char* path, cgi& c)
 {
@@ -69,7 +69,7 @@ static void list_directory_rec(char* path, cgi& c)
       curr = path + strlen(path);
       curr[0] = '/';
       curr[1] = 0;
-      curr += 2;
+      curr += 1;
       while ((de = readdir(d)))
 	{
 	  if (stat(g_path, &st) != -1)
@@ -85,7 +85,7 @@ static void list_directory_rec(char* path, cgi& c)
 static void list_directory(char* path, cgi& c)
 {
   strcpy(g_path, path);
-  list_directory_rec(path, c);
+  list_directory_rec(g_path, c);
 }
 
 
@@ -97,5 +97,8 @@ int main(int ac, char** av)
 
   cout << "** listing directory **\n";
   c.nl();
-  list_directory(av[1], c);
+  if (ac == 1)
+    list_directory(".", c);
+  else
+    list_directory(av[1], c);
 }
