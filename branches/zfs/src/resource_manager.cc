@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:04:04 2006 texane
-// Last update Wed Feb 22 22:09:16 2006 texane
+// Last update Wed Feb 22 22:20:49 2006 texane
 //
 
 
@@ -78,6 +78,9 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   resource::e_error err;
 
   // instanciate the resource
+
+  printf("in factorty!!!!!!!!!!\n");
+  fflush(stdout);
   err = E_SUCCESS;
   res_handle = 0;
   res_handle = new file(res_name, res_omode);
