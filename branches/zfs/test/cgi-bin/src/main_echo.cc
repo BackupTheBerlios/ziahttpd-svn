@@ -46,18 +46,24 @@ extern char** environ;
 int main(int ac, char** av)
 {
   cgi c;
-  string s;
+  int nret;
+  unsigned char buffer[512];
 
   cout << "hello from the cgi" << endl;
   c.nl();
 
 //   while (cin >> s)
+  nret = read(0, buffer, sizeof(buffer));
+  if (nret <= 0)
     {
-      cin >> s;
-      cout << "<from_input>: " << s << endl;
-      c.nl();
+      strcpy((char*)buffer, "cannot read");
     }
-
+  else
+    {
+      buffer[nret] = 0;
+    }
+  cout << "from_input: " << buffer << endl;
+  c.nl();
   cout << "end of cgi" << endl;
   c.nl();
 }

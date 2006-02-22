@@ -144,7 +144,7 @@ x	bug: bouffe tout le cpu sous unix... normal? -> fichier de conf, poll delay tr
 x	bug: on directory browsing, the directory is prepend to one more time
 ?	bug: linux -> bouffe tout le cpu a l entree...
 	bug: body_buf doesn't return anything
-?	bug: the post input is truncated... normal?
+	bug: the body reception is truncated (case of cgi)
 
 	
 
