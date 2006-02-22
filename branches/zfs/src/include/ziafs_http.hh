@@ -92,6 +92,7 @@ namespace net
 		bool									error_code_string(std::string&);
 		bool									get_type_of_resource(net::config&, resouce_type_t&);
 		bool									pre_create_resource(net::config&, resouce_type_t&);
+		bool									get_cgi_path(config&, std::string&);
 		class data_enco
     {
     public:

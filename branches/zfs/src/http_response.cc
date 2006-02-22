@@ -44,6 +44,29 @@ bool			net::http::generate_content_type(config& conf)
 	return true;
 }
 
+bool			net::http::get_cgi_path(config& conf, std::string& path)
+{
+	//Need config file 
+	std::list<net::config::mime*>::iterator it;
+	conf.get_mimes(it);
+	std::string	ext;
+
+	m_uri.extension(ext);
+	while (conf.end_mimes(it) == false)
+	{
+		if (ext == (*it)->extension)
+		{
+			path = (*it)->cgi;
+			return true;
+		}
+		it++;
+	}
+	path = "";
+	//response["Content-type"] = "text/html";
+	return false;
+}
+
+
 bool	net::http::generate_header_date()
 {
 	char					*datestr;
@@ -229,17 +252,35 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	}
 	else if (r_type == EXEC_BY_CGI)
 	{
-		// split du fichier CGI de conf
+		std::string cgi_path;
+		char **av;
+		const char *env[] = {0};
+		int ac;
+		std::vector<std::string> vec;
+		std::vector<std::string>::iterator iter;
+		int i;
 
-//		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
-//		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, m_uri.localname());
+		get_cgi_path(conf, cgi_path);
+
+		// split du fichier CGI de conf
+		stringmanager::split(cgi_path, " ", vec);
+		ac = (int)vec.size() + 1;
+		av = new char*[vec.size() + 2];
+		for(iter = vec.begin(), i = 0; iter != vec.end(); iter++, i++)
+		{
+			av[i] = (char *)(*iter).c_str();
+		}
+		av[i++] = (char *)m_uri.localname().c_str();
+		av[i] = '\0';
+
+		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
 	}
 	else if (r_type == EXEC_DIRECTORY_LISTING)
 	{
 		int ac = 2;
 
 		const char *tab[] = { conf.get_system()->directory_listing.c_str() , m_uri.localname().c_str(), 0};
-		const char *env[] = {0};
+		const char *env[] = {"SERVER_PORT=80", 0};
 		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
 	}
 	else if (r_type == IS_FLY)
