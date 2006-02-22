@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Wed Feb 22 02:49:53 2006 texane
+// Last update Wed Feb 22 20:46:16 2006 texane
 //
 
 
@@ -65,6 +65,20 @@ sysapi::error::handle_t sysapi::file::close(handle_t& hfile)
 
 
 sysapi::error::handle_t sysapi::file::read(handle_t& hfile, unsigned char* buf, unsigned int nbytes, unsigned int& nread)
+{
+  DWORD nr_bytes;
+  BOOL ret;
+
+  nread = 0;
+  ret = ReadFile(hfile, static_cast<LPVOID>(buf), nbytes, &nr_bytes, NULL);
+  if (ret == FALSE)
+    return error::READ_FAILED;
+  nread = (unsigned int)nr_bytes;
+  return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::file::read_nonblock(handle_t& hfile, unsigned char* buf, unsigned int nbytes, unsigned int& nread)
 {
   DWORD nr_bytes;
   BOOL ret;

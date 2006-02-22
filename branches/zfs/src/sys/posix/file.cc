@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:40 2006 
-// Last update Wed Feb 22 00:56:29 2006 
+// Last update Wed Feb 22 20:46:33 2006 texane
 //
 
 #include <string>
@@ -68,6 +68,36 @@ sysapi::error::handle_t sysapi::file::read(handle_t& hfile, unsigned char* buf, 
     return error::READ_FAILED;
   nread = (unsigned int)nret;
   return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::file::read_nonblock(handle_t& hfile, unsigned char* buf, unsigned int nbytes, unsigned int& nread)
+{
+  sysapi::error::handle_t sys_err;
+  int nret;
+
+  fcntl(hfile, F_SETFL, O_NONBLOCK);
+  errno = 0;
+  nret = ::read(hfile, nbytes, nread);
+  if (nret == -1 && errno == EAGAIN)
+    {
+      // would block
+      nread = 0;
+      sys_err = sysapi::error::OPERATION_WOULDBLOCK;
+    }
+  else if (nret <= 0)
+    {
+      // error
+      nread = 0;
+      sys_err = error::READ_FAILED;
+    }
+  else
+    {
+      // success
+      sys_err = error::SUCCESS;
+    }
+  fcntl(hfile, F_SETFL, ~O_NONBLOCK);
+  return sys_err;
 }
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Sat Feb 18 23:23:53 2006 texane
+// Last update Wed Feb 22 20:45:11 2006 texane
 //
 
 
@@ -39,6 +39,7 @@ namespace sys
 	  INVALID_NAME,
 	  INVALID_DESCRIPTOR,
 	  OPERATION_TIMEOUTED,
+	  OPERATION_WOULDBLOCK,
 
 	  CONNECTION_ABORTED,
 	  CONNECTION_CLOSED,
@@ -70,6 +71,7 @@ namespace sys
       error::handle_t open(handle_t&, const std::string&, omode_t = O_BOTH);
       error::handle_t close(handle_t&);
       error::handle_t read(handle_t&, unsigned char*, unsigned int, unsigned int&);
+      error::handle_t read_nonblock(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t write(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t size(handle_t&, unsigned long long&);
       bool is_path_valid(const std::string&);
