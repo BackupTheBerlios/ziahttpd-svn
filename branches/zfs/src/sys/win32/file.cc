@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Wed Feb 22 23:17:34 2006 texane
+// Last update Wed Feb 22 23:40:23 2006 texane
 //
 
 
@@ -87,6 +87,8 @@ sysapi::error::handle_t sysapi::file::read_nonblock(handle_t& hfile, unsigned ch
   DWORD nr_wait;
   BOOL ret;
 
+  printf("entering"); fflush(stdout);
+
   sys_err = error::SUCCESS;
   nread = 0;
 
@@ -108,7 +110,8 @@ sysapi::error::handle_t sysapi::file::read_nonblock(handle_t& hfile, unsigned ch
       if (nr_wait == WAIT_TIMEOUT)
 	{
 	  // blocking operation
-	  printf("HAS timeouted");
+	  printf("HAS timeouted\n");
+	  fflush(stdout);
 	  sys_err = error::OPERATION_WOULDBLOCK;
 	  nread = 0;
 	}
