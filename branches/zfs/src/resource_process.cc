@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Wed Feb 22 11:58:53 2006 texane
+// Last update Wed Feb 22 12:25:27 2006 texane
 //
 
 
@@ -106,9 +106,33 @@ resource::e_error resource::process::flush_environ()
 }
 
 
-resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, buffer&)
+resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, buffer& buf)
 {
-  
+  bool done;
+  unsigned int nsent;
+  sysapi::error::handle_t sys_err;
+
+  done = false;
+  while (done == false)
+    {
+      if (data.size() == 0)
+	{
+	  done = true;
+	}
+      else
+	{
+// 	  sys_err = send(thr_slot, write_handle, data.bufptr(), data.size(), nsent);
+	  if (sys_err != sysapi::error::SUCCESS)
+	    {
+	      done = true;
+	    }
+	  else
+	    {
+	      data.remove_front(nsent);
+	    }
+	}
+    }
+
   return E_SUCCESS;
 }
 
