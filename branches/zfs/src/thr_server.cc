@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 22 22:14:01 2006 texane
+// Last update Wed Feb 22 23:20:08 2006 texane
 //
 
 
@@ -207,6 +207,8 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	    }
 	  else if (e_err == resource::E_WOULDBLOCK)
 	    {
+	      printf("ici, nothing done\n");
+	      fflush(stdout);
 	    }
 	  else // if (e_err == resource::E_ALREADY_GEN)
 	    {

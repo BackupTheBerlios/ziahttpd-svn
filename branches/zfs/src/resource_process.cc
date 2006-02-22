@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Wed Feb 22 20:52:52 2006 texane
+// Last update Wed Feb 22 23:22:45 2006 texane
 //
 
 
@@ -47,7 +47,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
       // blocking operation
       nbytes = 0;
       data.clear();
-      sys_err = sysapi::error::SUCCESS;
+      e_err = resource::E_WOULDBLOCK;
     }
   else if (sys_err != sysapi::error::SUCCESS)
     {
