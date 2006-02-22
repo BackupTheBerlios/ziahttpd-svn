@@ -5,16 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 22 11:52:04 2006 texane
+// Last update Wed Feb 22 16:51:11 2006 texane
 //
 
 
 #include <cstdio>
 #include <string>
 #include <ziafs.hh>
-#include <iostream>
-
-using namespace std;
 
 
 // @info
@@ -145,6 +142,10 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 }
 
 
+#include <iostream>
+using namespace std;
+
+
 bool thr::pool::sess_handle_request(session_t& sess)
 {
   buffer raw_buf;
@@ -169,17 +170,28 @@ bool thr::pool::sess_handle_request(session_t& sess)
       // get / post method
       while (done == false)
 	{
- 	  if (sess.proto.body_size())
+	  if (sess.target->input_size())
 	    {
-	      // First read the body next buffer
-	      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-	      if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
+	      // Resources can be created with a
+	      // buffer as input prefetch.
+	      if (sess.target->is_prefetched_input() == true)
 		{
-		  sess.done = true;
-		  return false;
+		  sess.target->get_prefetched_input(raw_buf);
 		}
+	      else
+		{
+		  herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+		  if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
+		    {
+		      sess.done = true;
+		      return false;
+		    }
+		  raw_buf = buffer((unsigned char*)buf, nbytes);
+		}
+
 	      // Then make http consum/process the buffer(it can be chunked)
- 	      sess.proto.consume_body(raw_buf, &body_buf);
+ 	      // +++ sess.proto.consume_body(raw_buf, &body_buf);
+	      body_buf = raw_buf;
 	      // Send the buffer as input to the resource
 	      sess.target->flush_input(*sess.thr_slot, raw_buf);
 	    }
@@ -190,7 +202,6 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	      sess.chunk_pos = net::http::CHUNK_MIDDLE;
 // 	      sess.proto.modify_header(hdr_buf);
 	      sess.target->prepend_header(hdr_buf);
-// 	      cout << hdr_buf.tostring() << endl;
 	      if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
 		{
 		  sess.done = true;

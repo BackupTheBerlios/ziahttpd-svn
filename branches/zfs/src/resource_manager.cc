@@ -5,14 +5,17 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:04:04 2006 texane
-// Last update Tue Feb 21 22:12:24 2006 texane
+// Last update Wed Feb 22 16:51:06 2006 texane
 //
 
 
 #include <string>
+#include <iostream>
+#include <ziafs_buffer.hh>
 #include <ziafs_resource.hh>
 
 
+using namespace std;
 using std::string;
 
 
@@ -20,7 +23,9 @@ using std::string;
 resource::e_error resource::manager::factory_create(resource::handle*& res_handle,
 						    resource::e_id res_id,
 						    resource::e_omode res_omode,
-						    int ac, char** av, char** env)
+						    int ac, char** av, char** env,
+						    buffer* res_inbuf,
+						    unsigned int res_insz)
 {
   resource::e_error e_err;
 
@@ -32,6 +37,12 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   // set informations
   res_handle->omode = res_omode;
   res_handle->id = res_id;
+  res_handle->in_size = res_insz;
+  if (res_inbuf)
+    {
+      res_handle->in_buf = buffer(*res_inbuf, res_inbuf->size());
+      res_inbuf->remove_front((unsigned int)res_inbuf->size());
+    }
   return e_err;
 }
 
@@ -52,6 +63,7 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   // set the infos
   res_handle->omode = res_omode;
   res_handle->id = res_id;
+  res_handle->in_size = 0;
   return err;
 }
 
@@ -60,7 +72,9 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
 resource::e_error resource::manager::factory_create(resource::handle*& res_handle,
 						    resource::e_id res_id,
 						    resource::e_omode res_omode,
-						    const string& res_name)
+						    const string& res_name,
+						    buffer* res_inbuf,
+						    unsigned int res_insz)
 {
   resource::e_error err;
 
@@ -72,6 +86,16 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   // set the infos
   res_handle->omode = res_omode;
   res_handle->id = res_id;
+  res_handle->in_size = 0;
+  if (res_omode == O_OUTPUT || res_omode == O_BOTH)
+    {
+      if (res_inbuf)
+	{
+	  res_handle->in_buf = buffer(*res_inbuf, res_insz);
+	  res_inbuf->remove_front(res_insz);
+	}
+      res_handle->in_size = res_insz;
+    }
   return err;
 }
 
@@ -83,6 +107,7 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
   res_handle = new fake();
   res_handle->omode = O_BOTH;
   res_handle->id = res_id;
+  res_handle->in_size = 0;
   return E_SUCCESS;
 }
 

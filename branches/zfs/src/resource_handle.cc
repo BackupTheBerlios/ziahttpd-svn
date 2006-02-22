@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:21:12 2006 texane
-// Last update Tue Feb 21 17:11:30 2006 texane
+// Last update Wed Feb 22 15:41:46 2006 texane
 //
 
 
@@ -44,6 +44,25 @@ bool resource::handle::is_output() const
   if (omode == O_OUTPUT || omode == O_BOTH)
     return true;
   return false;
+}
+
+
+unsigned int resource::handle::input_size()
+{
+  return in_size;
+}
+
+
+bool resource::handle::is_prefetched_input()
+{
+  return in_buf.size() ? true : false;
+}
+
+
+void resource::handle::get_prefetched_input(buffer& data)
+{
+  data = in_buf;
+  in_buf.clear();
 }
 
 

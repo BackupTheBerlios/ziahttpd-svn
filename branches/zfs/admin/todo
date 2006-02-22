@@ -117,6 +117,11 @@ today
 	[>] test cgi with post
 	[ ] implement the put request
 	[ ] implement the flush_input method of the process resource
+	[ ] check no buffer is passed to affect without having been ALLOCATED (it is deleted in the destructor)
+	[x] in the resource factory, for file => input size should be set if opened in O_WRITE mode
+	[ ] in the resource, handle data in in_buffer
+	[ ] in the http_response.cc, handle passing factory buffer in the mline according to the body size
+	[ ] check support for cgi input, body
 
 @test:
 	handle are deallocated
@@ -138,6 +143,8 @@ x	bug: the second time a cgi is opened: got as a file
 x	bug: bouffe tout le cpu sous unix... normal? -> fichier de conf, poll delay trop grand 1000
 x	bug: on directory browsing, the directory is prepend to one more time
 ?	bug: linux -> bouffe tout le cpu a l entree...
+	bug: body_buf doesn't return anything
+?	bug: the post input is truncated... normal?
 
 	
 
@@ -148,3 +155,17 @@ x	bug: on directory browsing, the directory is prepend to one more time
 
 @whereamI
 	[ ] correct the factory -> return error appropriate if process creation  failed
+	[ ] implement the input size for resource
+	[ ] implement the mline
+
+
+@ideas
+	[ ] asbstraction above the socket(read->buffer_socket and then socket), to handle probleme with mline and buffering
+	[ ] abstraction above io operation
+	typedef struct
+	{
+          buffer;
+	  handle;
+	  time...;
+	  in_progress...
+	} ioport_t

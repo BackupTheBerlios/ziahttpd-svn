@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:25:08 2006 texane
-// Last update Fri Feb 17 01:27:58 2006 texane
+// Last update Wed Feb 22 15:09:32 2006 texane
 //
 
 
@@ -31,7 +31,7 @@ namespace utils
     bool get_bytes(buffer&, unsigned int);
     bool reset();
 
-  private:
+//   private:
     // attributes
     buffer m_line;
     buffer m_buf;

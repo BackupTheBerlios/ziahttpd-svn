@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Tue Feb 21 22:10:36 2006 texane
+// Last update Wed Feb 22 15:31:01 2006 texane
 //
 
 
@@ -77,10 +77,18 @@ namespace resource
     // type of resource
     bool is_input() const;
     bool is_output() const;
+    unsigned int input_size();
+    bool is_prefetched_input();
+    void get_prefetched_input(buffer&);
 
   protected:
     // implement the current chunk
     buffer data;
+
+    // This is filled at create time
+    buffer in_buf;
+    // remaining size
+    unsigned int in_size;
 
   private:
     e_omode omode;
@@ -196,8 +204,8 @@ namespace resource
   class manager
   {
   public:
-    e_error factory_create(handle*&, e_id, e_omode, int, char**, char**);
-    e_error factory_create(handle*&, e_id, e_omode, const std::string&);
+    e_error factory_create(handle*&, e_id, e_omode, int, char**, char**, buffer* = 0, unsigned int = 0);
+    e_error factory_create(handle*&, e_id, e_omode, const std::string&, buffer* = 0, unsigned int = 0);
     e_error factory_create(handle*&, e_id, e_omode, const unsigned int);
     e_error factory_create(handle*&, e_id);
     e_error factory_destroy(handle*);

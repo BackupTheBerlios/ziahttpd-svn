@@ -248,7 +248,10 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		int ac = 1;
 		const char *tab[] = { m_uri.localname().c_str(), 0};
 		const char *env[] = {0};
-		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
+		  // This line has been modified by texane
+		  // buffer is a buffer to prefecth the input.
+		  // content of the mline.buf will be removed
+		  error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env, &m_line.m_buf, body_size());
 	}
 	else if (r_type == EXEC_BY_CGI)
 	{
@@ -273,7 +276,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		av[i++] = (char *)m_uri.localname().c_str();
 		av[i] = '\0';
 
-		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
+		  error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env, &m_line.m_buf, body_size());
 	}
 	else if (r_type == EXEC_DIRECTORY_LISTING)
 	{

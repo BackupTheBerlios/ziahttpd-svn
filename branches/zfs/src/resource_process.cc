@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Wed Feb 22 12:25:27 2006 texane
+// Last update Wed Feb 22 16:12:19 2006 texane
 //
 
 
@@ -53,10 +53,6 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
     }
   return e_err;
 }
-
-
-#include <iostream>
-using namespace std;
 
 
 resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
@@ -115,24 +111,24 @@ resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, bu
   done = false;
   while (done == false)
     {
-      if (data.size() == 0)
+      if (buf.size() == 0)
 	{
 	  done = true;
 	}
       else
 	{
-// 	  sys_err = send(thr_slot, write_handle, data.bufptr(), data.size(), nsent);
+	  sys_err = sysapi::file::write(read_handle, buf.bufptr(), (unsigned int)buf.size(), nsent);
 	  if (sys_err != sysapi::error::SUCCESS)
 	    {
 	      done = true;
 	    }
 	  else
 	    {
-	      data.remove_front(nsent);
+	      in_size -= nsent;
+	      buf.remove_front(nsent);
 	    }
 	}
     }
-
   return E_SUCCESS;
 }
 
