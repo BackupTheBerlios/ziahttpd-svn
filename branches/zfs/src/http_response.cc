@@ -136,6 +136,15 @@ bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r
 		std::list<net::config::mime*>::iterator it;
 		std::string method_str(m_method);
 		stringmanager::normalize(method_str);
+
+		//Listing directory 
+		if (m_uri.wwwname()[m_uri.wwwname().size() - 1] == '/')
+		{
+			type_r = EXEC_DIRECTORY_LISTING;
+			response.is_chunk = true;
+			return true;
+		}
+
 		if (method_str == "head")
 		{
 			type_r = IS_FAKE;
@@ -212,11 +221,11 @@ bool				net::http::pre_create_resource(net::config& conf, resouce_type_t& r_type
 			}
 		}
 		//Listing directory 
-		if (!have_dir)
-		{
-			r_type = EXEC_DIRECTORY_LISTING;
-			response.is_chunk = true;
-		}
+		//if (!have_dir)
+		//{
+		//	r_type = EXEC_DIRECTORY_LISTING;
+		//	response.is_chunk = true;
+		//}
 	}
 	m_uri.localname() = doc_root + m_uri.wwwname();
 	if (m_uri.wwwname()[m_uri.wwwname().size() - 1] != '/')
@@ -244,8 +253,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
 	pre_create_resource(conf, r_type);
 
-	if (r_type == IS_NONE)
-		get_type_of_resource(conf, r_type);
+	get_type_of_resource(conf, r_type);
 
 	if (r_type == IS_FILE)
 		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
@@ -311,7 +319,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	}
 	if (!m_uri.status_code())
 		m_uri.status_code() = 200;
-	if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI)|| (r_type == EXEC_DIRECTORY_LISTING))
+	if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI) || (r_type == EXEC_DIRECTORY_LISTING))
 		response.m_data_enco = new chunked;
 	else
 		response.m_data_enco = new unchunked;

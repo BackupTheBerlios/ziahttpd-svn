@@ -147,7 +147,10 @@ status::error					net::http::parse_status_line(std::string& ln)
 	}
 	stringmanager::unconvert_hexa(m_uri.wwwname());
 	stringmanager::unconvert_hexa(m_query);
-	request.m_version = vec[2];
+//	if (vec.size() == 2)
+//		request.m_version = "HTTP/1.1";
+//	else
+		request.m_version = vec[2];
 
 //	m_uri.status_code() = 200;
 	ziafs_return_status(status::STATUSLINE_SUCCESS);

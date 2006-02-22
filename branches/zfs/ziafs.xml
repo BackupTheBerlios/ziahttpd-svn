@@ -9,7 +9,7 @@
 <server>
   <id>1</id>
   <cgi_id>1</cgi_id>
-  <port>40000</port>
+  <port>80</port>
   <directory_index>index.html index.htm</directory_index>
 </server>
 
@@ -46,3 +46,9 @@
   <image></image>
 </mime>
 
+<mime extension="php">
+  <is_cgi>0</is_cgi>
+  <type>text/html</type>
+  <cgi>./php/php-cgi.exe</cgi>
+  <image></image>
+</mime>
