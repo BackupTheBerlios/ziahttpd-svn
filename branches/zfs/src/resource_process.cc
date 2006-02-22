@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Wed Feb 22 16:12:19 2006 texane
+// Last update Wed Feb 22 21:00:55 2006 texane
 //
 
 
@@ -42,7 +42,21 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   nbytes = 0;
   e_err = E_SUCCESS;
 
-#ifdef __linux__
+
+#ifdef _WIN32
+  {
+    OVERLAPPED overlapped;
+    ReadFile(write_handle, buf, sizeof(buf), nbytes);
+      {
+	nbytes = 0;
+	data.clear();
+	sys_err = sysapi::error::SUCCESS;
+	printf("the operation timeouted\n");
+	fflush(stdout);
+      }
+    else
+      {
+#else
   {
     // Dont do that if there is no remaining data
     // to send to the script input
@@ -50,11 +64,14 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
     #include <fcntl.h>
     fcntl(write_handle, F_SETFL, O_NONBLOCK);
   }
-#endif // __linux__
+#endif // _WIN32
 
   sys_err = sysapi::file::read(write_handle, buf, sizeof(buf), nbytes);
 
-#ifdef __linux__
+#ifdef _WIN32
+      }
+  }
+#else
     if (sys_err != sysapi::error::SUCCESS && errno == EAGAIN)
       {
 	nbytes = 0;
@@ -62,7 +79,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
 	sys_err = sysapi::error::SUCCESS;
       }
     fcntl(write_handle, F_SETFL, ~O_NONBLOCK);
-#endif // __linux__
+#endif // _WIN32
 
   if (sys_err != sysapi::error::SUCCESS)
     {
