@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Wed Feb 22 21:48:42 2006 texane
+// Last update Wed Feb 22 22:04:53 2006 texane
 //
 
 
@@ -125,8 +125,11 @@ resource::e_error resource::file::flush_environ()
   return E_NOT_IMPL;
 }
 
-resource::e_error resource::file::flush_input(thr::pool::slot_t& thr_slot, buffer&)
+resource::e_error resource::file::flush_input(thr::pool::slot_t& thr_slot, buffer& buf)
 {
+  printf("this is a file resource, put on the disk, not yet supported\n");
+  fflush(stdout);
+  buf.clear();
   return E_SUCCESS;
 }
 
