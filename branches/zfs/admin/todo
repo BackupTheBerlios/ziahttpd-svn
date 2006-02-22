@@ -165,6 +165,7 @@ x	bug: the body reception is truncated (case of cgi)
 	[>] handle the put method
 	[>] handle the deadlock cgi problem on windows
 	[>] handle the deadlock cgi problem on unix
+	[ ] why the process take the whole buffer in the factory
 
 
 @ideas
