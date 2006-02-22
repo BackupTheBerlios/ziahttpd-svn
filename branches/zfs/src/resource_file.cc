@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Tue Feb 21 17:01:28 2006 texane
+// Last update Wed Feb 22 21:48:42 2006 texane
 //
 
 
@@ -55,11 +55,36 @@ using std::string;
 
 resource::e_error resource::file::generate(unsigned int& nbytes)
 {
-  if (generated == true)
-    return E_ALREADY_GEN;
-  generated = true;
-  nbytes = (unsigned int)file_size;
-  return E_SUCCESS;
+  resource::e_error e_err;
+
+  e_err = E_SUCCESS;
+  if (omode == O_OUTPUT)
+    {
+      // put to disk
+      printf("file to put on the disk: %u\n", in_size);
+      fflush(stdout);
+      e_err = E_NOT_SUPP;
+    }
+  else if (omode == O_INPUT)
+    {
+      // get the file
+      if (generated == true)
+	{
+	  e_err = E_ALREADY_GEN;
+	}
+      else
+	{
+	  generated = true;
+	  nbytes = (unsigned int)file_size;
+	  e_err = E_SUCCESS;
+	}
+    }
+  else
+    {
+      // operation not supported yet
+      e_err = E_NOT_SUPP;
+    }
+  return e_err;
 }
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 11:34:11 2006 texane
-// Last update Wed Feb 22 20:23:36 2006 texane
+// Last update Wed Feb 22 21:45:12 2006 texane
 //
 
 
@@ -90,9 +90,10 @@ namespace resource
     buffer in_buf;
     // remaining size
     unsigned int in_size;
+    // open mode
+    e_omode omode;
 
   private:
-    e_omode omode;
     e_id id;
   };
 }
