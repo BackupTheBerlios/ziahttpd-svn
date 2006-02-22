@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Tue Feb 21 19:53:08 2006 texane
+// Last update Wed Feb 22 02:24:48 2006 texane
 //
 
 
@@ -127,13 +127,9 @@ static bool normalfile_query_about(const char* filename, enum file_query q, unsi
 
   hfile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
   if (hfile == INVALID_HANDLE_VALUE)
-    {
-      printf("INVALIDPATH1\n"); fflush(stdout);
-      return false;
-    }
+    return false;
   if (GetFileInformationByHandle(hfile, &info) == FALSE)
     {
-      printf("INVALIDPATH2\n"); fflush(stdout);
       CloseHandle(hfile);
       return false;
     }
@@ -145,6 +141,8 @@ static bool normalfile_query_about(const char* filename, enum file_query q, unsi
       break;
 
     case IS_DIRECTORY:
+      if (info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+	ret = true;
       break;
 
     case GET_SIZE:

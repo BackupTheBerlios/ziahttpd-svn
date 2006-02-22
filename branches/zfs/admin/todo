@@ -101,15 +101,16 @@ today
 	[?] do the av for the process
 	[ ] test invalid control path, as the failure in opening a file, cretaing  a process
 	[ ] play with the size of the line to raise bugs
-	[>] implement directory listing windows
 	[ ] return error in the factory -> catch exception in the new resource
 		-> else segfault
 		-> reset the handle !! else an exeception is raised with invalid handle value
-	[ ] install a new cgi bin directory for testing purpose (netbsd/, linux/, windows/)
-	[ ] install a site directory
+	[x] install a new cgi bin directory for testing purpose (netbsd/, linux/, windows/)
+	[x] install a site directory
+	[>] make directory listing windows
 	[ ] chroot
 	[ ] make the server chrooted
 	[ ] handle error from http protocol
+	[ ] free av, create env and append the get request
 
 @test:
 	handle are deallocated
@@ -135,3 +136,7 @@ x	bug: bouffe tout le cpu sous unix... normal? -> fichier de conf, poll delay tr
  
 @optimization
 	static linking
+
+
+@whereamI
+	[ ] correct the factory -> return error appropriate if process creation  failed
