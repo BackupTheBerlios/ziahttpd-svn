@@ -113,6 +113,10 @@ today
 	[ ] free av, create env and append the get request
 	[ ] the cgi directory segault on will unix, (maybe on windows...), so check it(use the g_path variable)
 
+@today
+	[>] test cgi with post
+	[ ] implement the put request
+
 @test:
 	handle are deallocated
 	memory is not leaking
