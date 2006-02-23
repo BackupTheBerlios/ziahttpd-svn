@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 23 22:50:11 2006 texane
+// Last update Thu Feb 23 23:32:27 2006 texane
 //
 
 
@@ -114,9 +114,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   end_of_metadata = false;
   while (end_of_metadata == false)
     {
-      printf("recv start\n"); fflush(stdout);
       herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-      printf("recv done\n"); fflush(stdout);
       if (sess.thr_slot->curr_io.timeouted == true)
 	{
 	  sess.done = true;
@@ -128,9 +126,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	  return false;
 	}
 
-      printf("consum1\n"); fflush(stdout);
       valid = sess.proto.consume(buf, nbytes, end_of_metadata);
-      printf("consym2\n"); fflush(stdout);
       if (valid == false)
 	{
 	  end_of_metadata = true;
@@ -143,9 +139,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
     }
 
   // Create the resource
-  printf("create resource\n"); fflush(stdout);
   sess.proto.create_resource(sess.target, sess.srv->core->res_manager, *sess.srv->srv_config);
-  printf("create resource 2\n"); fflush(stdout);
   return true;
 }
 
@@ -215,14 +209,11 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	  // buffer as input prefetch.
 	  if (sess.target->is_prefetched_input() == true)
 	    {
-	      printf("prefetched\n"); fflush(stdout);
 	      sess.target->get_prefetched_input(raw_buf);
 	    }
 	  else
 	    {
-	      printf("recv1\n"); fflush(stdout);
 	      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-	      printf("rec2\n"); fflush(stdout);
 	      if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
 		{
 		  sess.done = true;
@@ -297,9 +288,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   while (sess.done == false)
     {
       sess_reset_request(sess);
-      printf("reading metadata\n"); fflush(stdout);
       sess_read_metadata(sess);
-      printf("reading done\n"); fflush(stdout);
       sess_handle_predata(sess);
       sess_handle_request(sess);
       sess_release_request(sess);

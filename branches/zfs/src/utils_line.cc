@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:28:42 2006 texane
-// Last update Thu Feb 23 23:01:12 2006 texane
+// Last update Thu Feb 23 23:31:18 2006 texane
 //
 
 
@@ -72,32 +72,25 @@ bool utils::line::get_from_normal_case()
   unsigned char* line;
   bool ret = false;
 
-  printf("11\n"); fflush(stdout);
   if (m_line.size() == 0)
     {
-      printf("22\n"); fflush(stdout);
       m_line.resize(1);
-      printf("33\n"); fflush(stdout);
       *(m_line.bufptr()) = 0;
     }
 
-  printf("44\n"); fflush(stdout);
   len = (unsigned int)m_line.size() - 1;
   if (len &&
       m_line[len - 1] == '\r' &&
       m_buf.size() &&
       (*(m_buf.bufptr())) == '\n')
     {
-      printf("55\n"); fflush(stdout);
       return get_from_special_case();
     }
   else
     {
-      printf("66\n"); fflush(stdout);
       bufsz = (unsigned int)m_buf.size();
       if (bufsz)
 	{
-	  printf("77\n"); fflush(stdout);
 	  n = 1;
 	  while ((n < bufsz) && is_endof_line(m_buf.bufptr() + n) == false)
 	    ++n;
@@ -108,8 +101,6 @@ bool utils::line::get_from_normal_case()
 	    }
 	}
     }
-
-  printf("88\n"); fflush(stdout);
 
   // append the line to m_line
   len = n + m_line.size() - 1;
@@ -155,29 +146,18 @@ bool utils::line::from_buffer(string& ln, buffer& buf, bool& too_long)
   bool ret = false;
   char* c_str;
 
-
-  printf("entering mline\n");fflush(stdout);
-
   // Append to the buffer
-  printf("1\n"); fflush(stdout);
   m_buf += buf;
   too_long = false;
 
   // Try to get a line
-  printf("2\n"); fflush(stdout);
   ret = get_from_normal_case();
-  printf("3\n"); fflush(stdout);
   if (ret == true)
     {
-      printf("4\n"); fflush(stdout);
       c_str = m_line.c_str();
-      printf("5\n"); fflush(stdout);
       ln = string(c_str);
-      printf("6\n"); fflush(stdout);
       delete[] c_str;
-      printf("7\n"); fflush(stdout);
       m_line.clear();
-      printf("8\n"); fflush(stdout);
       ret = true;
     }
   else if (m_line.size() >= ZIAFS_STATIC_LINESZ)
@@ -185,9 +165,6 @@ bool utils::line::from_buffer(string& ln, buffer& buf, bool& too_long)
       too_long = true;
       ret = false;
     }
-
-  printf("out from mline\n");
-  fflush(stdout);
 
   return ret;
 }
