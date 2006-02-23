@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:56:27 2006 texane
-// Last update Thu Feb 23 11:24:39 2006 texane
+// Last update Thu Feb 23 11:38:25 2006 texane
 //
 
 
@@ -67,6 +67,8 @@ bool proxy::handle_connection(request_t*& req)
 
 bool proxy::bind()
 {
+  error::handle_t sys_err;
+
   // bind the proxy
   if (m_bound == false)
     {
@@ -75,6 +77,7 @@ bool proxy::bind()
       if (sys_err != error::SUCCESS)
 	{
 	  cout << "error binding" << endl;
+	  m_done = true;
 	  return false;
 	}
       m_bound = true;
@@ -110,20 +113,37 @@ proxy::~proxy()
 }
 
 
+#ifndef SOCKET_ERROR
+# define SOCKET_ERROR -1
+#endif // SOCKET_ERROR
+
+
 bool proxy::fuzz()
 {
   bool ret;
   request_t* req;
-  FDSET rd_set;
+  fd_set rd_set;
   int nr_ret;
+  struct timeval tm_timeout;
 
   ret = true;
   bind();
   while (m_done == false)
     {
-      nr_ret = select();
+      FD_ZERO(&rd_set);
+      FD_SET(m_srv_handle, &rd_set);
+      tm_timeout.tv_sec = 0;
+      tm_timeout.tv_usec = 500000;
+      cout << "[ ] select" << endl;
+      nr_ret = select((int)m_srv_handle + 1, &rd_set, 0, 0, &tm_timeout);
+      cout << "[x] select" << endl;
 
-      if (nr_ret == 1)
+      if (nr_ret == SOCKET_ERROR)
+	{
+	  // error
+	  cout << "error selecting" << endl;
+	}
+      else if (nr_ret == 1)
 	{
 	  // Handle incoming connection
 	  ret = handle_connection(req);
@@ -140,7 +160,7 @@ bool proxy::fuzz()
 	{
 	  // timeout, reap requests
 	  list<request_t*>::iterator curr_req = m_req.begin();
-	  list<request_t*>::iterator last_req = m_req.last();
+	  list<request_t*>::iterator last_req = m_req.end();
 	  
 	  while (curr_req != last_req)
 	    {
