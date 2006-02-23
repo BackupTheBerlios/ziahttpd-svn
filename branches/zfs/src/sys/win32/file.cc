@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Wed Feb 22 23:40:23 2006 texane
+// Last update Thu Feb 23 02:23:01 2006 texane
 //
 
 
@@ -80,60 +80,24 @@ sysapi::error::handle_t sysapi::file::read(handle_t& hfile, unsigned char* buf, 
 
 sysapi::error::handle_t sysapi::file::read_nonblock(handle_t& hfile, unsigned char* buf, unsigned int nbytes, unsigned int& nread)
 {
-  sysapi::error::handle_t sys_err;
-  HANDLE event_handle;
-  OVERLAPPED overlapped;
+  unsigned char one_buf;
   DWORD nr_bytes;
-  DWORD nr_wait;
+  DWORD nr_avail;
   BOOL ret;
 
-  printf("entering"); fflush(stdout);
-
-  sys_err = error::SUCCESS;
-  nread = 0;
-
-  // prepare the overflapped structure
-  event_handle = CreateEvent(0, TRUE, FALSE, 0);
-  if (event_handle == INVALID_HANDLE_VALUE)
+  // are there data pending in the pipe
+  ret = PeekNamedPipe(hfile, (LPVOID)&one_buf, sizeof(unsigned char), &nr_bytes, &nr_avail, 0);
+  if (ret == FALSE)
     {
-      sys_err = error::READ_FAILED;
-      printf("cannot create the event\n");
-      fflush(stdout);
+      return sysapi::error::READ_FAILED;
     }
-  else
+  if (nr_bytes == 0)
     {
-      // test for blocking operation
-      overlapped.Offset = 0;
-      overlapped.OffsetHigh = 0;
-      overlapped.hEvent = event_handle;
-      nr_wait = WaitForSingleObject(event_handle, 0);
-      if (nr_wait == WAIT_TIMEOUT)
-	{
-	  // blocking operation
-	  printf("HAS timeouted\n");
-	  fflush(stdout);
-	  sys_err = error::OPERATION_WOULDBLOCK;
-	  nread = 0;
-	}
-      else
-	{
-	  // perform the read
-	  ret = ReadFile(hfile, static_cast<LPVOID>(buf), nbytes, &nr_bytes, &overlapped);
-	  if (ret == FALSE)
-	    {
-	      printf("[important] error reading\n");
-	      fflush(stdout);
-	      sys_err = error::READ_FAILED;
-	      nread = 0;
-	    }
-	  else
-	    {
-	      nread = (unsigned int)nbytes;
-	    }
-	}
+      // no data to read
+      nread = 0;
+      return sysapi::error::OPERATION_WOULDBLOCK;
     }
-  CloseHandle(event_handle);
-  return sys_err;
+  return sysapi::file::read(hfile, buf, nbytes, nread);
 }
 
 

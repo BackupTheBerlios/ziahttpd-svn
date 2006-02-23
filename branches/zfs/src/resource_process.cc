@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Thu Feb 23 01:56:15 2006 
+// Last update Thu Feb 23 02:30:48 2006 texane
 //
 
 
@@ -40,7 +40,6 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
 
   nbytes = 0;
   e_err = E_SUCCESS;
-//   sys_err = sysapi::file::read(write_handle, buf, sizeof(buf), nbytes);
   sys_err = sysapi::file::read_nonblock(write_handle, buf, sizeof(buf), nbytes);
   if (sys_err == sysapi::error::OPERATION_WOULDBLOCK)
     {
@@ -59,7 +58,6 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   else
     {
       // success
-      printf("has geenrated!!\n"); fflush(stdout);
       data = buffer(buf, nbytes);
     }
   return e_err;
@@ -76,9 +74,6 @@ resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, 
   unsigned int nsent;
   unsigned int nbytes;
   bool done;
-
-
-  cout << data.tostring() << endl;
 
   done = false;
   eerr = E_SUCCESS;
