@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:58:01 2006 texane
-// Last update Thu Feb 23 11:00:11 2006 texane
+// Last update Thu Feb 23 11:10:12 2006 texane
 //
 
 
@@ -15,6 +15,9 @@
 
 #include <list>
 #include <string>
+#include <sched.h>
+#include <pthread.h>
+#include <semaphore.h>
 #include <sys/sysapi.hh>
 
 
@@ -52,8 +55,8 @@ private:
   bool m_done;
   bool m_log;
   bool m_bound;
-  unsigned short m_port;
-  unsigned long m_ip;
+  unsigned short m_local_port;
+  unsigned long m_local_ip;
   struct sockaddr_in m_srv_inaddr;
   sysapi::insock::handle_t m_srv_handle;
   std::string m_logfile;

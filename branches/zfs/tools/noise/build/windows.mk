@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Thu Feb 23 11:01:22 2006 texane
+## Last update Thu Feb 23 11:14:02 2006 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -36,7 +36,7 @@ CCFLAGS	=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS)
 LD	=	link -nologo
 LDPATHS	=	-libpath:"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Lib/" \
 		-libpath:"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Lib/" \
-		-libpath:"src/lib"
+		-libpath:"lib"
 LDLIBS	=	-defaultlib:Ws2_32.lib	\
 		-defaultlib:pthreadVSE1.lib \
 		-defaultlib:Mswsock.lib

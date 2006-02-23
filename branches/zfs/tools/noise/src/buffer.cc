@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Tue Feb 21 17:14:52 2006 texane
+// Last update Thu Feb 23 11:08:08 2006 texane
 //
 
 
@@ -13,7 +13,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cstring>
-#include <ziafs_buffer.hh>
+#include <buffer.hh>
 
 
 // Todo list

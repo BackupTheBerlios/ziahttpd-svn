@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:56:27 2006 texane
-// Last update Thu Feb 23 10:57:59 2006 texane
+// Last update Thu Feb 23 11:09:53 2006 texane
 //
 
 
@@ -52,7 +52,7 @@ bool proxy::handle_connection(request_t*& req)
   if (m_bound == false)
     {
       cout << "[ ] binding the proxy" << endl;
-      sys_err = create_listening(m_srv_handle, m_srv_inaddr, 10);
+      sys_err = insock::create_listening(m_srv_handle, m_srv_inaddr, 10);
       if (sys_err != error::SUCCESS)
 	{
 	  cout << "error binding" << endl;
@@ -63,9 +63,9 @@ bool proxy::handle_connection(request_t*& req)
     }
 
   // accept connection
-  request_create(req);
+  req = request_create();
   cout << "[ ] accepting new connection" << endl;
-  sys_err = insock::accept(req->cli_sock, req->cli_addr, m_srv_handle);
+  sys_err = insock::accept(req->cli_handle, req->cli_inaddr, m_srv_handle);
   if (sys_err != error::SUCCESS)
     {
       delete req;

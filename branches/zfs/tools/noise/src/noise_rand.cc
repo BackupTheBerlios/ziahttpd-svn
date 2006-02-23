@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:59:44 2006 texane
-// Last update Thu Feb 23 10:01:35 2006 texane
+// Last update Thu Feb 23 11:12:54 2006 texane
 //
 
 
@@ -16,7 +16,12 @@
 #include <buffer.hh>
 
 
-bool noise::rnd::fuzz(buffer& buf)
+rnd::~rnd()
+{
+}
+
+
+bool rnd::fuzz(buffer& buf)
 {
   return false;
 }

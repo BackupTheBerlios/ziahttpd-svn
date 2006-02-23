@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:55:11 2006 texane
-// Last update Thu Feb 23 10:31:32 2006 texane
+// Last update Thu Feb 23 11:13:19 2006 texane
 //
 
 
@@ -32,7 +32,15 @@ public:
   void log(buffer&, buffer&);
 
   // interface
-  virtual bool fuzz() = 0;
+  virtual bool fuzz(buffer&) = 0;
+};
+
+// simple random fuzz generator
+class rnd : public noise
+{
+public:
+  ~rnd();
+  bool fuzz(buffer&);
 };
 
 
