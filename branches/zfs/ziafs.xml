@@ -3,13 +3,13 @@
   <poll_delay>500000</poll_delay>
   <expiration_delay>5</expiration_delay>
   <nr_bklog>100</nr_bklog>
-  <directory_listing>./test/cgi-bin/windows/dir_list.exe</directory_listing>
+  <directory_listing>./test/cgi-bin/netbsd/dir_list.exe</directory_listing>
 </system>
 
 <server>
   <id>1</id>
   <cgi_id>1</cgi_id>
-  <port>80</port>
+  <port>40000</port>
   <directory_index>index.html index.htm</directory_index>
 </server>
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 14:51:00 2006 texane
-// Last update Wed Feb 22 11:54:37 2006 texane
+// Last update Wed Feb 22 23:20:55 2006 
 //
 
 
@@ -57,7 +57,7 @@ int main(int ac, char** av)
   nread = 0;
   while (nread < 2000)
     {
-      nret = read(0, (unsigned char*)buffer + nread, 1000);
+      nret = read(0, (unsigned char*)buffer + nread, 200);
       if (nret <= 0)
 	{
 	  strcpy((char*)buffer, "cannot read");

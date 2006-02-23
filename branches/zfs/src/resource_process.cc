@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Wed Feb 22 23:42:00 2006 texane
+// Last update Thu Feb 23 01:56:15 2006 
 //
 
 
@@ -40,8 +40,8 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
 
   nbytes = 0;
   e_err = E_SUCCESS;
-  sys_err = sysapi::file::read(write_handle, buf, sizeof(buf), nbytes);
-//   sys_err = sysapi::file::read_nonblock(write_handle, buf, sizeof(buf), nbytes);
+//   sys_err = sysapi::file::read(write_handle, buf, sizeof(buf), nbytes);
+  sys_err = sysapi::file::read_nonblock(write_handle, buf, sizeof(buf), nbytes);
   if (sys_err == sysapi::error::OPERATION_WOULDBLOCK)
     {
       // blocking operation

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Feb 22 23:33:41 2006 texane
+// Last update Thu Feb 23 01:59:45 2006 
 //
 
 
@@ -161,86 +161,68 @@ bool thr::pool::sess_handle_request(session_t& sess)
     return false;
 
   done = false;
-//   if (sess.target->is_input() == true)
+  // get / post method
+  while (done == false)
     {
-      // get / post method
-      while (done == false)
+      if (sess.target->input_size())
 	{
-	  if (sess.target->input_size())
+	  // Resources can be created with a
+	  // buffer as input prefetch.
+	  if (sess.target->is_prefetched_input() == true)
 	    {
-	      // Resources can be created with a
-	      // buffer as input prefetch.
-	      if (sess.target->is_prefetched_input() == true)
-		{
-		  sess.target->get_prefetched_input(raw_buf);
-		}
-	      else
-		{
-		  herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-		  if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
-		    {
-		      sess.done = true;
-		      return false;
-		    }
-		  raw_buf = buffer((unsigned char*)buf, nbytes);
-		}
-
-	      // Then make http consum/process the buffer(it can be chunked)
- 	      // +++ sess.proto.consume_body(raw_buf, &body_buf);
-	      body_buf = raw_buf;
-	      // Send the buffer as input to the resource
-	      printf("flushing input with %u\n", raw_buf.size());
-	      fflush(stdout);
-	      sess.target->flush_input(*sess.thr_slot, raw_buf);
+	      sess.target->get_prefetched_input(raw_buf);
 	    }
-	  if ((e_err = sess.target->generate(size)) == resource::E_SUCCESS)
+	  else
 	    {
-	      // this is for non blocking mode
-// 	      sess.target->alter(size);
- 	      sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
-	      sess.chunk_pos = net::http::CHUNK_MIDDLE;
-// 	      sess.proto.modify_header(hdr_buf);
-	      sess.target->prepend_header(hdr_buf);
-	      if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
+	      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+	      if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
 		{
 		  sess.done = true;
 		  return false;
 		}
+	      raw_buf = buffer((unsigned char*)buf, nbytes);
 	    }
-	  else if (e_err == resource::E_WOULDBLOCK)
+
+	  // Then make http consum/process the buffer(it can be chunked)
+	  // +++ sess.proto.consume_body(raw_buf, &body_buf);
+	  body_buf = raw_buf;
+	  // Send the buffer as input to the resource
+	  printf("flushing input with %u\n", raw_buf.size());
+	  fflush(stdout);
+	  sess.target->flush_input(*sess.thr_slot, raw_buf);
+	}
+      if ((e_err = sess.target->generate(size)) == resource::E_SUCCESS)
+	{
+	  // this is for non blocking mode
+	  // 	      sess.target->alter(size);
+	  sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
+	  sess.chunk_pos = net::http::CHUNK_MIDDLE;
+	  // 	      sess.proto.modify_header(hdr_buf);
+	  sess.target->prepend_header(hdr_buf);
+	  if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
 	    {
-	      printf("ici, nothing done\n");
-	      fflush(stdout);
-	    }
-	  else // if (e_err == resource::E_ALREADY_GEN)
-	    {
-	      // Send the last chunk
-	      if (sess.proto.response.is_chunk == true)
-		{
-		  sess.chunk_pos = net::http::CHUNK_LAST;
-		  sess.proto.create_header(hdr_buf, 0, net::http::CHUNK_LAST);
-		  sess.target->prepend_header(hdr_buf);
-		  sess.target->flush_network(*sess.thr_slot, sess.cli_sock);
-		}
-	      done = true;
+	      sess.done = true;
+	      return false;
 	    }
 	}
+      else if (e_err == resource::E_WOULDBLOCK)
+	{
+	  printf("ici, nothing done\n");
+	  fflush(stdout);
+	}
+      else // if (e_err == resource::E_ALREADY_GEN)
+	{
+	  // Send the last chunk
+	  if (sess.proto.response.is_chunk == true)
+	    {
+	      sess.chunk_pos = net::http::CHUNK_LAST;
+	      sess.proto.create_header(hdr_buf, 0, net::http::CHUNK_LAST);
+	      sess.target->prepend_header(hdr_buf);
+	      sess.target->flush_network(*sess.thr_slot, sess.cli_sock);
+	    }
+	  done = true;
+	}
     }
-//   else if (sess.target->is_output() == true)
-//     {
-//       // This is a put method
-//       while (done == false)
-// 	{
-// 	  if (sess.proto.body_size() == 0)
-// 	    {
-// 	      done = true;
-// 	    }
-// 	  else
-// 	    {
-// 	    }
-// 	}
-//     }
-
   return true;
 }
 
