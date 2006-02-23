@@ -5,10 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:56:27 2006 texane
-// Last update Thu Feb 23 11:09:53 2006 texane
+// Last update Thu Feb 23 11:24:39 2006 texane
 //
 
 
+#include <list>
 #include <iostream>
 #include <noise.hh>
 
@@ -48,20 +49,6 @@ bool proxy::handle_connection(request_t*& req)
 {
   error::handle_t sys_err;
 
-  // bind the proxy
-  if (m_bound == false)
-    {
-      cout << "[ ] binding the proxy" << endl;
-      sys_err = insock::create_listening(m_srv_handle, m_srv_inaddr, 10);
-      if (sys_err != error::SUCCESS)
-	{
-	  cout << "error binding" << endl;
-	  return false;
-	}
-      m_bound = true;
-      cout << "[x] binding the proxy" << endl;
-    }
-
   // accept connection
   req = request_create();
   cout << "[ ] accepting new connection" << endl;
@@ -76,6 +63,24 @@ bool proxy::handle_connection(request_t*& req)
   cout << "[x] accepting new connection" << endl;  
 
   return true;
+}
+
+bool proxy::bind()
+{
+  // bind the proxy
+  if (m_bound == false)
+    {
+      cout << "[ ] binding the proxy" << endl;
+      sys_err = insock::create_listening(m_srv_handle, m_srv_inaddr, 10);
+      if (sys_err != error::SUCCESS)
+	{
+	  cout << "error binding" << endl;
+	  return false;
+	}
+      m_bound = true;
+      cout << "[x] binding the proxy" << endl;
+    }
+  return false;
 }
 
 
@@ -109,20 +114,43 @@ bool proxy::fuzz()
 {
   bool ret;
   request_t* req;
+  FDSET rd_set;
+  int nr_ret;
 
   ret = true;
+  bind();
   while (m_done == false)
     {
-      req = 0;
-      ret = handle_connection(req);
-      if (ret == true)
+      nr_ret = select();
+
+      if (nr_ret == 1)
 	{
-	  ret = handle_request(req);
-	  if (ret == false)
+	  // Handle incoming connection
+	  ret = handle_connection(req);
+	  if (ret == true)
+	    {
+	      ret = handle_request(req);
+	      if (ret == false)
+		m_done = false;
+	    }
+	  else
 	    m_done = false;
 	}
       else
-	m_done = false;
+	{
+	  // timeout, reap requests
+	  list<request_t*>::iterator curr_req = m_req.begin();
+	  list<request_t*>::iterator last_req = m_req.last();
+	  
+	  while (curr_req != last_req)
+	    {
+	      if ((*curr_req)->thr_is_done)
+		{
+		  cout << "[ ] handling done request" << endl;
+		}
+	      ++curr_req;
+	    }
+	}
     }
   if (req)
     delete req;

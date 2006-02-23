@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:58:01 2006 texane
-// Last update Thu Feb 23 11:10:12 2006 texane
+// Last update Thu Feb 23 11:18:18 2006 texane
 //
 
 
@@ -64,6 +64,7 @@ private:
   std::list<request_t*> m_req;
 
   void reset();
+  bool bind();
   bool handle_request(request_t*&);
   bool handle_connection(request_t*&);
   static void* thr_entry(request_t*);
