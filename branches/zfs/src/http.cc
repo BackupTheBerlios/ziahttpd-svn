@@ -332,6 +332,7 @@ bool			net::http::predata(buffer &buf)
 		buf += st_code + " ";
 		error_code_string(st_code_str, atoi(st_code.c_str()));
 		buf += st_code_str + "\r\n\r\n";
+		m_uri.status_code() = 201;
 		create_header(head, 0, CHUNK_FIRST);
 		buf += head;
 	}
