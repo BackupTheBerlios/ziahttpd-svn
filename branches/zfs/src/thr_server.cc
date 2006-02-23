@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 23 02:53:52 2006 texane
+// Last update Thu Feb 23 03:01:25 2006 texane
 //
 
 
@@ -187,8 +187,6 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	  // +++ sess.proto.consume_body(raw_buf, &body_buf);
 	  body_buf = raw_buf;
 	  // Send the buffer as input to the resource
-	  printf("flushing input with %u\n", raw_buf.size());
-	  fflush(stdout);
 	  sess.target->flush_input(*sess.thr_slot, raw_buf);
 	}
       // generate the resource

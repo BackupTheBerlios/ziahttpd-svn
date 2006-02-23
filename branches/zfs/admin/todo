@@ -1,69 +1,19 @@
-[x] implement the lock function on unix
-[x] implement the system thread
-	-> should at least be able to unblock threads
-[x] implement the net::server class
-[~] make the servers reapable
-[ ] correct the debug_msg bug (when thread id and others...)
-[ ] implement <system></system> in the config file, for
-	all balise related to the system config
-[x] implement ONE SERVER
-	-> implement the core, handling pool, srvlist...
-	-> implement one server
-[x] implement the run method
-[x] try to reap all the resource that are older than <timeout>
-[x] problem when the thread implementing the last client timeouts
-
-// two thread config
-[x] system config file
-	poll delay
-	expiration delay
-	size of the backlog queue
-[x] implement reset on http
-[2] test leaks + on failure, on client deconnection
-[3] implement file/resource management
-[4] try to guess rush from the clients
-[x] limit the line size
+@fixme
+[ ] linux, 100% cpu on start
+[?] leaks from the mline
+[ ] resize from generate() data
 
 
-today
-[x] impelement by fly resources
-[x] impelement file resources
-[x] implement process resource
-[~] implement the resource manager
-	-> for in memory resources, the session should have a static buffer
-	-> file should be cache at the fd level
-	-> function to match a file against another one
-	-> function to lock a file
-[ ] make test tonight on file resources
-[x] if omode is input, flush the input, else if
-	omode is output, flush the ouput
-[x] think of releasing the target resource if allocated...
-[x] for the moment, the resource manager's only role is
-	to allocate a new resource/delete it
-[x] pass the core to the thread server
-[ ] turn the nbytes unsigned int into unsigned long long
-[x] implement the file opening in the file::file constructor
-[x] for all the sending/receiving function, ensure the whole buffer
-	is transmitted before returning
-[x] change the resource factory, cleaner
-[x] bug when refreshing
-[x] see why the cpu bug
-[x] reset the request
-[x] see for the send file function
-[x] segfault on the release function, destructing the file
-	-> probleme in the close function
-[>] implement the process resouce
-[>] mark the process output as non blocking, or
-	find a scheme to read from the process output
-	without blocking (sysapi wrapper?)
-		-> windows: waitforsingleobject/timeout_read
-		-> unix: non blocking fd
-[>] flush_environ should take a (key_string, val_string) parameter
-[x] implement the resource_process in manager
-[ ] cleaner way to get error from resource creation
-[ ] solve the input problem, case when method is get
-	of cgi with large sized body
-[ ] in the process resource: take the omode into account(minimizing fds used)
+@tests
+[ ] play with static sizes to raise bugs
+[ ] test leaks on handle, memory
+[ ] test if resources(threads, processes) are reaped
+[ ] test invalid control path, allocation failure, function errors...
+[ ] compile with the efence lib on unix
+[ ] try to get purify and track leaks...
+[ ] test the timeouting
+[ ] test post on cgi
+[ ] test put on files
 [ ] handle issues such as:
 	-> memory allocation errors
 	-> file too large
@@ -73,106 +23,28 @@ today
 	-> resource leaks on failure control paths
 	-> clients deconnections
 	-> ...
-[?] wrap the http request so that it is cleaner for the api
-	-> wait for the api?
-[>] code chunked, for process
-[x] port on unix for the process
-[ ] code various cgi script, for testing purposes:
-	-> test blocking on in
-	-> test no writing at all
-	-> ...
-[ ] check the sendfile on netbsd
-[ ] defines an invalid value for each closable handle
-	functions have been defined in the sysapi,
-	use it after the current implementation is stable
-[ ] implement a kind of static limit for the body
-[ ] see the read bug in the process resource generate function!
-	-> only the first chunk is generated
-[ ] problem of the process resource
-	-> problem with data remaining in the pipe at
-	process exiting
-[ ] reap the processses on unix
 
 
+@todos
+[ ] reset handles in sysapi and check before releasing
+[ ] implement error in resource factory -> exception handling (not safe?)
+[ ] chrooting of the server
+[ ] implement a correct body buffer production from http.cc
+[ ] clean the resource interface, some function unused(is_input, is_output...)
 
-@tonight:
-	[x] reap the process.
-	[x] do the fake resource
-	[?] do the av for the process
-	[ ] test invalid control path, as the failure in opening a file, cretaing  a process
-	[ ] play with the size of the line to raise bugs
-	[ ] return error in the factory -> catch exception in the new resource
-		-> else segfault
-		-> reset the handle !! else an exeception is raised with invalid handle value
-	[x] install a new cgi bin directory for testing purpose (netbsd/, linux/, windows/)
-	[x] install a site directory
-	[>] make directory listing windows
-	[ ] chroot
-	[ ] make the server chrooted
-	[ ] handle error from http protocol
-	[ ] free av, create env and append the get request
-	[ ] the cgi directory segault on will unix, (maybe on windows...), so check it(use the g_path variable)
-
-@today
-	[>] test cgi with post
-	[ ] implement the put request
-	[ ] implement the flush_input method of the process resource
-	[ ] check no buffer is passed to affect without having been ALLOCATED (it is deleted in the destructor)
-	[x] in the resource factory, for file => input size should be set if opened in O_WRITE mode
-	[ ] in the resource, handle data in in_buffer
-	[ ] in the http_response.cc, handle passing factory buffer in the mline according to the body size
-	[ ] check support for cgi input, body
-
-@test:
-	handle are deallocated
-	memory is not leaking
-	cgi support on  unix, linux
-	verify resources allocated for process, wether or not handle are deallocated...
-	check the timeout function
-
-@bugs:
-	leaks from the mline(?)
-x	bug: ie doesn't find cgiscripts
-	bug: resize from generate() data
-	bug: segfaultoncgi -> possibly from prepend_header
-x	bug: no more connection can establish n
-	bug: makeserver;:runreturn a bool value if it cannot assign a new task
-x	bug: reap process -> problem connection reused
-x	bug: metadata loop... -> nust be rrot to start server < 1024
-x	bug: the second time a cgi is opened: got as a file
-x	bug: bouffe tout le cpu sous unix... normal? -> fichier de conf, poll delay trop grand 1000
-x	bug: on directory browsing, the directory is prepend to one more time
-?	bug: linux -> bouffe tout le cpu a l entree...
-	bug: body_buf doesn't return anything
-x	bug: the body reception is truncated (case of cgi)
-	bug: process is waiting for input in flush_input -> we are waiting for output in generate
-		---> deadlock!
-
-	
-
+@whereami
+[ ] test the put method
+[ ] test on linux
+[ ] clean the resource
  
-@optimization
-	static linking
-
-
-@whereamI
-	[ ] correct the factory -> return error appropriate if process creation  failed
-	[x] implement the input size for resource
-	[x] implement the mline
-	[ ] solve the deadlock problem
-		-> non blocking fd on posix system, so that if there are remaining input and no output available, don't block on output reception and go filling the input
-		-> on windows... async io?
-	[>] handle the put method
-	[x] handle the deadlock cgi problem on windows
-	[x] handle the deadlock cgi problem on unix
-	[x] why the process take the whole buffer in the factory
-	[ ] make the todo be cleaner
-	[ ] clean the resource
+@optimizations
+[ ] static linking
+[ ] search for common called code and optim -> buf = buffer(...);
 
 
 @ideas
-	[ ] asbstraction above the socket(read->buffer_socket and then socket), to handle probleme with mline and buffering
-	[ ] abstraction above io operation
+[ ] abstraction above the socket(read->buffer_socket and then socket), to handle probleme with mline and buffering
+[ ] abstraction above io operation -> mline is not ok
 	typedef struct
 	{
           buffer;
