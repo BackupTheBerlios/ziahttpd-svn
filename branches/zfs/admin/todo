@@ -2,6 +2,7 @@
 [ ] linux, 100% cpu on start
 [?] leaks from the mline
 [ ] resize from generate() data
+[ ] segfault when ZIAFS_STATIC_BUFSZ == 2
 
 
 @tests
@@ -29,8 +30,9 @@
 [ ] reset handles in sysapi and check before releasing
 [ ] implement error in resource factory -> exception handling (not safe?)
 [ ] chrooting of the server
-[ ] implement a correct body buffer production from http.cc
 [ ] clean the resource interface, some function unused(is_input, is_output...)
+[ ] implement a correct body buffer production from http.cc
+[ ] chunked input
 
 @whereami
 [ ] test the put method

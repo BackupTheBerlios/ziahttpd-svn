@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:56:27 2006 texane
-// Last update Thu Feb 23 20:44:18 2006 texane
+// Last update Thu Feb 23 22:31:23 2006 texane
 //
 
 
@@ -195,10 +195,8 @@ bool proxy::forward()
 	    {
 	      ret = handle_request(req);
 	      if (ret == false)
-		m_done = false;
+		m_done = true;
 	    }
-	  else
-	    m_done = false;
 	}
       else
 	{
@@ -211,6 +209,8 @@ bool proxy::forward()
 	    {
 	      if ((*curr_req)->thr_local_done && (*curr_req)->thr_remote_done)
 		{
+		  printf("reaping resource\n");
+		  fflush(stdout);
 		  prev_req = curr_req;
 		  ++curr_req;
 		  request_release(*prev_req);
