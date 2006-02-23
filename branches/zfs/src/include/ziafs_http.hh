@@ -73,6 +73,7 @@ namespace net
 		bool	valid_uri();
 		bool	valid_version();
 		bool	valid_host();
+		bool	valid_root();
 		bool	method_can_have_body();
 		//Response
 		enum resouce_type_t

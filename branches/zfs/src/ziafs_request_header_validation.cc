@@ -61,11 +61,35 @@ bool	net::http::valid_host()
 	return true;
 }
 
+bool	net::http::valid_root()
+{
+	// root is valid ?
+	std::vector<std::string>	vec;
+	std::string str;
+	str = m_uri.wwwname();
+	str += "lala";
+	stringmanager::split(str, "/", vec);
+	std::vector<std::string>::iterator iter;
+	int			i = 0;
+	for(iter = vec.begin(); iter != vec.end(); iter++)
+	{
+		if ((*iter) == "..")
+			i--;
+		else
+			i++;
+	}
+	i--;
+	if (i < 0)
+		m_uri.status_code() = 403;
+	return true;
+}
+
 bool	net::http::request_header_validation()
 {
 	if (!valid_method()) return false;
 	if (!valid_uri()) return false;
 	if (!valid_version()) return false;
 	if (!valid_host()) return false;
+	if (!valid_root()) return false;
 	return true;
 }

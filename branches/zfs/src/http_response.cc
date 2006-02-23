@@ -137,6 +137,11 @@ bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r
 		std::string method_str(m_method);
 		stringmanager::normalize(method_str);
 
+		if (m_uri.status_code())
+		{
+			type_r = IS_FLY;
+			return true;
+		}
 		//Listing directory 
 		if (m_uri.wwwname()[m_uri.wwwname().size() - 1] == '/')
 		{
@@ -157,11 +162,7 @@ bool			net::http::get_type_of_resource(net::config& conf, resouce_type_t& type_r
 			return true;
 		}
 
-		if (m_uri.status_code())
-		{
-			type_r = IS_FLY;
-			return true;
-		}
+
 		conf.get_mimes(it);
 		std::string	ext;
 	
@@ -220,6 +221,7 @@ bool				net::http::pre_create_resource(net::config& conf, resouce_type_t& r_type
 				break;
 			}
 		}
+		
 		//Listing directory 
 		//if (!have_dir)
 		//{
