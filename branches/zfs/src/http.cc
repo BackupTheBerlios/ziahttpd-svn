@@ -316,3 +316,21 @@ bool	net::http::method_can_have_body()
 		return true;
 	return false;
 }
+
+bool			net::http::predata(buffer &buf)
+{
+	if (!request.m_hdrlines["expect"].empty())
+	{
+		std::string st_code;
+		std::string st_code_str;
+
+		size_t i = request.m_hdrlines["expect"].find("-", 0);
+		if (i != std::string::npos)
+			st_code = request.m_hdrlines["expect"].substr(0, i);
+		buf += request.m_version + " ";
+		buf += st_code + " ";
+		error_code_string(st_code_str, atoi(st_code.c_str()));
+		buf += st_code_str + "\r\n\r\n";
+	}
+	return true;
+}

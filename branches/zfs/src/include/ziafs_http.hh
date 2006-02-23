@@ -61,6 +61,7 @@ namespace net
 		bool									request_header_validation();
 		unsigned int					body_size();
 		bool									create_resource(resource::handle*&, resource::manager&, config&);
+		bool									predata(buffer&);
 
 		// Response
 		bool									create_header(buffer&, size_t, chunk_pos_t);
@@ -91,6 +92,7 @@ namespace net
 		bool									generate_header_date();
 		bool									generate_content_length(size_t);
 		bool									error_code_string(std::string&);
+		bool									error_code_string(std::string &dest, int st_code);
 		bool									get_type_of_resource(net::config&, resouce_type_t&);
 		bool									pre_create_resource(net::config&, resouce_type_t&);
 		bool									get_cgi_path(config&, std::string&);

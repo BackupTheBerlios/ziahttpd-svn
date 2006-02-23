@@ -55,11 +55,22 @@ static const err_list_s	err_list[] =
 
 bool	net::http::error_code_string(std::string &dest)
 {
-
-
 	for (int i = 0; err_list[i].err_code; i++)
 	{
 		if (err_list[i].err_code == m_uri.status_code())
+		{
+			dest = err_list[i].str;
+			return (true);
+		}
+	}
+	return (false);
+}
+
+bool	net::http::error_code_string(std::string &dest, int st_code)
+{
+	for (int i = 0; err_list[i].err_code; i++)
+	{
+		if (err_list[i].err_code == st_code)
 		{
 			dest = err_list[i].str;
 			return (true);
