@@ -3,6 +3,7 @@
 [?] leaks from the mline
 [ ] resize from generate() data
 [ ] segfault when ZIAFS_STATIC_BUFSZ == 2
+[ ] sigpipe in netbsd from sendto()
 
 
 @tests

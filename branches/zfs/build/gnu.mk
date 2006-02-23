@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Wed Feb 22 01:10:17 2006 
+## Last update Fri Feb 24 00:23:49 2006 
 ##
 
 
@@ -23,7 +23,7 @@ __GNU_MK	=	1
 CC	:=	g++
 CCPATHS	:=	-I$(PROJ_ROOT)/src/include/
 CCDEFS	:=	-D_SYSAPI=1 -D_REENTRANT
-CCGEN	:=	-O2
+CCGEN	:=	-O2 -ggdb
 CCWARNS	:=	-Wall
 CCOUT	:=	-c
 CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS) -DTIXML_USE_STL
@@ -32,7 +32,7 @@ CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS) -DTIXML_USE_STL
 osname	:=	$(shell uname -s)
 LD	:=	g++
 LDPATHS	:=
-LDLIBS	:=	-lpthread
+LDLIBS	:=	-lpthread -L/usr/pkg/lib # -lefence
 ifeq ($(osname), Linux)
 LDLIBS	+=	-ldl
 endif

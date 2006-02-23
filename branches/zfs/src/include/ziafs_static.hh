@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Wed Feb 15 22:37:34 2006 
-// Last update Thu Feb 23 23:03:27 2006 texane
+// Last update Fri Feb 24 00:18:16 2006 
 //
 
 
@@ -17,7 +17,8 @@
 
 #define ZIAFS_STATIC_LINESZ	1024
 // #define ZIAFS_STATIC_BUFSZ	512
-#define ZIAFS_STATIC_BUFSZ	1
+#define ZIAFS_STATIC_BUFSZ	2
+#define ZIAFS_STATIC_BYFLYSZ	512
 #define ZIAFS_STATIC_POLL	100000
 #define ZIAFS_STATIC_EXPIR	10
 

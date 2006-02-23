@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:16:34 2006 texane
-// Last update Fri Feb 17 23:07:00 2006 texane
+// Last update Fri Feb 24 00:18:33 2006 
 //
 
 
@@ -38,7 +38,7 @@ resource::e_error resource::byfly::generate(unsigned int& nbytes)
     return E_ALREADY_GEN;
   generated = true;
 
-  data.resize(ZIAFS_STATIC_BUFSZ);
+  data.resize(ZIAFS_STATIC_BYFLYSZ);
   mk_status_msg(err_code, data.bufptr(), nbytes);
   data.resize(nbytes);
   return E_SUCCESS;
