@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:58:01 2006 texane
-// Last update Thu Feb 23 11:18:18 2006 texane
+// Last update Thu Feb 23 15:12:06 2006 texane
 //
 
 
@@ -35,8 +35,18 @@ typedef struct
   sysapi::insock::handle_t cli_handle;
   struct sockaddr_in cli_inaddr;
 
+  // received from the client
+  pthread_mutex_t cli_buf_lock;
+  buffer cli_buf;
+  // received from the server
+  pthread_mutex_t srv_buf_lock;
+  buffer srv_buf;
+
   // thread related
-  pthread_t thr_id;
+  pthread_t thr_recv_id;
+  pthread_t thr_fuzzer_id;
+
+
   pthread_cond_t thr_cond_done;
   pthread_mutex_t thr_mtx_done;
   bool thr_is_done;
@@ -67,7 +77,8 @@ private:
   bool bind();
   bool handle_request(request_t*&);
   bool handle_connection(request_t*&);
-  static void* thr_entry(request_t*);
+  static void* thr_receiver_entry(request_t*);
+  static void* thr_fuzzer_entry(request_t*);
 };
 
 

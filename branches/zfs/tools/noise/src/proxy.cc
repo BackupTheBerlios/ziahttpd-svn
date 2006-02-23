@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:56:27 2006 texane
-// Last update Thu Feb 23 11:43:01 2006 texane
+// Last update Thu Feb 23 15:15:50 2006 texane
 //
 
 
@@ -25,23 +25,33 @@ static void request_reset(request_t& req)
   req.thr_is_done = false;
 }
 
+static void request_release(request_t& req)
+{
+  if (req)
+    {
+      pthread_mutex_release(&req->cli_buf_lock);
+      pthread_mutex_release(&req->srv_buf_lock);
+      delete req;
+    }
+}
+
 static request_t* request_create()
 {
   request_t* rq;
+  int ret;
 
   rq = new request_t;
   request_reset(*rq);
-  return rq;
-}
+  pthread_mutex_init(&rq->cli_buf_lock, 0);
+  pthread_mutex_init(&rq->srv_buf_lock, 0);
 
-static void request_release(request_t* req)
-{
-  delete req;
+  return rq;
 }
 
 
 bool proxy::handle_request(request_t*& req)
 {
+  pthread_create();
   return true;
 }
 
@@ -103,14 +113,15 @@ void proxy::reset()
 proxy::proxy(int ac, char** av)
 {
   // list of options
+  insock::init_subsystem();
   reset();
-  insock::n_to_inaddr(srv_inaddr, m_local_addr, m_local_port);
+  insock::n_to_inaddr(m_srv_inaddr, m_local_ip, m_local_port);
 }
 
 
 proxy::~proxy()
 {
-  
+  insock::release_subsystem();
 }
 
 
@@ -147,6 +158,7 @@ bool proxy::fuzz()
       else if (nr_ret == 1)
 	{
 	  // Handle incoming connection
+	  printf("on connection avaialbel\n"); fflush(stdout);
 	  ret = handle_connection(req);
 	  if (ret == true)
 	    {
@@ -162,7 +174,7 @@ bool proxy::fuzz()
 	  // timeout, reap requests
 	  list<request_t*>::iterator curr_req = m_req.begin();
 	  list<request_t*>::iterator last_req = m_req.end();
-	  
+
 	  while (curr_req != last_req)
 	    {
 	      if ((*curr_req)->thr_is_done)
