@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:54:43 2006 texane
-// Last update Thu Feb 23 11:07:34 2006 texane
+// Last update Thu Feb 23 16:28:34 2006 texane
 //
 
 
@@ -15,5 +15,5 @@
 int main(int ac, char** av)
 {
   proxy p(ac, av);
-  p.fuzz();
+  p.forward();
 }

@@ -5,12 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 10:58:42 2006 texane
-// Last update Thu Feb 23 15:09:28 2006 texane
+// Last update Thu Feb 23 16:58:59 2006 texane
 //
 
 
 #include <iostream>
 #include <noise.hh>
+#include <proxy.hh>
 
 
 using namespace std;
@@ -20,9 +21,9 @@ using namespace sysapi;
 #define BUFSZ 512
 
 
-void* proxy::thr_receiver_entry(request_t* req)
+void* proxy::thr_handle_remote(request_t* req)
 {
-  // receive from the server, send back to client
+  // srv -> us -> client
 
   buffer buf;
   error::handle_t sys_err;
@@ -30,19 +31,19 @@ void* proxy::thr_receiver_entry(request_t* req)
   unsigned int nr_sent;
   bool done;
 
-  cout << "[ ] new recveiver thread" << endl;
+  cout << "[ ] new remote thread" << endl;
   done = false;
   buf.resize(BUFSZ);
   while (done == false)
     {
-      sys_err = insock::recv(req->srv_handle, buf.bufptr(), buf.size(), nr_recv);
+      sys_err = insock::recv(req->remote_handle, buf.bufptr(), (unsigned int)buf.size(), nr_recv);
       if (sys_err != error::SUCCESS)
 	{
 	  done = false;
 	}
       else
 	{
-	  sys_err = insock::send(req->cli_handle, buf.bufptr(), nr_recv, nr_sent);
+	  sys_err = insock::send(req->local_handle, buf.bufptr(), nr_recv, nr_sent);
 	  if (sys_err != error::SUCCESS)
 	    {
 	      done = false;
@@ -55,29 +56,32 @@ void* proxy::thr_receiver_entry(request_t* req)
 }
 
 
-void* proxy::thr_fuzzer_entry(request_t* req)
+void* proxy::thr_handle_local(request_t* req)
 {
   // receive from the client, fuzz and send to server
 
-  buffer buf;
+  buffer src;
+  buffer dst;
   error::handle_t sys_err;
   unsigned int nr_recv;
   unsigned int nr_sent;
   bool done;
 
-  cout << "[ ] new fuzzer thread" << endl;
+  cout << "[ ] new local thread" << endl;
   done = false;
-  buf.resize(BUFSZ);
+  src.resize(BUFSZ);
   while (done == false)
     {
-      sys_err = insock::recv(req->cli_handle, buf.bufptr(), buf.size(), nr_recv);
+      sys_err = insock::recv(req->local_handle, src.bufptr(), (unsigned int)src.size(), nr_recv);
       if (sys_err != error::SUCCESS)
 	{
 	  done = false;
 	}
       else
 	{
-	  sys_err = insock::send(req->srv_handle, buf.bufptr(), nr_recv, nr_sent);
+	  src.resize(nr_recv);
+	  req->px->m_noiser->fuzz(dst, src);
+	  sys_err = insock::send(req->remote_handle, dst.bufptr(), (unsigned int)dst.size(), nr_sent);
 	  if (sys_err != error::SUCCESS)
 	    {
 	      done = false;

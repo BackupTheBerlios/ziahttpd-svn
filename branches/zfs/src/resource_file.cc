@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Thu Feb 23 15:21:50 2006 texane
+// Last update Thu Feb 23 17:50:05 2006 texane
 //
 
 
@@ -104,6 +104,10 @@ resource::e_error resource::file::flush_network(thr::pool::slot_t& thr_slot, ins
 	return E_OP_ERROR;
       return E_SUCCESS;
     }
+  else if (omode == O_OUTPUT)
+    {
+      // send only the header
+    }
   return E_NOT_SUPP;
 }
 
@@ -120,8 +124,7 @@ resource::e_error resource::file::flush_environ()
 
 resource::e_error resource::file::flush_input(thr::pool::slot_t& thr_slot, buffer& buf)
 {
-  printf("flushing input: %d \n", buf.size());
-  fflush(stdout);
+  cout << buf.tostring() << endl;
 
   // operation not supported
   if (omode != O_OUTPUT)

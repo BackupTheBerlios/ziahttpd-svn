@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Thu Feb 23 11:10:49 2006 texane
+## Last update Thu Feb 23 17:30:02 2006 texane
 ##
 
 # ! Always include this file
@@ -20,6 +20,7 @@ srcs	= src$(SLASH)main.cc			\
 	  src$(SLASH)proxy_thr.cc		\
 	  src$(SLASH)noise.cc			\
 	  src$(SLASH)noise_rand.cc		\
+	  src$(SLASH)noise_http.cc		\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc	\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc	\
 	  src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)insock.cc	\

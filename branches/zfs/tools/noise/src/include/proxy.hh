@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:58:01 2006 texane
-// Last update Thu Feb 23 15:12:06 2006 texane
+// Last update Thu Feb 23 16:52:33 2006 texane
 //
 
 
@@ -15,70 +15,94 @@
 
 #include <list>
 #include <string>
+#include <buffer.hh>
+#include <noise.hh>
 #include <sched.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <sys/sysapi.hh>
 
 
-#define DFLT_LOCAL_PORT 40000
+// default options
+// local designs the endpoint recving from the client
+#define DFLT_LOCAL_PORT	40001
 #define DFLT_LOCAL_IP INADDR_ANY
+// remote designs endpoint recving from the server
+#define DFLT_REMOTE_PORT 40000
+#define DFLT_REMOTE_IP "localhost"
+// general options
 #define DFLT_LOG true
 #define DFLT_LOGFILE "noise.out"
 
 
+class proxy;
+
+
 typedef struct
 {
-  // network related
-  sysapi::insock::handle_t srv_handle;
-  struct sockaddr_in srv_inaddr;
-  sysapi::insock::handle_t cli_handle;
-  struct sockaddr_in cli_inaddr;
+  proxy* px;
 
-  // received from the client
-  pthread_mutex_t cli_buf_lock;
-  buffer cli_buf;
-  // received from the server
-  pthread_mutex_t srv_buf_lock;
-  buffer srv_buf;
+  // us -> client
+  sysapi::insock::handle_t local_handle;
+  struct sockaddr_in local_inaddr;
+  pthread_t thr_local_id;
+  bool thr_local_done;
 
-  // thread related
-  pthread_t thr_recv_id;
-  pthread_t thr_fuzzer_id;
+  // us -> server
+  sysapi::insock::handle_t remote_handle;
+  pthread_t thr_remote_id;
+  bool thr_remote_done;
 
-
-  pthread_cond_t thr_cond_done;
-  pthread_mutex_t thr_mtx_done;
+  // request is done
   bool thr_is_done;
 } request_t;
 
 
 class proxy
 {
+  friend request_t;
+
 public:
   proxy(int, char**);
   ~proxy();
-  bool fuzz();
+  bool forward();
   void display_history() const;
 
 private:
   bool m_done;
   bool m_log;
   bool m_bound;
+
+  // noiser
+  noise* m_noiser;
+
+  // client -> us
   unsigned short m_local_port;
   unsigned long m_local_ip;
-  struct sockaddr_in m_srv_inaddr;
-  sysapi::insock::handle_t m_srv_handle;
+  struct sockaddr_in m_local_inaddr;
+  sysapi::insock::handle_t m_local_handle;
+
+  // us -> server
+  unsigned short m_remote_port;
+  std::string m_remote_ip;
+  struct sockaddr_in m_remote_inaddr;
+  sysapi::insock::handle_t m_remote_handle;
+
+  // request queue
+  std::list<request_t*> m_req;
+  
+  // logging
   std::string m_logfile;
   std::list<std::string> m_hist;
-  std::list<request_t*> m_req;
 
+
+  // internal management
   void reset();
   bool bind();
   bool handle_request(request_t*&);
   bool handle_connection(request_t*&);
-  static void* thr_receiver_entry(request_t*);
-  static void* thr_fuzzer_entry(request_t*);
+  static void* thr_handle_local(request_t*);
+  static void* thr_handle_remote(request_t*);
 };
 
 

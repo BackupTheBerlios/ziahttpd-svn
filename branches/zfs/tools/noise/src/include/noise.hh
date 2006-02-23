@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:55:11 2006 texane
-// Last update Thu Feb 23 11:13:19 2006 texane
+// Last update Thu Feb 23 17:17:43 2006 texane
 //
 
 
@@ -13,7 +13,6 @@
 # define NOISE_HH
 
 
-#include <proxy.hh>
 #include <buffer.hh>
 #include <sched.h>
 #include <pthread.h>
@@ -32,7 +31,7 @@ public:
   void log(buffer&, buffer&);
 
   // interface
-  virtual bool fuzz(buffer&) = 0;
+  virtual bool fuzz(buffer&, const buffer&) = 0;
 };
 
 // simple random fuzz generator
@@ -40,7 +39,15 @@ class rnd : public noise
 {
 public:
   ~rnd();
-  bool fuzz(buffer&);
+  bool fuzz(buffer&, const buffer&);
+};
+
+// http fuzzer
+class http : public noise
+{
+public:
+  ~http();
+  bool fuzz(buffer&, const buffer&);
 };
 
 
