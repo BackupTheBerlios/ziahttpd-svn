@@ -323,6 +323,7 @@ bool			net::http::predata(buffer &buf)
 	{
 		std::string st_code;
 		std::string st_code_str;
+		buffer head;
 
 		size_t i = request.m_hdrlines["expect"].find("-", 0);
 		if (i != std::string::npos)
@@ -331,6 +332,8 @@ bool			net::http::predata(buffer &buf)
 		buf += st_code + " ";
 		error_code_string(st_code_str, atoi(st_code.c_str()));
 		buf += st_code_str + "\r\n\r\n";
+		create_header(head, 0, CHUNK_FIRST);
+		buf += head;
 	}
 	return true;
 }
