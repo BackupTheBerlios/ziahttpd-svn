@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:56:27 2006 texane
-// Last update Thu Feb 23 17:18:15 2006 texane
+// Last update Thu Feb 23 20:44:18 2006 texane
 //
 
 
@@ -205,14 +205,22 @@ bool proxy::forward()
 	  // timeout, reap requests
 	  list<request_t*>::iterator curr_req = m_req.begin();
 	  list<request_t*>::iterator last_req = m_req.end();
+	  list<request_t*>::iterator prev_req;
 
 	  while (curr_req != last_req)
 	    {
-	      if ((*curr_req)->thr_is_done)
+	      if ((*curr_req)->thr_local_done && (*curr_req)->thr_remote_done)
 		{
+		  prev_req = curr_req;
+		  ++curr_req;
+		  request_release(*prev_req);
+		  m_req.remove(*prev_req);
 		  cout << "[ ] handling done request" << endl;
 		}
-	      ++curr_req;
+	      else
+		{
+		  ++curr_req;
+		}
 	    }
 	}
     }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:58:01 2006 texane
-// Last update Thu Feb 23 16:52:33 2006 texane
+// Last update Thu Feb 23 20:40:29 2006 texane
 //
 
 
@@ -53,8 +53,6 @@ typedef struct
   pthread_t thr_remote_id;
   bool thr_remote_done;
 
-  // request is done
-  bool thr_is_done;
 } request_t;
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 10:58:42 2006 texane
-// Last update Thu Feb 23 18:03:03 2006 texane
+// Last update Thu Feb 23 20:38:58 2006 texane
 //
 
 
@@ -52,6 +52,7 @@ void* proxy::thr_handle_remote(request_t* req)
     }
 
   cout << "[x] new recveiver thread" << endl;
+  req->thr_remote_done = true;
   return 0;
 }
 
@@ -89,6 +90,7 @@ void* proxy::thr_handle_local(request_t* req)
 	}
     }
 
+  req->thr_local_done = true;
   cout << "[x] new fuzzer thread" << endl;
   return 0;
 }

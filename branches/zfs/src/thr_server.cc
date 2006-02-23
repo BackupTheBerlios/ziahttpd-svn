@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 23 20:36:55 2006 texane
+// Last update Thu Feb 23 20:55:40 2006 texane
 //
 
 
@@ -155,7 +155,7 @@ bool thr::pool::sess_handle_predata(session_t& sess)
   unsigned int nr_sent;
   sysapi::error::handle_t sys_err;
 
-//   if (sess.proto.predata(buf) == true)
+  if (sess.proto.predata(buf) == true)
     {
       done = false;
       while (done == false)
@@ -255,6 +255,14 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	}
       else if (e_err == resource::E_CONTINUE)
 	{
+// 	  sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
+// 	  sess.chunk_pos = net::http::CHUNK_MIDDLE;
+// 	  sess.target->prepend_header(hdr_buf);
+// 	  if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
+// 	    {
+// 	      sess.done = true;
+// 	      return false;
+// 	    }
 	}
       else // if (e_err == resource::E_ALREADY_GEN)
 	{
