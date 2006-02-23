@@ -261,29 +261,31 @@ status::error				net::http::chunked::decode(net::protocol*, utils::line& m_line,
 
 status::error				net::http::unchunked::decode(net::protocol* s,utils::line& m_line, buffer& buf)
 {
-	buffer tmp;
-	net::http* pr = (net::http*)s;
+	//buffer tmp;
+	//net::http* pr = (net::http*)s;
 
-	if (m_state == FIRSTTIME)
-	{
+//	if (m_state == FIRSTTIME)
+//	{
 		m_line.get_bytes(m_buf);
-		m_size = atoi(pr->request["content-length"].c_str());
-		m_state = OTHERTIME;
-		tmp = m_buf + buf;
-		buf = tmp;
-	}
-	m_size_read += buf.size();
-	m_buf = buf;
+		m_buf += buf;
+		//m_size = atoi(pr->request["content-length"].c_str());
+		//m_state = OTHERTIME;
+		//tmp = m_buf + buf;
+//		buf = tmp;
+//	}
+//	m_size_read += buf.size();
+//	m_buf = buf;
 
-	if (m_size <= m_size_read)
-	{
-		size_t diff;
-
-		diff = m_size_read - m_size;
-		m_done = true;
-//		std::cout << "SIZE :" << m_buf.size() << "\n" << m_buf.tostring();
-		ziafs_return_status(status::ENDOFREQUEST);
-	}
+//	if (m_size <= m_size_read)
+//	{
+//		size_t diff;
+//
+//		diff = m_size_read - m_size;
+//		m_done = true;
+////		std::cout << "SIZE :" << m_buf.size() << "\n" << m_buf.tostring();
+//		ziafs_return_status(status::ENDOFREQUEST);
+//	}
+	ziafs_return_status(status::ENDOFREQUEST);
 	ziafs_return_status(status::SUCCESS);
 }
 

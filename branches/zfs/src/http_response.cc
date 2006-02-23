@@ -298,11 +298,33 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	}
 	else if (r_type == EXEC_DIRECTORY_LISTING)
 	{
-		int ac = 2;
+		std::string cgi_path;
+		char **av;
+		const char *env[] = {"SERVER_PORT=80", 0};
+		int ac;
+		std::vector<std::string> vec;
+		std::vector<std::string>::iterator iter;
+		int i;
 
-		const char *tab[] = { conf.get_system()->directory_listing.c_str() , m_uri.localname().c_str(), 0};
-		const char *env[] = {0};
-		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
+		cgi_path = conf.get_system()->directory_listing.c_str();
+
+		// split du fichier CGI de conf
+		stringmanager::split(cgi_path, " ", vec);
+		ac = (int)vec.size() + 1;
+		av = new char*[vec.size() + 2];
+		for(iter = vec.begin(), i = 0; iter != vec.end(); iter++, i++)
+		{
+			av[i] = (char *)(*iter).c_str();
+		}
+		av[i++] = (char *)m_uri.localname().c_str();
+		av[i] = '\0';
+		//std::string cgi_path;
+		//char **av;
+		//int ac;
+
+		////const char *tab[] = { conf.get_system()->directory_listing.c_str() , m_uri.localname().c_str(), 0};
+		//const char *env[] = {0};
+		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
 	}
 	else if (r_type == IS_PUT)
 		error = manager.factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, m_uri.localname(), &m_line.m_buf, body_size());
