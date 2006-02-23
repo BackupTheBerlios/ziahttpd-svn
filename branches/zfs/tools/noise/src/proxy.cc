@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 09:56:27 2006 texane
-// Last update Thu Feb 23 11:38:25 2006 texane
+// Last update Thu Feb 23 11:43:01 2006 texane
 //
 
 
@@ -104,6 +104,7 @@ proxy::proxy(int ac, char** av)
 {
   // list of options
   reset();
+  insock::n_to_inaddr(srv_inaddr, m_local_addr, m_local_port);
 }
 
 
