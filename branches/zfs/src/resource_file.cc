@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Thu Feb 23 20:55:32 2006 texane
+// Last update Thu Feb 23 22:05:55 2006 texane
 //
 
 
@@ -124,8 +124,6 @@ resource::e_error resource::file::flush_environ()
 
 resource::e_error resource::file::flush_input(thr::pool::slot_t& thr_slot, buffer& buf)
 {
-  cout << buf.tostring() << endl;
-
   // operation not supported
   if (omode != O_OUTPUT)
     return E_NOT_SUPP;

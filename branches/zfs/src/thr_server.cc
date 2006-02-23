@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 23 20:55:40 2006 texane
+// Last update Thu Feb 23 22:06:03 2006 texane
 //
 
 
@@ -126,7 +126,6 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	  return false;
 	}
 
-      cout << buffer(buf, nbytes).tostring() << endl;
       valid = sess.proto.consume(buf, nbytes, end_of_metadata);
       if (valid == false)
 	{
@@ -225,9 +224,6 @@ bool thr::pool::sess_handle_request(session_t& sess)
 		}
 	      raw_buf = buffer((unsigned char*)buf, nbytes);
 	    }
-
-	  cout << raw_buf.tostring() << endl;
-
 	  // Then make http consum/process the buffer(it can be chunked)
 	  // +++ sess.proto.consume_body(raw_buf, &body_buf);
 	  body_buf = raw_buf;
@@ -255,14 +251,7 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	}
       else if (e_err == resource::E_CONTINUE)
 	{
-// 	  sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
 // 	  sess.chunk_pos = net::http::CHUNK_MIDDLE;
-// 	  sess.target->prepend_header(hdr_buf);
-// 	  if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
-// 	    {
-// 	      sess.done = true;
-// 	      return false;
-// 	    }
 	}
       else // if (e_err == resource::E_ALREADY_GEN)
 	{
