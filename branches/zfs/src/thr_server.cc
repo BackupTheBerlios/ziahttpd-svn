@@ -5,10 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 23 15:39:59 2006 texane
+// Last update Thu Feb 23 20:36:55 2006 texane
 //
 
 
+#include <iostream>
 #include <cstdio>
 #include <string>
 #include <ziafs.hh>
@@ -23,6 +24,7 @@
 // Thus, the thread doesn't return in cache
 
 using namespace sysapi;
+using namespace std;
 
 
 // session management
@@ -124,6 +126,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	  return false;
 	}
 
+      cout << buffer(buf, nbytes).tostring() << endl;
       valid = sess.proto.consume(buf, nbytes, end_of_metadata);
       if (valid == false)
 	{
@@ -138,6 +141,43 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 
   // Create the resource
   sess.proto.create_resource(sess.target, sess.srv->core->res_manager, *sess.srv->srv_config);
+  return true;
+}
+
+
+bool thr::pool::sess_handle_predata(session_t& sess)
+{
+  // handle pre data, such
+  // as the expect code...
+
+  buffer buf;
+  bool done;
+  unsigned int nr_sent;
+  sysapi::error::handle_t sys_err;
+
+//   if (sess.proto.predata(buf) == true)
+    {
+      done = false;
+      while (done == false)
+	{
+	  if (buf.size() == 0)
+	    {
+	      done = true;
+	    }
+	  else
+	    {
+	      sys_err = insock::send(sess.cli_sock, buf.bufptr(), (unsigned int)buf.size(), nr_sent);
+	      if (sys_err != sysapi::error::SUCCESS)
+		{
+		  done = true;
+		}
+	      else
+		{
+		  buf.remove_front(nr_sent);
+		}
+	    }
+	}
+    }
   return true;
 }
 
@@ -170,11 +210,14 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	  // buffer as input prefetch.
 	  if (sess.target->is_prefetched_input() == true)
 	    {
+	      printf("prefetched\n"); fflush(stdout);
 	      sess.target->get_prefetched_input(raw_buf);
 	    }
 	  else
 	    {
+	      printf("recv1\n"); fflush(stdout);
 	      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
+	      printf("rec2\n"); fflush(stdout);
 	      if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
 		{
 		  sess.done = true;
@@ -182,6 +225,8 @@ bool thr::pool::sess_handle_request(session_t& sess)
 		}
 	      raw_buf = buffer((unsigned char*)buf, nbytes);
 	    }
+
+	  cout << raw_buf.tostring() << endl;
 
 	  // Then make http consum/process the buffer(it can be chunked)
 	  // +++ sess.proto.consume_body(raw_buf, &body_buf);
@@ -250,6 +295,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     {
       sess_reset_request(sess);
       sess_read_metadata(sess);
+      sess_handle_predata(sess);
       sess_handle_request(sess);
       sess_release_request(sess);
     }

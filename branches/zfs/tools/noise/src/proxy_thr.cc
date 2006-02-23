@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Feb 23 10:58:42 2006 texane
-// Last update Thu Feb 23 16:58:59 2006 texane
+// Last update Thu Feb 23 18:03:03 2006 texane
 //
 
 
@@ -80,7 +80,7 @@ void* proxy::thr_handle_local(request_t* req)
       else
 	{
 	  src.resize(nr_recv);
-	  req->px->m_noiser->fuzz(dst, src);
+// 	  req->px->m_noiser->fuzz(dst, src);
 	  sys_err = insock::send(req->remote_handle, dst.bufptr(), (unsigned int)dst.size(), nr_sent);
 	  if (sys_err != error::SUCCESS)
 	    {
