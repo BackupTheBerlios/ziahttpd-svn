@@ -157,15 +157,17 @@ x	bug: the body reception is truncated (case of cgi)
 
 @whereamI
 	[ ] correct the factory -> return error appropriate if process creation  failed
-	[ ] implement the input size for resource
-	[ ] implement the mline
+	[x] implement the input size for resource
+	[x] implement the mline
 	[ ] solve the deadlock problem
 		-> non blocking fd on posix system, so that if there are remaining input and no output available, don't block on output reception and go filling the input
 		-> on windows... async io?
 	[>] handle the put method
-	[>] handle the deadlock cgi problem on windows
-	[>] handle the deadlock cgi problem on unix
-	[ ] why the process take the whole buffer in the factory
+	[x] handle the deadlock cgi problem on windows
+	[x] handle the deadlock cgi problem on unix
+	[x] why the process take the whole buffer in the factory
+	[ ] make the todo be cleaner
+	[ ] clean the resource
 
 
 @ideas

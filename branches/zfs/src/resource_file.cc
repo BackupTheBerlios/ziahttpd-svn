@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Fri Feb 17 13:15:23 2006 texane
-// Last update Wed Feb 22 22:04:53 2006 texane
+// Last update Thu Feb 23 02:54:20 2006 texane
 //
 
 
@@ -22,49 +22,38 @@ using namespace sysapi;
 using std::string;
 
 
-// resource::e_error resource::file::generate(unsigned int& nbytes)
-// {
-//   sysapi::error::handle_t herr;
-//   unsigned int nread;
-//   unsigned char buf[ZIAFS_STATIC_BUFSZ];
-
-//   // basic checks
-//   nbytes = 0;
-//   if (opened == false)
-//     return E_NOT_OPENED;
-//   if (generated == true)
-//     return E_ALREADY_GEN;
-
-//   generated = true;
-      
-//   // read the whole file into memory
-//   while (data.size() < file_size)
-//     {
-//       herr = sysapi::file::read(file_handle, (unsigned char*)buf, sizeof(buf), nread);
-//       if (herr != sysapi::error::SUCCESS)
-// 	{
-// 	  data.reset();
-// 	  return E_OP_ERROR;
-// 	}
-//       data += buffer((unsigned char*)buf, nread);
-//       nbytes += nread;
-//     }
-//   nbytes = (unsigned int)data.size();
-//   return E_SUCCESS;
-// }
-
 resource::e_error resource::file::generate(unsigned int& nbytes)
 {
   resource::e_error e_err;
 
   e_err = E_SUCCESS;
+
+  // put on the disk
   if (omode == O_OUTPUT)
     {
-      // put to disk
-      printf("file to put on the disk: %u\n", in_size);
-      fflush(stdout);
-      e_err = E_NOT_SUPP;
+      sysapi::error::handle_t sys_err;
+      unsigned int nr_written;
+      bool done;
+
+      done = false;
+      while (done == false)
+	{
+	  if (data.size() == 0)
+	    {
+	      done = true;
+	    }
+	  else
+	    {
+	      sys_err = sysapi::file::write(file_handle, data.bufptr(), (unsigned int)data.size(), nr_written);
+	      if (sys_err != sysapi::error::SUCCESS)
+		done = true;
+	      else
+		data.remove_front(nr_written);
+	    }
+	}
+      e_err = E_CONTINUE;
     }
+  // send on the wire
   else if (omode == O_INPUT)
     {
       // get the file
@@ -93,25 +82,29 @@ using namespace std;
 
 resource::e_error resource::file::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
 {
-  // Send the file
-  sysapi::error::handle_t sys_err;
+  if (omode == O_INPUT)
+    {
+      // Send the file
+      sysapi::error::handle_t sys_err;
 
-  // initiate the io operation
-  io_info_reset(thr_slot.curr_io);
-  thr_slot.curr_io.sz = (unsigned int)data.size() + (unsigned int)file_size;
-  thr_slot.curr_io.id = thr::IO_SENDFILE;
-  thr_slot.curr_io.desc.hsock = hsock;
-  thr_slot.curr_io.tm_start = thr_slot.pool->tm_now();
-  thr_slot.curr_io.in_progress = true;
+      // initiate the io operation
+      io_info_reset(thr_slot.curr_io);
+      thr_slot.curr_io.sz = (unsigned int)data.size() + (unsigned int)file_size;
+      thr_slot.curr_io.id = thr::IO_SENDFILE;
+      thr_slot.curr_io.desc.hsock = hsock;
+      thr_slot.curr_io.tm_start = thr_slot.pool->tm_now();
+      thr_slot.curr_io.in_progress = true;
 
-  // send the whole file
-  sys_err = insock::send_file(hsock, file_handle, (unsigned int)file_size, data.bufptr(), (unsigned int)data.size());
-  thr_slot.curr_io.in_progress = true;
+      // send the whole file
+      sys_err = insock::send_file(hsock, file_handle, (unsigned int)file_size, data.bufptr(), (unsigned int)data.size());
+      thr_slot.curr_io.in_progress = true;
 
-  // post process
-  if (thr_slot.curr_io.timeouted == true || sys_err != sysapi::error::SUCCESS)
-    return E_OP_ERROR;
-  return E_SUCCESS;
+      // post process
+      if (thr_slot.curr_io.timeouted == true || sys_err != sysapi::error::SUCCESS)
+	return E_OP_ERROR;
+      return E_SUCCESS;
+    }
+  return E_NOT_SUPP;
 }
 
 
@@ -127,8 +120,12 @@ resource::e_error resource::file::flush_environ()
 
 resource::e_error resource::file::flush_input(thr::pool::slot_t& thr_slot, buffer& buf)
 {
-  printf("this is a file resource, put on the disk, not yet supported\n");
-  fflush(stdout);
+  // operation not supported
+  if (omode != O_OUTPUT)
+    return E_NOT_SUPP;
+
+  // append to data
+  data += buf;
   buf.clear();
   return E_SUCCESS;
 }

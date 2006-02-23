@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 23 01:59:45 2006 
+// Last update Thu Feb 23 02:53:52 2006 texane
 //
 
 
@@ -191,7 +191,9 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	  fflush(stdout);
 	  sess.target->flush_input(*sess.thr_slot, raw_buf);
 	}
-      if ((e_err = sess.target->generate(size)) == resource::E_SUCCESS)
+      // generate the resource
+      e_err = sess.target->generate(size);
+      if (e_err == resource::E_SUCCESS)
 	{
 	  // this is for non blocking mode
 	  // 	      sess.target->alter(size);
@@ -207,8 +209,9 @@ bool thr::pool::sess_handle_request(session_t& sess)
 	}
       else if (e_err == resource::E_WOULDBLOCK)
 	{
-	  printf("ici, nothing done\n");
-	  fflush(stdout);
+	}
+      else if (e_err == resource::E_CONTINUE)
+	{
 	}
       else // if (e_err == resource::E_ALREADY_GEN)
 	{
