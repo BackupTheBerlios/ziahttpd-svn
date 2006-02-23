@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Thu Feb 23 02:23:01 2006 texane
+// Last update Thu Feb 23 15:26:13 2006 texane
 //
 
 
@@ -34,21 +34,24 @@ sysapi::error::handle_t sysapi::file::open(handle_t& hfile, const std::string& p
   sysapi::error::handle_t herr;
   DWORD shmode;
   DWORD op_mod;
+  bool open_existing;
 
   herr = error::SUCCESS;
   shmode = 0;
+  open_existing = false;
   op_mod = 0;
   if (omode & O_READ)
     {
       op_mod |= GENERIC_READ;
       shmode |= FILE_SHARE_READ;
+      open_existing = true;
     }
   if (omode & O_WRITE)
     {
       op_mod |= GENERIC_WRITE;
       shmode |= FILE_SHARE_WRITE;
     }
-  hfile = CreateFile(path.c_str(), op_mod, shmode, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  hfile = CreateFile(path.c_str(), op_mod, shmode, NULL, open_existing ? OPEN_EXISTING : 0, FILE_ATTRIBUTE_NORMAL, NULL);
   if (hfile == INVALID_HANDLE_VALUE)
     herr = error::OPEN_FAILED;
     // herr = GetLastError();
