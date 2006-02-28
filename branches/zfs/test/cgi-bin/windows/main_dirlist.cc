@@ -32,7 +32,7 @@ cgi::cgi()
 {
   len_ = 0;
   cout << "<html><body>" << endl;
-  cout << "<table cellpadding=0 cellspacing=0>" << endl;
+  cout << "<table border=0 cellpadding=0 cellspacing=0>" << endl;
 }
 
 cgi::~cgi()
@@ -66,10 +66,10 @@ static void make_title(char *path, cgi& c)
 			c.len_++;
 	c.len_ -= 3;
 	cout << "<tr>" << endl;
-	cout << "<td colspan=5><font size=5><b>Index of file:" << path << "</b></font></td>" << endl;
+	cout << "<td colspan=6><font size=5><b>Index of file:" << path << "</b></font></td>" << endl;
 	cout << "</tr>" << endl;
 	cout << "<tr>" << endl;
-	cout << "<td colspan=5>&nbsp;</td>" << endl;
+	cout << "<td colspan=6>&nbsp;</td>" << endl;
 	cout << "</tr>" << endl;
 }
 
@@ -80,18 +80,31 @@ static void report_path(char* path, WIN32_FIND_DATA& infos, cgi& c)
 
   cout << "<tr>" << endl;
   if (!(infos.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) // FICHIER
+  {
 	cout << "<td><img src = \"" << c.path_img(1) << "\">" << "&nbsp;</td>" << endl;
+	cout << "<td><a href = \"" << path << "\">" << path << "</a>&nbsp;</td>" << endl;
+	if (GetFileAttributesEx(path, GetFileExInfoStandard, &attr))
+	{
+		cout << "<td>" << attr.nFileSizeLow / 1000 << "&nbsp;</td>" << endl;
+		cout << "<td>KB" << "&nbsp;</td>" << endl;
+	}
+	else
+	{
+		cout << "<td>&nbsp;</td>" << endl;
+		cout << "<td>&nbsp;</td>" << endl;
+	}
+  }
   else // DOSSIER
+  {
 	cout << "<td><img src = \"" << c.path_img(2)<< "\">" << "&nbsp;</td>" << endl;
-  cout << "<td><a href = \"" << path << "\">" << path << "</a>&nbsp;</td>" << endl;;
+	cout << "<td><a href = \"" << path << "\">" << path << "</a>&nbsp;</td>" << endl;
+	cout << "<td>&nbsp;</td>" << endl;
+	cout << "<td>&nbsp;</td>" << endl;
+  }
+  
 
   // SIZE
-  if (GetFileAttributesEx(path, GetFileExInfoStandard, &attr))
-  {
-	  cout << "<td>" << attr.nFileSizeLow / 1000 << "&nbsp;</td>";
-  }
-  else
-	cout << "<td>&nbsp;</td>";
+  
   if (FileTimeToSystemTime(&infos.ftLastWriteTime, &t))
   {
 	cout << "<td>" << t.wMonth << "/" << t.wDay << "/" << t.wYear << "&nbsp;</td>" << endl;
