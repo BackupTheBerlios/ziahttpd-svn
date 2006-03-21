@@ -71,3 +71,14 @@ how to use the void* returned by accept
 
 
 the server should be reloadable
+
+
+
+--- interfaces to implement
+IBuffer
+IFS
+IInput
+IOutput
+
+a client request (connection pov) is defined by the iinput and ioutput
+	-> in the CONSTRUCTOR!!
