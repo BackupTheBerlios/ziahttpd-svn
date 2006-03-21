@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Tue Mar 21 20:04:29 2006 texane
+// Last update Tue Mar 21 22:59:39 2006 texane
 //
 
 
@@ -111,7 +111,7 @@ int mod_sock::Recv(SOCKET h_sock, void* p_data, char* p_buf, int ln_buf)
   h_err = sysapi::insock::recv(h_sock, (unsigned char*)p_buf, ln_buf, nr_recv);
   if (h_err != sysapi::error::SUCCESS)
     return -1;
-  return (unsigned int)nr_recv;
+  return (int)nr_recv;
 }
 
 int mod_sock::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
@@ -123,7 +123,7 @@ int mod_sock::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
   h_err = sysapi::insock::send(h_sock, (unsigned char*)p_buf, ln_buf, nr_sent);
   if (h_err != sysapi::error::SUCCESS)
     return -1;
-  return (unsigned int)nr_sent;
+  return (int)nr_sent;
 }
 
 void mod_sock::Close(SOCKET, void*)

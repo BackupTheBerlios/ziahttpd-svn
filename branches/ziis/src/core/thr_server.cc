@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Mar 21 22:30:47 2006 texane
+// Last update Tue Mar 21 23:07:00 2006 texane
 //
 
 
@@ -39,8 +39,6 @@ void thr::pool::sess_reset_request(session_t& sess)
   // ziis related
   sess.m_input = 0;
   sess.m_output = 0;
-  sess.m_conn_module = 0;
-  sess.m_conn_data = 0;
   sess.m_comp_module = 0;
   sess.m_comp_data = 0;
   sess.m_gen_module = 0;
@@ -67,8 +65,6 @@ void thr::pool::sess_release_request(session_t& sess)
       delete sess.m_output;
       sess.m_output = 0;
     }
-
-
 }
 
 void thr::pool::sess_reset(session_t& sess)
@@ -127,11 +123,10 @@ bool thr::pool::sess_accept_connection(session_t& sess)
 
 bool thr::pool::sess_read_metadata(session_t& sess)
 {
-  bool valid;
+  bool is_valid;
   bool end_of_metadata;
-  error::handle_t herr;
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
-  unsigned int nbytes;
+  int nr_recv;
 
   if (sess.done == true)
     return false;
@@ -139,20 +134,15 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   end_of_metadata = false;
   while (end_of_metadata == false)
     {
-      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-      if (sess.thr_slot->curr_io.timeouted == true)
+      nr_recv = sess.m_conn_module->Recv(sess.cli_sock, 0, (char*)buf, sizeof(buf));
+      if (nr_recv == -1)
 	{
 	  sess.done = true;
 	  return false;
 	}
-      else if (herr != error::SUCCESS)
-	{
-	  sess.done = true;
-	  return false;
-	}
-
-      valid = sess.proto.consume(buf, nbytes, end_of_metadata);
-      if (valid == false)
+      
+      is_valid = sess.proto.consume(buf, nr_recv, end_of_metadata);
+      if (is_valid == false)
 	{
 	  end_of_metadata = true;
 	  sess.done = true;
@@ -162,6 +152,8 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	}
 
     }
+
+  cout << "end of metadata" << endl;
 
   // instanciate ZfsInput
   sess.m_input = new ZfsInput(sess.proto);
@@ -312,14 +304,12 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   // get the connection module
   if (sess.srv->m_modman.get_connection_module(sess.m_conn_module) == false)
-    {
-      cout << "cannot get connection module" << endl;
-      return 0;
-    }
+    return 0;
 
   // session pipeline
   sess_bind_server(sess);
   sess_accept_connection(sess);
+
   while (sess.done == false)
     {
       sess_reset_request(sess);

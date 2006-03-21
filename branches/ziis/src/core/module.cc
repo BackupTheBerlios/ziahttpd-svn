@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Tue Mar 21 22:35:05 2006 texane
+// Last update Tue Mar 21 22:48:30 2006 texane
 //
 
 
@@ -80,6 +80,7 @@ bool mod::manager::load_module(const string& path)
   modinfo* p_info;
 
   p_info = new modinfo(path);
+  m_modlist.push_front(p_info);
   return true;
 }
 
