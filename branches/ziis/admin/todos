@@ -82,3 +82,7 @@ IOutput
 
 a client request (connection pov) is defined by the iinput and ioutput
 	-> in the CONSTRUCTOR!!
+
+
+when implementing the pipeline, take care about
+	priority of modifiers
