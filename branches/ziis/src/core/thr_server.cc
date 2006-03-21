@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Mar 21 23:21:59 2006 texane
+// Last update Tue Mar 21 23:25:52 2006 texane
 //
 
 
@@ -80,6 +80,10 @@ void thr::pool::sess_reset(session_t& sess)
 void thr::pool::sess_release(session_t& sess)
 {
   core_t* core;
+
+
+  // release Accept free variable
+  sess.m_conn_module->Close(sess.cli_sock, sess.m_conn_data);
 
   core = sess.srv->core;
   sess_release_request(sess);

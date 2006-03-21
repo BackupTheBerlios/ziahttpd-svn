@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Tue Mar 21 22:48:30 2006 texane
+// Last update Tue Mar 21 23:30:23 2006 texane
 //
 
 
@@ -14,6 +14,7 @@
 
 #include <list>
 #include <string>
+#include <string.h>
 #include <ziafs.hh>
 
 
@@ -66,6 +67,28 @@ bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& enco
 bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string& mimetype)
 {
   // match the mime type
+  list<modinfo*>::iterator it_curr;
+  list<modinfo*>::iterator it_last;
+  const char** arr_mime;
+  unsigned int i_mime;
+
+  it_curr = m_modlist.begin();
+  it_last = m_modlist.end();
+  while (it_curr != it_last)
+    {
+      if ((p_mod = dynamic_cast<IDocumentGenerator*>((*it_curr)->m_instance)))
+	{
+	  arr_mime = p_mod->GetSupportedMime();
+	  for (i_mime = 0; arr_mime[i_mime]; ++i_mime)
+	    {
+	      if (!strcmp(arr_mime[i_mime], mimetype.c_str()))
+		{
+		  return true;
+		}
+	    }
+	}
+      ++it_curr;
+    }
   return false;
 }
 
