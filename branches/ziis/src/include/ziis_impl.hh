@@ -25,8 +25,8 @@ public:
   ~ZfsInput() {}
 
   const char* GetInput(const char*);
-  const char* GetInputMethod(){ return 0; }
-  const char* GetInputLocation(){ return 0; }
+  const char* GetInputMethod();
+  const char* GetInputLocation();
   const char* GetInputHttpVersion(){ return 0; }
   const char* GetInputQueryString(){ return 0; }
   int ReadPostEntity(char*, int){ return -1;}

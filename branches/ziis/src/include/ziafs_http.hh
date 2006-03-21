@@ -67,6 +67,7 @@ namespace net
 		bool									create_header(buffer&, size_t, chunk_pos_t);
 		bool									modify_header(config&, chunk_pos_t);
 		bool									stringify_header(buffer&);
+		uri&									get_uri() {return m_uri; }
 
 	private:
 		bool	valid_method();
