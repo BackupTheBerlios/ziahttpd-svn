@@ -30,7 +30,7 @@ public:
   const char* GetInputHttpVersion();
   const char* GetInputQueryString();
   int ReadPostEntity(char*, int){ return -1;}
-  bool GetNextHeader(char**, char**){ return false; }
+  bool GetNextHeader(char**, char**);
 private:
 	net::http* m_proto;
 };
