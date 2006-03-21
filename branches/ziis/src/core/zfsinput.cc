@@ -12,7 +12,7 @@ const char*	ZfsInput::GetInput(const char*key)
 	std::string	val = m_proto->request[key];
 
 	if (val.empty())
-		return false;
+		return NULL;
 	return val.c_str();
 }
 
