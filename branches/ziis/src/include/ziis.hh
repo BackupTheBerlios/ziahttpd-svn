@@ -86,7 +86,7 @@ class IOutput
 public:
   virtual void SetOutput(const char*, const char*) = 0;
   virtual const char* GetOutput(const char*) = 0;
-  virtual int SendHeader() = 0;
+  virtual bool SendHeader() = 0;
   virtual int SendError(int) = 0;
   virtual int SendBuffer(const char*, int) = 0;
   virtual void SetStatusCode(int) = 0;

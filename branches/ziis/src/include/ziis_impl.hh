@@ -51,7 +51,7 @@ public:
 
   void SetOutput(const char*, const char*);
   const char* GetOutput(const char*);
-  int SendHeader() {return -1;}
+  bool SendHeader();
   int SendError(int) { return -1;}
   int SendBuffer(const char*, int) { return -1; }
   void SetStatusCode(int);

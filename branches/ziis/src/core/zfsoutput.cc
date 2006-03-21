@@ -30,3 +30,12 @@ void	ZfsOutput::SetStatusCode(int st)
 {
 	m_proto->get_uri().status_code() = st;
 }
+
+bool	ZfsOutput::SendHeader()
+{
+	buffer	header;
+
+	m_proto->create_header(header, 20, net::http::CHUNK_FIRST);
+
+	return true;
+}
