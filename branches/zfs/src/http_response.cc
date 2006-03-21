@@ -263,7 +263,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	{
 		int ac = 1;
 		const char *tab[] = { m_uri.localname().c_str(), 0};
-		const char *env[] = {0};
+		const char *env[] = {"SERVER_PORT=80", 0};
 		  // This line has been modified by texane
 		  // buffer is a buffer to prefecth the input.
 		  // content of the mline.buf will be removed

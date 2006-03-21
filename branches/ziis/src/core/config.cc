@@ -338,10 +338,11 @@ status::error	net::config::dump(buffer &buf)
 
 bool						net::config::generate_config(config::server* s, config& conf)
 {
-	std::list<int>::iterator iserid;
+	std::list<int>::iterator				iserid;
 	std::list<directory*>::iterator idirectory;
-	std::list<mime*>::iterator imime;
-	std::list<module*>::iterator imodules;
+	std::list<mime*>::iterator			imime;
+	std::list<module*>::iterator		imodules;
+	std::list<std::string>::iterator	ismodules;
 
 	m_lserver.push_back(s);
 	memcpy((void*)&m_system, (const void*)conf.get_system(), sizeof(system));
@@ -359,6 +360,13 @@ bool						net::config::generate_config(config::server* s, config& conf)
 		m_lmimes.push_back((*imime));
 	conf.get_modules(imodules);
 	for (; !conf.end_modules(imodules); imodules++)
-		m_lmodules.push_back((*imodules));
+	{
+		for (ismodules = s->modulename.begin(); ismodules != s->modulename.end(); ismodules++)
+		{
+			if ((*ismodules) == (*imodules)->name)
+				m_lmodules.push_back((*imodules));
+		}
+		
+	}
 	return (true);
 }

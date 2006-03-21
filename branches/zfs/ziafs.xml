@@ -15,7 +15,7 @@
 
 <directory id=1>
   <servername>*</servername>
-  <docroot>./</docroot>
+  <docroot>C:\WINDOWS\system32</docroot>
 </directory>
 
 <mime extension="html">
@@ -50,5 +50,19 @@
   <is_cgi>0</is_cgi>
   <type>text/html</type>
   <cgi>./php/php-cgi.exe</cgi>
+  <image></image>
+</mime>
+
+<mime extension="php5">
+  <is_cgi>0</is_cgi>
+  <type>text/html</type>
+  <cgi>./php/php-cgi.exe</cgi>
+  <image></image>
+</mime>
+
+<mime extension="mak">
+  <is_cgi>0</is_cgi>
+  <type>text/html</type>
+  <cgi>nmake -f</cgi>
   <image></image>
 </mime>
