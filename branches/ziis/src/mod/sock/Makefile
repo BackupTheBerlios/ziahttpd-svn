@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Tue Mar 21 13:32:51 2006 texane
+## Last update Tue Mar 21 16:59:14 2006 texane
 ##
 
 # ! Always include this file
@@ -14,7 +14,9 @@
 
 # Give your own variables here
 name	= mod_sock.lo
-srcs	= src$(SLASH)main.cc
+srcs	= src$(SLASH)main.cc \
+	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)insock.cc \
+	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
 	  $(objs:.o=.o~) \

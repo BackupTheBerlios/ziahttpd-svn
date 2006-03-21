@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Feb 23 23:32:27 2006 texane
+// Last update Tue Mar 21 19:07:57 2006 texane
 //
 
 
@@ -35,6 +35,8 @@ void thr::pool::sess_reset_request(session_t& sess)
   sess.proto.reset();
   sess.chunk_pos = net::http::CHUNK_FIRST;
   sess.target = 0;
+  sess.m_input = 0;
+  sess.m_output = 0;
 }
 
 void thr::pool::sess_release_request(session_t& sess)
@@ -47,6 +49,18 @@ void thr::pool::sess_release_request(session_t& sess)
       core->res_manager.factory_destroy(sess.target);
       sess.target = 0;
     }
+  if (sess.m_input)
+    {
+      delete sess.m_input;
+      sess.m_input = 0;
+    }
+  if (sess.m_output)
+    {
+//       delete sess.m_output;
+      sess.m_output = 0;
+    }
+
+
 }
 
 void thr::pool::sess_reset(session_t& sess)
@@ -138,8 +152,11 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 
     }
 
+  //
+  sess.m_input = new ZfsInput(sess.proto);
+
   // Create the resource
-  sess.proto.create_resource(sess.target, sess.srv->core->res_manager, *sess.srv->srv_config);
+//   sess.proto.create_resource(sess.target, sess.srv->core->res_manager, *sess.srv->srv_config);
   return true;
 }
 
@@ -289,8 +306,8 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     {
       sess_reset_request(sess);
       sess_read_metadata(sess);
-      sess_handle_predata(sess);
-      sess_handle_request(sess);
+//       sess_handle_predata(sess);
+//       sess_handle_request(sess);
       sess_release_request(sess);
     }
   sess_release(sess);

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Thu Feb 23 20:35:58 2006 texane
+// Last update Tue Mar 21 19:07:03 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 
 // This file covers threads
 
+#include <ziis_impl.hh>
 #include <ziafs_http.hh>
 #include <sys/sysapi.hh>
 
@@ -29,6 +30,8 @@
 // Forward declarations
 namespace net { class server; }
 namespace resource { class handle; };
+class ZfsOutput;
+class ZfsInput;
 
 namespace thr
 {
@@ -162,7 +165,11 @@ namespace thr
       net::http proto;
       net::http::chunk_pos_t chunk_pos;
       resource::handle* target;
+
+      ZfsInput* m_input;
+      ZfsOutput* m_output;
     } session_t;
+
     static void sess_reset_request(session_t&);
     static void sess_release_request(session_t&);
     static void sess_reset(session_t&);
