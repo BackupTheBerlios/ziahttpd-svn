@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Fri Feb 17 20:46:06 2006 texane
+// Last update Tue Mar 21 16:10:44 2006 texane
 //
 
 
@@ -14,12 +14,13 @@
 
 
 #include <sys/sysapi.hh>
+#include <ziafs_mod.hh>
 
 
 // forward declarations
 struct core;
 namespace net { class config; }
-namespace thr { class pool; };
+namespace thr { class pool; }
 
 namespace net
 {
@@ -47,6 +48,7 @@ namespace net
     // Http related
 
     // Module related
+    mod::pipeline m_pipeline;
   };
 }
 

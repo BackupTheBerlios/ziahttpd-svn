@@ -5,10 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Tue Mar 21 13:52:31 2006 texane
+// Last update Tue Mar 21 16:42:13 2006 texane
 //
 
 
+#include <iostream>
 #include <string>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
@@ -55,6 +56,7 @@ private:
 
 IModule* GetNewInstance()
 {
+  cout << "in get new instance()" << endl;
   return new mod_sock;
 }
 

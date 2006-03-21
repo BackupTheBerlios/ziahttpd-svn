@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:50:30 2006 texane
-// Last update Wed Feb 22 11:52:00 2006 texane
+// Last update Tue Mar 21 16:11:00 2006 texane
 //
 
 
@@ -43,6 +43,10 @@ bool net::server::reload_config(config* config)
   nr_bklog = (*curr_srv)->nr_bklog;
   port = (*curr_srv)->port;
   insock::n_to_inaddr(srv_addr, INADDR_ANY, port);
+
+  // build the module pipeline
+  m_pipeline.rebuild(config);
+
   return true;
 }
 

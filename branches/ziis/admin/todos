@@ -1,3 +1,10 @@
+todos:
+implement the module manager
+
+session should have hash table for context
+think about how to invoke the module
+	-> get prio, mime ...
+
 1) implement module manager
 	. think about involvures -> should be reloadable
 	. should have a data aera for the module (void*)
@@ -86,3 +93,15 @@ a client request (connection pov) is defined by the iinput and ioutput
 
 when implementing the pipeline, take care about
 	priority of modifiers
+
+
+
+
+---
+proto
+-> pass linked list for header in input constructor
+
+
+-> split the proto class
+	-> input
+	-> output

@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Mar 21 11:45:51 2006 texane
+## Last update Tue Mar 21 16:16:03 2006 texane
 ##
 
 # ! Always include this file
@@ -16,6 +16,7 @@
 name	= zfs.x
 srcs	= main.cc			\
 	  core.cc			\
+	  module.cc			\
 	  net_server.cc			\
 	  thr_pool.cc			\
 	  thr_io.cc			\
@@ -63,7 +64,7 @@ trash	= $(srcs:.cc=.cc~) \
 all	: $(name)
 $(name)	: $(objs)
 	$(LD) $(LDFLAGS) $(LDOUT)$(name) $(objs)
-	$(CP) $(name) $(PROJ_ROOT)
+	$(CP) $(name) $(PROJ_ROOT)$(SLASH)zfs.exe
 clean	: force
 	$(ECHO) deleting $(objs)
 	$(RM) $(objs)

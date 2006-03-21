@@ -6,12 +6,21 @@
   <directory_listing>./test/cgi-bin/windows/dir_list.exe</directory_listing>
 </system>
 
+
+<module name="mod_sock">
+<file>src/mod/sock/mod_sock.lo</file>
+</module>
+
+
 <server>
   <id>1</id>
   <cgi_id>1</cgi_id>
   <port>40000</port>
   <directory_index>index.html index.htm</directory_index>
+  <modulename>mod_sock</modulename>
 </server>
+
+
 
 <directory id=1>
   <servername>*</servername>
