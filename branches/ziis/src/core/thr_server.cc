@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Mar 21 23:07:00 2006 texane
+// Last update Tue Mar 21 23:21:59 2006 texane
 //
 
 
@@ -115,7 +115,7 @@ bool thr::pool::sess_accept_connection(session_t& sess)
     sess.ret_in_cache = false;
   if (herr == error::SUCCESS)
     {
-      sess.m_conn_module->Accept(sess.cli_sock);
+      sess.m_conn_data = sess.m_conn_module->Accept(sess.cli_sock);
       return true;
     }
   return false;
@@ -134,7 +134,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   end_of_metadata = false;
   while (end_of_metadata == false)
     {
-      nr_recv = sess.m_conn_module->Recv(sess.cli_sock, 0, (char*)buf, sizeof(buf));
+      nr_recv = sess.m_conn_module->Recv(sess.cli_sock, sess.m_conn_data, (char*)buf, sizeof(buf));
       if (nr_recv == -1)
 	{
 	  sess.done = true;
