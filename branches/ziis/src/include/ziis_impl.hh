@@ -38,6 +38,7 @@ public:
 private:
   net::http*						m_proto;
 	thr::pool::session_t* m_session;
+	int										m_ip_client;
 };
 
 
@@ -45,7 +46,8 @@ class ZfsOutput : public IOutput
 {
 public:
 	ZfsOutput(net::http&);
-  ~ZfsOutput();
+
+	~ZfsOutput() {}
 
   void SetOutput(const char*, const char*);
   const char* GetOutput(const char*);
@@ -53,7 +55,6 @@ public:
   int SendError(int) { return -1;}
   int SendBuffer(const char*, int) { return -1; }
   void SetStatusCode(int);
-	int		GetClientIp() { return -1; }
 
 private:
   net::http* m_proto;
