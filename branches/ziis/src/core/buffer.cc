@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Tue Feb 21 17:14:52 2006 texane
+// Last update Tue Mar 21 19:52:36 2006 texane
 //
 
 
@@ -218,11 +218,11 @@ buffer& buffer::operator=(const string& s)
 }
 
 
-unsigned char& buffer::operator[](unsigned int i)
+char& buffer::operator[](unsigned int i)
 {
   if (!buf_ || (size_t)i < 0 || (size_t)i >= sz_)
     throw (int)0;
-  return buf_[i];
+  return (char&)buf_[i];
 }
 
 
@@ -366,4 +366,39 @@ bool buffer::remove_front(unsigned int nbytes)
     *to++ = *from++;
   sz_ -= nbytes;
   return true;
+}
+
+
+// implement interface IBuffer
+
+int buffer::Length()
+{
+  return (int)size();
+}
+
+const char* buffer::Str()
+{
+  return c_str();
+}
+
+void buffer::Clear()
+{
+  clear();
+}
+
+void buffer::Append(const char* buf, int size)
+{
+  *this += buffer((unsigned char*)buf, (size_t)size);
+}
+
+IBuffer& buffer::operator=(IBuffer& buf)
+{
+  *this = buf;
+  return *this;
+}
+
+IBuffer& buffer::operator+=(IBuffer& buf)
+{
+  *this += buf;
+  return *this;
 }

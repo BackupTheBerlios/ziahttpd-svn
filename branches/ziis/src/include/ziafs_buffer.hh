@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Jan 21 23:35:20 2006 texane
-// Last update Thu Jan 26 19:28:39 2006 texane
+// Last update Tue Mar 21 19:49:57 2006 texane
 //
 
 
@@ -15,17 +15,30 @@
 
 #include <string>
 #include <cstdlib>
+#include <sys/sysapi.hh>
+#include <ziis.hh>
 
 
-class buffer
+// implement the IBuffer interface
+
+class buffer : public IBuffer
 {
 public:
   buffer();
   buffer(const unsigned char*, size_t);
   buffer(const buffer&);
-
   ~buffer();
 
+  // implement interface IBuffer
+  int Length();
+  const char* Str();
+  void Clear();
+  void Append(const char*, int);
+  IBuffer& operator=(IBuffer&);
+  IBuffer& operator+=(IBuffer&);
+  char& operator[](unsigned int);
+
+  // internal
   void buf(unsigned char*, size_t);
   void affect(unsigned char*, size_t);
 
@@ -45,7 +58,6 @@ public:
   buffer& operator+=(const std::string&);
   buffer& operator=(const buffer&);
   buffer& operator=(const std::string&);
-  unsigned char& operator[](unsigned int);
   operator unsigned char*();
 
   std::string tostring(unsigned int = 0,

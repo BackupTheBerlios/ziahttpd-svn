@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Tue Mar 21 16:10:44 2006 texane
+// Last update Tue Mar 21 20:46:29 2006 texane
 //
 
 
@@ -48,7 +48,7 @@ namespace net
     // Http related
 
     // Module related
-    mod::pipeline m_pipeline;
+    mod::manager m_modman;
   };
 }
 

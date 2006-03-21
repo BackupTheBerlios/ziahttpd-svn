@@ -1,5 +1,11 @@
 todos:
+implement module connection module retrieval
 implement the module manager
+implement the IConnection call
+implement in,out put constructors with thrinfo
+	-> the input constructor should fill the
+		module instance...
+		-> commonly define it
 
 session should have hash table for context
 think about how to invoke the module

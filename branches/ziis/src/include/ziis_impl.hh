@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Tue Mar 21 19:30:28 2006 texane
+// Last update Tue Mar 21 21:01:54 2006 texane
 //
 
 
@@ -24,16 +24,17 @@ public:
   ZfsInput(net::http&);
   ~ZfsInput() {}
 
-	int					GetClientIp() { return -1; }
   const char* GetInput(const char*);
   const char* GetInputMethod();
   const char* GetInputLocation();
   const char* GetInputHttpVersion();
   const char* GetInputQueryString();
+  int GetClientIp() { return 0; }
   int ReadPostEntity(char*, int){ return -1;}
   bool GetNextHeader(char**, char**);
+
 private:
-	net::http* m_proto;
+  net::http* m_proto;
 };
 
 
@@ -49,10 +50,10 @@ public:
   int SendError(int) { return -1;}
   int SendBuffer(const char*, int) { return -1; }
   void SetStatusCode(int);
-private:
-	net::http* m_proto;
-};
 
+private:
+  net::http* m_proto;
+};
 
 
 #endif // ! ZIIS_IMPL_HH

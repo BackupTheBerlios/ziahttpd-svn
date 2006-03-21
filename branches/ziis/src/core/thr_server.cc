@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Mar 21 19:30:36 2006 texane
+// Last update Tue Mar 21 20:54:43 2006 texane
 //
 
 
@@ -35,8 +35,16 @@ void thr::pool::sess_reset_request(session_t& sess)
   sess.proto.reset();
   sess.chunk_pos = net::http::CHUNK_FIRST;
   sess.target = 0;
+
+  // ziis related
   sess.m_input = 0;
   sess.m_output = 0;
+  sess.m_conn_module = 0;
+  sess.m_conn_data = 0;
+  sess.m_comp_module = 0;
+  sess.m_comp_data = 0;
+  sess.m_gen_module = 0;
+  sess.m_modifiers.clear();
 }
 
 void thr::pool::sess_release_request(session_t& sess)
@@ -110,7 +118,10 @@ bool thr::pool::sess_accept_connection(session_t& sess)
   if (sess.thr_slot->pool->assign_task(server_entry, (void*)sess.srv) == false)
     sess.ret_in_cache = false;
   if (herr == error::SUCCESS)
-    return true;
+    {
+      sess.m_conn_module->Accept(sess.cli_sock);
+      return true;
+    }
   return false;
 }
 
@@ -298,6 +309,12 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   sess.thr_slot = thr_slot;
   io_info_reset(sess.thr_slot->curr_io);
   sess.srv = (net::server*)thr_slot->uparam;
+
+  // get the connection module
+  if (sess.srv->m_modman.get_connection_module(sess.m_conn_module) == false)
+    {
+      cout << "cannot get connection module" << endl;
+    }
 
   // session pipeline
   sess_bind_server(sess);

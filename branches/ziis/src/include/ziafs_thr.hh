@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Tue Mar 21 19:07:03 2006 texane
+// Last update Tue Mar 21 20:33:31 2006 texane
 //
 
 
@@ -32,6 +32,7 @@ namespace net { class server; }
 namespace resource { class handle; };
 class ZfsOutput;
 class ZfsInput;
+class IConnection;
 
 namespace thr
 {
@@ -166,8 +167,15 @@ namespace thr
       net::http::chunk_pos_t chunk_pos;
       resource::handle* target;
 
+      // ziis related
       ZfsInput* m_input;
       ZfsOutput* m_output;
+      IConnection* m_conn_module;
+      void* m_conn_data;
+      ICompressor* m_comp_module;
+      void* m_comp_data;
+      IDocumentGenerator* m_gen_module;
+      std::list<IStreamModifier*> m_modifiers;
     } session_t;
 
     static void sess_reset_request(session_t&);

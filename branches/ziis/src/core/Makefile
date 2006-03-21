@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Mar 21 16:16:03 2006 texane
+## Last update Tue Mar 21 20:59:51 2006 texane
 ##
 
 # ! Always include this file
@@ -35,6 +35,8 @@ srcs	= main.cc			\
 	  utils_line.cc			\
 	  zia_stringmanager.cc		\
 	  ziafs_request_header_validation.cc	\
+	  zfsinput.cc			\
+	  zfsoutput.cc			\
 	  http_response.cc		\
 	  http_data.cc			\
 	  error_code.cc			\

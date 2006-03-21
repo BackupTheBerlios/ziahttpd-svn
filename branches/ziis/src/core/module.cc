@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Tue Mar 21 16:39:35 2006 texane
+// Last update Tue Mar 21 20:50:24 2006 texane
 //
 
 
@@ -20,27 +20,65 @@
 using namespace std;
 
 
-// pipeline implementation
+// one manager instance by server
 
-mod::pipeline::pipeline()
+mod::manager::manager()
 {
-  reset();
 }
 
-mod::pipeline::~pipeline()
+mod::manager::~manager()
 {
-  release();
+  list<modinfo*>::iterator i_curr;
+  list<modinfo*>::iterator i_last;
+
+  i_curr = m_modlist.begin();
+  i_last = m_modlist.end();
+  while (i_curr != i_last)
+    {
+      delete *i_curr;
+      ++i_curr;
+    }
+  m_modlist.clear();
 }
 
-bool mod::pipeline::rebuild(net::config* config)
+bool mod::manager::get_connection_module(IConnection*& p_mod)
+{
+  // always return the connection module
+  return false;
+}
+
+bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& encoding)
+{
+  // match the supported encoding
+  return false;
+}
+
+bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string& mimetype)
+{
+  // match the mime type
+  return false;
+}
+
+bool mod::manager::get_modifier_list(list<IStreamModifier*>& p_list, list<string>& modifiers)
+{
+  // match the content type + order by priority
+  return false;
+}
+
+bool mod::manager::load_module(const string& path)
+{
+  modinfo* p_info;
+
+  p_info = new modinfo(path);
+  return true;
+}
+
+bool mod::manager::reload(net::config* p_config)
 {
   list<net::config::module*>::iterator curr_mod;
 
-  release();
-  reset();
-
-  config->get_modules(curr_mod);
-  while (config->end_modules(curr_mod) == false)
+  p_config->get_modules(curr_mod);
+  while (p_config->end_modules(curr_mod) == false)
     {
       load_module((*curr_mod)->file);
       ++curr_mod;
@@ -48,80 +86,34 @@ bool mod::pipeline::rebuild(net::config* config)
   return true;
 }
 
-void mod::pipeline::release()
-{
-  list<modinfo*>::iterator i_curr;
-  list<modinfo*>::iterator i_last;
 
-  i_curr = m_modules.begin();
-  i_last = m_modules.end();
-  while (i_curr != i_last)
-    {
-      delete *i_curr;
-      ++i_curr;
-    }
-  m_modules.clear();
-}
+// module wrapper class
 
-void mod::pipeline::reset()
-{
-}
-
-bool mod::pipeline::load_module(const string& nm_module)
-{
-  // take into account the
-  // module priority, if any
-
-  modinfo* mod;
-
-  mod = new modinfo(nm_module);
-  m_modules.push_front(mod);
-  return true;
-}
-
-bool mod::pipeline::unload_module(const string& nm_module)
-{
-  return false;
-}
-
-bool mod::pipeline::execute()
-{
-  return false;
-}
-
-bool mod::pipeline::find(const string& nm_module)
-{
-  return false;
-}
-
-
-// module implementation
-
-mod::modinfo::modinfo(const string& nm_module)
+mod::modinfo::modinfo(const string& path)
 {
   IModule* (*fptr)();
 
-  m_id_module = 0;
-  m_nm_module = nm_module;
-  if (sysapi::module::load(m_h_module, nm_module) == sysapi::error::SUCCESS)
+  m_instance = 0;
+  m_path = path;
+  if (sysapi::module::load(m_handle, path) == sysapi::error::SUCCESS)
     {
-      if (sysapi::module::resolve((void*&)fptr, m_h_module, "GetNewInstance") == sysapi::error::SUCCESS)
+      if (sysapi::module::resolve((void*&)fptr, m_handle, "GetNewInstance") == sysapi::error::SUCCESS)
 	{
-	  m_id_module = fptr();
+	  m_instance = fptr();
 	}
       else
 	{
 	  cout << "resolv failed" << endl;
-	  sysapi::module::unload(m_h_module);
+	  sysapi::module::unload(m_handle);
 	}
     }
 }
 
 mod::modinfo::~modinfo()
 {
-  if (m_id_module)
+  if (m_instance)
     {
-      delete m_id_module;
-      sysapi::module::unload(m_h_module);
+      delete m_instance;
+      sysapi::module::unload(m_handle);
     }
 }

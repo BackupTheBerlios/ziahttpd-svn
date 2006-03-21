@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:10:34 2006 texane
-// Last update Tue Mar 21 16:31:17 2006 texane
+// Last update Tue Mar 21 20:49:39 2006 texane
 //
 
 
@@ -20,47 +20,46 @@
 
 
 namespace net { class config; }
-namespace mod { class pipeline; }
+namespace mod { class manager; }
+
 
 namespace mod
 {
   class modinfo
   {
-    friend class pipeline;
-
+    friend class manager;
   public:
     modinfo(const std::string&);
     ~modinfo();
 
+    bool reload();
+
   private:
-    sysapi::module::handle_t m_h_module;
-    IModule* m_id_module;
-    std::string m_nm_module;
+    sysapi::module::handle_t m_handle;
+    IModule* m_instance;
+    std::string m_path;
   };
 }
 
-
 namespace mod
 {
-  class pipeline
+  class manager
   {
   public:
-    pipeline();
-    ~pipeline();
-    
-    bool rebuild(net::config*);
-    bool load_module(const std::string&);
-    bool unload_module(const std::string&);
-    bool execute();
-    bool find(const std::string&);
+    manager();
+    ~manager();
 
+    bool reload(net::config*);
+    bool get_connection_module(IConnection*&);
+    bool get_compressor_module(ICompressor*&, const std::string&);
+    bool get_generator_module(IDocumentGenerator*&, const std::string&);
+    bool get_modifier_list(std::list<IStreamModifier*>&, std::list<std::string>&);
 
   private:
+    std::list<modinfo*> m_modlist;
 
-    std::list<modinfo*> m_modules;
-    
-    void release();
-    void reset();
+    // internal management
+    bool load_module(const std::string&);
   };
 }
 
