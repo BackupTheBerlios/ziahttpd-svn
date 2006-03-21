@@ -1,0 +1,15 @@
+0) make the core build
+
+1) implement module manager
+	. think about involvures -> should be reloadable
+	. should have a data aera for the module (void*)
+	. implement the reload method according to conf file
+
+2) integrate mod manager into the core
+	. read modules from conf
+	. define hook modele
+
+3) implement modules
+	. default
+	. ssl
+	. perl
