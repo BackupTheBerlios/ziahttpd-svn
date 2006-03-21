@@ -210,6 +210,9 @@
 					RelativePath="..\src\core\zfsinput.cc">
 				</File>
 				<File
+					RelativePath="..\src\core\zfsoutput.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\zia_stringmanager.cc">
 				</File>
 				<File

@@ -40,15 +40,17 @@ private:
 class ZfsOutput : public IOutput
 {
 public:
-  ZfsOutput() {}
+  ZfsOutput(net::http&);
   ~ZfsOutput() {}
 
-  void SetOutput(const char*, const char*) {}
-  const char* GetOutput(const char*) { return 0; }
+  void SetOutput(const char*, const char*);
+  const char* GetOutput(const char*);
   int SendHeader() {return -1;}
   int SendError(int) { return -1;}
   int SendBuffer(const char*, int) { return -1; }
-  void SetStatusCode(int) {}
+  void SetStatusCode(int);
+private:
+	net::http* m_proto;
 };
 
 
