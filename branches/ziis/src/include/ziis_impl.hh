@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Tue Mar 21 19:06:17 2006 texane
+// Last update Tue Mar 21 19:30:28 2006 texane
 //
 
 
@@ -32,6 +32,22 @@ public:
   int ReadPostEntity(char*, int){ return -1;}
   bool GetNextHeader(char**, char**){ return false; }
 };
+
+
+class ZfsOutput : public IOutput
+{
+public:
+  ZfsOutput() {}
+  ~ZfsOutput() {}
+
+  void SetOutput(const char*, const char*) {}
+  const char* GetOutput(const char*) { return 0; }
+  int SendHeader() {return -1;}
+  int SendError(int) { return -1;}
+  int SendBuffer(const char*, int) { return -1; }
+  void SetStatusCode(int) {}
+};
+
 
 
 #endif // ! ZIIS_IMPL_HH

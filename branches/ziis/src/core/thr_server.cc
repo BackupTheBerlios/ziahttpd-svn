@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Mar 21 19:07:57 2006 texane
+// Last update Tue Mar 21 19:30:36 2006 texane
 //
 
 
@@ -56,7 +56,7 @@ void thr::pool::sess_release_request(session_t& sess)
     }
   if (sess.m_output)
     {
-//       delete sess.m_output;
+      delete sess.m_output;
       sess.m_output = 0;
     }
 
