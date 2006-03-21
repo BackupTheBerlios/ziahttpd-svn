@@ -57,6 +57,7 @@ namespace net
     status::error					produce(buffer&);
     status::error					dump(buffer&);
     std::string						method() { return m_method; };
+		std::string						query() { return m_query; };
 		bool									reset();
 		bool									request_header_validation();
 		unsigned int					body_size();

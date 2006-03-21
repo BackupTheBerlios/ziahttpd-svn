@@ -27,8 +27,8 @@ public:
   const char* GetInput(const char*);
   const char* GetInputMethod();
   const char* GetInputLocation();
-  const char* GetInputHttpVersion(){ return 0; }
-  const char* GetInputQueryString(){ return 0; }
+  const char* GetInputHttpVersion();
+  const char* GetInputQueryString();
   int ReadPostEntity(char*, int){ return -1;}
   bool GetNextHeader(char**, char**){ return false; }
 private:
