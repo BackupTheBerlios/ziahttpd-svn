@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Tue Mar 21 21:01:54 2006 texane
+// Last update Tue Mar 21 22:42:59 2006 texane
 //
 
 
@@ -13,6 +13,7 @@
 # define ZIIS_IMPL_HH
 
 
+#include <ziafs_thr.hh>
 #include <ziafs_http.hh>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
@@ -22,6 +23,7 @@ class ZfsInput : public IInput
 {
 public:
   ZfsInput(net::http&);
+  ZfsInput(thr::pool::session_t&);
   ~ZfsInput() {}
 
   const char* GetInput(const char*);

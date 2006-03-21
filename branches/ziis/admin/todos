@@ -1,5 +1,5 @@
 todos:
-implement module connection module retrieval
+implement connection module retrieval
 implement the module manager
 implement the IConnection call
 implement in,out put constructors with thrinfo

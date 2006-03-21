@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Tue Mar 21 20:54:43 2006 texane
+// Last update Tue Mar 21 22:30:47 2006 texane
 //
 
 
@@ -163,7 +163,7 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 
     }
 
-  //
+  // instanciate ZfsInput
   sess.m_input = new ZfsInput(sess.proto);
 
   // Create the resource
@@ -314,6 +314,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   if (sess.srv->m_modman.get_connection_module(sess.m_conn_module) == false)
     {
       cout << "cannot get connection module" << endl;
+      return 0;
     }
 
   // session pipeline

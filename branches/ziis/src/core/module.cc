@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Tue Mar 21 20:50:24 2006 texane
+// Last update Tue Mar 21 22:35:05 2006 texane
 //
 
 
@@ -43,7 +43,17 @@ mod::manager::~manager()
 
 bool mod::manager::get_connection_module(IConnection*& p_mod)
 {
-  // always return the connection module
+  list<modinfo*>::iterator it_curr;
+  list<modinfo*>::iterator it_last;
+
+  it_curr = m_modlist.begin();
+  it_last = m_modlist.end();
+  while (it_curr != it_last)
+    {
+      if ((p_mod = dynamic_cast<IConnection*>((*it_curr)->m_instance)))
+	return true;
+      ++it_curr;
+    }
   return false;
 }
 

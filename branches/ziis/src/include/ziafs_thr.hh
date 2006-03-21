@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Tue Mar 21 20:33:31 2006 texane
+// Last update Tue Mar 21 22:43:34 2006 texane
 //
 
 
@@ -15,7 +15,6 @@
 
 // This file covers threads
 
-#include <ziis_impl.hh>
 #include <ziafs_http.hh>
 #include <sys/sysapi.hh>
 
@@ -29,7 +28,8 @@
 
 // Forward declarations
 namespace net { class server; }
-namespace resource { class handle; };
+namespace resource { class handle; }
+
 class ZfsOutput;
 class ZfsInput;
 class IConnection;
@@ -155,7 +155,7 @@ namespace thr
     static void* system_entry(slot_t*);
 
     // session management
-    typedef struct
+    typedef struct session
     {
       net::server* srv;
       slot_t* thr_slot;
