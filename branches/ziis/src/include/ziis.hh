@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 10:34:58 2006 texane
-// Last update Tue Mar 21 11:43:55 2006 texane
+// Last update Tue Mar 21 13:59:22 2006 texane
 //
 
 
@@ -94,19 +94,29 @@ public:
 
 class ICompressor
 {
-  // to do
+public:
+  virtual void* GetNewContext(const char*) = 0;
+  virtual void DestroyContext(void*) = 0;
+  virtual bool Compress(void*, IBuffer&, IBuffer&) = 0;
+  virtual bool Decompress(void*, IBuffer&, IBuffer&) = 0;
+  virtual const char** GetSupportedEncoding() = 0;
 };
 
 
 class IDocumentGenerator
 {
-  // to do
+public:
+  virtual void GenerateDocument(IInput&, const char*, IOutput&) = 0;
+  virtual const char** GetSupportedMime() = 0;
 };
 
 
 class IStreamModifier
 {
-  // todo
+public:
+  virtual int GetPriority() = 0;
+  virtual const char** GetSupportedContentType() = 0;
+  virtual void Transform(IBuffer&, IBuffer&, IBuffer&, bool = false) = 0;
 };
 
 

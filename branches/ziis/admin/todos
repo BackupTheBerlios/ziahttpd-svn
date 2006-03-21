@@ -63,3 +63,11 @@ impelement the default module, to handle connection(but not accept, the module h
 	-> first the default mod
 	-> generate document is the resource factory
 	-> the module may be plugged in another server
+
+
+how to use the void* returned by accept
+	-> just for ssl
+	-> or use it to mod_sock
+
+
+the server should be reloadable
