@@ -6,6 +6,12 @@ ZfsOutput::ZfsOutput(net::http& proto)
 	m_proto = &proto;
 }
 
+ZfsOutput::ZfsOutput(thr::pool::session_t& s)
+{
+	m_proto = &s.proto;
+	m_session = &s;
+}
+
 void	ZfsOutput::SetOutput(const char*key, const char*value)
 {
 	m_proto->response[key] = value;

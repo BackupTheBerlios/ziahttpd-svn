@@ -46,7 +46,7 @@ class ZfsOutput : public IOutput
 {
 public:
 	ZfsOutput(net::http&);
-
+	ZfsOutput(thr::pool::session_t&);
 	~ZfsOutput() {}
 
   void SetOutput(const char*, const char*);
@@ -58,6 +58,7 @@ public:
 
 private:
   net::http* m_proto;
+	thr::pool::session_t* m_session;
 };
 
 
