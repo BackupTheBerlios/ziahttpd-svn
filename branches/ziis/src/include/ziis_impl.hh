@@ -24,6 +24,7 @@ public:
   ZfsInput(net::http&);
   ~ZfsInput() {}
 
+	int					GetClientIp() { return -1; }
   const char* GetInput(const char*);
   const char* GetInputMethod();
   const char* GetInputLocation();
