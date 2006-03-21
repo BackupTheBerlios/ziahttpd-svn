@@ -51,6 +51,7 @@ namespace net
 			CHUNK_LAST
 		} chunk_pos_t;
     http();
+		~http();
 
     bool									consume(unsigned char *, unsigned int , bool&);
 		bool									consume_body(buffer& dest, buffer* source);
@@ -63,12 +64,13 @@ namespace net
 		unsigned int					body_size();
 		bool									create_resource(resource::handle*&, resource::manager&, config&);
 		bool									predata(buffer&);
+		uri&									get_uri() {return m_uri; }
 
 		// Response
 		bool									create_header(buffer&, size_t, chunk_pos_t);
 		bool									modify_header(config&, chunk_pos_t);
 		bool									stringify_header(buffer&);
-		uri&									get_uri() {return m_uri; }
+
 
 	private:
 		bool	valid_method();

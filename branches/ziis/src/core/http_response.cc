@@ -122,7 +122,7 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 	response.m_data_enco->encode(data, sz, chunk);
 	if ((chunk == CHUNK_LAST) && (response.is_chunk == true))
 		data += "\r\n";
-return true;
+	return true;
 }
 
 bool			net::http::modify_header(config& conf, chunk_pos_t chunk)

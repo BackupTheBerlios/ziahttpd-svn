@@ -11,6 +11,11 @@ net::http::http()
 	request.m_data_enco = NULL;
 }
 
+net::http::~http()
+{
+	reset();
+}
+
 bool				net::http::reset()
 {
 	ziafs_debug_msg("\nHTTP Reset %s\n", "");

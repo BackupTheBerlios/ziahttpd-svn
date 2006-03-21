@@ -23,8 +23,8 @@ class ZfsInput : public IInput
 {
 public:
   ZfsInput(net::http&);
-  ZfsInput(thr::pool::session_t&);
-  ~ZfsInput() {}
+	ZfsInput(thr::pool::session_t&);
+  ~ZfsInput();
 
   const char* GetInput(const char*);
   const char* GetInputMethod();
@@ -36,15 +36,16 @@ public:
   bool GetNextHeader(char**, char**);
 
 private:
-  net::http* m_proto;
+  net::http*						m_proto;
+	thr::pool::session_t* m_session;
 };
 
 
 class ZfsOutput : public IOutput
 {
 public:
-  ZfsOutput(net::http&);
-  ~ZfsOutput() {}
+	ZfsOutput(net::http&);
+  ~ZfsOutput();
 
   void SetOutput(const char*, const char*);
   const char* GetOutput(const char*);
@@ -52,6 +53,7 @@ public:
   int SendError(int) { return -1;}
   int SendBuffer(const char*, int) { return -1; }
   void SetStatusCode(int);
+	int		GetClientIp() { return -1; }
 
 private:
   net::http* m_proto;

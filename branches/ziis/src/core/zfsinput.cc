@@ -1,10 +1,20 @@
 #include <ziis_impl.hh>
 #include <ziafs_http.hh>
 
-
 ZfsInput::ZfsInput(net::http& proto)
 {
 	m_proto = &proto;
+}
+
+ZfsInput::ZfsInput(thr::pool::session_t& s)
+{
+	m_session = &s;
+	m_proto = &m_session->proto;
+}
+
+ZfsInput::~ZfsInput()
+{
+
 }
 
 const char*	ZfsInput::GetInput(const char*key)
