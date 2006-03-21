@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Tue Dec 06 23:29:57 2005 texane
+## Last update Sun Jan 29 19:31:49 2006 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -21,9 +21,9 @@ __WINDOWS_MK	=	1
 
 # .compiler
 CC	=	cl -nologo
-CCPATHS	=	-I"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Include/"	\
-		-I"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Include/" \
-		-I"d:/WINDDK/2600/inc/ddk/wxp/" \
+CCPATHS	=	-I"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Include/"	\
+		-I"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Include/" \
+		-I"c:/WINDDK/2600/inc/ddk/wxp/" \
 		-I"$(PROJ_ROOT)/src/include/"
 CCDEFS	=	-D "_WIN32" -D "_CONSOLE" -D "_MBCS" -D "_MT" -D "_SYSAPI"=2 -TP -MD
 CCGEN	=	-O2 -Wp64 -EHsc
@@ -33,9 +33,9 @@ CCFLAGS	=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS)
 
 # .linker
 LD	=	link -nologo
-LDPATHS	=	-libpath:"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Lib/" \
-		-libpath:"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Lib/" \
-		-libpath:"d:/WINDDK/2600/lib/"
+LDPATHS	=	-libpath:"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Lib/" \
+		-libpath:"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Lib/" \
+		-libpath:"c:/WINDDK/2600/lib/"
 LDLIBS	=	-implib:ntdll.lib Ws2_32.lib user32.lib kernel32.lib gdi32.lib WS2_32.lib
 LDGEN	=	-machine:x86 -subsystem:console -opt:noref
 LIBOUT	=	-lib

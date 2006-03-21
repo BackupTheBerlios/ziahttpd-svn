@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Tue Mar 21 23:21:55 2006 texane
+// Last update Tue Mar 21 23:23:00 2006 texane
 //
 
 
@@ -21,14 +21,14 @@
 struct core;
 namespace net { class config; }
 namespace thr { class pool; }
-class IInput;
+class ZfsInput;
 
 namespace net
 {
   class server
   {
     friend class thr::pool;
-    friend class IInput;
+    friend class ZfsInput;
 
   public:
     server(struct core*);
