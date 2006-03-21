@@ -31,7 +31,7 @@ public:
   const char* GetInputLocation();
   const char* GetInputHttpVersion();
   const char* GetInputQueryString();
-  int GetClientIp() { return 0; }
+  int					GetClientIp();
   int ReadPostEntity(char*, int){ return -1;}
   bool GetNextHeader(char**, char**);
 

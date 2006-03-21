@@ -63,3 +63,8 @@ bool	ZfsInput::GetNextHeader(char**key, char**value)
 	it++;
 	return true;
 }
+
+int ZfsInput::GetClientIp()
+{
+	return m_ip_client;
+}
