@@ -35,10 +35,12 @@ void	ZfsOutput::SetStatusCode(int st)
 bool	ZfsOutput::SendHeader()
 {
 	buffer	header;
+	const char *buf;
 
 	m_proto->stringify_header(header);
-
-
+	buf = header.c_str();
+	m_session->m_conn_module->Send(m_session->cli_sock, NULL, buf, (int)strlen(buf));
+	delete buf;
 	return true;
 }
 
