@@ -1,6 +1,14 @@
 todos
 
 
+. handle prefetched datas...
+
+. for chunk generation
+	-> for the moment, maintained in the session: the position
+	should be external, local variable and passed to generate_chunk_header
+	-> generate_chunk_header(buffer&, chunk_pos)
+
+
 . think you should not have a while ... in resource generation
 	(besides the loop in documentgenerator)
 . add the is_content_dynamic() method, in order to

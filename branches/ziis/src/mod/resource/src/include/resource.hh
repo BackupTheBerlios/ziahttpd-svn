@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:25:56 2006 texane
-// Last update Wed Mar 22 11:41:34 2006 texane
+// Last update Wed Mar 22 12:24:16 2006 texane
 //
 
 
@@ -210,11 +210,11 @@ namespace resource
   class manager
   {
   public:
-    e_error factory_create(handle*&, e_id, e_omode, int, char**, char**, buffer* = 0, unsigned int = 0);
-    e_error factory_create(handle*&, e_id, e_omode, const std::string&, buffer* = 0, unsigned int = 0);
-    e_error factory_create(handle*&, e_id, e_omode, const unsigned int);
-    e_error factory_create(handle*&, e_id);
-    e_error factory_destroy(handle*);
+    static e_error factory_create(handle*&, e_id, e_omode, int, char**, char**, buffer* = 0, unsigned int = 0);
+    static e_error factory_create(handle*&, e_id, e_omode, const std::string&, buffer* = 0, unsigned int = 0);
+    static e_error factory_create(handle*&, e_id, e_omode, const unsigned int);
+    static e_error factory_create(handle*&, e_id);
+    static e_error factory_destroy(handle*);
   };
 }
 
