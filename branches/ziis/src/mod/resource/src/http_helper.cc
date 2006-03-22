@@ -153,7 +153,6 @@ bool			http_helper::get_cgi_path(net::config& conf, std::string& path, std::stri
 }
 
 bool				http_helper::create_resource(resource::handle*& hld, 
-//																				 resource::manager& manager, 
 																				 net::config& conf, IInput& inp, 
 																				 IOutput& out, 
 																				 std::string localname)
