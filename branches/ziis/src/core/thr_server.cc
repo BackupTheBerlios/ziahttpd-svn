@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Mar 22 13:35:49 2006 texane
+// Last update Wed Mar 22 13:43:09 2006 texane
 //
 
 
@@ -170,6 +170,7 @@ bool thr::pool::sess_handle_document(session_t& sess)
   sess.m_output = new ZfsOutput(sess);
 
   // generate the resource
+  cout << "doc generation: " << sess.proto.get_uri().wwwname() << endl;
   cout << "doc generation: " << sess.proto.get_uri().localname() << endl;
   sess.m_gen_module->GenerateDocument(*sess.m_input, sess.proto.get_uri().localname().c_str(), *sess.m_output);
   cout << "handle_document done" << endl;
