@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:25:56 2006 texane
-// Last update Wed Mar 22 12:24:16 2006 texane
+// Last update Wed Mar 22 16:52:26 2006 texane
 //
 
 
@@ -154,55 +154,56 @@ namespace resource
 }
 
 
-// namespace resource
-// {
-//   class process : public handle
-//   {
-//   public:
-//     // construction/destruction
-//     process(int, char**, char**, e_omode);
-//     ~process();
+namespace resource
+{
+  class process : public handle
+  {
+  public:
+    // construction/destruction
+    process(int, char**, char**, e_omode);
+    ~process();
 
-//     // interface implementation
-//     e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&);
-//     e_error flush_disk(sysapi::file::handle_t&);
-//     e_error flush_environ();
-//     e_error flush_input(thr::pool::slot_t&, buffer&);
-//     e_error generate(unsigned int&);
-//     e_error size(unsigned int&);
+    // interface implementation
+    e_error flush_network(IOutput&);
+    e_error flush_disk(sysapi::file::handle_t&);
+    e_error flush_environ();
+    e_error flush_input(buffer&);
+    e_error generate(unsigned int&);
+    e_error size(unsigned int&);
+    bool is_content_dynamic() const;
+
+  private:
+    sysapi::process::handle_t proc_handle;
+    sysapi::file::handle_t read_handle;
+    sysapi::file::handle_t write_handle;
+    bool generated;
+
+  };
+}
 
 
-//   private:
-//     sysapi::process::handle_t proc_handle;
-//     sysapi::file::handle_t read_handle;
-//     sysapi::file::handle_t write_handle;
-//     bool generated;
+namespace resource
+{
+  class fake : public handle
+  {
+  public:
+    // construction/destruction
+    fake();
+    ~fake();
 
-//   };
-// }
+    // interface implementation
+    e_error flush_network(IOutput&);
+    e_error flush_disk(sysapi::file::handle_t&);
+    e_error flush_environ();
+    e_error flush_input(buffer&);
+    e_error generate(unsigned int&);
+    e_error size(unsigned int&);
+    bool is_content_dynamic() const;
 
-
-// namespace resource
-// {
-//   class fake : public handle
-//   {
-//   public:
-//     // construction/destruction
-//     fake();
-//     ~fake();
-
-//     // interface implementation
-//     e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&);
-//     e_error flush_disk(sysapi::file::handle_t&);
-//     e_error flush_environ();
-//     e_error flush_input(thr::pool::slot_t&, buffer&);
-//     e_error generate(unsigned int&);
-//     e_error size(unsigned int&);
-
-//   private:
-//     bool generated;
-//   };
-// }
+  private:
+    bool generated;
+  };
+}
 
 
 namespace resource

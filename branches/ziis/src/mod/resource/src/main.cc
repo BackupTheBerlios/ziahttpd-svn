@@ -5,40 +5,15 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 16:35:50 2006 texane
+// Last update Wed Mar 22 16:41:37 2006 texane
 //
 
 
-#include <iostream>
-#include <sstream>
-#include <string.h>
-#include <sys/sysapi.hh>
-#include <ziis.hh>
-#include "include/buffer.hh"
-#include "include/resource.hh"
-#include "include/constants.hh"
+#include "include/mod_resource.hh"
 
 
 using namespace std;
 using namespace resource;
-
-
-class mod_resource : public IModule, public IDocumentGenerator
-{
-public:
-  mod_resource();
-  ~mod_resource();
-
-  // implement IModule
-  bool ReadConfig(const char*);
-  const char* GetModuleName();
-  const char* GetModuleVersion();
-  void OnLoad(IFS*);
-
-  // implement IDocumentGenerator
-  void GenerateDocument(IInput&, const char*, IOutput&);
-  const char** GetSupportedMime();
-};
 
 
 // module management
@@ -53,28 +28,6 @@ mod_resource::mod_resource()
 }
 
 mod_resource::~mod_resource()
-{
-}
-
-
-// implement IModule
-
-bool mod_resource::ReadConfig(const char*)
-{
-  return true;
-}
-
-const char* mod_resource::GetModuleName()
-{
-  return "mod_resource";
-}
-
-const char* mod_resource::GetModuleVersion()
-{
-  return "1.0";
-}
-
-void mod_resource::OnLoad(IFS*)
 {
 }
 

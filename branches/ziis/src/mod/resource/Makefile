@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Wed Mar 22 11:02:55 2006 texane
+## Last update Wed Mar 22 16:44:04 2006 texane
 ##
 
 # ! Always include this file
@@ -15,11 +15,14 @@
 # Give your own variables here
 name	= mod_resource.lo
 srcs	= src$(SLASH)main.cc \
+	  src$(SLASH)modimpl.cc \
 	  src$(SLASH)buffer.cc \
 	  src$(SLASH)resource_handle.cc \
 	  src$(SLASH)resource_manager.cc \
 	  src$(SLASH)resource_byfly.cc \
 	  src$(SLASH)resource_file.cc \
+	  src$(SLASH)resource_fake.cc \
+	  src$(SLASH)resource_process.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)module.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)insock.cc \

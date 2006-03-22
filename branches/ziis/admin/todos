@@ -2,9 +2,8 @@ todos
 
 
 . get local name -> uri to local
-. resource creation + read  conf
+> resource creation + read  conf
 . chunk generation
-. readpostentity
 
 
 for the ReadPostEntity()

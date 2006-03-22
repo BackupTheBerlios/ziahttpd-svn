@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Wed Mar 22 16:28:37 2006 texane
+// Last update Wed Mar 22 16:48:35 2006 texane
 //
 
 
@@ -96,8 +96,6 @@ resource::e_error resource::file::flush_network(IOutput& out)
 
   if (omode == O_INPUT)
     {
-      // send it to output
-      cout << data.tostring() << endl;
       nr_sent = out.SendBuffer((const char*)data.bufptr(), (int)data.size());
       if (nr_sent < 0)
 	return E_OP_ERROR;

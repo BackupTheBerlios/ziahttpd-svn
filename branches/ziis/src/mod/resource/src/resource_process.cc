@@ -1,19 +1,18 @@
 //
-// resource_process.cc for  in 
+// resource_process.cc<2> for  in 
 // 
 // Made by texane
 // Login   <texane@gmail.com>
 // 
-// Started on  Fri Feb 17 13:18:15 2006 texane
-// Last update Wed Mar 22 16:56:31 2006 texane
+// Started on  Wed Mar 22 16:45:04 2006 texane
+// Last update Wed Mar 22 16:56:55 2006 texane
 //
 
 
-#include <sys/sysapi.hh>
-#include <ziafs_resource.hh>
-#include <ziafs_static.hh>
+#include "include/mod_resource.hh"
 
 
+using namespace std;
 using namespace sysapi;
 
 
@@ -24,7 +23,7 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
   e_error e_err;
   sysapi::process::state_t proc_st;
   sysapi::error::handle_t sys_err;
-  unsigned char buf[ZIAFS_STATIC_BUFSZ];
+  unsigned char buf[constants::BUFFER_SIZE];
 
   if (generated == true)
     return E_ALREADY_GEN;
@@ -64,41 +63,14 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
 }
 
 
-#include <iostream>
-using namespace std;
-
-resource::e_error resource::process::flush_network(thr::pool::slot_t& thr_slot, insock::handle_t& hsock)
+resource::e_error resource::process::flush_network(IOutput& out)
 {
-  e_error eerr;
-  error::handle_t herr;
-  unsigned int nsent;
-  unsigned int nbytes;
-  bool done;
+  int nr_sent;
 
-  done = false;
-  eerr = E_SUCCESS;
-  while (done == false)
-    {
-      nbytes = (unsigned int)data.size();
-      if (nbytes == 0)
-	{
-	  done = true;
-	}
-      else
-	{
-	  herr = send(thr_slot, hsock, data.bufptr(), nbytes, nsent);
-	  if (thr_slot.curr_io.timeouted == true || herr != sysapi::error::SUCCESS)
-	    {
-	      eerr = E_OP_ERROR;
-	      done = true;
-	    }
-	  else
-	    {
-	      data.remove_front(nsent);
-	    }
-	}
-    }
-  return eerr;
+  nr_sent = out.SendBuffer((const char*)data.bufptr(), (int)data.size());
+  if (nr_sent < 0)
+    return E_OP_ERROR;
+  return E_SUCCESS;
 }
 
 
@@ -114,7 +86,7 @@ resource::e_error resource::process::flush_environ()
 }
 
 
-resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, buffer& buf)
+resource::e_error resource::process::flush_input(buffer& buf)
 {
   bool done;
   unsigned int nsent;
@@ -147,8 +119,14 @@ resource::e_error resource::process::flush_input(thr::pool::slot_t& thr_slot, bu
 
 resource::e_error resource::process::size(unsigned int& nbytes)
 {
-  nbytes = (unsigned int)-1;
+  nbytes = 0;
   return E_SUCCESS;
+}
+
+
+bool resource::process::is_content_dynamic() const
+{
+  return true;
 }
 
 
