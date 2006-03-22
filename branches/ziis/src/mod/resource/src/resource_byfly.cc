@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:45:06 2006 texane
-// Last update Wed Mar 22 23:34:44 2006 texane
+// Last update Wed Mar 22 23:57:01 2006 texane
 //
 
 
@@ -27,7 +27,8 @@ using namespace sysapi;
 #define STATUS	"ZIAFS_GENERATED_PAGE"
 static void inline mk_status_msg(unsigned int err_code, unsigned char* buf, unsigned int& nbytes)
 {
-  nbytes = sprintf((char*)buf + nbytes, BODY, STATUS, err_code);
+  nbytes = 0;
+  nbytes += sprintf((char*)buf + nbytes, BODY, STATUS, err_code);
 }
 
 

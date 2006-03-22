@@ -1,6 +1,9 @@
 todos
 
 
+--------> handle the read config
+--------> handle thread system in connection mod: io_thr
+
 . sending_buffer
 
 

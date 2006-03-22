@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:38:48 2006 texane
-// Last update Wed Mar 22 16:42:21 2006 texane
+// Last update Wed Mar 22 23:57:32 2006 texane
 //
 
 
@@ -16,13 +16,13 @@
 
 bool mod_resource::ReadConfig(const char* path)
 {
-	if (conf)
-	{
-		delete conf;
-		conf = NULL;
-	}
+  if (conf)
+    {
+      delete conf;
+      conf = NULL;
+    }
 
-	conf = new net::config(path);
+  conf = new net::config(path);
   return true;
 }
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:10:34 2006 texane
-// Last update Wed Mar 22 21:25:47 2006 texane
+// Last update Thu Mar 23 00:05:20 2006 texane
 //
 
 
@@ -59,7 +59,7 @@ namespace mod
     std::list<modinfo*> m_modlist;
 
     // internal management
-    bool load_module(const std::string&);
+    bool load_module(const std::string&, const std::string&);
   };
 }
 

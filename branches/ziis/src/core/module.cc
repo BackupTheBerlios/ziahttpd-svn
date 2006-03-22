@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Wed Mar 22 23:49:40 2006 texane
+// Last update Thu Mar 23 00:05:54 2006 texane
 //
 
 
@@ -54,7 +54,6 @@ bool mod::manager::get_connection_module(IConnection*& p_mod)
     {
       if ((p_mod = dynamic_cast<IConnection*>((*it_curr)->m_instance)))
 	{
-	  (dynamic_cast<IModule*>(p_mod))->ReadConfig("conf/ziafs.xml");
 	  return true;
 	}
       ++it_curr;
@@ -77,7 +76,6 @@ bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& enco
     {
       if ((p_mod = dynamic_cast<ICompressor*>((*it_curr)->m_instance)))
 	{
-	  (dynamic_cast<IModule*>(p_mod))->ReadConfig("conf/ziafs.xml");
 	  arr_encodings = p_mod->GetSupportedEncoding();
 	  for (i_encoding = 0; arr_encodings && arr_encodings[i_encoding]; ++i_encoding)
 	    {
@@ -106,7 +104,6 @@ bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string
     {
       if ((p_mod = dynamic_cast<IDocumentGenerator*>((*it_curr)->m_instance)))
 	{
-	  (dynamic_cast<IModule*>(p_mod))->ReadConfig("conf/ziafs.xml");
 	  arr_mime = p_mod->GetSupportedMime();
 	  for (i_mime = 0; arr_mime && arr_mime[i_mime]; ++i_mime)
 	    {
@@ -140,7 +137,6 @@ bool mod::manager::get_modifier_list(list<IStreamModifier*>& lst_modifiers, list
     {
       if ((p_mod = dynamic_cast<IStreamModifier*>((*i_curr)->m_instance)))
 	{
-	  (dynamic_cast<IModule*>(p_mod))->ReadConfig("conf/ziafs.xml");
 	  arr_type = p_mod->GetSupportedContentType();
 	  for (i_type = 0; arr_type && arr_type[i_type]; ++i_type)
 	    {
@@ -160,11 +156,13 @@ bool mod::manager::get_modifier_list(list<IStreamModifier*>& lst_modifiers, list
   return true;
 }
 
-bool mod::manager::load_module(const string& path)
+bool mod::manager::load_module(const string& path, const string& conf)
 {
   modinfo* p_info;
 
   p_info = new modinfo(path);
+  if (p_info->m_instance)
+    p_info->m_instance->ReadConfig(conf.c_str());
   m_modlist.push_front(p_info);
   return true;
 }
@@ -176,7 +174,7 @@ bool mod::manager::reload(net::config* p_config)
   p_config->get_modules(curr_mod);
   while (p_config->end_modules(curr_mod) == false)
     {
-      load_module((*curr_mod)->file);
+      load_module((*curr_mod)->file, "conf/ziafs.xml");
       ++curr_mod;
     }
   return true;

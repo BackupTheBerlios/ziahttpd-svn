@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 23:25:31 2006 texane
+// Last update Wed Mar 22 23:56:36 2006 texane
 //
 
 
@@ -25,7 +25,7 @@ IModule* GetNewInstance()
 
 mod_resource::mod_resource()
 {
-	conf = NULL;
+  conf = NULL;
 }
 
 mod_resource::~mod_resource()
