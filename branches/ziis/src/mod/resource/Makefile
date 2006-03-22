@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Wed Mar 22 19:29:34 2006 texane
+## Last update Wed Mar 22 22:26:17 2006 texane
 ##
 
 # ! Always include this file
@@ -25,6 +25,11 @@ srcs	= src$(SLASH)main.cc \
 	  src$(SLASH)resource_file.cc \
 	  src$(SLASH)resource_fake.cc \
 	  src$(SLASH)resource_process.cc \
+	  src$(SLASH)config.cc \
+	  $(PROJ_ROOT)$(SLASH)src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinystr.cc \
+	  $(PROJ_ROOT)$(SLASH)src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxml.cc \
+	  $(PROJ_ROOT)$(SLASH)src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxmlerror.cc \
+	  $(PROJ_ROOT)$(SLASH)src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxmlparser.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)module.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)insock.cc \

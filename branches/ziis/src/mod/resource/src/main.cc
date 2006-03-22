@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 21:43:15 2006 texane
+// Last update Wed Mar 22 22:49:13 2006 texane
 //
 
 
@@ -77,6 +77,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 
       if (p_resource->input_size())
 	{
+	  cout << "input size!" << endl;
 	  nr_input = in.ReadPostEntity(buf_input, sizeof(buf_input));
 	  p_resource->flush_input( buffer((unsigned char*)buf_input, (unsigned int)nr_input) );
 	}
