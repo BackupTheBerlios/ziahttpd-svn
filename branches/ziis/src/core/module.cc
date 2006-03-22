@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Wed Mar 22 21:29:42 2006 texane
+// Last update Wed Mar 22 23:49:40 2006 texane
 //
 
 
@@ -53,7 +53,10 @@ bool mod::manager::get_connection_module(IConnection*& p_mod)
   while (it_curr != it_last)
     {
       if ((p_mod = dynamic_cast<IConnection*>((*it_curr)->m_instance)))
-	return true;
+	{
+	  (dynamic_cast<IModule*>(p_mod))->ReadConfig("conf/ziafs.xml");
+	  return true;
+	}
       ++it_curr;
     }
   return false;
@@ -74,6 +77,7 @@ bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& enco
     {
       if ((p_mod = dynamic_cast<ICompressor*>((*it_curr)->m_instance)))
 	{
+	  (dynamic_cast<IModule*>(p_mod))->ReadConfig("conf/ziafs.xml");
 	  arr_encodings = p_mod->GetSupportedEncoding();
 	  for (i_encoding = 0; arr_encodings && arr_encodings[i_encoding]; ++i_encoding)
 	    {
@@ -102,6 +106,7 @@ bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string
     {
       if ((p_mod = dynamic_cast<IDocumentGenerator*>((*it_curr)->m_instance)))
 	{
+	  (dynamic_cast<IModule*>(p_mod))->ReadConfig("conf/ziafs.xml");
 	  arr_mime = p_mod->GetSupportedMime();
 	  for (i_mime = 0; arr_mime && arr_mime[i_mime]; ++i_mime)
 	    {
@@ -135,6 +140,7 @@ bool mod::manager::get_modifier_list(list<IStreamModifier*>& lst_modifiers, list
     {
       if ((p_mod = dynamic_cast<IStreamModifier*>((*i_curr)->m_instance)))
 	{
+	  (dynamic_cast<IModule*>(p_mod))->ReadConfig("conf/ziafs.xml");
 	  arr_type = p_mod->GetSupportedContentType();
 	  for (i_type = 0; arr_type && arr_type[i_type]; ++i_type)
 	    {

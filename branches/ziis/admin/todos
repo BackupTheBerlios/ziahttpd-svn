@@ -1,6 +1,9 @@
 todos
 
 
+. sending_buffer
+
+
 . impleemnt the modifier list in sendVBuffer
 
 . remove the system thread -> io_thread
