@@ -1,128 +1,32 @@
 todos
 
-handle constructor calling
-pass pointer to session in ZfsOutput / input ctor
+. implement hooks and instanciation @good times
+. pass session pointer to constructor
+. resource manager in GenerateDocument
+. implement the ReadPostEntity method
+. stream modifier module (+ prio)
+. compressor module
+. implement a timeouter in the connection module (array of io slot)
 
-try to call the resource manager in GenerateDocument
-implement the ReadPostEntity method
-implement the hook system for connection module
+
+. implement the send* method
+. readpostentity method
+	-> internally take into account the body size
+. implement error page sending + http header
+
+
 config file should handle markers for modules
 	-> mime types...
 error when the module is not correctly loaded
 	-> is in the list, but ... (invalid path)
 
 
-
-todos:
-implement connection module retrieval
-implement the module manager
-implement the IConnection call
-implement in,out put constructors with thrinfo
-	-> the input constructor should fill the
-		module instance...
-		-> commonly define it
-
-session should have hash table for context
-think about how to invoke the module
-	-> get prio, mime ...
-
 1) implement module manager
 	. think about involvures -> should be reloadable
 	. should have a data aera for the module (void*)
 	. implement the reload method according to conf file
 
-2) integrate mod manager into the core
-	. read modules from conf
-	. define hook modele
 
-3) implement modules
-	. default
-	. ssl
-	. perl
-
-
-. design new client model
-
-
-. implement the default module
-. implement the module manager
-	-> integrate the default module
-	to the server, thus design the hook scheme
-. where data are to be stored
-
-. one module instance by server
-
-
-----
-one client
-: iinput* p_request;
-: ioutput* p_response;
-: const char* nm_resource;
-: ([module&type], void*)
-
-
-----
-
-A module will implement the good one
-
-concentrate on the main interface for modules
-	-> IConnection
-	-> ICompressor
-	-> IDocgen
-	-> IStreamMod
-
-module IDocumentGenerator exports the mime types it supports
-	-> iterate over those types, and find invoke the module
-
-server(conf) -> generate pipeline(instanciate module)
-server list
--> each server has its pipeline
-
-
-
-[!!!!!!!!!!!!!!]
-	-> establish relation between client and IInput and IOutput
-	-> each client should have a hash map to associate
-	a module_name to the void* free variable
-	-> accept is always done by the server
-	-> then get the good module
-impelement the default module, to handle connection(but not accept, the module has no access to the server socket)
-	-> module will be load in order they are found
-	-> first the default mod
-	-> generate document is the resource factory
-	-> the module may be plugged in another server
-
-
-how to use the void* returned by accept
-	-> just for ssl
-	-> or use it to mod_sock
-
-
-the server should be reloadable
-
-
-
---- interfaces to implement
-IBuffer
-IFS
-IInput
-IOutput
-
-a client request (connection pov) is defined by the iinput and ioutput
-	-> in the CONSTRUCTOR!!
-
-
-when implementing the pipeline, take care about
-	priority of modifiers
-
-
-
-
----
-proto
--> pass linked list for header in input constructor
-
-
--> split the proto class
-	-> input
-	-> output
+toremember
+-> the module may be plugged in another server
+-> the server should be reloadable

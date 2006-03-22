@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Wed Mar 22 01:36:19 2006 texane
+// Last update Wed Mar 22 09:06:23 2006 texane
 //
 
 
@@ -118,29 +118,11 @@ int mod_sock::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
 {
   sysapi::error::handle_t h_err;
   unsigned int nr_sent;
-  int nr_total;
-  bool is_done;
 
-  cout << "[module] module->Send()" << endl;
-  is_done = false;
-  nr_total = 0;
-  while (is_done == false)
-    {
-      if (ln_buf <= 0)
-	{
-	  is_done = true;
-	}
-      else
-	{
-	  h_err = sysapi::insock::send(h_sock, (unsigned char*)p_buf, ln_buf, nr_sent);
-	  if (h_err != sysapi::error::SUCCESS)
-	    return -1;
-	  p_buf += nr_sent;
-	  nr_total += (int)nr_sent;
-	  ln_buf -= (int)nr_sent;
-	}
-    }
-  return (int)nr_total;
+  h_err = sysapi::insock::send(h_sock, (unsigned char*)p_buf, ln_buf, nr_sent);
+  if (h_err != sysapi::error::SUCCESS)
+    return -1;
+  return nr_sent;
 }
 
 void mod_sock::Close(SOCKET, void*)

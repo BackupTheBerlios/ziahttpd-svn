@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Wed Mar 22 01:25:19 2006 texane
+// Last update Wed Mar 22 09:28:32 2006 texane
 //
 
 
@@ -30,34 +30,36 @@ public:
   const char* GetInputLocation();
   const char* GetInputHttpVersion();
   const char* GetInputQueryString();
-  int					GetClientIp();
+  int GetClientIp();
   int ReadPostEntity(char*, int){ return -1;}
   bool GetNextHeader(char**, char**);
 
 private:
-  net::http*						m_proto;
+  net::http* m_proto;
   thr::pool::session_t* m_session;
-  int										m_ip_client;
+  int m_ip_client;
 };
 
 
 class ZfsOutput : public IOutput
 {
 public:
-	ZfsOutput(net::http&);
-	ZfsOutput(thr::pool::session_t&);
-	~ZfsOutput() {}
+  ZfsOutput(net::http&);
+  ZfsOutput(thr::pool::session_t&);
+  ~ZfsOutput() {}
 
   void SetOutput(const char*, const char*);
   const char* GetOutput(const char*);
   bool SendHeader();
-  int SendError(int) { return -1;}
+  int SendError(int);
   int SendBuffer(const char*, int);
   void SetStatusCode(int);
 
 private:
-  net::http*						m_proto;
-	thr::pool::session_t* m_session;
+  net::http* m_proto;
+  thr::pool::session_t* m_session;
+
+  int send_whole_buffer(const char*, int);
 };
 
 
