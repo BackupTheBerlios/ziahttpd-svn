@@ -24,6 +24,7 @@ class ZfsInput : public IInput
 {
 public:
   ZfsInput(thr::pool::session_t&);
+	ZfsInput(thr::pool::session_t*);
   ~ZfsInput();
 
   const char* GetInput(const char*);
@@ -47,6 +48,7 @@ class ZfsOutput : public IOutput
 public:
   ZfsOutput(net::http&);
   ZfsOutput(thr::pool::session_t&);
+	ZfsOutput(thr::pool::session_t*);
   ~ZfsOutput() {}
 
   void SetOutput(const char*, const char*);

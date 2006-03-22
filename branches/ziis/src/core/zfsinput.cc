@@ -13,6 +13,17 @@ ZfsInput::ZfsInput(thr::pool::session_t& s)
 	m_ip_client = s.cli_addr.sin_addr.S_un.S_addr;
 }
 
+ZfsInput::ZfsInput(thr::pool::session_t* s)
+{
+	std::string extension;
+	m_session = s;
+	m_proto = &m_session->proto;
+	m_proto->get_uri().extension(extension);
+	extension = "." + extension;
+	s->srv->m_modman.get_generator_module(s->m_gen_module, extension);
+	m_ip_client = s->cli_addr.sin_addr.S_un.S_addr;
+}
+
 ZfsInput::~ZfsInput()
 {
 
