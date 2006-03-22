@@ -1,4 +1,4 @@
-#include <ziafs_resource.hh>
+///#include <ziafs_resource.hh>
 #include <ziafs_http.hh>
 #include <ziafs_debug.hh>
 #include <zia_stringmanager.hh>
@@ -263,7 +263,7 @@ bool				net::http::pre_create_resource(net::config& conf, resouce_type_t& r_type
 
 bool				net::http::create_resource(resource::handle*& hld, resource::manager& manager, config& conf)
 {
-	resource::e_error error = resource::E_SUCCESS;
+///	resource::e_error error = resource::E_SUCCESS;
 	resouce_type_t r_type = IS_NONE;
 
 	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
@@ -352,7 +352,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	else if (r_type == IS_FAKE) ;
 ///		error = manager.factory_create(hld, resource::ID_FAKE);
 
-	if (error != resource::E_SUCCESS)
+///	if (error != resource::E_SUCCESS)
 	{
 		m_uri.status_code() = 500;
 		r_type = IS_FLY;
