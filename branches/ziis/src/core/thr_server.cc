@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Mar 22 16:00:47 2006 texane
+// Last update Wed Mar 22 18:55:51 2006 texane
 //
 
 
@@ -33,8 +33,6 @@ void thr::pool::sess_reset_request(session_t& sess)
 {
   sess.done = false;
   sess.proto.reset();
-  sess.chunk_pos = net::http::CHUNK_FIRST;
-  sess.target = 0;
 
   // ziis related
   sess.m_input = 0;
@@ -50,11 +48,6 @@ void thr::pool::sess_release_request(session_t& sess)
   core_t* core;
 
   core = sess.srv->core;
-  if (sess.target)
-    {
-      core->res_manager.factory_destroy(sess.target);
-      sess.target = 0;
-    }
   if (sess.m_input)
     {
       delete sess.m_input;
@@ -161,152 +154,27 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 
 bool thr::pool::sess_handle_document(session_t& sess)
 {
+  const char* p_hostname;
   string localname;
-  const char* hostname;
+  string hostname;
 
   // instanciate ZfsInput
-  cout << "input generation" << endl;
   sess.m_input = new ZfsInput(sess);
 
   // according to metadata, instanciate the output
-  cout << "output generation" << endl;
   sess.m_output = new ZfsOutput(sess);
 
   // generate the resource
-  cout << "generating document for " << localname << endl;
-  hostname = sess.m_output->GetOutput("host");
-  if (hostname == 0)
-    hostname = "";
-  localname = "./test/sites/simple/index.html";
-//   localname = sess.proto.get_uri(sess.srv->srv_config, hostname).localname();
+  p_hostname = sess.m_output->GetOutput("host");
+  if (p_hostname == 0)
+    p_hostname = "";
+  hostname = p_hostname;
+  localname = sess.proto.get_uri().localname(*sess.srv->srv_config, hostname);
   sess.m_gen_module->GenerateDocument(*sess.m_input, localname.c_str(), *sess.m_output);
-  cout << "handle_document done" << endl;
 
   return true;
 }
 
-
-bool thr::pool::sess_handle_predata(session_t& sess)
-{
-  // handle pre data, such
-  // as the expect code...
-
-  buffer buf;
-  bool done;
-  unsigned int nr_sent;
-  sysapi::error::handle_t sys_err;
-
-  if (sess.proto.predata(buf) == true)
-    {
-      done = false;
-      while (done == false)
-	{
-	  if (buf.size() == 0)
-	    {
-	      done = true;
-	    }
-	  else
-	    {
-	      sys_err = insock::send(sess.cli_sock, buf.bufptr(), (unsigned int)buf.size(), nr_sent);
-	      if (sys_err != sysapi::error::SUCCESS)
-		{
-		  done = true;
-		}
-	      else
-		{
-		  buf.remove_front(nr_sent);
-		}
-	    }
-	}
-    }
-  return true;
-}
-
-
-bool thr::pool::sess_handle_request(session_t& sess)
-{
-  buffer raw_buf;
-  buffer body_buf;
-  buffer hdr_buf;
-  unsigned int size;
-  unsigned char buf[ZIAFS_STATIC_BUFSZ];
-  sysapi::error::handle_t herr;
-  resource::e_error e_err;
-  unsigned int nbytes;
-  bool done;
-
-  // Basic checks
-  if (sess.done == true)
-    return false;
-  if (sess.target == 0)
-    return false;
-
-  done = false;
-  // get / post method
-  while (done == false)
-    {
-      if (sess.target->input_size())
-	{
-	  // Resources can be created with a
-	  // buffer as input prefetch.
-	  if (sess.target->is_prefetched_input() == true)
-	    {
-	      sess.target->get_prefetched_input(raw_buf);
-	    }
-	  else
-	    {
-	      herr = recv(*sess.thr_slot, sess.cli_sock, (unsigned char*)buf, sizeof(buf), nbytes);
-	      if (sess.thr_slot->curr_io.timeouted == true || herr != error::SUCCESS)
-		{
-		  sess.done = true;
-		  return false;
-		}
-	      raw_buf = buffer((unsigned char*)buf, nbytes);
-	    }
-	  // Then make http consum/process the buffer(it can be chunked)
-	  // +++ sess.proto.consume_body(raw_buf, &body_buf);
-	  body_buf = raw_buf;
-	  // Send the buffer as input to the resource
-	  sess.target->flush_input(*sess.thr_slot, raw_buf);
-	}
-      // generate the resource
-      e_err = sess.target->generate(size);
-      if (e_err == resource::E_SUCCESS)
-	{
-	  // this is for non blocking mode
-	  // 	      sess.target->alter(size);
-	  sess.proto.create_header(hdr_buf, size, sess.chunk_pos);
-	  sess.chunk_pos = net::http::CHUNK_MIDDLE;
-	  // 	      sess.proto.modify_header(hdr_buf);
-	  sess.target->prepend_header(hdr_buf);
-	  if (sess.target->flush_network(*sess.thr_slot, sess.cli_sock) != resource::E_SUCCESS)
-	    {
-	      sess.done = true;
-	      return false;
-	    }
-	}
-      else if (e_err == resource::E_WOULDBLOCK)
-	{
-	}
-      else if (e_err == resource::E_CONTINUE)
-	{
-// 	  sess.chunk_pos = net::http::CHUNK_MIDDLE;
-	}
-      else // if (e_err == resource::E_ALREADY_GEN)
-	{
-	  // Send the last chunk
-	  if (sess.proto.response.is_chunk == true)
-	    {
-	      sess.chunk_pos = net::http::CHUNK_LAST;
-	      sess.proto.create_header(hdr_buf, 0, net::http::CHUNK_LAST);
-	      sess.target->prepend_header(hdr_buf);
-	      sess.target->flush_network(*sess.thr_slot, sess.cli_sock);
-	    }
-	  done = true;
-	}
-    }
-  return true;
-}
 
 void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 {
@@ -337,8 +205,6 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
       sess_reset_request(sess);
       sess_read_metadata(sess);
       sess_handle_document(sess);
-//       sess_handle_predata(sess);
-//       sess_handle_request(sess);
       sess_release_request(sess);
     }
   sess_release(sess);

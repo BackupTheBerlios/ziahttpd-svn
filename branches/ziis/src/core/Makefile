@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Tue Mar 21 20:59:51 2006 texane
+## Last update Wed Mar 22 18:57:56 2006 texane
 ##
 
 # ! Always include this file
@@ -22,15 +22,10 @@ srcs	= main.cc			\
 	  thr_io.cc			\
 	  thr_system.cc			\
 	  thr_server.cc			\
-	  resource_manager.cc		\
-	  resource_handle.cc		\
-	  resource_file.cc		\
-	  resource_byfly.cc		\
-	  resource_process.cc		\
-	  resource_fake.cc		\
 	  config.cc			\
 	  buffer.cc			\
 	  http.cc			\
+	  http_helper.cc		\
 	  uri.cc			\
 	  utils_line.cc			\
 	  zia_stringmanager.cc		\

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Wed Mar 22 09:37:33 2006 texane
+// Last update Wed Mar 22 18:55:35 2006 texane
 //
 
 
@@ -28,7 +28,6 @@
 
 // Forward declarations
 namespace net { class server; }
-namespace resource { class handle; }
 
 class ZfsOutput;
 class ZfsInput;
@@ -164,8 +163,6 @@ namespace thr
       bool done;
       bool ret_in_cache;
       net::http proto;
-      net::http::chunk_pos_t chunk_pos;
-      resource::handle* target;
 
       // ziis related
       IInput* m_input;
@@ -186,8 +183,6 @@ namespace thr
     static bool sess_accept_connection(session_t&);
     static bool sess_read_metadata(session_t&);
     static bool sess_handle_document(session_t&);
-    static bool sess_handle_predata(session_t&);
-    static bool sess_handle_request(session_t&);
 
   private:
     // Thread slots
