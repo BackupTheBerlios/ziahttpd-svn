@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:45:06 2006 texane
-// Last update Wed Mar 22 23:29:38 2006 texane
+// Last update Wed Mar 22 23:34:44 2006 texane
 //
 
 
@@ -79,7 +79,7 @@ resource::e_error resource::byfly::size(unsigned int& nbytes)
 
 bool resource::byfly::is_content_dynamic() const
 {
-  return false;
+  return true;
 }
 
 
