@@ -57,6 +57,14 @@ bool	stringmanager::normalize(std::string &str)
 	return (true);
 }
 
+bool	stringmanager::uppercase(std::string &str)
+{
+	for (size_t i = 0 ; i < str.size(); i++)
+		if (str[i] >= 'a' && str[i] <= 'z')
+			str[i] = str[i] - 'a' + 'A';
+	return (true);
+}
+
 bool	stringmanager::normalize(char *str)
 {
 	for (size_t i = 0 ; i < strlen(str); i++)

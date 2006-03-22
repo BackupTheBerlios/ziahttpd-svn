@@ -10,6 +10,7 @@ ZfsOutput::ZfsOutput(thr::pool::session_t& s)
 {
 	m_proto = &s.proto;
 	m_session = &s;
+	m_proto->create_header();
 }
 
 void	ZfsOutput::SetOutput(const char*key, const char*value)
@@ -35,7 +36,14 @@ bool	ZfsOutput::SendHeader()
 {
 	buffer	header;
 
-	m_proto->create_header(header, 20, net::http::CHUNK_FIRST);
+	m_proto->stringify_header(header);
+
 
 	return true;
+}
+
+int	ZfsOutput::SendBuffer(const char*buf, int sz)
+{
+	return m_session->m_conn_module->Send(m_session->cli_sock, NULL, buf, sz);
+
 }

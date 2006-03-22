@@ -2,11 +2,6 @@
 #include <ziafs_http.hh>
 #include <ziafs_net.hh>
 
-ZfsInput::ZfsInput(net::http& proto)
-{
-	m_proto = &proto;
-}
-
 ZfsInput::ZfsInput(thr::pool::session_t& s)
 {
 	std::string extension;

@@ -22,7 +22,6 @@
 class ZfsInput : public IInput
 {
 public:
-  ZfsInput(net::http&);
 	ZfsInput(thr::pool::session_t&);
   ~ZfsInput();
 
@@ -53,11 +52,11 @@ public:
   const char* GetOutput(const char*);
   bool SendHeader();
   int SendError(int) { return -1;}
-  int SendBuffer(const char*, int) { return -1; }
+  int SendBuffer(const char*, int);
   void SetStatusCode(int);
 
 private:
-  net::http* m_proto;
+  net::http*						m_proto;
 	thr::pool::session_t* m_session;
 };
 

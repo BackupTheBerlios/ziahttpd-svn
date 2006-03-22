@@ -139,7 +139,7 @@ status::error					net::http::parse_status_line(std::string& ln)
 		ziafs_return_status(status::STATUSLINE_FAILED);
 	}
 	m_method = vec[0];
-	
+//	uppercase(m_method);
 	size_t i = vec[1].find("?", 0);
 	if (i != std::string::npos)
 	{

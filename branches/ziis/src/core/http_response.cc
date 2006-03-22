@@ -125,6 +125,19 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 	return true;
 }
 
+bool			net::http::create_header()
+{
+	response["Server"] = "Zfs.";
+	response["Content-type"] = "text/html";
+	generate_header_date();
+	if (response.is_chunk == false)
+		generate_content_length(0);
+	else
+		response["Transfer-Encoding"] = "chunked";
+
+	return true;
+}
+
 bool			net::http::modify_header(config& conf, chunk_pos_t chunk)
 {
 	generate_content_type(conf);

@@ -9,6 +9,7 @@ class stringmanager
 public:
 	static bool	normalize(std::string &);
 	static bool	normalize(char *);
+	static bool	uppercase(std::string&);
 	static bool	split(const std::string&, const std::string&, std::vector<std::string>&, const std::string& putdel = "");
 	static bool	convert_hexa(const std::string &, std::string &);
 	static bool	unconvert_hexa(const std::string &, std::string &);

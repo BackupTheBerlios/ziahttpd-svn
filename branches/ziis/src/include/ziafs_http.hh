@@ -68,6 +68,7 @@ namespace net
 
 		// Response
 		bool									create_header(buffer&, size_t, chunk_pos_t);
+		bool									create_header();
 		bool									modify_header(config&, chunk_pos_t);
 		bool									stringify_header(buffer&);
 
