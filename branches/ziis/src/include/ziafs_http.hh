@@ -7,6 +7,7 @@
 #include <ziafs_buffer.hh>
 #include <ziafs_config.hh>
 #include <ziafs_status.hh>
+#include <http_helper.hh>
 
 namespace resource { class handle; class manager; }
 
@@ -45,12 +46,12 @@ namespace net
   {
   public:
 		// session management
-		typedef enum
-		{
-			CHUNK_FIRST = 0,
-			CHUNK_MIDDLE,
-			CHUNK_LAST
-		} chunk_pos_t;
+		//typedef enum
+		//{
+		//	CHUNK_FIRST = 0,
+		//	CHUNK_MIDDLE,
+		//	CHUNK_LAST
+		//} chunk_pos_t;
     http();
 		~http();
 
@@ -72,7 +73,6 @@ namespace net
 		bool									create_header();
 		bool									modify_header(config&, chunk_pos_t);
 		bool									stringify_header(buffer&);
-		static bool						generate_chunk_header(buffer& data, size_t sz, net::http::chunk_pos_t chunk);
 
 	private:
 		bool	valid_method();

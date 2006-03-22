@@ -146,6 +146,9 @@
 					RelativePath="..\src\core\http_data.cc">
 				</File>
 				<File
+					RelativePath="..\src\core\http_helper.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\http_response.cc">
 				</File>
 				<File
@@ -276,6 +279,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath="..\src\include\http_helper.hh">
+			</File>
 			<File
 				RelativePath="..\src\include\zia_stringmanager.hh">
 			</File>
