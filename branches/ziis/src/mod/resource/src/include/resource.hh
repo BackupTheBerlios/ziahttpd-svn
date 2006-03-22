@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:25:56 2006 texane
-// Last update Wed Mar 22 16:52:26 2006 texane
+// Last update Wed Mar 22 19:35:22 2006 texane
 //
 
 
@@ -13,10 +13,14 @@
 # define RESOURCE_HH
 
 
+#include <sstream>
+#include <iomanip>
 #include <string>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
+#include "include/http_helper.hh"
 #include "include/buffer.hh"
+#include "include/string_manager.hh"
 
 
 namespace resource

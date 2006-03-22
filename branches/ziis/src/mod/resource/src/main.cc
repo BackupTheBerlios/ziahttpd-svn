@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 16:41:37 2006 texane
+// Last update Wed Mar 22 19:35:37 2006 texane
 //
 
 
@@ -32,94 +32,24 @@ mod_resource::~mod_resource()
 }
 
 
-// implement IDocumentGenerator
-// {
-//   bool is_done;
-//   int nr_pass;
-//   int nr_recv;
-//   int nr_insz;
-//   char buf[512];
-//   const char* p_method;
-//   const char* p_content_length;
-//   ostringstream oss;
-
-//   cout << "generating document" << endl;
-
-//   // get the method
-//   p_method = in.GetInputMethod();
-//   if (p_method == 0)
-//     return ;
-
-//   // get the input size
-//   nr_insz = 0;
-//   p_content_length = in.GetInput("content-length");
-//   if (p_content_length)
-//     {
-//       istringstream iss(p_content_length);
-//       iss >> nr_insz;
-//     }
-
-//   // generate the resource
-//   is_done = false;
-//   nr_pass = 0;
-//   while (is_done == false)
-//     {
-//       // something to recv from
-//       if (nr_insz > 0)
-// 	{
-// 	  nr_recv = in.ReadPostEntity(buf, sizeof(buf));
-// 	  if (nr_recv > 0)
-// 	    nr_insz -= nr_recv;
-// 	}
-
-//       // feed the resource with buf
-
-//       // generate content from resource
-
-//       // generate header
-//       if (nr_pass == 0)
-// 	{
-// 	  out.SendHeader();
-// 	}
-//       // generate chunk
-//       else
-// 	{
-
-// 	}
-//       ++nr_pass;
-
-//       // send the buffer
-//     }
-
-//   cout << "generate document ok" << endl;
-// }
-
 void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 {
   ostringstream oss;
   resource::handle* p_resource;
   resource::e_error e_err;
-  resource::e_omode e_omode;
   unsigned int nr_size;
   buffer hdr_chunk;
-  unsigned int pos_chunk;
+  http_helper::chunk_pos_t pos_chunk;
   char buf_input[constants::BUFFER_SIZE];
   int nr_input;
   bool is_done;
 
   // resource creation
-  cout << "createing resource" << endl;
-  e_omode = resource::O_INPUT;
-  if (resource::manager::factory_create(p_resource, resource::ID_FILE, e_omode, path) != E_SUCCESS)
-    {
-      cout << "cannot create the resource" << endl;
-      return ;
-    }
-  cout << "createing resource done" << endl;
+  p_resource = http_helper::create_resource(in, path, out);
 
   // main generation loop
   is_done = false;
-  pos_chunk = constants::FIRST_CHUNK;
+  pos_chunk = http_helper::CHUNK_FIRST;
 
   // if content chunked
   if (p_resource->is_content_dynamic() == true)
@@ -140,6 +70,11 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   // generate the resource
   while (is_done == false)
     {
+      cout << "x" << endl;
+
+      // reset buffers
+      hdr_chunk.clear();
+
       if (p_resource->input_size())
 	{
 	  nr_input = in.ReadPostEntity(buf_input, sizeof(buf_input));
@@ -151,8 +86,8 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	{
 	  if (p_resource->is_content_dynamic())
 	    {
-// 	      generate_chunk_header(hdr_chunk, nr_size, pos_chunk);
-	      pos_chunk = constants::MIDDLE_CHUNK;
+	      http_helper::generate_chunk_header(hdr_chunk, nr_size, pos_chunk);
+	      pos_chunk = http_helper::CHUNK_MIDDLE;
 	      p_resource->prepend_header(hdr_chunk);
 	    }
 	  if (p_resource->flush_network(out) != resource::E_SUCCESS)
@@ -169,8 +104,8 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	  // send the last chunk
 	  if (p_resource->is_content_dynamic())
 	    {
-	      pos_chunk = constants::LAST_CHUNK;
-// 	      generate_chunk_header(hdr_chunk, 0, pos_chunk);
+	      pos_chunk = http_helper::CHUNK_LAST;
+ 	      http_helper::generate_chunk_header(hdr_chunk, 0, pos_chunk);
 	      p_resource->prepend_header(hdr_chunk);
 	      p_resource->flush_network(out);
 	    }
