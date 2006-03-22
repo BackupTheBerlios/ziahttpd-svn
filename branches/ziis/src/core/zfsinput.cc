@@ -31,11 +31,9 @@ ZfsInput::~ZfsInput()
 
 const char*	ZfsInput::GetInput(const char*key)
 {
-	std::string	val = m_proto->request[key];
-
-	if (val.empty())
+	if (m_proto->request[key].empty())
 		return NULL;
-	return val.c_str();
+	return m_proto->request[key].c_str();
 }
 
 const	char*	ZfsInput::GetInputMethod()

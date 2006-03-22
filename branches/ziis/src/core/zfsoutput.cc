@@ -45,11 +45,9 @@ void	ZfsOutput::SetOutput(const char*key, const char*value)
 
 const	char*	ZfsOutput::GetOutput(const char*key)
 {
-	std::string	val = m_proto->response[key];
-
-	if (val.empty())
+	if (m_proto->response[key].empty())
 		return NULL;
-	return val.c_str();
+	return m_proto->response[key].c_str();
 }
 
 void	ZfsOutput::SetStatusCode(int st)
