@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 02:00:09 2006 texane
-// Last update Thu Feb 16 00:43:11 2006 
+// Last update Wed Mar 22 21:38:51 2006 texane
 //
 
 
@@ -48,7 +48,6 @@ void thr::pool::reset_slot(thr::pool::slot_t& slot)
   slot.thr_blocked = false;
   slot.thr_lasterr = slot_t::e_success;
   slot.pool = this;
-  io_info_reset(slot.curr_io);
 //   slot.cond_start = 0;
 //   slot.mtx_start = 0;
   slot.entry_fn = 0;

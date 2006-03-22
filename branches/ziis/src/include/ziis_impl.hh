@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Wed Mar 22 15:52:18 2006 texane
+// Last update Wed Mar 22 21:47:13 2006 texane
 //
 
 
@@ -13,6 +13,7 @@
 # define ZIIS_IMPL_HH
 
 
+#include <list>
 #include <ziafs_thr.hh>
 #include <ziafs_http.hh>
 #include <sys/sysapi.hh>
@@ -59,7 +60,7 @@ private:
   net::http* m_proto;
   thr::pool::session_t* m_session;
 
-  int send_whole_buffer(const char*, int);
+  int send_whole_buffer(const char*, int, bool = false);
 };
 
 

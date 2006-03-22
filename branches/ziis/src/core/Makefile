@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Wed Mar 22 18:57:56 2006 texane
+## Last update Wed Mar 22 21:38:04 2006 texane
 ##
 
 # ! Always include this file
@@ -19,7 +19,6 @@ srcs	= main.cc			\
 	  module.cc			\
 	  net_server.cc			\
 	  thr_pool.cc			\
-	  thr_io.cc			\
 	  thr_system.cc			\
 	  thr_server.cc			\
 	  config.cc			\

@@ -1,6 +1,8 @@
 todos
 
 
+. impleemnt the modifier list in sendVBuffer
+
 . remove the system thread -> io_thread
 . remove resource from the server core
 

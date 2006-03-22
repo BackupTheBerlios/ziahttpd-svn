@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:26 2006 texane
-// Last update Tue Feb 21 19:34:46 2006 
+// Last update Wed Mar 22 21:39:44 2006 texane
 //
 
 
@@ -49,24 +49,6 @@ void* thr::pool::system_entry(thr::pool::slot_t* thr_slot)
       slots = thr_slot->pool->thr_slots;
       for (n = 0; n < thr_slot->pool->nr_slots; ++n)
 	{
-	  if (slots[n].allocated == true && slots[n].curr_io.in_progress == true)
-	    {
-	      if (thr_slot->pool->nr_ticks - slots[n].curr_io.tm_start > expir_delay)
-		{
-		  // Make the thread unlock according
-		  // to the current operation
-		  switch (slots[n].curr_io.id)
-		    {
-		    case IO_RECV:
-		    case IO_SEND:
-		      slots[n].curr_io.timeouted = true;
-		      insock::close(slots[n].curr_io.desc.hsock);
-		    case IO_SENDFILE:
-		    default:
-		      break;
-		    }
-		}
-	    }
 	}
 
       // Increment the tick number

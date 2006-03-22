@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Wed Mar 22 18:55:35 2006 texane
+// Last update Wed Mar 22 22:06:30 2006 texane
 //
 
 
@@ -81,28 +81,6 @@ namespace thr
   // terminate, just it should give up the current operation.
   // What should be done after that is left to implemententor
 
-  // Information about the inprogress io
-  typedef enum
-    {
-      IO_NONE = 0,
-      IO_ACCEPT,
-      IO_SEND,
-      IO_SENDFILE,
-      IO_RECV,
-    } io_id_t;
-  typedef struct
-  {
-    unsigned int sz;
-    unsigned long tm_start;
-    bool in_progress;
-    bool timeouted;
-    io_id_t id;
-    union
-    {
-      sysapi::insock::handle_t hsock;
-    } desc;
-  } io_info_t;
-
   // Thread pool
   class pool
   {
@@ -123,9 +101,6 @@ namespace thr
       void* (*entry_fn)(struct slot*);
       void* uparam;
       thr::pool* pool;
-
-      // current io information
-      io_info_t curr_io;
 
       // blocking operations
       time_t tm_started;
@@ -156,8 +131,11 @@ namespace thr
     // session management
     typedef struct session
     {
+      // server related
       net::server* srv;
       slot_t* thr_slot;
+
+      // client related
       sysapi::insock::handle_t cli_sock;
       struct sockaddr_in cli_addr;
       bool done;
@@ -198,13 +176,6 @@ namespace thr
     bool release_slot(slot_t&);
     bool execute_task(slot_t&);
   };
-
-
-  // io related operations
-  void io_info_reset(io_info_t&);
-  // for network io
-  sysapi::error::handle_t send(pool::slot_t&, sysapi::insock::handle_t&, unsigned char*, unsigned int, unsigned int&);
-  sysapi::error::handle_t recv(pool::slot_t&, sysapi::insock::handle_t&, unsigned char*, unsigned int, unsigned int&);
 }
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Mar 22 18:55:51 2006 texane
+// Last update Wed Mar 22 22:13:43 2006 texane
 //
 
 
@@ -74,14 +74,10 @@ void thr::pool::sess_release(session_t& sess)
 {
   core_t* core;
 
-
-  // release Accept free variable
-  sess.m_conn_module->Close(sess.cli_sock, sess.m_conn_data);
-
   core = sess.srv->core;
   sess_release_request(sess);
-  if (sess.thr_slot->curr_io.timeouted == false)
-    insock::close(sess.cli_sock);
+  sess.m_conn_module->Close(sess.cli_sock, sess.m_conn_data);
+  insock::close(sess.cli_sock);
 }
 
 
@@ -189,7 +185,6 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
  serve_another:
   sess_reset(sess);
   sess.thr_slot = thr_slot;
-  io_info_reset(sess.thr_slot->curr_io);
   sess.srv = (net::server*)thr_slot->uparam;
 
   // get the connection module

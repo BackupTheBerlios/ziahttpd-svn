@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 19:35:37 2006 texane
+// Last update Wed Mar 22 21:43:15 2006 texane
 //
 
 
@@ -46,6 +46,8 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 
   // resource creation
   p_resource = http_helper::create_resource(in, path, out);
+  if (p_resource == 0)
+    return ;
 
   // main generation loop
   is_done = false;
@@ -70,8 +72,6 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   // generate the resource
   while (is_done == false)
     {
-      cout << "x" << endl;
-
       // reset buffers
       hdr_chunk.clear();
 

@@ -1,5 +1,22 @@
+//
+// zfsoutput.cc for  in 
+// 
+// Made by texane
+// Login   <texane@gmail.com>
+// 
+// Started on  Wed Mar 22 21:45:33 2006 texane
+// Last update Wed Mar 22 22:03:25 2006 texane
+//
+
+
+#include <list>
+#include <sys/sysapi.hh>
+#include <ziis.hh>
 #include <ziis_impl.hh>
 #include <ziafs_http.hh>
+
+
+using namespace std;
 
 
 ZfsOutput::ZfsOutput(net::http& proto)
@@ -34,27 +51,50 @@ void	ZfsOutput::SetStatusCode(int st)
 }
 
 
-int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
+int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf, bool do_filtering)
 {
-	bool is_error;
+  bool is_error;
   const char* ptr;
   int nr_sent;
 
   is_error = false;
   ptr = p_buf;
   while (ln_buf > 0 && is_error == false)
-  {
-		nr_sent = m_session->m_conn_module->Send(m_session->cli_sock, NULL, ptr, ln_buf);
-    if (nr_sent == -1)
-		{
-			is_error = true;
-		}
-    else
-		{
-			ln_buf -= nr_sent;
-			ptr += nr_sent;
-		}
-  }
+    {
+      // pass thru all filters
+      if (do_filtering == true)
+	{
+	  // pass thru stream modifiers
+	  list<IStreamModifier*>::iterator i_curr;
+	  list<IStreamModifier*>::iterator i_last;
+
+	  i_curr = m_session->m_modifiers.begin();
+	  i_last = m_session->m_modifiers.end();
+	  while (i_curr != i_last)
+	    {
+	      // (*i_curr)->Transform();
+	      ++i_curr;
+	    }
+
+	  // pass thru compressor
+	  if (m_session->m_comp_module)
+	    {
+	      // m_session->m_comp_module->Decompress(m_session->m_comp_data, , );
+	    }
+	}
+
+      // finally send the buffer
+      nr_sent = m_session->m_conn_module->Send(m_session->cli_sock, NULL, ptr, ln_buf);
+      if (nr_sent == -1)
+	{
+	  is_error = true;
+	}
+      else
+	{
+	  ln_buf -= nr_sent;
+	  ptr += nr_sent;
+	}
+    }
 
   if (is_error == true)
     return false;
@@ -80,7 +120,7 @@ bool	ZfsOutput::SendHeader()
 
 int	ZfsOutput::SendBuffer(const char* buf, int sz)
 {
-  return send_whole_buffer(buf, sz);
+  return send_whole_buffer(buf, sz, true);
 }
 
 int ZfsOutput::SendError(int)
