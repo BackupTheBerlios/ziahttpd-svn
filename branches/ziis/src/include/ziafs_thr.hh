@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Tue Mar 21 23:16:41 2006 texane
+// Last update Tue Mar 21 23:53:10 2006 texane
 //
 
 
@@ -168,8 +168,8 @@ namespace thr
       resource::handle* target;
 
       // ziis related
-      ZfsInput* m_input;
-      ZfsOutput* m_output;
+      IInput* m_input;
+      IOutput* m_output;
       IConnection* m_conn_module;
       void* m_conn_data;
       ICompressor* m_comp_module;

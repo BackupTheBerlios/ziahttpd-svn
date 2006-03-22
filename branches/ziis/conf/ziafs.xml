@@ -11,6 +11,10 @@
 <file>src/mod/sock/mod_sock.lo</file>
 </module>
 
+<module name="mod_file">
+<file>src/mod/file/mod_file.lo</file>
+</module>
+
 
 <server>
   <id>1</id>
@@ -18,6 +22,7 @@
   <port>40000</port>
   <directory_index>index.html index.htm</directory_index>
   <modulename>mod_sock</modulename>
+  <modulename>mod_file</modulename>
 </server>
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Tue Mar 21 22:42:59 2006 texane
+// Last update Wed Mar 22 01:25:19 2006 texane
 //
 
 
@@ -22,7 +22,7 @@
 class ZfsInput : public IInput
 {
 public:
-	ZfsInput(thr::pool::session_t&);
+  ZfsInput(thr::pool::session_t&);
   ~ZfsInput();
 
   const char* GetInput(const char*);
@@ -36,8 +36,8 @@ public:
 
 private:
   net::http*						m_proto;
-	thr::pool::session_t* m_session;
-	int										m_ip_client;
+  thr::pool::session_t* m_session;
+  int										m_ip_client;
 };
 
 

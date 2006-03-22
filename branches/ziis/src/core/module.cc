@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Tue Mar 21 23:30:23 2006 texane
+// Last update Wed Mar 22 00:07:11 2006 texane
 //
 
 
@@ -61,6 +61,29 @@ bool mod::manager::get_connection_module(IConnection*& p_mod)
 bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& encoding)
 {
   // match the supported encoding
+  // match the mime type
+  list<modinfo*>::iterator it_curr;
+  list<modinfo*>::iterator it_last;
+  const char** arr_encodings;
+  unsigned int i_encoding;
+
+  it_curr = m_modlist.begin();
+  it_last = m_modlist.end();
+  while (it_curr != it_last)
+    {
+      if ((p_mod = dynamic_cast<ICompressor*>((*it_curr)->m_instance)))
+	{
+	  arr_encodings = p_mod->GetSupportedEncoding();
+	  for (i_encoding = 0; arr_encodings[i_encoding]; ++i_encoding)
+	    {
+	      if (!strcmp(arr_encodings[i_encoding], encoding.c_str()))
+		{
+		  return true;
+		}
+	    }
+	}
+      ++it_curr;
+    }
   return false;
 }
 

@@ -1,5 +1,15 @@
 todos
+
+handle constructor calling
+pass pointer to session in ZfsOutput / input ctor
+
+try to call the resource manager in GenerateDocument
+implement the ReadPostEntity method
 implement the hook system for connection module
+config file should handle markers for modules
+	-> mime types...
+error when the module is not correctly loaded
+	-> is in the list, but ... (invalid path)
 
 
 
