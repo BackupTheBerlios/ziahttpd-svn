@@ -36,25 +36,25 @@ void	ZfsOutput::SetStatusCode(int st)
 
 int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
 {
-  bool is_error;
+	bool is_error;
   const char* ptr;
   int nr_sent;
 
   is_error = false;
   ptr = p_buf;
   while (ln_buf > 0 && is_error == false)
-    {
-      nr_sent = m_session->m_conn_module->Send(m_session->cli_sock, NULL, ptr, ln_buf);
-      if (nr_sent == -1)
-	{
-	  is_error = true;
-	}
-      else
-	{
-	  ln_buf -= nr_sent;
-	  ptr += nr_sent;
-	}
-    }
+  {
+		nr_sent = m_session->m_conn_module->Send(m_session->cli_sock, NULL, ptr, ln_buf);
+    if (nr_sent == -1)
+		{
+			is_error = true;
+		}
+    else
+		{
+			ln_buf -= nr_sent;
+			ptr += nr_sent;
+		}
+  }
 
   if (is_error == true)
     return false;

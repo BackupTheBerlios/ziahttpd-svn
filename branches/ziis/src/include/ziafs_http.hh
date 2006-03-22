@@ -29,6 +29,7 @@ namespace net
 		uri();
 		status::error					extension(std::string& localname);
     std::string&					localname() { return m_localname; };
+		std::string&					localname(net::config&, std::string&);
     std::string&					wwwname() { return m_wwwname; };
     int&									status_code() { return m_status_code; };
 		bool									reset();

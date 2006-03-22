@@ -127,13 +127,13 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 
 bool			net::http::create_header()
 {
+	if (response["Transfer-Encoding"] == "chunked")
+		response.m_data_enco = new chunked;
+	else
+		response.m_data_enco = new unchunked;
 	response["Server"] = "Zfs.";
 	response["Content-type"] = "text/html";
 	generate_header_date();
-	if (response.is_chunk == false)
-		generate_content_length(0);
-	else
-		response["Transfer-Encoding"] = "chunked";
 
 	return true;
 }
@@ -243,6 +243,7 @@ bool				net::http::pre_create_resource(net::config& conf, resouce_type_t& r_type
 		//}
 	}
 	m_uri.localname() = doc_root + m_uri.wwwname();
+
 	if (m_uri.wwwname()[m_uri.wwwname().size() - 1] != '/')
 	{
 		// Move if directory
@@ -271,7 +272,8 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	get_type_of_resource(conf, r_type);
 
 	if (r_type == IS_FILE)
-		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
+		;
+///		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
 	else if (r_type == IS_CGI)
 	{
 		int ac = 1;
@@ -280,7 +282,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		  // This line has been modified by texane
 		  // buffer is a buffer to prefecth the input.
 		  // content of the mline.buf will be removed
-		  error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env, &m_line.m_buf, body_size());
+///		  error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env, &m_line.m_buf, body_size());
 	}
 	else if (r_type == EXEC_BY_CGI)
 	{
@@ -305,7 +307,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 		av[i++] = (char *)m_uri.localname().c_str();
 		av[i] = '\0';
 
-		  error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env, &m_line.m_buf, body_size());
+///		  error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env, &m_line.m_buf, body_size());
 		// free env + av
 		//		for (i = 0; av[i]; i++)
 		//			delete av[i];
@@ -339,27 +341,29 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 
 		////const char *tab[] = { conf.get_system()->directory_listing.c_str() , m_uri.localname().c_str(), 0};
 		//const char *env[] = {0};
-		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
+
+///		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
+
 	}
-	else if (r_type == IS_PUT)
-		error = manager.factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, m_uri.localname(), &m_line.m_buf, body_size());
-	else if (r_type == IS_FLY)
-		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
-	else if (r_type == IS_FAKE)
-		error = manager.factory_create(hld, resource::ID_FAKE);
+	else if (r_type == IS_PUT) ;
+///		error = manager.factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, m_uri.localname(), &m_line.m_buf, body_size());
+	else if (r_type == IS_FLY) ;
+///		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
+	else if (r_type == IS_FAKE) ;
+///		error = manager.factory_create(hld, resource::ID_FAKE);
 
 	if (error != resource::E_SUCCESS)
 	{
 		m_uri.status_code() = 500;
 		r_type = IS_FLY;
-		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
+///		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
 	}
 	if (!m_uri.status_code())
 		m_uri.status_code() = 200;
-	if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI) || (r_type == EXEC_DIRECTORY_LISTING))
-		response.m_data_enco = new chunked;
-	else
-		response.m_data_enco = new unchunked;
+	//if ((r_type == IS_CGI) || (r_type == EXEC_BY_CGI) || (r_type == EXEC_DIRECTORY_LISTING))
+	//	response.m_data_enco = new chunked;
+	//else
+	//	response.m_data_enco = new unchunked;
 	return true;
 }
 
