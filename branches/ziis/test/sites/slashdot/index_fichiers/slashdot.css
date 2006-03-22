@@ -1,0 +1,751 @@
+body
+{
+	font-size: 100%;
+	background: #000;
+}
+
+a { color: #066; }
+a:visited { color: #000; }
+.sb_header { color: #066; }
+
+/* Layout */
+#frame
+{
+	background: #fff;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	margin-top: .5em;
+}
+
+#articles, #messages, #subscribe, #submit, #comments, #login, #pollBooth, #wide, #search, #authors, #topics, #misc
+{
+	overflow: visible;
+	z-index: 2;
+	position: relative;
+	margin: 0 .3em 1em 0;
+	padding: 0;
+}
+
+.aduserbox #articles, .admin #articles, div#search.aduserbox .generaltitle, div#search.aduserbox .generalbody
+{
+	margin: 0 15.6em 1em 0;
+	position: relative;
+}
+
+/* Header */
+#logo h1 a
+{
+	width: 275px;
+	height: 74px;
+	background: url("//images.slashdot.org/title.gif") no-repeat;
+	margin: 0;
+}
+
+/* test */
+#topnav #topics
+{
+	text-align: center;
+	margin: .2em 0 0 275px;
+	clear: both;
+}
+
+#topnav ul { text-align: right; }
+#topnav ul li img { margin: .2em 0; }
+#slogan h2 { display: none; }
+
+/* links */
+#links div.block { background: #fff; }
+#links div.title { background: #066; }
+
+#links h4
+{
+	padding: .1em 0 0 .2em;
+	font-weight: normal;
+}
+
+#links h2
+{
+	margin: 0;
+	padding: 0;
+	font-size: 120%;
+}
+
+#links h2 a, #links h2 a:visited { color: #066; }
+#links em { font-size: 80%; }
+
+#links div.content
+{
+	padding: 0;
+	font-size: 80%;
+	line-height: 120%;
+	position: relative;
+}
+
+#links div.content li a, #links div.content p { padding: 0 0 0 .3em; }
+
+/* slashboxes */
+#slashboxes div.block
+{
+	background: #ccc;
+	margin: 0 .3em .3em 0;
+}
+
+#slashboxes div.title { background: #066; }
+
+#slashboxes h4
+{
+	font-weight: bold;
+	font-family: sans-serif;
+	font-size: 80%;
+	color: #fff;
+	padding: .4em .3em .3em .2em;
+}
+
+#slashboxes div.content
+{
+	font-size: 80%;
+	line-height: 120%;
+	padding: .3em .3em .3em .2em;
+}
+
+#slashboxes small { font-size: 100%; }
+
+#slashboxes .title img
+{
+	position: absolute;
+	right: .3em;
+	margin: -.13em 0 0 0;
+}
+
+/* Quick links content */
+#slashboxes #index_qlinks-content ul, #slashboxes #index_qlinks-content li, #slashboxes #features_qlinks-content ul, #slashboxes #features_qlinks-content li
+{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+/* poll box content */
+#slashboxes #poll-content
+{
+	list-style: none;
+	padding: .3em .2em;
+}
+
+#slashboxes #poll-content form fieldset { padding: 0; }
+
+#pollBooth fieldset
+{
+	padding: .3em 0 0 0;
+	margin: 0;
+	border: none;
+}
+
+/* General */
+.generaltitle
+{
+	margin: 0;
+	background: #ccc;
+}
+
+.generalbody
+{
+	background: #fff;
+	margin: 0 .3em 2em 0;
+	padding: 0;
+}
+
+/* articles */
+.article div.future div.generaltitle div.title { background: #c33 url("//images.slashdot.org/slc.gif") top left no-repeat; }
+.article div.title, .generaltitle div.title, #pollBooth div.title#poll-title { background: #066 url("//images.slashdot.org/slc.gif") top left no-repeat; }
+
+#journal .article h3, .generaltitle h3, #pollBooth.aduserbox div.title#poll-title h4
+{
+	color: #fff;
+	font-family: sans-serif;
+	font-weight: bold;
+	background: transparent;
+	padding: .1em .8em 0 .8em;
+}
+
+.article .details
+{
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+	background: #fff;
+}
+
+.article .details strong { font-size: 80%; }
+
+.article .body
+{
+	margin: 0;
+	padding: 0;
+	background: #fff;
+}
+
+div.storylinks
+{
+	margin: 1em 0;
+	padding: 0;
+}
+
+div.storylinks div
+{
+	margin: 0;
+	padding: 0;
+}
+
+div.storylinks ul
+{
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+div.storylinks ul li { border-left: 1px solid #555; }
+
+/* Footer */
+#footer
+{
+	border-top: 1px solid #066;
+	padding: .3em;
+	font-family: sans-serif;
+}
+
+#footer .rightcontent
+{
+	min-height: 2em;
+	margin: 0 0 0 20em;
+	text-align: center;
+	font-style: italic;
+}
+
+#footer .rightcontent table td
+{
+	font-style: normal;
+	text-align: left;
+}
+
+#footer .search
+{
+	text-align: left;
+	position: absolute;
+	top: 0;
+	left: 1em;
+	margin: 0;
+	padding: 0;
+}
+
+#footer legend, #footer fieldset, #footer label
+{
+	margin: 0;
+	padding: 0;
+}
+
+#footer .copyright
+{
+	font-size: x-small;
+	color: #066;
+	margin: 0 0 -.4em 0;
+}
+
+body.admin .frame #footer
+{
+	background: #fff;
+	margin: -1em 1em .5em 1em;
+	padding-bottom: 0;
+}
+
+.clear { clear: both; }
+.inside { padding: 0; }
+
+/* Comments */
+.commentBox
+{
+	background: #066;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+}
+
+.commentwrap
+{
+	border: none;
+	margin: 0 .3em;
+}
+
+#commentlisting
+{
+	position: relative;
+	margin: 0 .3em;
+}
+
+.comment { position: relative; }
+
+.commentTop .details
+{
+	font-size: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.commentTop .details small { font-size: 80%; }
+.commentTop h4 a { color: #000; }
+
+.commentTop
+{
+	background: #ccc;
+	border: none;
+	padding: .3em;
+}
+
+.commentSub
+{
+	background: transparent;
+	padding: .3em;
+	font-size: 80%;
+	border: none;
+	margin: 0;
+}
+
+.commentBody
+{
+	border: none;
+	padding: .3em 0;
+}
+
+.comment_footer { background: #ccc; }
+
+.note ul
+{
+	font-size: 140%;
+	font-family: serif;
+}
+
+/* Poll */
+.bar
+{
+	width: 100%;
+	border: none;
+}
+
+.barColor { background: #066; }
+
+.barPercent
+{
+	color: #066;
+	white-space: nowrap;
+	padding: 0;
+	background: none;
+}
+
+.barVotes
+{
+	color: #000;
+	background: none;
+	padding: 0 0 0 .3em;
+}
+
+.totalVotes { font-size: 120%; }
+
+/* Bottom Nav */
+.btmnav
+{
+	color: #066;
+	font-size: 80%;
+	padding: 0 0 1em 0;
+	margin: -.7em 0 0 0;
+}
+
+.btmnav ul li a
+{
+	font-family: serif;
+	color: #fff;
+	border-left: 1px solid #066;
+}
+
+body.admin .btmnav a { color: #066; }
+.btmnav ul li a:visited { color: #fff; }
+
+/* Journal */
+.journaldate { position: relative; }
+
+.generalbody #journalgeneric .article
+{
+	height: auto;
+	margin: 1em 0;
+}
+
+#journalgeneric div.storylinks ul li
+{
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+#journalgeneric div.storylinks ul li a
+{
+	padding: 0 .4em 0 1em;
+	border-left: 1px solid #000;
+}
+
+#journalgeneric div.storylinks ul li.edit a, #journalgeneric div.storylinks ul li.discussion a, #journalgeneric div.storylinks ul li.journalid a { border: none; }
+
+#journalgeneric .details
+{
+	font-style: italic;
+	font-size: 100%;
+	font-weight: normal;
+	background: #ccc;
+	margin: 0 0 .3em 0;
+	padding: 0 .1em;
+}
+
+#journalgeneric .details .adminoptions
+{
+	font-style: normal;
+	position: absolute;
+	right: 0;
+	font-size: 85%;
+	margin: 0;
+}
+
+#journalgeneric .body { margin: 0 0 0 .3em; }
+
+/* Forms */
+#admin input, textarea { width: 80%; }
+#admin input.button { width: auto; }
+
+/* Submit */
+#submit fieldset
+{
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+#submit legend { display: none; }
+
+#submit .message
+{
+	margin: 0 0 1em 0;
+	padding: 0;
+}
+
+/* Misc */
+pre, code { font-size: 80%; }
+
+/* Ad */
+.ad1
+{
+	margin: .3em 0 0 0;
+	padding: 0;
+	text-align: center;
+}
+
+.ad2
+{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.ad6
+{
+	margin: .2em .2em .2em 0;
+	padding: 0;
+}
+
+/* Data Tables  */
+.data_head { background: #066; }
+.data_hl1 td, .data_hl2 td, .data_hl3 td { border: none; }
+
+.data_bgc1
+{
+	width: 20%;
+	color: #fff;
+	background: #066;
+}
+
+.data_bgc1 a { color: #fff; }
+.tb_col { background: #066; }
+
+/* Usermenu */
+ul.menu a, ul.menu a:visited { color: #000; }
+.generalbody ul.menu li a { color: #066; }
+
+#usermenu
+{
+	background: #066;
+	padding: 6px 0 0 9px;
+	margin: 0;
+	border: none;
+}
+
+#adminmenu, #adminmenu a { color: #066; }
+
+#usermenu li, #usermenu-top li
+{
+	display: inline;
+	list-style: none;
+	margin: 0;
+	padding: 0 2px 0 1px;
+}
+
+#usermenu ul.menu a
+{
+	background: url("//images.slashdot.org/menu_r.gif") #ccc no-repeat top right;
+	color: #000;
+	height: 1em;
+	padding: 5px 11px 0 1px;
+	margin: 0 -.3em 0 0;
+	text-decoration: none;
+	border: none;
+}
+
+#usermenu li.selected
+{
+	background: url("//images.slashdot.org/menu_l_s.gif") #fff no-repeat top left;
+	margin: 0 0 0 -9px;
+	padding: 5px 2px 0 7px;
+}
+
+#usermenu li.selected a
+{
+	background: transparent url("//images.slashdot.org/menu_r_s.gif") no-repeat top right;
+	color: #000;
+	padding: 5px 11px 0 2px;
+	text-decoration: none;
+}
+
+#usermenu li.selected b.begin
+{
+	background: url("//images.slashdot.org/menu_l_s_b.gif") no-repeat top left;
+	margin: 0 0 0 -9px;
+	padding: 5px 0 0 9px;
+}
+
+#usermenu li span.begin
+{
+	background: url("//images.slashdot.org/menu_l_b.gif") no-repeat top left;
+	margin: 0 0 0 -9px;
+	padding: 5px 1px 0 9px;
+}
+
+#usermenu li.selected b a.begin { padding: 5px 11px 0 2px; }
+
+#usermenu ul.menu a.end
+{
+	background: url("//images.slashdot.org/menu_r_e.gif") #ccc no-repeat top right;
+	padding: 5px 11px 0 2px;
+}
+
+#usermenu li.selected a.end
+{
+	background: transparent url("//images.slashdot.org/menu_r_s_e.gif") no-repeat top right;
+	color: #000;
+	padding: 5px 11px 0 2px;
+}
+
+#usermenu-top ul
+{
+	padding: 0;
+	margin: 0 0 1em 0;
+}
+
+#usermenu-top li:before { content: "| "; }
+#usermenu-top li:first-child:before { content: ""; }
+.uslashboxes { background: #ccc; }
+
+/* Messages */
+body.admin div.message
+{
+	font-family: sans-serif;
+	border: 1px solid #066;
+	color: #066;
+	margin: -.5em .1em .6em .1em;
+	font-weight: bold;
+	padding: .3em;
+	background: #bdd;
+}
+
+body.admin div.message .error
+{
+	border: 1px solid #600;
+	color: #600;
+	background: #ebb;
+}
+
+/* Admin */
+body.admin .generaltitle
+{
+	padding: 0 1em;
+	margin: 0;
+	background: #fff;
+}
+
+body.admin .generalbody .generaltitle, body.admin fieldset .generaltitle
+{
+	padding: 0;
+	margin: 0;
+}
+
+body.admin .generalbody
+{
+	padding: 0 1em 1em 1em;
+	margin: 0;
+	background: #fff;
+}
+
+body.admin fieldset
+{
+	padding: 0 1em 1em 1em;
+	margin: 0;
+	background: #fff;
+}
+
+body.admin { background: #000; }
+
+body.admin .contentsadmin
+{
+	padding: .6em 0 0 0;
+	margin: 1em;
+	background: #fff;
+}
+
+body.admin #content { padding: 0 0 .1em 1em; }
+
+#st-display table
+{
+	background: #066;
+	color: #fff;
+}
+
+.admin_story_list, .submit_story_list { font-family: sans-serif; }
+
+#users fieldset
+{
+	border: none;
+	margin: 1em 0 0 0;
+	padding: 0 1em 1em 1em;
+}
+
+#users legend { display: none; }
+
+/* Admin menu */
+#adminmenu
+{
+	margin: 0;
+	background: #eee;
+	border-top: 1px solid #ddd;
+	padding: .1em;
+}
+
+#adminmenu ul
+{
+	/* all lists */
+	list-style: none;
+	z-index: 20;
+}
+
+#adminmenu ul
+{
+	padding: 0;
+	margin-top: 0;
+}
+
+#adminmenu ul li ul
+{
+	border: 1px solid #066;
+	border-top: none;
+	padding: 0;
+	margin: 0;
+}
+
+#adminmenu ul.nestedmenu a
+{
+	display: block;
+	text-decoration: none;
+	padding: 0 0 0 .3em;
+}
+
+#adminmenu ul.nestedmenu li:hover
+{
+	background: #ddd;
+}
+
+#adminmenu ul.nestedmenu li ul li a:hover { font-weight: normal; }
+
+#adminmenu ul li ul li a
+{
+	display: block;
+	width: 8em;
+	text-decoration: none;
+	padding: 0;
+}
+
+#adminmenu ul.nestedmenu li ul li
+{
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #ccc;
+	padding: 0 0 0 .3em;
+	width: 7.7em;
+	margin: 0;
+}
+
+#adminmenu ul.nestedmenu li
+{
+	float: left;
+	margin: 0 .6em;
+}
+
+#adminmenu ul li ul
+{
+	position: absolute;
+	background: #eee;
+	width: 8em;
+	display: none;
+}
+
+#adminmenu ul li:hover ul { display: block; }
+
+#adminmenu ul li ul li:hover
+{
+	border-top: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	background: #ddd;
+}
+
+body .adminstoryform fieldset { background: #ccc; }
+body .adminstoryform legend { display: none; }
+.briefarticle { padding: .3em 1em; font-size: 80%}
+.briefarticle a { color: #000 }
+.future .briefarticle { background: #c33; }
+.briefarticles { padding: 0; background: #ccc; border-top: solid 2px #066; margin: .3em 0 1em 0;}
+
+.briefarticle { background : #ccc; }
+.briefarticle .section { color: #333; }
+.briefarticle .storytitle { font-weight: bold; }
+.briefarticle .introhide, .tagshide { display : none }
+.briefarticle .intro { padding-left: 1em; padding-top: 0.5em;}
+
+/* Tags */
+
+.tags { width: 100%; font-size: 90%; line-height: 115% }
+.tagname { color: #066; font-weight: bold; padding: 0 }
+.tagtitleopen { background: #066; color: #fff; font-size: 90% }
+.tagtitleopen a { color: #fff; text-decoration: none; font-size: 90% }
+.tagtitleclosed { background: #fff; font-size: 90% }
+.tagtitleclosed a { text-decoration: none; font-size: 90%}
+.tagbody { border: 1px #aaa solid; background: #ccc; padding: 8px }
+.tagshide { display : none }
+
+.secpref_master td { border-bottom: solid 2px #066;}
+.secpref_nexus_row { color: #aaa; background: #ccc; }
+#sectionprefs_message  { background: #066; font-size: 120%; color: #fff; font-weight: bold; text-align: right; }
+#sectionprefs_hdr {text-align: right; background: #066; font-size: 120%; color: #fff; }
+#sectionprefs_hdr a {float: left; color: #fff;}
+#sectionprefs_hdr span a {float: none; color: #fff; font-size: 10px; font-weight: bold; font-family: sans-serif; text-decoration: none;}
+#sectionprefs_hdr span { margin: -.3em 0; padding: 0 4px; height: 11px; width: 11px;}
+.ps_23, .ps_22 { display: none; }
