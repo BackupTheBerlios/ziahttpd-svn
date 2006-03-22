@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 10:12:05 2006 texane
+// Last update Wed Mar 22 10:27:59 2006 texane
 //
 
 
@@ -14,9 +14,12 @@
 #include <string.h>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
+#include "include/buffer.hh"
+#include "include/resource.hh"
 
 
 using namespace std;
+using namespace resource;
 
 
 class mod_file : public IModule, public IDocumentGenerator
@@ -78,98 +81,64 @@ void mod_file::OnLoad(IFS*)
 // implement IDocumentGenerator
 void mod_file::GenerateDocument(IInput& in, const char* path, IOutput& out)
 {
-//   bool is_done;
-//   int nr_pass;
-//   int nr_recv;
-//   int nr_insz;
-//   char buf[512];
-//   const char* p_method;
-//   const char* p_content_length;
-//   ostringstream oss;
+  bool is_done;
+  int nr_pass;
+  int nr_recv;
+  int nr_insz;
+  char buf[512];
+  const char* p_method;
+  const char* p_content_length;
+  ostringstream oss;
 
-//   cout << "generating document" << endl;
+  cout << "generating document" << endl;
 
-//   // get the method
-//   p_method = in.GetInputMethod();
-//   if (method == 0)
-//     return ;
+  // get the method
+  p_method = in.GetInputMethod();
+  if (p_method == 0)
+    return ;
 
-//   // get the input size
-//   nr_insz = 0;
-//   p_content_length = in.GetInput("content-length");
-//   if (p_content_length)
-//     {
-//       istringstream iss(p_content_length);
-//       iss >> nr_insz;
-//     }
+  // get the input size
+  nr_insz = 0;
+  p_content_length = in.GetInput("content-length");
+  if (p_content_length)
+    {
+      istringstream iss(p_content_length);
+      iss >> nr_insz;
+    }
 
-//   // generate the resource
-//   is_done = false;
-//   nr_pass = 0;
-//   while (is_done == false)
-//     {
-//       // something to recv from
-//       if (nr_insz > 0)
-// 	{
-// 	  nr_recv = in.ReadPostEntity(buf, sizeof(buf));
-// 	  if (nr_recv > 0)
-// 	    nr_insz -= nr_recv;
-// 	}
+  // generate the resource
+  is_done = false;
+  nr_pass = 0;
+  while (is_done == false)
+    {
+      // something to recv from
+      if (nr_insz > 0)
+	{
+	  nr_recv = in.ReadPostEntity(buf, sizeof(buf));
+	  if (nr_recv > 0)
+	    nr_insz -= nr_recv;
+	}
 
-//       // feed the resource with buf
+      // feed the resource with buf
 
-//       // generate content from resource
+      // generate content from resource
 
-//       // generate header
-//       if (nr_pass == 0)
-// 	{
-// 	  out.SendHeader();
-// 	}
-//       // generate chunk
-//       else
-// 	{
+      // generate header
+      if (nr_pass == 0)
+	{
+	  out.SendHeader();
+	}
+      // generate chunk
+      else
+	{
 
-// 	}
-//       ++nr_pass;
+	}
+      ++nr_pass;
 
-//       // send the buffer
-//     }
+      // send the buffer
+    }
 
-
-//   if (strcmp(method, "GET") == 0)
-//     {
-//       oss << "<html><body>404 pas found</body></html>" << endl;
-//       out.SendHeader();
-//       out.SendBuffer(oss.str().c_str(), (int)strlen(oss.str().c_str()));
-//     }
-//   else if (strcmp(method, "POST") == 0)
-//     {
-//       cout << "post method not handled" << endl;
-//     }
-//   return ;
-
-
-
-//   is_done = false;
-//   nr_recv = 0;
-//   iss >> nr_size;
-//   cout << "generate document: " << nr_size << endl;
-//   while (is_done == false)
-//     {
-//       if (nr_size <= 0)
-// 	{
-// 	  is_done = true;
-// 	}
-//       else
-// 	{
-// 	  nr_recv = in.ReadPostEntity(buf, sizeof(buf));
-// 	  if (nr_recv == -1)
-// 	    is_done = true;
-// 	  else
-// 	    nr_size -= nr_recv;
-// 	}
-//     }
-//   cout << "generate document ok" << endl;
+  cout << "generate document ok" << endl;
 }
 
 static const char* _my_mimes[] =
