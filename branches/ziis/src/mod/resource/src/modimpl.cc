@@ -16,6 +16,13 @@
 
 bool mod_resource::ReadConfig(const char* path)
 {
+	if (conf)
+	{
+		delete conf;
+		conf = NULL;
+	}
+
+	conf = new net::config(path);
   return true;
 }
 

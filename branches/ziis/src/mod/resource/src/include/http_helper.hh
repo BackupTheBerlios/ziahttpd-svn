@@ -40,7 +40,7 @@ namespace http_helper
 		IS_FAKE
 	};
   bool generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chunk);
-  resource::handle* create_resource(IInput&, const char*, IOutput&);
+	resource::handle* create_resource(IInput&, const char*, IOutput&, net::config*);
 	bool get_type_of_resource(net::config& conf, 
 														resouce_type_t& type_r, 
 														IInput& inp, 

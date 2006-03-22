@@ -25,6 +25,7 @@ IModule* GetNewInstance()
 
 mod_resource::mod_resource()
 {
+	conf = NULL;
 }
 
 mod_resource::~mod_resource()
@@ -45,7 +46,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   bool is_done;
 
   // resource creation
-  p_resource = http_helper::create_resource(in, path, out);
+  p_resource = http_helper::create_resource(in, path, out, conf);
   if (p_resource == 0)
     return ;
 

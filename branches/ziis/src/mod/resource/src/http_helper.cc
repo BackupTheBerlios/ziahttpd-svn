@@ -258,11 +258,11 @@ bool				http_helper::create_resource(resource::handle*& hld,
 	return true;
 }
 
-resource::handle* http_helper::create_resource(IInput& in, const char* path, IOutput& out)
+resource::handle* http_helper::create_resource(IInput& in, const char* path, IOutput& out, net::config* conf)
 {
-	net::config conf("conf/ziafs.xml");
+
 	resource::handle *hdl;
 
-	create_resource(hdl, conf, in, out, path);
+	create_resource(hdl, *conf, in, out, path);
   return hdl;
 }
