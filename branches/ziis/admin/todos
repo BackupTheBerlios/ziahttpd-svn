@@ -1,5 +1,18 @@
 todos
 
+
+. this is the document generator that creates the resource
+
+. remove ioslot (?)
+	-> integrate it into the connection module
+
+. handle predata
+
+. think about prefetched buffer for resource
+. see their hook and where they are called
+. migrate the two function in the document generator
+
+. check the ibuffer class
 . implement hooks and instanciation @good times
 . pass session pointer to constructor
 . resource manager in GenerateDocument

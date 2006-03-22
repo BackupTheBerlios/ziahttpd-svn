@@ -11,8 +11,8 @@
 <file>src/mod/sock/mod_sock.lo</file>
 </module>
 
-<module name="mod_file">
-<file>src/mod/file/mod_file.lo</file>
+<module name="mod_resource">
+<file>src/mod/resource/mod_resource.lo</file>
 </module>
 
 

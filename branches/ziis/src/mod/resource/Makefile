@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Tue Mar 21 23:46:21 2006 texane
+## Last update Wed Mar 22 10:08:59 2006 texane
 ##
 
 # ! Always include this file
@@ -13,7 +13,7 @@
 # include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
-name	= mod_file.lo
+name	= mod_resource.lo
 srcs	= src$(SLASH)main.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \

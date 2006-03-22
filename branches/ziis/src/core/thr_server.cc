@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Mar 22 01:31:07 2006 texane
+// Last update Wed Mar 22 09:37:50 2006 texane
 //
 
 
@@ -157,14 +157,20 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 
     }
 
+  return true;
+}
+
+
+bool thr::pool::sess_handle_document(session_t& sess)
+{
   // instanciate ZfsInput
   sess.m_input = new ZfsInput(sess);
+
+  // according to metadata, instanciate the output
   sess.m_output = new ZfsOutput(sess);
 
   // generate the resource
-  cout << "in: " << sess.proto.get_uri().localname() << endl;
   sess.m_gen_module->GenerateDocument(*sess.m_input, sess.proto.get_uri().localname().c_str(), *sess.m_output);
-  cout << "out" << endl;
 
   return true;
 }
@@ -320,6 +326,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     {
       sess_reset_request(sess);
       sess_read_metadata(sess);
+      sess_handle_document(sess);
 //       sess_handle_predata(sess);
 //       sess_handle_request(sess);
       sess_release_request(sess);
