@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Mar 22 15:20:27 2006 texane
+// Last update Wed Mar 22 16:00:47 2006 texane
 //
 
 
@@ -177,7 +177,8 @@ bool thr::pool::sess_handle_document(session_t& sess)
   hostname = sess.m_output->GetOutput("host");
   if (hostname == 0)
     hostname = "";
-  localname = sess.proto.get_uri(sess.srv->srv_config, hostname).localname();
+  localname = "./test/sites/simple/index.html";
+//   localname = sess.proto.get_uri(sess.srv->srv_config, hostname).localname();
   sess.m_gen_module->GenerateDocument(*sess.m_input, localname.c_str(), *sess.m_output);
   cout << "handle_document done" << endl;
 

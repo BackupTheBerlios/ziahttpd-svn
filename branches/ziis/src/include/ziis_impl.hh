@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Wed Mar 22 09:28:32 2006 texane
+// Last update Wed Mar 22 15:52:18 2006 texane
 //
 
 
@@ -31,7 +31,7 @@ public:
   const char* GetInputHttpVersion();
   const char* GetInputQueryString();
   int GetClientIp();
-  int ReadPostEntity(char*, int){ return -1;}
+  int ReadPostEntity(char*, int);
   bool GetNextHeader(char**, char**);
 
 private:

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:37:39 2006 texane
-// Last update Wed Mar 22 11:18:37 2006 texane
+// Last update Wed Mar 22 16:14:37 2006 texane
 //
 
 
@@ -121,6 +121,7 @@ resource::e_error resource::manager::factory_create(resource::handle*& res_handl
 
 resource::e_error resource::manager::factory_destroy(resource::handle* res_handle)
 {
-  delete res_handle;
+  if (res_handle)
+    delete res_handle;
   return E_SUCCESS;
 }

@@ -7,6 +7,10 @@ todos
 . readpostentity
 
 
+for the ReadPostEntity()
+	-> take care of reading from the mbuffer, to get the prefeteched data
+
+
 . handle prefetched datas...
 
 . for chunk generation

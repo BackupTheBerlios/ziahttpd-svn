@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Wed Mar 22 11:40:39 2006 texane
+// Last update Wed Mar 22 16:28:37 2006 texane
 //
 
 
@@ -30,7 +30,7 @@ bool resource::file::is_content_dynamic() const
 
 resource::e_error resource::file::generate(unsigned int& nbytes)
 {
-  unsigned char buffer[constants::BUFFER_SIZE];
+  unsigned char buf[constants::BUFFER_SIZE];
   sysapi::error::handle_t h_err;
   resource::e_error e_err;
 
@@ -72,9 +72,10 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
       else
 	{
 	  // read next buffer from file
-	  h_err = sysapi::file::read(file_handle, buffer, sizeof(buffer), nbytes);
+	  h_err = sysapi::file::read(file_handle, buf, sizeof(buf), nbytes);
 	  if (h_err != sysapi::error::SUCCESS)
 	    return E_OP_ERROR;
+	  data = buffer(buf, nbytes);
 	  file_size -= nbytes;
 	  if (file_size == 0)
 	    generated = true;
@@ -96,6 +97,7 @@ resource::e_error resource::file::flush_network(IOutput& out)
   if (omode == O_INPUT)
     {
       // send it to output
+      cout << data.tostring() << endl;
       nr_sent = out.SendBuffer((const char*)data.bufptr(), (int)data.size());
       if (nr_sent < 0)
 	return E_OP_ERROR;

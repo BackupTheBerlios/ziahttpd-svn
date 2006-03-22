@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 14:56:28 2006 texane
+// Last update Wed Mar 22 16:35:50 2006 texane
 //
 
 
@@ -143,11 +143,11 @@ void mod_resource::OnLoad(IFS*)
 
 void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 {
+  ostringstream oss;
   resource::handle* p_resource;
   resource::e_error e_err;
   resource::e_omode e_omode;
   unsigned int nr_size;
-  unsigned int nr_pass;
   buffer hdr_chunk;
   unsigned int pos_chunk;
   char buf_input[constants::BUFFER_SIZE];
@@ -155,25 +155,36 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   bool is_done;
 
   // resource creation
+  cout << "createing resource" << endl;
   e_omode = resource::O_INPUT;
-
-  cout << "creating new resource" << path << endl;
-  getchar();
-
-  resource::manager::factory_create(p_resource, resource::ID_FILE, e_omode, path);
+  if (resource::manager::factory_create(p_resource, resource::ID_FILE, e_omode, path) != E_SUCCESS)
+    {
+      cout << "cannot create the resource" << endl;
+      return ;
+    }
+  cout << "createing resource done" << endl;
 
   // main generation loop
   is_done = false;
-  nr_pass = 0;
   pos_chunk = constants::FIRST_CHUNK;
 
   // if content chunked
   if (p_resource->is_content_dynamic() == true)
-    out.SetOutput("transfer-encoding", "chunked");
+    {
+      out.SetOutput("transfer-encoding", "chunked");
+    }
   else
-    // set the size
-    ;
+    {
+      p_resource->size(nr_size);
+      oss << nr_size;
+      out.SetOutput("content-length", oss.str().c_str());
+    }
 
+  // send response header
+  if (out.SendHeader() == false)
+    is_done = true;
+
+  // generate the resource
   while (is_done == false)
     {
       if (p_resource->input_size())
@@ -185,11 +196,9 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
       e_err = p_resource->generate(nr_size);
       if (e_err == resource::E_SUCCESS)
 	{
-	  if (nr_pass == 0)
-	    out.SendHeader();
 	  if (p_resource->is_content_dynamic())
 	    {
-	      // generate_chunk_header(hdr_chunk, size_from_generate, pos_chunk)
+// 	      generate_chunk_header(hdr_chunk, nr_size, pos_chunk);
 	      pos_chunk = constants::MIDDLE_CHUNK;
 	      p_resource->prepend_header(hdr_chunk);
 	    }
@@ -208,13 +217,12 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	  if (p_resource->is_content_dynamic())
 	    {
 	      pos_chunk = constants::LAST_CHUNK;
-	      // generate_chunk_header(hdr_chunk, 0, pos_chunk);
+// 	      generate_chunk_header(hdr_chunk, 0, pos_chunk);
 	      p_resource->prepend_header(hdr_chunk);
 	      p_resource->flush_network(out);
 	    }
 	  is_done = true;
 	}
-      ++nr_pass;
     }
 
   // resource deletion
