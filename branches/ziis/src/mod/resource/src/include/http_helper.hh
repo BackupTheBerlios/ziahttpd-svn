@@ -14,6 +14,7 @@
 
 
 #include "buffer.hh"
+#include "config.hh"
 
 namespace resource { class handle; }
 class IInput;
@@ -27,9 +28,37 @@ namespace http_helper
       CHUNK_MIDDLE,
       CHUNK_LAST
     } chunk_pos_t;
-
+	enum resouce_type_t
+	{
+		IS_NONE,
+		IS_FILE,
+		IS_CGI,
+		IS_PUT,
+		EXEC_BY_CGI,
+		EXEC_DIRECTORY_LISTING,
+		IS_FLY,
+		IS_FAKE
+	};
   bool generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chunk);
   resource::handle* create_resource(IInput&, const char*, IOutput&);
+	bool get_type_of_resource(net::config& conf, 
+														resouce_type_t& type_r, 
+														IInput& inp, 
+														IOutput& out, 
+														std::string& localname,
+														int& status_code);
+	std::string extension(std::string& localname);
+	bool pre_create_resource(net::config& conf,
+														resouce_type_t& r_type,
+														int& status_code,
+														IInput& inp,
+														IOutput& out,
+														std::string& localname);
+	bool create_resource(resource::handle*& hld, 
+												net::config& conf, IInput& inp, 
+												IOutput& out, 
+												std::string localname);
+	bool get_cgi_path(net::config& conf, std::string& path, std::string& localname);
 }
 
 

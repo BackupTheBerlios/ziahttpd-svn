@@ -38,6 +38,7 @@ public:
   // implement IDocumentGenerator
   void GenerateDocument(IInput&, const char*, IOutput&);
   const char** GetSupportedMime();
+
 };
 
 

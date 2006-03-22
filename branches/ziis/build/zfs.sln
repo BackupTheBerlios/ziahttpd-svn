@@ -3,6 +3,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zfs", "zfs.vcproj", "{5C1D0
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod_resource", "..\src\mod\resource\mod_resource.vcproj", "{666AF604-8900-41E5-AD26-A8D6E1566069}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod_sock", "..\src\mod\sock\mod_sock.vcproj", "{E39C62A7-F948-481F-B095-025157D82D64}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -13,6 +21,14 @@ Global
 		{5C1D0689-362B-4109-8C56-8FB49D12604F}.Debug.Build.0 = Debug|Win32
 		{5C1D0689-362B-4109-8C56-8FB49D12604F}.Release.ActiveCfg = Release|Win32
 		{5C1D0689-362B-4109-8C56-8FB49D12604F}.Release.Build.0 = Release|Win32
+		{666AF604-8900-41E5-AD26-A8D6E1566069}.Debug.ActiveCfg = Debug|Win32
+		{666AF604-8900-41E5-AD26-A8D6E1566069}.Debug.Build.0 = Debug|Win32
+		{666AF604-8900-41E5-AD26-A8D6E1566069}.Release.ActiveCfg = Release|Win32
+		{666AF604-8900-41E5-AD26-A8D6E1566069}.Release.Build.0 = Release|Win32
+		{E39C62A7-F948-481F-B095-025157D82D64}.Debug.ActiveCfg = Debug|Win32
+		{E39C62A7-F948-481F-B095-025157D82D64}.Debug.Build.0 = Debug|Win32
+		{E39C62A7-F948-481F-B095-025157D82D64}.Release.ActiveCfg = Release|Win32
+		{E39C62A7-F948-481F-B095-025157D82D64}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

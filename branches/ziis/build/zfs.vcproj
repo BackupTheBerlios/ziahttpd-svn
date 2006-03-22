@@ -25,6 +25,7 @@
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				DisableLanguageExtensions="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -174,24 +175,6 @@
 				</File>
 				<File
 					RelativePath=".\remove_me.cpp">
-				</File>
-				<File
-					RelativePath="..\src\core\resource_byfly.cc">
-				</File>
-				<File
-					RelativePath="..\src\core\resource_fake.cc">
-				</File>
-				<File
-					RelativePath="..\src\core\resource_file.cc">
-				</File>
-				<File
-					RelativePath="..\src\core\resource_handle.cc">
-				</File>
-				<File
-					RelativePath="..\src\core\resource_manager.cc">
-				</File>
-				<File
-					RelativePath="..\src\core\resource_process.cc">
 				</File>
 				<File
 					RelativePath="..\src\core\thr_io.cc">
