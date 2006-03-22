@@ -1,6 +1,9 @@
 todos
 
 
+. remove the system thread -> io_thread
+. remove resource from the server core
+
 . get local name -> uri to local
 > resource creation + read  conf
 . chunk generation
@@ -11,30 +14,8 @@ for the ReadPostEntity()
 
 
 . handle prefetched datas...
-
-. for chunk generation
-	-> for the moment, maintained in the session: the position
-	should be external, local variable and passed to generate_chunk_header
-	-> generate_chunk_header(buffer&, chunk_pos)
-
-
-. think you should not have a while ... in resource generation
-	(besides the loop in documentgenerator)
-. add the is_content_dynamic() method, in order to
-	tell if the response body must be chunked
 . resource creation factory
-. resource generation loop
-. integrate resources + main loop in mod_resource
-	-> byfly
-	-> file: implement a seek pointer
-	-> cgi
 
-
-. init the resource with an ioutput, so that it can send
-	instead of a thr_slot
-. function to handle error code sending prior to be in the
-	document generator + usable in it
-. this is the document generator that creates the resource
 
 . remove ioslot (?)
 	-> integrate it into the connection module
@@ -55,7 +36,6 @@ for the ReadPostEntity()
 . implement a timeouter in the connection module (array of io slot)
 
 
-. implement the send* method
 . readpostentity method
 	-> internally take into account the body size
 . implement error page sending + http header
