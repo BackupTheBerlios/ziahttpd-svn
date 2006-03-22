@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 12:21:15 2006 texane
+// Last update Wed Mar 22 13:10:25 2006 texane
 //
 
 
@@ -156,6 +156,10 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 
   // resource creation
   e_omode = resource::O_INPUT;
+
+  cout << "creating new resource" << path << endl;
+  getchar();
+
   resource::manager::factory_create(p_resource, resource::ID_FILE, e_omode, path);
 
   // main generation loop
