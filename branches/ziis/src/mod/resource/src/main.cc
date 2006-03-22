@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 13:10:25 2006 texane
+// Last update Wed Mar 22 14:56:28 2006 texane
 //
 
 
@@ -166,6 +166,14 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   is_done = false;
   nr_pass = 0;
   pos_chunk = constants::FIRST_CHUNK;
+
+  // if content chunked
+  if (p_resource->is_content_dynamic() == true)
+    out.SetOutput("transfer-encoding", "chunked");
+  else
+    // set the size
+    ;
+
   while (is_done == false)
     {
       if (p_resource->input_size())
@@ -181,7 +189,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	    out.SendHeader();
 	  if (p_resource->is_content_dynamic())
 	    {
-	      // generate_chunk_header(hdr_chunk, pos_chunk)
+	      // generate_chunk_header(hdr_chunk, size_from_generate, pos_chunk)
 	      pos_chunk = constants::MIDDLE_CHUNK;
 	      p_resource->prepend_header(hdr_chunk);
 	    }
@@ -200,7 +208,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	  if (p_resource->is_content_dynamic())
 	    {
 	      pos_chunk = constants::LAST_CHUNK;
-	      // generate_chunk_header(hdr_chunk, pos_chunk);
+	      // generate_chunk_header(hdr_chunk, 0, pos_chunk);
 	      p_resource->prepend_header(hdr_chunk);
 	      p_resource->flush_network(out);
 	    }

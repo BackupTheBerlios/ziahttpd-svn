@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Mar 22 13:43:09 2006 texane
+// Last update Wed Mar 22 15:20:27 2006 texane
 //
 
 
@@ -161,6 +161,9 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 
 bool thr::pool::sess_handle_document(session_t& sess)
 {
+  string localname;
+  const char* hostname;
+
   // instanciate ZfsInput
   cout << "input generation" << endl;
   sess.m_input = new ZfsInput(sess);
@@ -170,9 +173,12 @@ bool thr::pool::sess_handle_document(session_t& sess)
   sess.m_output = new ZfsOutput(sess);
 
   // generate the resource
-  cout << "doc generation: " << sess.proto.get_uri().wwwname() << endl;
-  cout << "doc generation: " << sess.proto.get_uri().localname() << endl;
-  sess.m_gen_module->GenerateDocument(*sess.m_input, sess.proto.get_uri().localname().c_str(), *sess.m_output);
+  cout << "generating document for " << localname << endl;
+  hostname = sess.m_output->GetOutput("host");
+  if (hostname == 0)
+    hostname = "";
+  localname = sess.proto.get_uri(sess.srv->srv_config, hostname).localname();
+  sess.m_gen_module->GenerateDocument(*sess.m_input, localname.c_str(), *sess.m_output);
   cout << "handle_document done" << endl;
 
   return true;

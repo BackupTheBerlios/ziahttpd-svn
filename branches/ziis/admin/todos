@@ -1,6 +1,12 @@
 todos
 
 
+. get local name -> uri to local
+. resource creation + read  conf
+. chunk generation
+. readpostentity
+
+
 . handle prefetched datas...
 
 . for chunk generation
