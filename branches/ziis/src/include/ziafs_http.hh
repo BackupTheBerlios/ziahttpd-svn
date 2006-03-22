@@ -72,7 +72,7 @@ namespace net
 		bool									create_header();
 		bool									modify_header(config&, chunk_pos_t);
 		bool									stringify_header(buffer&);
-
+		static bool						generate_chunk_header(buffer& data, size_t sz, net::http::chunk_pos_t chunk);
 
 	private:
 		bool	valid_method();
@@ -180,5 +180,7 @@ namespace net
 		http_data							response;
   };
 }
+
+
 
 #endif
