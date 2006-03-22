@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:25:56 2006 texane
-// Last update Wed Mar 22 10:36:05 2006 texane
+// Last update Wed Mar 22 11:41:34 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 
 #include <string>
 #include <sys/sysapi.hh>
+#include <ziis.hh>
 #include "include/buffer.hh"
 
 
@@ -63,14 +64,15 @@ namespace resource
     handle();
     virtual ~handle() {}
 
-//     // interface
-//     // serve the resource current data
-//     virtual e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&) = 0;
-//     virtual e_error flush_disk(sysapi::file::handle_t&) = 0;
-//     virtual e_error flush_environ() = 0;
-//     virtual e_error flush_input(thr::pool::slot_t&, buffer&) = 0;
-//     virtual e_error generate(unsigned int&) = 0;
-//     virtual e_error size(unsigned int&) = 0;
+    // interface
+    // serve the resource current data
+    virtual e_error flush_network(IOutput&) = 0;
+    virtual e_error flush_disk(sysapi::file::handle_t&) = 0;
+    virtual e_error flush_environ() = 0;
+    virtual e_error flush_input(buffer&) = 0;
+    virtual e_error generate(unsigned int&) = 0;
+    virtual e_error size(unsigned int&) = 0;
+    virtual bool is_content_dynamic() const = 0;
 
     // Chunk/data modifications
     e_error prepend_header(buffer&);
@@ -99,55 +101,57 @@ namespace resource
 }
 
 
-// namespace resource
-// {
-//   class byfly : public handle
-//   {
-//   public:
-//     // construction/destruction
-//     byfly(unsigned int);
-//     ~byfly();
+namespace resource
+{
+  class byfly : public handle
+  {
+  public:
+    // construction/destruction
+    byfly(unsigned int);
+    ~byfly();
 
-//     // interface implementation
-//     e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&);
-//     e_error flush_disk(sysapi::file::handle_t&);
-//     e_error flush_environ();
-//     e_error flush_input(thr::pool::slot_t&, buffer&);
-//     e_error generate(unsigned int&);
-//     e_error size(unsigned int&);
+    // interface implementation
+    e_error flush_network(IOutput&);
+    e_error flush_disk(sysapi::file::handle_t&);
+    e_error flush_environ();
+    e_error flush_input(buffer&);
+    e_error generate(unsigned int&);
+    e_error size(unsigned int&);
+    bool is_content_dynamic() const;
 
-//   private:
-//     bool generated;
-//     unsigned int err_code;
-//   };
-// }
+  private:
+    bool generated;
+    unsigned int err_code;
+  };
+}
 
 
-// namespace resource
-// {
-//   class file : public handle
-//   {
-//   public:
-//     // construction/destruction
-//     file(const std::string&, e_omode);
-//     ~file();
+namespace resource
+{
+  class file : public handle
+  {
+  public:
+    // construction/destruction
+    file(const std::string&, e_omode);
+    ~file();
 
-//     // interface implementation
-//     e_error flush_network(thr::pool::slot_t&, sysapi::insock::handle_t&);
-//     e_error flush_disk(sysapi::file::handle_t&);
-//     e_error flush_environ();
-//     e_error flush_input(thr::pool::slot_t&, buffer&);
-//     e_error generate(unsigned int&);
-//     e_error size(unsigned int&);
+    // interface implementation
+    e_error flush_network(IOutput&);
+    e_error flush_disk(sysapi::file::handle_t&);
+    e_error flush_environ();
+    e_error flush_input(buffer&);
+    e_error generate(unsigned int&);
+    e_error size(unsigned int&);
+    bool is_content_dynamic() const;
 
-//   private:
-//     bool opened;
-//     bool generated;
-//     std::string file_path;
-//     sysapi::file::handle_t file_handle;
-//     unsigned long long file_size;
-//   };
-// }
+  private:
+    bool opened;
+    bool generated;
+    std::string file_path;
+    sysapi::file::handle_t file_handle;
+    unsigned long long file_size;
+  };
+}
 
 
 // namespace resource

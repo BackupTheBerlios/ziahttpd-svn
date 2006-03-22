@@ -22,7 +22,7 @@
   <port>40000</port>
   <directory_index>index.html index.htm</directory_index>
   <modulename>mod_sock</modulename>
-  <modulename>mod_file</modulename>
+  <modulename>mod_resource</modulename>
 </server>
 
 

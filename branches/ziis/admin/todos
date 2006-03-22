@@ -1,6 +1,22 @@
 todos
 
 
+. think you should not have a while ... in resource generation
+	(besides the loop in documentgenerator)
+. add the is_content_dynamic() method, in order to
+	tell if the response body must be chunked
+. resource creation factory
+. resource generation loop
+. integrate resources + main loop in mod_resource
+	-> byfly
+	-> file: implement a seek pointer
+	-> cgi
+
+
+. init the resource with an ioutput, so that it can send
+	instead of a thr_slot
+. function to handle error code sending prior to be in the
+	document generator + usable in it
 . this is the document generator that creates the resource
 
 . remove ioslot (?)
