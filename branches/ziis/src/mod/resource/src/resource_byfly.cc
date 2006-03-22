@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:45:06 2006 texane
-// Last update Wed Mar 22 11:41:07 2006 texane
+// Last update Wed Mar 22 23:29:38 2006 texane
 //
 
 
@@ -27,8 +27,7 @@ using namespace sysapi;
 #define STATUS	"ZIAFS_GENERATED_PAGE"
 static void inline mk_status_msg(unsigned int err_code, unsigned char* buf, unsigned int& nbytes)
 {
-  nbytes = 0;
-  nbytes += sprintf((char*)buf + nbytes, BODY, STATUS, err_code);
+  nbytes = sprintf((char*)buf + nbytes, BODY, STATUS, err_code);
 }
 
 
@@ -74,8 +73,8 @@ resource::e_error resource::byfly::flush_input(buffer&)
 
 resource::e_error resource::byfly::size(unsigned int& nbytes)
 {
-  nbytes = 0;
-  return E_NOT_IMPL;
+  nbytes = (unsigned int)data.size();
+  return E_SUCCESS;
 }
 
 bool resource::byfly::is_content_dynamic() const
