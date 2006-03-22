@@ -345,11 +345,11 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 ///		error = manager.factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
 
 	}
-	else if (r_type == IS_PUT) ;
+///	else if (r_type == IS_PUT) ;
 ///		error = manager.factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, m_uri.localname(), &m_line.m_buf, body_size());
-	else if (r_type == IS_FLY) ;
+///	else if (r_type == IS_FLY) ;
 ///		error = manager.factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, m_uri.status_code());
-	else if (r_type == IS_FAKE) ;
+///	else if (r_type == IS_FAKE) ;
 ///		error = manager.factory_create(hld, resource::ID_FAKE);
 
 ///	if (error != resource::E_SUCCESS)
