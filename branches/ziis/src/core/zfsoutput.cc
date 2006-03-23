@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Thu Mar 23 19:33:26 2006 texane
+// Last update Thu Mar 23 19:56:50 2006 texane
 //
 
 
@@ -138,8 +138,9 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
 	net::generate_chunk_header(buf_header, sz, net::CHUNK_LAST);
       else
 	net::generate_chunk_header(buf_header, sz, net::CHUNK_MIDDLE);
+      buf_entity = buf_header + buf_entity;
+      buf_entity += "\r\n";
     }
-  buf_entity = buf_header + buf_entity;
 
   // send the buffer
   return send_whole_buffer((const char*)buf_entity.bufptr(), (int)buf_entity.size());
