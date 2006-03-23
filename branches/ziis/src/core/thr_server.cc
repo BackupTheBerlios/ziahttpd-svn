@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Mar 23 16:52:24 2006 texane
+// Last update Wed Mar 23 17:24:44 2005 texane
 //
 
 
@@ -155,7 +155,6 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 bool thr::pool::sess_handle_document(session_t* sess)
 {
   const char* p_hostname;
-  const char* accepted_encoding;
   string chosen_encoding;
   string localname;
   string hostname;
@@ -166,16 +165,18 @@ bool thr::pool::sess_handle_document(session_t* sess)
   // according to metadata, instanciate the output
   sess->m_output = new ZfsOutput(sess);
 
+  cout << "handling document" << endl;
+
   // post process meta data
-  accepted_encoding = sess->m_input->GetInput("accept-encoding");
-  if (accepted_encoding)
-    {
-      if (sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, accepted_encoding, chosen_encoding) == true)
-	{
-	  sess->m_output->SetOutput("transfer-encoding", "chunked");
-	  sess->m_output->SetOutput("content-encoding", chosen_encoding.c_str());
-	}
-    }
+//   accepted_encoding = sess->m_input->GetInput("accept-encoding");
+//   if (accepted_encoding)
+//     {
+//       if (sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, accepted_encoding, chosen_encoding) == true)
+// 	{
+// 	  sess->m_output->SetOutput("transfer-encoding", "chunked");
+// 	  sess->m_output->SetOutput("content-encoding", chosen_encoding.c_str());
+// 	}
+//     }
 
   // generate the resource
   p_hostname = sess->m_input->GetInput("host");
@@ -185,6 +186,8 @@ bool thr::pool::sess_handle_document(session_t* sess)
   localname = sess->proto.get_uri().localname(*sess->srv->srv_config, hostname);
   if (sess->m_gen_module)
     sess->m_gen_module->GenerateDocument(*sess->m_input, localname.c_str(), *sess->m_output);
+  else
+    cout << "no generation module found" << endl;
   return true;
 }
 

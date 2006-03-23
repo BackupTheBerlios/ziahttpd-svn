@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Thu Mar 23 15:58:11 2006 texane
+## Last update Wed Mar 23 16:53:56 2005 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -40,7 +40,7 @@ LDPATHS	=	-libpath:"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Platf
 LDLIBS	=	-defaultlib:Ws2_32.lib	\
 		-defaultlib:Mswsock.lib	\
 		-defaultlib:pthreadVSE1.lib
-LDGEN	=	-debug -machine:x86 -subsystem:console -opt:noref
+LDGEN	=	-machine:x86 -subsystem:console -opt:noref
 LIBOUT	=	-lib
 DLLOUT	=	-dll
 LDOUT	=	-out:

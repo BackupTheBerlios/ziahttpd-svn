@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 23 16:35:16 2005 texane
+// Last update Wed Mar 23 17:04:56 2005 texane
 //
 
 
@@ -140,6 +140,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 static const char* _my_mimes[] =
   {
     "text/html",
+    "image/gif",
     0
   };
 
