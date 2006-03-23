@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Thu Mar 23 10:00:26 2006 texane
+## Last update Thu Mar 23 11:57:54 2006 texane
 ##
 
 # ! Always include this file
@@ -14,12 +14,38 @@
 
 # Give your own variables here
 name	= mod_encoding.lo
-srcs	= src$(SLASH)main.cc	\
-	  src$(SLASH)modimpl.cc	\
-	  src$(SLASH)compimpl.cc
-objs	= $(srcs:.cc=.o)
-trash	= $(srcs:.cc=.cc~) \
-	  $(objs:.o=.o~) \
+srcs	= src$(SLASH)main.cc		\
+	  src$(SLASH)modimpl.cc		\
+	  src$(SLASH)compimpl.cc	\
+	  src$(SLASH)compimpl_zlib.cc	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)adler32.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)compress.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)crc32.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)deflate.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)gzio.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)infback.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)inffast.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)inflate.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)inftrees.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)trees.c	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)zutil.c
+objs	= src$(SLASH)main.o \
+	  src$(SLASH)modimpl.o \
+	  src$(SLASH)compimpl.o \
+	  src$(SLASH)compimpl_zlib.o \
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)adler32.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)compress.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)crc32.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)deflate.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)gzio.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)infback.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)inffast.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)inflate.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)inftrees.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)trees.o	\
+	  src$(SLASH)lib$(SLASH)zlib-1.2.3$(SLASH)zutil.o
+trash	= src$(SLASH)*.cc~ \
+	  src$(SLASH)*.o~ \
 	  Makefile~
 
 # Override default variables here

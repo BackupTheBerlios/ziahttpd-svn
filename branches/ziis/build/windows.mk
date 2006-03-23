@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Thu Mar 23 09:08:51 2006 texane
+## Last update Thu Mar 23 11:37:07 2006 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -59,8 +59,11 @@ SLASH	=	\\
 # - inferred rules
 
 
-.SUFFIXES	: .lo .cc .hh .lib .o .x .mk
+.SUFFIXES	: .lo .c .cc .hh .h .lib .o .x .mk
 force		:
+.c.o		:
+		$(CC) $(CCFLAGS) $(CCOUT) $<
+		$(MV) $(<F:.c=.obj) $@
 .cc.o		:
 		$(CC) $(CCFLAGS) $(CCOUT) $<
 		$(MV) $(<F:.cc=.obj) $@

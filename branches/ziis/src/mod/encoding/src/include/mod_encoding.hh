@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:54:28 2006 texane
-// Last update Thu Mar 23 09:55:08 2006 texane
+// Last update Thu Mar 23 11:04:27 2006 texane
 //
 
 
@@ -15,8 +15,10 @@
 
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
+#include "../lib/zlib-1.2.3/zlib.h"
 
 
 class mod_encoding : public IModule, public ICompressor
@@ -40,6 +42,29 @@ public:
   const char** GetSupportedEncoding();
 
 private:
+  // Zlib compression
+  typedef struct
+  {
+    z_stream strm_inflate;
+    z_stream strm_deflate;
+  } zlib_context_t;
+  bool ZlibGetNewContext(zlib_context_t*&);
+  bool ZlibDestroyContext(zlib_context_t*);
+  bool ZlibDecompress(zlib_context_t*, IBuffer&, IBuffer&);
+  bool ZlibCompress(zlib_context_t*, IBuffer&, IBuffer&);
+
+  // add new version here
+
+  // general context
+  typedef struct
+  {
+    std::string encoding;
+    union
+    {
+      zlib_context_t* zlib_context;
+      void* context;
+    } u;
+  } context_t;
 };
 
 
