@@ -37,9 +37,11 @@ public:
   bool GetNextHeader(char**, char**);
 
 private:
-  net::http* m_proto;
+	bool genete_type_mimes(net::config& conf, std::string& extension, std::string& type);
+	net::http* m_proto;
   thr::pool::session_t* m_session;
-  int m_ip_client;
+  int										m_ip_client;
+
 };
 
 

@@ -1,6 +1,5 @@
 #include "include/resource.hh"
 
-
 using namespace std;
 using namespace sysapi;
 
@@ -79,13 +78,11 @@ bool			http_helper::get_type_of_resource(net::config& conf,
 		if ((ext == (*it)->extension) && (*it)->is_cgi)
 		{
 			type_r = IS_CGI;
-//			response.is_chunk = true;
 			return true;
 		}
 		if ((ext == (*it)->extension) && !(*it)->cgi.empty())
 		{
 			type_r = EXEC_BY_CGI;
-//			response.is_chunk = true;
 			return true;
 		}
 		it++;
@@ -152,6 +149,26 @@ bool			http_helper::get_cgi_path(net::config& conf, std::string& path, std::stri
 	return false;
 }
 
+bool				http_helper::genete_type_mimes(net::config& conf, IOutput& out, std::string& localname)
+{
+	std::list<net::config::mime*>::iterator it;
+	conf.get_mimes(it);
+	std::string	ext;
+
+	ext = extension(localname);
+	while (conf.end_mimes(it) == false)
+	{
+		if ((*it)->extension == ext)
+		{
+			out.SetOutput("Content-Type", (*it)->type.c_str());
+			return true;
+		}
+		++it;
+	}
+	out.SetOutput("Content-Type", (*it)->type.c_str());
+	return false;
+}
+
 bool				http_helper::create_resource(resource::handle*& hld, 
 																				 net::config& conf, IInput& inp, 
 																				 IOutput& out, 
@@ -161,13 +178,14 @@ bool				http_helper::create_resource(resource::handle*& hld,
 	resouce_type_t r_type = IS_NONE;
 	int status_code = 0;
 
-//	ziafs_debug_msg("CREATE resource %s", m_uri.localname().c_str());
 	pre_create_resource(conf, r_type, status_code, inp, out, localname);
-
 	get_type_of_resource(conf, r_type, inp, out, localname, status_code);
 
 	if (r_type == IS_FILE)
+	{
+		genete_type_mimes(conf, out, localname);
 		error = resource::manager::factory_create(hld, resource::ID_FILE, resource::O_INPUT, localname);
+	}
 	else if (r_type == IS_CGI)
 	{
 		int ac = 1;

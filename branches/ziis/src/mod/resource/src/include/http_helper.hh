@@ -59,6 +59,7 @@ namespace http_helper
 												IOutput& out, 
 												std::string localname);
 	bool get_cgi_path(net::config& conf, std::string& path, std::string& localname);
+	bool genete_type_mimes(net::config& conf, IOutput& out, std::string& localname);
 }
 
 

@@ -19,11 +19,13 @@ ZfsInput::ZfsInput(thr::pool::session_t& s)
 ZfsInput::ZfsInput(thr::pool::session_t* s)
 {
 	std::string extension;
+	std::string type;
+	
 	m_session = s;
 	m_proto = &m_session->proto;
 	m_proto->get_uri().extension(extension);
-	extension = "." + extension;
-	if (s->srv->m_modman.get_generator_module(s->m_gen_module, extension) == false)
+	genete_type_mimes(*(s->srv->srv_config), extension, type);
+	if (s->srv->m_modman.get_generator_module(s->m_gen_module, type) == false)
 	  {
 	    cout << "[!] cannot get generator module" << endl;
 	  }
@@ -34,6 +36,24 @@ ZfsInput::ZfsInput(thr::pool::session_t* s)
 ZfsInput::~ZfsInput()
 {
 
+}
+
+bool				ZfsInput::genete_type_mimes(net::config& conf, std::string& ext, std::string& type)
+{
+	std::list<net::config::mime*>::iterator it;
+	conf.get_mimes(it);
+
+	while (conf.end_mimes(it) == false)
+	{
+		if ((*it)->extension == ext)
+		{
+			type = (*it)->type;
+			return true;
+		}
+		++it;
+	}
+	type = "text/html";
+	return false;
 }
 
 const char*	ZfsInput::GetInput(const char*key)
