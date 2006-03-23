@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 23 17:04:56 2005 texane
+// Last update Thu Mar 23 19:36:26 2006 texane
 //
 
 
@@ -41,8 +41,8 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   unsigned int nr_size;
   buffer hdr_chunk;
   bool is_transfer_chunked;
-  http_helper::chunk_pos_t pos_chunk;
   char buf_input[constants::BUFFER_SIZE];
+  const char* te;
   int nr_input;
   bool is_done;
 
@@ -54,11 +54,13 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   // pre create the resource
   is_done = false;
   is_transfer_chunked = false;
-  pos_chunk = http_helper::CHUNK_FIRST;
 
-  if (out.GetOutput("transfer-encoding"))
+  // handle te
+  te = out.GetOutput("transfer-encoding");
+  if (te)
     {
-      is_transfer_chunked = true;
+      if (stricmp(te, "identity"))
+	is_transfer_chunked = true;
     }
   else
     {
@@ -77,9 +79,6 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
     }
 
   // send response header
-
-  cout << "sending header" << endl;
-
   if (out.SendHeader() == false)
     is_done = true;
 
@@ -89,6 +88,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
       // reset buffers
       hdr_chunk.clear();
 
+      // read and flush to input
       if (p_resource->input_size())
 	{
 	  nr_input = in.ReadPostEntity(buf_input, sizeof(buf_input));
@@ -98,15 +98,10 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	    }
 	}
 
+      // generate the resource
       e_err = p_resource->generate(nr_size);
       if (e_err == resource::E_SUCCESS)
 	{
-	  if (is_transfer_chunked)
-	    {
-	      http_helper::generate_chunk_header(hdr_chunk, nr_size, pos_chunk);
-	      pos_chunk = http_helper::CHUNK_MIDDLE;
-	      p_resource->prepend_header(hdr_chunk);
-	    }
 	  if (p_resource->flush_network(out) != resource::E_SUCCESS)
 	    is_done = true;
 	}
@@ -121,9 +116,6 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	  // send the last chunk
 	  if (is_transfer_chunked)
 	    {
-	      pos_chunk = http_helper::CHUNK_LAST;
- 	      http_helper::generate_chunk_header(hdr_chunk, 0, pos_chunk);
-	      p_resource->prepend_header(hdr_chunk);
 	      p_resource->flush_network(out);
 	    }
 	  is_done = true;

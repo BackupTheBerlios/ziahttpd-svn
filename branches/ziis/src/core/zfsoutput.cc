@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Wed Mar 23 17:45:11 2005 texane
+// Last update Thu Mar 23 19:33:26 2006 texane
 //
 
 
@@ -14,6 +14,7 @@
 #include <ziis.hh>
 #include <ziis_impl.hh>
 #include <ziafs_http.hh>
+#include <iostream>
 
 
 using namespace std;
@@ -56,38 +57,11 @@ void	ZfsOutput::SetStatusCode(int st)
 }
 
 
-int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf, bool do_filtering)
+int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
 {
   bool is_error;
   const char* ptr;
   int nr_sent;
-
-  if (do_filtering == true)
-    {
-//       // pass thru stream modifiers
-//       list<IStreamModifier*>::iterator i_curr;
-//       list<IStreamModifier*>::iterator i_last;
-
-//       i_curr = m_session->m_modifiers.begin();
-//       i_last = m_session->m_modifiers.end();
-//       while (i_curr != i_last)
-// 	{
-// 	  // (*i_curr)->Transform();
-// 	  ++i_curr;
-// 	}
-
-      // pass thru compressor
-      if (m_session->m_comp_out_module)
-	{
-	  IBuffer* buf_in;
-	  IBuffer* buf_out;
-	  buf_in = new buffer();
-	  buf_out = new buffer();
-	  m_session->m_comp_out_module->Compress(m_session->m_comp_out_data, buf_in, buf_out);
-	  delete buf_in;
-	  delete buf_out;
-	}
-    }
 
   is_error = false;
   ptr = p_buf;
@@ -128,23 +102,47 @@ bool	ZfsOutput::SendHeader()
   return true;
 }
 
-int	ZfsOutput::SendBuffer(const char* buf, int sz)
+int ZfsOutput::SendBuffer(const char* buf, int sz)
 {
-	//const char *tr_enco;
+  const char* te;
+  buffer buf_header;
+  buffer buf_out;
+  list<IStreamModifier*>::iterator i_curr;
+  list<IStreamModifier*>::iterator i_last;
+  buffer buf_entity((unsigned char*)buf, (unsigned int)sz);
 
-	//tr_enco = GetOutput("transfer-encoding");
+  // apply stream modifiers
+//   i_curr = m_session->m_modifiers.begin();
+//   i_last = m_session->m_modifiers.end();
+//   while (i_curr != i_last)
+//     {
+//       // (*i_curr)->Transform();
+//       ++i_curr;
+//     }
 
-	//if (!strcmp(tr_enco, "chunked"))
-	//{
-	//	buffer	hdr;
+  // apply compressor
+  if (m_session->m_comp_out_module)
+    {
+      cout << "!!applying compression!!" << endl;
+      buf_out.resize(buf_entity.size());
+      if (m_session->m_comp_out_module->Compress(m_session->m_comp_out_context, buf_entity, buf_out))
+	buf_entity = buf_out;
+    }
 
-	//	if (sz)
-	//		net::generate_chunk_header(hdr, xx, net::CHUNK_MIDDLE);
-	//	else
-	//		net::generate_chunk_header(hdr, xx, net::CHUNK_LAST);
-	//}
+  // chunk header generation
+  te = GetOutput("transfer-encoding");
+  if (te && !strcmp(te, "chunked"))
+    {
+      // last chunk
+      if (sz == 0)
+	net::generate_chunk_header(buf_header, sz, net::CHUNK_LAST);
+      else
+	net::generate_chunk_header(buf_header, sz, net::CHUNK_MIDDLE);
+    }
+  buf_entity = buf_header + buf_entity;
 
-	return send_whole_buffer(buf, sz, true);
+  // send the buffer
+  return send_whole_buffer((const char*)buf_entity.bufptr(), (int)buf_entity.size());
 }
 
 int ZfsOutput::SendError(int)

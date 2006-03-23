@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Wed Mar 23 16:53:14 2005 texane
+// Last update Thu Mar 23 19:35:53 2006 texane
 //
 
 
@@ -83,7 +83,7 @@ bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& acce
 	  arr_encodings = p_mod->GetSupportedEncoding();
 	  for (i_encoding = 0; arr_encodings && arr_encodings[i_encoding]; ++i_encoding)
 	    {
-	      if (!strcmp(arr_encodings[i_encoding], curr_encoding.c_str()))
+	      if (!stricmp(arr_encodings[i_encoding], curr_encoding.c_str()))
 		{
 		  chosen_encoding = arr_encodings[i_encoding];
 		  return true;
@@ -113,7 +113,7 @@ bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string
 	  arr_mime = p_mod->GetSupportedMime();
 	  for (i_mime = 0; arr_mime && arr_mime[i_mime]; ++i_mime)
 	    {
-// 	      if (!strcmp(arr_mime[i_mime], mimetype.c_str()))
+// 	      if (!stricmp(arr_mime[i_mime], mimetype.c_str()))
 		{
 		  return true;
 		}
@@ -150,7 +150,7 @@ bool mod::manager::get_modifier_list(list<IStreamModifier*>& lst_modifiers, list
 	    {
 	      for (i_mime = lst_mimes.begin(); i_mime != lst_mimes.end(); ++i_mime)
 		{
-		  if (!strcmp(arr_type[i_type], i_mime->c_str()))
+		  if (!stricmp(arr_type[i_type], i_mime->c_str()))
 		    {
 		      for (i_node = lst_modifiers.begin(); i_node != lst_modifiers.end() && (*i_node)->GetPriority() < p_mod->GetPriority(); ++i_node)
 			;

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Wed Mar 22 21:47:13 2006 texane
+// Last update Thu Mar 23 18:55:35 2006 texane
 //
 
 
@@ -50,7 +50,7 @@ class ZfsOutput : public IOutput
 public:
   ZfsOutput(net::http&);
   ZfsOutput(thr::pool::session_t&);
-	ZfsOutput(thr::pool::session_t*);
+  ZfsOutput(thr::pool::session_t*);
   ~ZfsOutput() {}
 
   void SetOutput(const char*, const char*);
@@ -64,7 +64,7 @@ private:
   net::http* m_proto;
   thr::pool::session_t* m_session;
 
-  int send_whole_buffer(const char*, int, bool = false);
+  int send_whole_buffer(const char*, int);
 };
 
 

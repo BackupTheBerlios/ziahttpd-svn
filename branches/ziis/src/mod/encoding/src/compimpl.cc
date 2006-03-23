@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:58:21 2006 texane
-// Last update Wed Mar 23 16:23:35 2005 texane
+// Last update Thu Mar 23 19:37:10 2006 texane
 //
 
 
@@ -25,7 +25,7 @@ void* mod_encoding::GetNewContext(const char* encoding)
   p_context->encoding = encoding;
   p_context->u.context = 0;
 
-  if (!strcmp(encoding, "deflate"))
+  if (!stricmp(encoding, "deflate"))
     ZlibGetNewContext(p_context->u.zlib_context);
   
   return p_context;

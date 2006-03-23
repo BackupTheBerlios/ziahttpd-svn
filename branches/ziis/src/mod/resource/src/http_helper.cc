@@ -1,4 +1,7 @@
 #include "include/resource.hh"
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 using namespace std;
 using namespace sysapi;
@@ -10,11 +13,7 @@ bool http_helper::generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chu
   data.clear();
   oss << hex << (unsigned int)sz;
 
-  if (chunk != CHUNK_FIRST)
-    data += "\r\n" + oss.str();
-  else
-    data += oss.str();
-  data += "\r\n";
+  data = oss.str() + "\r\n";
   if ((chunk == CHUNK_LAST))
     data += "\r\n";
   return true;

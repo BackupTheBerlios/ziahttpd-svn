@@ -2,8 +2,13 @@ todos
 
 
 
+remove the http_helper file from resource module
+
+
 [current]
 	=> decompress
+	-> handle the last chunk (0 in the size)
+	-> export chunk generation to output
 
 
 in the getinput interface method
@@ -12,6 +17,7 @@ in the getinput interface method
 	->
 
 
+--->  handle error sending
 --------> generation module is not ok // mimes
 --------> migrate the handle postprocess_medata in the document generator module
 --------> address this problem
