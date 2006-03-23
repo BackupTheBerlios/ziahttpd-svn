@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Thu Mar 23 16:56:34 2006 texane
+// Last update Wed Mar 23 16:32:30 2005 texane
 //
 
 
@@ -62,36 +62,37 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf, bool do_filterin
   const char* ptr;
   int nr_sent;
 
+//   if (do_filtering == true)
+//     {
+//       // pass thru stream modifiers
+//       list<IStreamModifier*>::iterator i_curr;
+//       list<IStreamModifier*>::iterator i_last;
+
+//       i_curr = m_session->m_modifiers.begin();
+//       i_last = m_session->m_modifiers.end();
+//       while (i_curr != i_last)
+// 	{
+// 	  // (*i_curr)->Transform();
+// 	  ++i_curr;
+// 	}
+
+//       // pass thru compressor
+//       if (m_session->m_comp_out_module)
+// 	{
+// 	  IBuffer* buf_in;
+// 	  IBuffer* buf_out;
+// 	  buf_in = new buffer();
+// 	  buf_out = new buffer();
+// 	  m_session->m_comp_out_module->Compress(m_session->m_comp_out_data, buf_in, buf_out);
+// 	  delete buf_in;
+// 	  delete buf_out;
+// 	}
+//     }
+
   is_error = false;
   ptr = p_buf;
   while (ln_buf > 0 && is_error == false)
     {
-      // pass thru all filters
-      if (do_filtering == true)
-	{
-	  // pass thru stream modifiers
-	  list<IStreamModifier*>::iterator i_curr;
-	  list<IStreamModifier*>::iterator i_last;
-
-	  i_curr = m_session->m_modifiers.begin();
-	  i_last = m_session->m_modifiers.end();
-	  while (i_curr != i_last)
-	    {
-	      // (*i_curr)->Transform();
-	      ++i_curr;
-	    }
-
-	  // pass thru compressor
-	  // if (m_session->m_comp_out_module)
-	  // {
-	  //   IBuffer* buf_in;
-	  //   IBuffer* buf_out;
-	  // buf_in = new buffer();
-	  // buf_out = 0;
-	  // m_session->m_comp_out_module->Decompress(m_session->m_comp_out_data, , );
-	  // }
-	}
-
       // finally send the buffer
       nr_sent = m_session->m_conn_module->Send(m_session->cli_sock, NULL, ptr, ln_buf);
       if (nr_sent == -1)

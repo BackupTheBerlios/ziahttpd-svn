@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Wed Mar 22 09:06:23 2006 texane
+// Last update Wed Mar 23 16:33:48 2005 texane
 //
 
 
@@ -119,6 +119,7 @@ int mod_sock::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
   sysapi::error::handle_t h_err;
   unsigned int nr_sent;
 
+  cout << "[module] module->Send()" << endl;
   h_err = sysapi::insock::send(h_sock, (unsigned char*)p_buf, ln_buf, nr_sent);
   if (h_err != sysapi::error::SUCCESS)
     return -1;
