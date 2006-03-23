@@ -157,6 +157,8 @@ bool	net::config::parse_modules()
 	{
 		if (xmltmp->ValueStr() == "file")
 			m->file = xmltmp->GetText();
+		if (xmltmp->ValueStr() == "configfile")
+			m->configfile = xmltmp->GetText();
 	}
 	m_lmodules.push_front(m);	
 	return (true);

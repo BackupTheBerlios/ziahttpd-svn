@@ -9,5 +9,5 @@ namespace net
 		CHUNK_MIDDLE,
 		CHUNK_LAST
 	} chunk_pos_t;
-	bool						generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chunk);
+	bool generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chunk);
 }

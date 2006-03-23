@@ -24,6 +24,7 @@ namespace net
 		{
 			std::string	file;
 			std::string	name;
+			std::string	configfile;
 		};
 		struct server
 		{

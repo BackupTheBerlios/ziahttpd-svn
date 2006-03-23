@@ -130,7 +130,21 @@ bool	ZfsOutput::SendHeader()
 
 int	ZfsOutput::SendBuffer(const char* buf, int sz)
 {
-  return send_whole_buffer(buf, sz, true);
+	//const char *tr_enco;
+
+	//tr_enco = GetOutput("transfer-encoding");
+
+	//if (!strcmp(tr_enco, "chunked"))
+	//{
+	//	buffer	hdr;
+
+	//	if (sz)
+	//		net::generate_chunk_header(hdr, xx, net::CHUNK_MIDDLE);
+	//	else
+	//		net::generate_chunk_header(hdr, xx, net::CHUNK_LAST);
+	//}
+
+	return send_whole_buffer(buf, sz, true);
 }
 
 int ZfsOutput::SendError(int)
