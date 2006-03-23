@@ -105,5 +105,19 @@ int ZfsInput::ReadPostEntity(char* p_buf, int nr_size)
 	}
     }
 
+  // here pass thru the decompress module
+//   if (m_session->m_comp_in_module)
+//     {
+//       IBuffer* buf_in;
+//       IBuffer* buf_out;
+//       buf_in = new buffer((unsigned char*)p_buf, (unsigned int)nr_size);
+//       buf_out = new buffer;
+//       m_session->m_comp_in_module->Decompress(buf_in, m_session->m_comp_in_data, buf_out);
+//       p_buf = ...;
+//       nr_total = ...;
+//       delete buf_in;
+//       delete buf_out;
+//     }
+
   return nr_total;
 }

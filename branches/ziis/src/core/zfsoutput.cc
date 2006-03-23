@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Thu Mar 23 09:36:35 2006 texane
+// Last update Thu Mar 23 12:06:41 2006 texane
 //
 
 
@@ -61,6 +61,8 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf, bool do_filterin
   bool is_error;
   const char* ptr;
   int nr_sent;
+  IBuffer* buf_in;
+  IBuffer* buf_out;
 
   is_error = false;
   ptr = p_buf;
@@ -84,6 +86,8 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf, bool do_filterin
 	  // pass thru compressor
 	  if (m_session->m_comp_out_module)
 	    {
+	      buf_in = new buffer();
+	      buf_out = 0;
 	      // m_session->m_comp_out_module->Decompress(m_session->m_comp_out_data, , );
 	    }
 	}

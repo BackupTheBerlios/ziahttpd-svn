@@ -1,6 +1,19 @@
 todos
 
 
+--------> address this problem
+--------> in document generator the content
+	encoding can be specified
+	if it's, cause of the compression algo,
+	then the document generator must not
+	try to guess the size of the document
+
+--------> in decompression, problem:
+	-> buffer_out > buffer_in
+	-> if the size in content-length
+		is the one decompressed,
+		it's ok
+
 --------> see why the mod sock get the conf in argument ctor
 --------> handle thread system in connection mod: io_thr
 
