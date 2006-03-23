@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Wed Mar 23 16:32:30 2005 texane
+// Last update Wed Mar 23 17:45:11 2005 texane
 //
 
 
@@ -62,8 +62,8 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf, bool do_filterin
   const char* ptr;
   int nr_sent;
 
-//   if (do_filtering == true)
-//     {
+  if (do_filtering == true)
+    {
 //       // pass thru stream modifiers
 //       list<IStreamModifier*>::iterator i_curr;
 //       list<IStreamModifier*>::iterator i_last;
@@ -76,18 +76,18 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf, bool do_filterin
 // 	  ++i_curr;
 // 	}
 
-//       // pass thru compressor
-//       if (m_session->m_comp_out_module)
-// 	{
-// 	  IBuffer* buf_in;
-// 	  IBuffer* buf_out;
-// 	  buf_in = new buffer();
-// 	  buf_out = new buffer();
-// 	  m_session->m_comp_out_module->Compress(m_session->m_comp_out_data, buf_in, buf_out);
-// 	  delete buf_in;
-// 	  delete buf_out;
-// 	}
-//     }
+      // pass thru compressor
+      if (m_session->m_comp_out_module)
+	{
+	  IBuffer* buf_in;
+	  IBuffer* buf_out;
+	  buf_in = new buffer();
+	  buf_out = new buffer();
+	  m_session->m_comp_out_module->Compress(m_session->m_comp_out_data, buf_in, buf_out);
+	  delete buf_in;
+	  delete buf_out;
+	}
+    }
 
   is_error = false;
   ptr = p_buf;
