@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Tue Mar 21 19:52:36 2006 texane
+// Last update Thu Mar 23 23:36:53 2006 texane
 //
 
 
@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cstring>
+#include <iostream>
 #include <ziafs_buffer.hh>
 
 
@@ -21,6 +22,8 @@
 // + make unit tests and regression tests
 
 
+using std::cout;
+using std::endl;
 using std::setfill;
 using std::setw;
 using std::hex;
@@ -63,7 +66,7 @@ buffer::buffer()
 
 buffer::buffer(const unsigned char* buf, size_t sz)
 {
-  buf_ =  0;
+  buf_ = 0;
   reset();
   buf_ = new unsigned char[sz];
   bufcpy(buf_, buf, sz);
@@ -147,7 +150,7 @@ buffer& buffer::operator+=(const buffer& b)
   if (buf_ == 0 && sz_)
     {
       printf("!!!!buffer.cc buf is false with a true size\n"); fflush(stdout);
-      exit (-1);
+      exit(-1);
     }
 
   // Copy
@@ -220,7 +223,7 @@ buffer& buffer::operator=(const string& s)
 
 char& buffer::operator[](unsigned int i)
 {
-  if (!buf_ || (size_t)i < 0 || (size_t)i >= sz_)
+  if (!buf_ || (size_t)i >= sz_)
     throw (int)0;
   return (char&)buf_[i];
 }
@@ -296,6 +299,9 @@ string	buffer::tostring(unsigned int windent,
   ostringstream prnt;
   ostringstream strm;
   unsigned int offset;
+
+  if (!sz_)
+    return "<empty_string>";
 
   for (unsigned int i = 0; i < windent; ++i)
     idnt << ' ';
@@ -388,17 +394,84 @@ void buffer::Clear()
 
 void buffer::Append(const char* buf, int size)
 {
-  *this += buffer((unsigned char*)buf, (size_t)size);
+  unsigned char* sav_buf;
+  unsigned int sav_len;
+  unsigned int ln_buf;
+  unsigned int i_buf;
+  unsigned int j_buf;
+
+  if (size == 0)
+    return ;
+
+  sav_buf = buf_;
+  sav_len = (unsigned int)sz_;
+  ln_buf = sav_len + size;
+  buf_ = 0;
+  reset();
+
+  buf_ = new unsigned char[ln_buf];
+  sz_ = ln_buf;
+  for (i_buf = 0; i_buf < sav_len; ++i_buf)
+    buf_[i_buf] = sav_buf[i_buf];
+
+  for (j_buf = 0; j_buf < (unsigned int)size; ++j_buf, ++i_buf)
+    buf_[i_buf] = (unsigned char)buf[j_buf];
+
+  if (sav_buf)
+    delete[] sav_buf;
 }
 
 IBuffer& buffer::operator=(IBuffer& buf)
 {
-  *this = buf;
+  unsigned int i_buf;
+  unsigned int ln_buf;
+
+  clear();
+  ln_buf = (unsigned int)buf.Length();
+  if (ln_buf)
+    {
+      buf_ = new unsigned char[ln_buf];
+      sz_ = ln_buf;
+      for (i_buf = 0; i_buf < ln_buf; ++i_buf)
+	(*this)[i_buf] = buf[i_buf];
+    }
   return *this;
 }
 
 IBuffer& buffer::operator+=(IBuffer& buf)
 {
-  *this += buf;
+  unsigned char* sav_buf;
+  unsigned int sav_len;
+  unsigned int ln_buf;
+  unsigned int i_buf;
+  unsigned int j_buf;
+  unsigned int size;
+
+  size = (unsigned int)buf.Length();
+  if (!size)
+    return *this;
+
+  if (!sz_)
+    {
+      *this = buf;
+      return *this;
+    }
+
+  sav_buf = buf_;
+  sav_len = (unsigned int)sz_;
+  ln_buf = sav_len + size;
+  buf_ = 0;
+  reset();
+
+  buf_ = new unsigned char[ln_buf];
+  sz_ = ln_buf;
+  for (i_buf = 0; i_buf < sav_len; ++i_buf)
+    buf_[i_buf] = sav_buf[i_buf];
+
+  for (j_buf = 0; j_buf < size; ++j_buf, ++i_buf)
+    buf_[i_buf] = buf[j_buf];
+
+  if (sav_buf)
+    delete[] sav_buf;
   return *this;
 }

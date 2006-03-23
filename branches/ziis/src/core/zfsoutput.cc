@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Thu Mar 23 19:56:50 2006 texane
+// Last update Fri Mar 24 00:29:55 2006 texane
 //
 
 
@@ -105,11 +105,11 @@ bool	ZfsOutput::SendHeader()
 int ZfsOutput::SendBuffer(const char* buf, int sz)
 {
   const char* te;
-  buffer buf_header;
-  buffer buf_out;
   list<IStreamModifier*>::iterator i_curr;
   list<IStreamModifier*>::iterator i_last;
+  buffer buf_header;
   buffer buf_entity((unsigned char*)buf, (unsigned int)sz);
+  buffer buf_out;
 
   // apply stream modifiers
 //   i_curr = m_session->m_modifiers.begin();
@@ -123,15 +123,13 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
   // apply compressor
   if (m_session->m_comp_out_module)
     {
-      cout << "!!applying compression!!" << endl;
-      buf_out.resize(buf_entity.size());
       if (m_session->m_comp_out_module->Compress(m_session->m_comp_out_context, buf_entity, buf_out))
 	buf_entity = buf_out;
     }
 
   // chunk header generation
   te = GetOutput("transfer-encoding");
-  if (te && !strcmp(te, "chunked"))
+  if (te && !stricmp(te, "chunked"))
     {
       // last chunk
       if (sz == 0)

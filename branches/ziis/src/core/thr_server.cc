@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Mar 23 17:24:44 2005 texane
+// Last update Fri Mar 24 00:38:25 2006 texane
 //
 
 
@@ -52,6 +52,18 @@ void thr::pool::sess_release_request(session_t& sess)
   core_t* core;
 
   core = sess.srv->core;
+  if (sess.m_comp_out_module)
+    {
+      sess.m_comp_out_module->DestroyContext(sess.m_comp_out_context);
+      sess.m_comp_out_context = 0;
+      sess.m_comp_out_module = 0;
+    }
+  if (sess.m_comp_in_module)
+    {
+      sess.m_comp_in_module->DestroyContext(sess.m_comp_in_context);
+      sess.m_comp_in_context = 0;
+      sess.m_comp_in_module = 0;
+    }
   if (sess.m_input)
     {
       delete sess.m_input;
@@ -156,6 +168,7 @@ bool thr::pool::sess_handle_document(session_t* sess)
 {
   const char* p_hostname;
   string chosen_encoding;
+  const char* accepted_encoding;
   string localname;
   string hostname;
 
@@ -165,18 +178,17 @@ bool thr::pool::sess_handle_document(session_t* sess)
   // according to metadata, instanciate the output
   sess->m_output = new ZfsOutput(sess);
 
-  cout << "handling document" << endl;
-
   // post process meta data
-//   accepted_encoding = sess->m_input->GetInput("accept-encoding");
-//   if (accepted_encoding)
-//     {
-//       if (sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, accepted_encoding, chosen_encoding) == true)
-// 	{
-// 	  sess->m_output->SetOutput("transfer-encoding", "chunked");
+  accepted_encoding = sess->m_input->GetInput("accept-encoding");
+  if (accepted_encoding)
+    {
+      if (sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, accepted_encoding, chosen_encoding) == true)
+	{
+	  sess->m_output->SetOutput("transfer-encoding", "chunked");
 // 	  sess->m_output->SetOutput("content-encoding", chosen_encoding.c_str());
-// 	}
-//     }
+	  sess->m_comp_out_context = sess->m_comp_out_module->GetNewContext(chosen_encoding.c_str());
+	}
+    }
 
   // generate the resource
   p_hostname = sess->m_input->GetInput("host");

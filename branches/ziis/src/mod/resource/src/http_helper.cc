@@ -14,8 +14,6 @@ bool http_helper::generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chu
   oss << hex << (unsigned int)sz;
 
   data = oss.str() + "\r\n";
-  if ((chunk == CHUNK_LAST))
-    data += "\r\n";
   return true;
 }
 
