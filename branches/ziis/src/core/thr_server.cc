@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Thu Mar 23 09:45:59 2006 texane
+// Last update Thu Mar 23 14:14:56 2006 texane
 //
 
 
@@ -152,19 +152,10 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 }
 
 
-bool thr::pool::sess_postprocess_metadata(session_t& sess)
-{
-  // get the accepted encoding
-  
-  // get the content encoding
-
-  return false;
-}
-
-
 bool thr::pool::sess_handle_document(session_t* sess)
 {
   const char* p_hostname;
+  string accepted_coding;
   string localname;
   string hostname;
 
@@ -174,14 +165,20 @@ bool thr::pool::sess_handle_document(session_t* sess)
   // according to metadata, instanciate the output
   sess->m_output = new ZfsOutput(sess);
 
+  // post process meta data
+  // accepted_coding = "deflate";
+//   sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, accepted_coding);
+//   if (sess->m_comp_out_module)
+//     sess->m_output->SetOutput("transfer-encoding", "chunked");
+
   // generate the resource
   p_hostname = sess->m_input->GetInput("host");
   if (p_hostname == 0)
     p_hostname = "";
   hostname = p_hostname;
   localname = sess->proto.get_uri().localname(*sess->srv->srv_config, hostname);
-  sess->m_gen_module->GenerateDocument(*sess->m_input, localname.c_str(), *sess->m_output);
-
+  if (sess->m_gen_module)
+    sess->m_gen_module->GenerateDocument(*sess->m_input, localname.c_str(), *sess->m_output);
   return true;
 }
 
@@ -213,7 +210,6 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     {
       sess_reset_request(sess);
       sess_read_metadata(sess);
-      sess_postprocess_metadata(sess);
       sess_handle_document(&sess);
       sess_release_request(sess);
     }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Thu Mar 23 09:41:33 2006 texane
+// Last update Thu Mar 23 14:17:30 2006 texane
 //
 
 
@@ -89,7 +89,6 @@ bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& enco
 	}
       ++it_curr;
     }
-
   p_mod = 0;
   return false;
 }
@@ -111,7 +110,7 @@ bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string
 	  arr_mime = p_mod->GetSupportedMime();
 	  for (i_mime = 0; arr_mime && arr_mime[i_mime]; ++i_mime)
 	    {
-	      if (!strcmp(arr_mime[i_mime], mimetype.c_str()))
+// 	      if (!strcmp(arr_mime[i_mime], mimetype.c_str()))
 		{
 		  return true;
 		}
@@ -119,6 +118,8 @@ bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string
 	}
       ++it_curr;
     }
+
+  p_mod = 0;
   return false;
 }
 

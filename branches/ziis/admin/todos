@@ -1,6 +1,8 @@
 todos
 
 
+
+--------> migrate the handle postprocess_medata in the document generator module
 --------> address this problem
 --------> in document generator the content
 	encoding can be specified

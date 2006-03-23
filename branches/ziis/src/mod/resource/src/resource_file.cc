@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Wed Mar 22 23:15:25 2006 texane
+// Last update Thu Mar 23 13:31:51 2006 texane
 //
 
 
@@ -35,8 +35,6 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
   resource::e_error e_err;
 
   e_err = E_SUCCESS;
-
-  cout << "taboulet" << endl;
 
   // put on the disk
   if (omode == O_OUTPUT)
@@ -74,9 +72,6 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
       else
 	{
 	  // read next buffer from file
-
-	  cout << "reading " << file_size << endl;
-
 	  h_err = sysapi::file::read(file_handle, buf, sizeof(buf), nbytes);
 	  if (h_err != sysapi::error::SUCCESS)
 	    return E_OP_ERROR;

@@ -1,6 +1,9 @@
+#include <iostream>
 #include <ziis_impl.hh>
 #include <ziafs_http.hh>
 #include <ziafs_net.hh>
+
+using namespace std;
 
 ZfsInput::ZfsInput(thr::pool::session_t& s)
 {
@@ -20,7 +23,11 @@ ZfsInput::ZfsInput(thr::pool::session_t* s)
 	m_proto = &m_session->proto;
 	m_proto->get_uri().extension(extension);
 	extension = "." + extension;
-	s->srv->m_modman.get_generator_module(s->m_gen_module, extension);
+	if (s->srv->m_modman.get_generator_module(s->m_gen_module, extension) == false)
+	  {
+	    cout << "[!] cannot get generator module" << endl;
+	  }
+
 	m_ip_client = s->cli_addr.sin_addr.S_un.S_addr;
 }
 

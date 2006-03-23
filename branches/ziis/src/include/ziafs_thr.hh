@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Thu Mar 23 09:45:24 2006 texane
+// Last update Thu Mar 23 13:45:18 2006 texane
 //
 
 
@@ -167,7 +167,6 @@ namespace thr
     static bool sess_bind_server(session_t&);
     static bool sess_accept_connection(session_t&);
     static bool sess_read_metadata(session_t&);
-    static bool sess_postprocess_metadata(session_t&);
     static bool sess_handle_document(session_t*);
 
   private:

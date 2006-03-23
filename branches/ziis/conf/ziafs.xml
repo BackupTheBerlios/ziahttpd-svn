@@ -16,7 +16,7 @@
 </module>
 
 <module name="mod_encoding">
-<file>src/mod/resource/mod_encoding.lo</file>
+<file>src/mod/encoding/mod_encoding.lo</file>
 </module>
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:53:34 2006 texane
-// Last update Thu Mar 23 11:52:47 2006 texane
+// Last update Thu Mar 23 13:32:56 2006 texane
 //
 
 
@@ -27,7 +27,7 @@ mod_encoding::~mod_encoding()
 
 bool mod_encoding::ReadConfig(const char* nm_conf)
 {
-  return false;
+  return true;
 }
 
 const char* mod_encoding::GetModuleName()

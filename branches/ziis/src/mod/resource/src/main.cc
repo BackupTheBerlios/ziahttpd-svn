@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Mar 22 23:56:36 2006 texane
+// Last update Thu Mar 23 13:43:27 2006 texane
 //
 
 
@@ -40,6 +40,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   resource::e_error e_err;
   unsigned int nr_size;
   buffer hdr_chunk;
+  bool is_transfer_chunked;
   http_helper::chunk_pos_t pos_chunk;
   char buf_input[constants::BUFFER_SIZE];
   int nr_input;
@@ -50,20 +51,29 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   if (p_resource == 0)
     return ;
 
-  // main generation loop
+  // pre create the resource
   is_done = false;
+  is_transfer_chunked = false;
   pos_chunk = http_helper::CHUNK_FIRST;
 
-  // if content chunked
-  if (p_resource->is_content_dynamic() == true)
+  if (out.GetOutput("transfer-encoding"))
     {
-      out.SetOutput("transfer-encoding", "chunked");
+      is_transfer_chunked = true;
     }
   else
     {
-      p_resource->size(nr_size);
-      oss << nr_size;
-      out.SetOutput("content-length", oss.str().c_str());
+      // content is dynamic, chunk the transfer
+      if (p_resource->is_content_dynamic() == true)
+	{
+	  out.SetOutput("transfer-encoding", "chunked");
+	  is_transfer_chunked = true;
+	}
+      else
+	{
+	  p_resource->size(nr_size);
+	  oss << nr_size;
+	  out.SetOutput("content-length", oss.str().c_str());
+	}
     }
 
   // send response header
@@ -88,7 +98,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
       e_err = p_resource->generate(nr_size);
       if (e_err == resource::E_SUCCESS)
 	{
-	  if (p_resource->is_content_dynamic())
+	  if (is_transfer_chunked)
 	    {
 	      http_helper::generate_chunk_header(hdr_chunk, nr_size, pos_chunk);
 	      pos_chunk = http_helper::CHUNK_MIDDLE;
@@ -106,7 +116,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
       else // ALREADY_GEN
 	{
 	  // send the last chunk
-	  if (p_resource->is_content_dynamic())
+	  if (is_transfer_chunked)
 	    {
 	      pos_chunk = http_helper::CHUNK_LAST;
  	      http_helper::generate_chunk_header(hdr_chunk, 0, pos_chunk);

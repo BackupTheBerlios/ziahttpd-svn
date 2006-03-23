@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:58:21 2006 texane
-// Last update Thu Mar 23 11:52:11 2006 texane
+// Last update Thu Mar 23 13:15:41 2006 texane
 //
 
 
@@ -43,9 +43,10 @@ bool mod_encoding::Compress(void* p_context, IBuffer& buf_in, IBuffer& buf_out)
 {
   bool is_success;
 
-  is_success = false;
+  is_success = true;
   if (((context_t*)p_context)->encoding == "deflate")
     is_success = ZlibCompress(((context_t*)p_context)->u.zlib_context, buf_in, buf_out);
+  buf_in = buf_out;
   return is_success;
 }
 
@@ -53,16 +54,16 @@ bool mod_encoding::Decompress(void* p_context, IBuffer& buf_in, IBuffer& buf_out
 {
   bool is_success;
 
-  is_success = false;
+  is_success = true;
   if (((context_t*)p_context)->encoding == "deflate")
     is_success = ZlibDecompress(((context_t*)p_context)->u.zlib_context, buf_in, buf_out);
+  buf_in = buf_out;
   return is_success;
 }
 
 
 static const char* _encodings[] =
   {
-    "identity",
     "gzip",
     "deflate",
     "compress",
