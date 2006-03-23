@@ -165,7 +165,7 @@ bool				http_helper::genete_type_mimes(net::config& conf, IOutput& out, std::str
 		}
 		++it;
 	}
-	out.SetOutput("Content-Type", (*it)->type.c_str());
+	out.SetOutput("Content-Type", "text/html");
 	return false;
 }
 
