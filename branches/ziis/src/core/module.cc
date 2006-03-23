@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Thu Mar 23 00:05:54 2006 texane
+// Last update Thu Mar 23 09:41:33 2006 texane
 //
 
 
@@ -58,6 +58,8 @@ bool mod::manager::get_connection_module(IConnection*& p_mod)
 	}
       ++it_curr;
     }
+
+  p_mod = 0;
   return false;
 }
 
@@ -87,6 +89,8 @@ bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& enco
 	}
       ++it_curr;
     }
+
+  p_mod = 0;
   return false;
 }
 
@@ -162,7 +166,10 @@ bool mod::manager::load_module(const string& path, const string& conf)
 
   p_info = new modinfo(path);
   if (p_info->m_instance)
-    p_info->m_instance->ReadConfig(conf.c_str());
+    {
+      p_info->m_instance->OnLoad(0);
+      p_info->m_instance->ReadConfig(conf.c_str());
+    }
   m_modlist.push_front(p_info);
   return true;
 }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Wed Mar 22 22:03:25 2006 texane
+// Last update Thu Mar 23 09:36:35 2006 texane
 //
 
 
@@ -82,9 +82,9 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf, bool do_filterin
 	    }
 
 	  // pass thru compressor
-	  if (m_session->m_comp_module)
+	  if (m_session->m_comp_out_module)
 	    {
-	      // m_session->m_comp_module->Decompress(m_session->m_comp_data, , );
+	      // m_session->m_comp_out_module->Decompress(m_session->m_comp_out_data, , );
 	    }
 	}
 

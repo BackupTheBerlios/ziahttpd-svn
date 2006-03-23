@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:30:22 2006 texane
-// Last update Wed Mar 22 22:33:00 2006 texane
+// Last update Thu Mar 23 09:45:24 2006 texane
 //
 
 
@@ -143,12 +143,19 @@ namespace thr
       net::http proto;
 
       // ziis related
-      IInput* m_input;
-      IOutput* m_output;
       IConnection* m_conn_module;
       void* m_conn_data;
-      ICompressor* m_comp_module;
-      void* m_comp_data;
+
+      IInput* m_input;
+      ICompressor* m_comp_in_module;
+      std::string m_in_encoding;
+      void* m_comp_in_context;
+
+      IOutput* m_output;
+      ICompressor* m_comp_out_module;
+      std::string m_out_encoding;
+      void* m_comp_out_context;
+
       IDocumentGenerator* m_gen_module;
       std::list<IStreamModifier*> m_modifiers;
     } session_t;
@@ -160,6 +167,7 @@ namespace thr
     static bool sess_bind_server(session_t&);
     static bool sess_accept_connection(session_t&);
     static bool sess_read_metadata(session_t&);
+    static bool sess_postprocess_metadata(session_t&);
     static bool sess_handle_document(session_t*);
 
   private:

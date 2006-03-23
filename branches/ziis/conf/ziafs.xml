@@ -15,6 +15,10 @@
 <file>src/mod/resource/mod_resource.lo</file>
 </module>
 
+<module name="mod_encoding">
+<file>src/mod/resource/mod_encoding.lo</file>
+</module>
+
 
 <server>
   <id>1</id>
@@ -23,6 +27,7 @@
   <directory_index>index.html index.htm</directory_index>
   <modulename>mod_sock</modulename>
   <modulename>mod_resource</modulename>
+  <modulename>mod_encoding</modulename>
 </server>
 
 

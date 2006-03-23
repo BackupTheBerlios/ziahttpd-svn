@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Mar 22 22:43:16 2006 texane
+// Last update Thu Mar 23 09:45:59 2006 texane
 //
 
 
@@ -37,8 +37,12 @@ void thr::pool::sess_reset_request(session_t& sess)
   // ziis related
   sess.m_input = 0;
   sess.m_output = 0;
-  sess.m_comp_module = 0;
-  sess.m_comp_data = 0;
+  sess.m_comp_in_module = 0;
+  sess.m_comp_in_context = 0;
+  sess.m_in_encoding.clear();
+  sess.m_comp_out_module = 0;
+  sess.m_comp_out_context = 0;
+  sess.m_out_encoding.clear();
   sess.m_gen_module = 0;
   sess.m_modifiers.clear();
 }
@@ -148,6 +152,16 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 }
 
 
+bool thr::pool::sess_postprocess_metadata(session_t& sess)
+{
+  // get the accepted encoding
+  
+  // get the content encoding
+
+  return false;
+}
+
+
 bool thr::pool::sess_handle_document(session_t* sess)
 {
   const char* p_hostname;
@@ -199,6 +213,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     {
       sess_reset_request(sess);
       sess_read_metadata(sess);
+      sess_postprocess_metadata(sess);
       sess_handle_document(&sess);
       sess_release_request(sess);
     }

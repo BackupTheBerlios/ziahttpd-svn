@@ -1,12 +1,11 @@
 todos
 
 
---------> handle the read config
+--------> see why the mod sock get the conf in argument ctor
 --------> handle thread system in connection mod: io_thr
 
-. sending_buffer
 
-
+. pass the ifs @onload time
 . impleemnt the modifier list in sendVBuffer
 
 . remove the system thread -> io_thread
