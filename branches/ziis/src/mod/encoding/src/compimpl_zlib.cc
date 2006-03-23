@@ -5,11 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 10:24:08 2006 texane
-// Last update Thu Mar 23 13:33:59 2006 texane
+// Last update Thu Mar 23 16:45:02 2006 texane
 //
 
 
 #include "include/mod_encoding.hh"
+
+
+using namespace std;
 
 
 bool mod_encoding::ZlibGetNewContext(zlib_context_t*& p_context)
@@ -73,12 +76,15 @@ bool mod_encoding::ZlibDestroyContext(zlib_context_t* p_context)
   return true;
 }
 
-bool mod_encoding::ZlibDecompress(zlib_context_t*, IBuffer&, IBuffer&)
+bool mod_encoding::ZlibDecompress(zlib_context_t*, IBuffer& buf_in, IBuffer& buf_out)
 {
-  return false;
+  buf_out = buf_in;
+  return true;
 }
 
-bool mod_encoding::ZlibCompress(zlib_context_t*, IBuffer&, IBuffer&)
+bool mod_encoding::ZlibCompress(zlib_context_t*, IBuffer& buf_in, IBuffer& buf_out)
 {
-  return false;
+  cout << "ZLIB COMPRESS" << endl;
+  buf_out = buf_in;
+  return true;
 }

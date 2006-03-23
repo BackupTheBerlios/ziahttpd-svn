@@ -2,6 +2,17 @@ todos
 
 
 
+[current]
+	=> decompress
+
+
+in the getinput interface method
+	-> bufferize
+	-> nr_size < uncompressed size, so buffer is too small
+	->
+
+
+--------> generation module is not ok // mimes
 --------> migrate the handle postprocess_medata in the document generator module
 --------> address this problem
 --------> in document generator the content

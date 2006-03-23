@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Thu Mar 23 14:17:30 2006 texane
+// Last update Thu Mar 23 16:50:46 2006 texane
 //
 
 
@@ -63,15 +63,17 @@ bool mod::manager::get_connection_module(IConnection*& p_mod)
   return false;
 }
 
-bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& encoding)
+bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& accepted_encoding, string& chosen_encoding)
 {
   // match the supported encoding
   // match the mime type
   list<modinfo*>::iterator it_curr;
   list<modinfo*>::iterator it_last;
+  string curr_encoding;
   const char** arr_encodings;
   unsigned int i_encoding;
 
+  curr_encoding = "deflate";
   it_curr = m_modlist.begin();
   it_last = m_modlist.end();
   while (it_curr != it_last)
@@ -81,8 +83,9 @@ bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& enco
 	  arr_encodings = p_mod->GetSupportedEncoding();
 	  for (i_encoding = 0; arr_encodings && arr_encodings[i_encoding]; ++i_encoding)
 	    {
-	      if (!strcmp(arr_encodings[i_encoding], encoding.c_str()))
+	      if (!strcmp(arr_encodings[i_encoding], curr_encoding.c_str()))
 		{
+		  chosen_encoding = arr_encodings[i_encoding];
 		  return true;
 		}
 	    }

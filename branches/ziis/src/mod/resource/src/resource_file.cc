@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Thu Mar 23 13:31:51 2006 texane
+// Last update Thu Mar 23 17:02:33 2006 texane
 //
 
 
@@ -79,6 +79,8 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
 	  file_size -= nbytes;
 	  if (file_size == 0)
 	    generated = true;
+	  cout << "generated: " << nbytes << endl;
+	  cout << "file size: " << file_size << endl;
 	}
     }
   else

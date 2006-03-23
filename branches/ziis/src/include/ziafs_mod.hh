@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:10:34 2006 texane
-// Last update Thu Mar 23 00:05:20 2006 texane
+// Last update Thu Mar 23 16:20:02 2006 texane
 //
 
 
@@ -51,7 +51,7 @@ namespace mod
 
     bool reload(net::config*);
     bool get_connection_module(IConnection*&);
-    bool get_compressor_module(ICompressor*&, const std::string&);
+    bool get_compressor_module(ICompressor*&, const std::string&, std::string&);
     bool get_generator_module(IDocumentGenerator*&, const std::string&);
     bool get_modifier_list(std::list<IStreamModifier*>&, std::list<std::string>&);
 
