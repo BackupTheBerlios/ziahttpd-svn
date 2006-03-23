@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:45:06 2006 texane
-// Last update Wed Mar 22 23:57:01 2006 texane
+// Last update Thu Mar 23 20:06:23 2006 texane
 //
 
 
@@ -53,7 +53,7 @@ resource::e_error resource::byfly::flush_network(IOutput& out)
   nr_sent = out.SendBuffer((const char*)data.bufptr(), (int)data.size());
   if (nr_sent < 0)
     return E_OP_ERROR;
-  data.remove_front(nr_sent);
+  data.clear();
   return E_SUCCESS;
 }
 
