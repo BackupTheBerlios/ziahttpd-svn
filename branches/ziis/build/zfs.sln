@@ -11,6 +11,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod_sock", "..\src\mod\sock
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod_encoding", "..\src\mod\encoding\mod_encoding.vcproj", "{FA1F298B-04DC-4BCE-B802-6DCD54847625}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -29,6 +33,10 @@ Global
 		{E39C62A7-F948-481F-B095-025157D82D64}.Debug.Build.0 = Debug|Win32
 		{E39C62A7-F948-481F-B095-025157D82D64}.Release.ActiveCfg = Release|Win32
 		{E39C62A7-F948-481F-B095-025157D82D64}.Release.Build.0 = Release|Win32
+		{FA1F298B-04DC-4BCE-B802-6DCD54847625}.Debug.ActiveCfg = Debug|Win32
+		{FA1F298B-04DC-4BCE-B802-6DCD54847625}.Debug.Build.0 = Debug|Win32
+		{FA1F298B-04DC-4BCE-B802-6DCD54847625}.Release.ActiveCfg = Release|Win32
+		{FA1F298B-04DC-4BCE-B802-6DCD54847625}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
