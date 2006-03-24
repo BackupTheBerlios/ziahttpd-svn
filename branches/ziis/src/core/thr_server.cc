@@ -5,13 +5,14 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Mar 24 15:45:30 2006 texane
+// Last update Fri Mar 24 20:56:07 2006 texane
 //
 
 
 #include <iostream>
 #include <cstdio>
 #include <string>
+#include <vector>
 #include <ziafs.hh>
 
 
@@ -174,6 +175,7 @@ bool thr::pool::sess_handle_document(session_t* sess)
   const char* p_hostname;
   string chosen_encoding;
   const char* accepted_encoding;
+  vector<string> arr_encodings;
   string localname;
   string hostname;
 
@@ -190,7 +192,8 @@ bool thr::pool::sess_handle_document(session_t* sess)
   accepted_encoding = sess->m_input->GetInput("accept-encoding");
   if (accepted_encoding)
     {
-      if (sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, accepted_encoding, chosen_encoding) == true)
+      net::split_accept_encoding(string(accepted_encoding), arr_encodings);
+      if (sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, arr_encodings, chosen_encoding) == true)
 	{
 	  sess->m_output->SetOutput("transfer-encoding", "chunked");
  	  sess->m_output->SetOutput("content-encoding", chosen_encoding.c_str());

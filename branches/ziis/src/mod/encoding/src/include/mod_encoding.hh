@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:54:28 2006 texane
-// Last update Fri Mar 24 12:33:05 2006 texane
+// Last update Fri Mar 24 17:48:53 2006 texane
 //
 
 
@@ -47,6 +47,13 @@ private:
   typedef struct
   {
     z_stream strm_encoding;
+    unsigned char* p_out;
+    unsigned char* p_in;
+    unsigned int sz_in;
+    unsigned int sz_out;
+    int nr_flush;
+    int nr_return;
+    bool is_done;
   } zlib_context_t;
   bool ZlibGetNewContext(zlib_context_t*&);
   bool ZlibDestroyContext(zlib_context_t*);

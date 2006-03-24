@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Fri Mar 24 15:33:11 2006 texane
+// Last update Fri Mar 24 21:11:48 2006 texane
 //
 
 
@@ -39,7 +39,6 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   resource::handle* p_resource;
   resource::e_error e_err;
   unsigned int nr_size;
-  buffer hdr_chunk;
   bool is_transfer_chunked;
   char buf_input[constants::BUFFER_SIZE];
   const char* te;
@@ -56,28 +55,26 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   // pre create the resource
   is_done = false;
   is_transfer_chunked = false;
-
-  // handle te
   te = out.GetOutput("transfer-encoding");
-  if (te)
+
+  // chunk but DONT encode if dynamic content
+  if (p_resource->is_content_dynamic() == true)
     {
-      if (stricmp(te, "identity"))
-	is_transfer_chunked = true;
+      out.SetOutput("content-length", "");
+      out.SetOutput("content-encoding", "");
+      out.SetOutput("transfer-encoding", "chunked");
+      is_transfer_chunked = true;
+    }
+  else if (te && !stricmp(te, "chunked"))
+    {
+      out.SetOutput("content-length", "");
+      is_transfer_chunked = true;
     }
   else
     {
-      // content is dynamic, chunk the transfer
-      if (p_resource->is_content_dynamic() == true)
-	{
-	  out.SetOutput("transfer-encoding", "chunked");
-	  is_transfer_chunked = true;
-	}
-      else
-	{
-	  p_resource->size(nr_size);
-	  oss << nr_size;
-	  out.SetOutput("content-length", oss.str().c_str());
-	}
+      p_resource->size(nr_size);
+      oss << nr_size;
+      out.SetOutput("content-length", oss.str().c_str());
     }
 
   // send response header
@@ -87,9 +84,6 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   // generate the resource
   while (is_done == false)
     {
-      // reset buffers
-      hdr_chunk.clear();
-
       // read and flush to input
       if (p_resource->input_size())
 	{
@@ -117,9 +111,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	{
 	  // send the last chunk
 	  if (is_transfer_chunked)
-	    {
-	      p_resource->flush_network(out);
-	    }
+	    p_resource->flush_network(out);
 	  is_done = true;
 	}
     }

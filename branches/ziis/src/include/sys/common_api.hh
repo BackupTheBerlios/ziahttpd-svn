@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Wed Feb 22 20:45:11 2006 texane
+// Last update Fri Mar 24 18:48:39 2006 texane
 //
 
 
@@ -79,6 +79,15 @@ namespace sys
       bool is_readable(const std::string&);
       bool is_writable(const std::string&);
       bool is_executable(const std::string&);
+    }
+
+    // memory mapping
+    namespace mmapping
+    {
+      error::handle_t alloc(handle_t&, const std::string&);
+      error::handle_t release(handle_t&);
+      error::handle_t reset(handle_t&);
+      error::handle_t size(handle_t&, unsigned long long&);
     }
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:25:56 2006 texane
-// Last update Wed Mar 22 19:35:22 2006 texane
+// Last update Fri Mar 24 20:22:33 2006 texane
 //
 
 
@@ -154,6 +154,11 @@ namespace resource
     std::string file_path;
     sysapi::file::handle_t file_handle;
     unsigned long long file_size;
+
+    // file mapping here
+    sysapi::mmapping::handle_t h_mmap;
+    unsigned int nr_read;
+    unsigned char* p_read;
   };
 }
 

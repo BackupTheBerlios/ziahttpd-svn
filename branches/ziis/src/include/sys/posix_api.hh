@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:01:21 2006 texane
-// Last update Sat Feb 18 11:25:52 2006 texane
+// Last update Fri Mar 24 18:45:10 2006 texane
 //
 
 
@@ -19,6 +19,13 @@ namespace sys
     namespace file
     {
       typedef int handle_t;
+    }
+
+    namespace mmapping
+    {
+      typedef struct
+      {
+      } handle_t;
     }
 
     namespace insock

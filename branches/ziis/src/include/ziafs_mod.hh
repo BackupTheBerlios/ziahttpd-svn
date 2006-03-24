@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:10:34 2006 texane
-// Last update Thu Mar 23 16:20:02 2006 texane
+// Last update Fri Mar 24 20:51:31 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 
 #include <list>
 #include <string>
+#include <vector>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
 
@@ -51,7 +52,7 @@ namespace mod
 
     bool reload(net::config*);
     bool get_connection_module(IConnection*&);
-    bool get_compressor_module(ICompressor*&, const std::string&, std::string&);
+    bool get_compressor_module(ICompressor*&, std::vector<std::string>&, std::string&);
     bool get_generator_module(IDocumentGenerator*&, const std::string&);
     bool get_modifier_list(std::list<IStreamModifier*>&, std::list<std::string>&);
 

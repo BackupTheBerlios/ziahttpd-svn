@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Fri Mar 24 17:07:08 2006 texane
+// Last update Fri Mar 24 20:57:15 2006 texane
 //
 
 
@@ -13,7 +13,7 @@
 
 
 #include <list>
-#include <queue>
+#include <vector>
 #include <string>
 #include <string.h>
 #include <ziafs.hh>
@@ -63,31 +63,37 @@ bool mod::manager::get_connection_module(IConnection*& p_mod)
   return false;
 }
 
-bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& accepted_encoding, string& chosen_encoding)
+bool mod::manager::get_compressor_module(ICompressor*& p_mod, vector<string>& arr_encodings, string& chosen_encoding)
 {
   // match the supported encoding
   // match the mime type
   list<modinfo*>::iterator it_curr;
   list<modinfo*>::iterator it_last;
+  vector<string>::iterator it_enco;
+  const char** supp_encodings;
   string curr_encoding;
-  const char** arr_encodings;
   unsigned int i_encoding;
 
-//   curr_encoding = "deflate";
-  curr_encoding = "gzip";
   it_curr = m_modlist.begin();
   it_last = m_modlist.end();
   while (it_curr != it_last)
     {
       if ((p_mod = dynamic_cast<ICompressor*>((*it_curr)->m_instance)))
 	{
-	  arr_encodings = p_mod->GetSupportedEncoding();
-	  for (i_encoding = 0; arr_encodings && arr_encodings[i_encoding]; ++i_encoding)
+	  supp_encodings = p_mod->GetSupportedEncoding();
+	  for (i_encoding = 0; supp_encodings && supp_encodings[i_encoding]; ++i_encoding)
 	    {
-	      if (!stricmp(arr_encodings[i_encoding], curr_encoding.c_str()))
+	      for (it_enco = arr_encodings.begin(); it_enco != arr_encodings.end(); ++it_enco)
 		{
-		  chosen_encoding = arr_encodings[i_encoding];
-		  return true;
+		  if (!stricmp(supp_encodings[i_encoding], it_enco->c_str()))
+		    {
+		      chosen_encoding = *it_enco;
+		      // hack me here
+		      {
+			chosen_encoding = "deflate";
+		      }
+		      return true;
+		    }
 		}
 	    }
 	}

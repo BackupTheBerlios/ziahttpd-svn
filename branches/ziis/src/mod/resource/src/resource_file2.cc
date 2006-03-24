@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Fri Mar 24 20:23:36 2006 texane
+// Last update Fri Mar 24 19:11:37 2006 texane
 //
 
 
@@ -30,6 +30,8 @@ bool resource::file::is_content_dynamic() const
 
 resource::e_error resource::file::generate(unsigned int& nbytes)
 {
+  unsigned char buf[constants::BUFFER_SIZE];
+  sysapi::error::handle_t h_err;
   resource::e_error e_err;
 
   e_err = E_SUCCESS;
@@ -69,12 +71,20 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
 	}
       else
 	{
-	  // read the next one
-	  p_read = h_mmap.p_mmapping;
-	  nr_read = (unsigned int)h_mmap.sz_mmapping;
+	  // read next buffer from file
+	  h_err = sysapi::file::read(file_handle, buf, sizeof(buf), nbytes);
+	  if (h_err != sysapi::error::SUCCESS)
+	    return E_OP_ERROR;
+	  data = buffer(buf, nbytes);
+
+	  // mmapping related
+	  nbytes = (unsigned int)h_mmap.sz_mmapping;
+	  seek_mmap = h_mmap.p_mmapping;
+	  cout << "has generated: " << nbytes << endl;
+	  getchar();
 
 	  // file size reached
-	  file_size -= (unsigned long long)nr_read;
+	  file_size -= nbytes;
 	  if (file_size == 0)
 	    generated = true;
 	}
@@ -94,10 +104,14 @@ resource::e_error resource::file::flush_network(IOutput& out)
 
   if (omode == O_INPUT)
     {
-      nr_sent = out.SendBuffer((const char*)p_read, (int)nr_read);
+//  --    nr_sent = out.SendBuffer((const char*)data.bufptr(), (int)data.size());
+
+      nr_sent = out.SendBuffer((const char*)h_mmap.p_mmapping, (int)h_mmap.sz_mmapping);
       if (nr_sent < 0)
 	return E_OP_ERROR;
-      nr_read = 0;
+
+//  --      data.clear();
+
       return E_SUCCESS;
     }
 
@@ -147,8 +161,7 @@ resource::file::file(const string& path, e_omode omode)
   if (omode == O_INPUT)
     {
       herr = sysapi::mmapping::alloc(h_mmap, path);
-      nr_read = 0;
-      p_read = h_mmap.p_mmapping;
+      seek_mmap = h_mmap.p_mmapping;
       herr = sysapi::file::open(file_handle, path, sysapi::file::O_READ);
     }
   else if (omode == O_OUTPUT)

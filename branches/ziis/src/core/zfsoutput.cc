@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Fri Mar 24 17:10:03 2006 texane
+// Last update Fri Mar 24 21:30:43 2006 texane
 //
 
 
@@ -18,7 +18,7 @@
 
 
 
-#define DEBUG_STEP
+// #define DEBUG_STEP
 
 using namespace std;
 
@@ -124,6 +124,7 @@ bool	ZfsOutput::SendHeader()
 int ZfsOutput::SendBuffer(const char* buf, int sz)
 {
   const char* te;
+  const char* ce;
   list<IStreamModifier*>::iterator i_curr;
   list<IStreamModifier*>::iterator i_last;
   buffer buf_header;
@@ -142,20 +143,21 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
 #ifdef DEBUG_STEP
   cout << "------- entering" << endl;
   cout << "size is " << sz << endl;
-  cout << "ensz is " << buf_entity.size() << endl;
+  cout << "ensz is " << (unsigned int)buf_entity.size() << endl;
   cout << buf_entity.tostring() << endl;
   getchar();
 #endif // DEBUG_STEP
 
 
   // apply compressor
-  if (m_session->m_comp_out_module)
+  ce = GetOutput("content-encoding");
+  if (ce && m_session->m_comp_out_module)
     {
-//       if (m_session->m_comp_out_module->Compress(m_session->m_comp_out_context, buf_entity, buf_out))
-// 	{
-// 	  buf_entity = buf_out;
-// 	  sz = (int)buf_entity.size();
-// 	}
+      if (m_session->m_comp_out_module->Compress(m_session->m_comp_out_context, buf_entity, buf_out))
+	{
+	  buf_entity = buf_out;
+	  sz = (int)buf_entity.size();
+	}
     }
 
   // chunk header generation

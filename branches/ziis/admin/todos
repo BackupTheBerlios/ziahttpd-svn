@@ -2,6 +2,11 @@ todos
 
 
 
+---> if resource content is dynamic, dont
+apply modifier or compressor to the the stream!
+
+
+
 ----> last chunk not ok, too small
 	-> output size < input size
 
