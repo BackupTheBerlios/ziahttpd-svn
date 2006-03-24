@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Fri Mar 24 14:35:38 2006 texane
+// Last update Fri Mar 24 16:04:40 2006 texane
 //
 
 
@@ -19,7 +19,6 @@
 
 
 #define DEBUG_STEP
-
 
 using namespace std;
 

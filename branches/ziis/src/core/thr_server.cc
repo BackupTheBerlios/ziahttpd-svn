@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Mar 24 13:18:57 2006 texane
+// Last update Fri Mar 24 15:45:30 2006 texane
 //
 
 
@@ -137,6 +137,8 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
   int nr_recv;
 
+  cout << "------------------>" << endl;
+
   if (sess.done == true)
     return false;
 
@@ -146,17 +148,20 @@ bool thr::pool::sess_read_metadata(session_t& sess)
       nr_recv = sess.m_conn_module->Recv(sess.cli_sock, sess.m_conn_data, (char*)buf, sizeof(buf));
       if (nr_recv == -1)
 	{
+	  cout << "-------->close connection" << endl;
 	  sess.done = true;
 	  return false;
 	}
       is_valid = sess.proto.consume(buf, nr_recv, end_of_metadata);
       if (is_valid == false)
 	{
+	  cout << "-------->is_valid" << endl;
 	  end_of_metadata = true;
 	  sess.done = true;
 	}
       else if (end_of_metadata == true)
 	{
+	  cout << "-------->end of metadata" << endl;
 	}
     }
 
@@ -171,6 +176,9 @@ bool thr::pool::sess_handle_document(session_t* sess)
   const char* accepted_encoding;
   string localname;
   string hostname;
+
+  if (sess->done == true)
+    return true;
 
   // instanciate ZfsInput
   sess->m_input = new ZfsInput(sess);

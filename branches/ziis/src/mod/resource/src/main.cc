@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Fri Mar 24 14:03:53 2006 texane
+// Last update Fri Mar 24 15:33:11 2006 texane
 //
 
 
@@ -135,6 +135,7 @@ static const char* _my_mimes[] =
   {
     "text/html",
     "image/gif",
+    "image/png",
     0
   };
 
