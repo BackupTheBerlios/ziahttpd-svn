@@ -157,6 +157,9 @@
 					RelativePath="..\src\core\main.cc">
 				</File>
 				<File
+					RelativePath="..\src\sys\win32\mmapping.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\module.cc">
 					<FileConfiguration
 						Name="Debug|Win32">
