@@ -45,11 +45,15 @@ ZfsOutput::ZfsOutput(thr::pool::session_t* s)
 void	ZfsOutput::SetOutput(const char*key, const char*value)
 {
 	if (!value)
+	{
+		m_proto->response.m_hdrlines.erase(key);
 		return ;
+	}
 	if (*value)
 		m_proto->response[key] = value;
 	else
 		m_proto->response.m_hdrlines.erase(key);
+
 }
 
 const	char*	ZfsOutput::GetOutput(const char*key)
