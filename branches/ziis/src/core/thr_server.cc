@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Mar 24 00:38:25 2006 texane
+// Last update Fri Mar 24 02:26:15 2006 texane
 //
 
 
@@ -185,7 +185,7 @@ bool thr::pool::sess_handle_document(session_t* sess)
       if (sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, accepted_encoding, chosen_encoding) == true)
 	{
 	  sess->m_output->SetOutput("transfer-encoding", "chunked");
-// 	  sess->m_output->SetOutput("content-encoding", chosen_encoding.c_str());
+ 	  sess->m_output->SetOutput("content-encoding", chosen_encoding.c_str());
 	  sess->m_comp_out_context = sess->m_comp_out_module->GetNewContext(chosen_encoding.c_str());
 	}
     }

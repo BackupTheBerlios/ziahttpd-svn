@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Thu Mar 23 23:36:53 2006 texane
+// Last update Fri Mar 24 02:22:02 2006 texane
 //
 
 
@@ -384,7 +384,7 @@ int buffer::Length()
 
 const char* buffer::Str()
 {
-  return c_str();
+  return (const char*)bufptr();
 }
 
 void buffer::Clear()
@@ -400,7 +400,7 @@ void buffer::Append(const char* buf, int size)
   unsigned int i_buf;
   unsigned int j_buf;
 
-  if (size == 0)
+  if (buf == 0 || size == 0)
     return ;
 
   sav_buf = buf_;
@@ -440,38 +440,6 @@ IBuffer& buffer::operator=(IBuffer& buf)
 
 IBuffer& buffer::operator+=(IBuffer& buf)
 {
-  unsigned char* sav_buf;
-  unsigned int sav_len;
-  unsigned int ln_buf;
-  unsigned int i_buf;
-  unsigned int j_buf;
-  unsigned int size;
-
-  size = (unsigned int)buf.Length();
-  if (!size)
-    return *this;
-
-  if (!sz_)
-    {
-      *this = buf;
-      return *this;
-    }
-
-  sav_buf = buf_;
-  sav_len = (unsigned int)sz_;
-  ln_buf = sav_len + size;
-  buf_ = 0;
-  reset();
-
-  buf_ = new unsigned char[ln_buf];
-  sz_ = ln_buf;
-  for (i_buf = 0; i_buf < sav_len; ++i_buf)
-    buf_[i_buf] = sav_buf[i_buf];
-
-  for (j_buf = 0; j_buf < size; ++j_buf, ++i_buf)
-    buf_[i_buf] = buf[j_buf];
-
-  if (sav_buf)
-    delete[] sav_buf;
+  this->Append(buf.Str(), buf.Length());
   return *this;
 }

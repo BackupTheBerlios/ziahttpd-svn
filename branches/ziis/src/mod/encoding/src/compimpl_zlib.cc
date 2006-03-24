@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 10:24:08 2006 texane
-// Last update Fri Mar 24 00:21:08 2006 texane
+// Last update Fri Mar 24 02:45:55 2006 texane
 //
 
 
@@ -18,64 +18,15 @@ using namespace std;
 bool mod_encoding::ZlibGetNewContext(zlib_context_t*& p_context)
 {
   p_context = 0;
-//   int err_code;
-//   bool is_success;
-//   bool is_deflat_inited;
-//   bool is_inflat_inited;
-
-//   // reset
-//   err_code = 0;
-//   is_success = true;
-//   is_deflat_inited = false;
-//   is_inflat_inited = false;
-//   p_context = new zlib_context_t;
-  
-  // init inflate stream
-//   p_context->strm_inflate.next_in = Z_NULL;
-//   p_context->strm_inflate.avail_in = Z_NULL;
-//   p_context->strm_inflate.zalloc = Z_NULL;
-//   p_context->strm_inflate.zfree = Z_NULL;
-//   p_context->strm_inflate.opaque = Z_NULL;
-//   err_code = inflateInit(&p_context->strm_inflate);
-//   if (err_code != Z_OK)
-//     {
-//       is_success = false;
-//       goto zlib_init_error;
-//     }
-//   is_inflat_inited = true;
-
-//   // init deflate stream
-//   p_context->strm_deflate.zalloc = Z_NULL;
-//   p_context->strm_deflate.zfree = Z_NULL;
-//   p_context->strm_deflate.opaque = Z_NULL;
-//   err_code = deflateInit(&p_context->strm_inflate, Z_DEFAULT_COMPRESSION);
-//   if (err_code != Z_OK)
-//     {
-//       is_success = false;
-//       goto zlib_init_error;
-//     }
-//   is_deflat_inited = true;
-
-  // error handling
-//  zlib_init_error:
-//   if (is_success == false)
-//     {
-//       if (is_inflat_inited == true)
-// 	inflateEnd(&p_context->strm_inflate);
-//       if (is_deflat_inited == true)
-// 	deflateEnd(&p_context->strm_deflate);
-//       delete p_context;
-//       p_context = 0;
-//     }
-
-//   return is_success;
   return true;
 }
 
 bool mod_encoding::ZlibDestroyContext(zlib_context_t* p_context)
 {
   if (p_context)
-    delete p_context;
+    {
+      delete p_context;
+    }
   return true;
 }
 
@@ -85,8 +36,60 @@ bool mod_encoding::ZlibDecompress(zlib_context_t*, IBuffer& buf_in, IBuffer& buf
   return true;
 }
 
-bool mod_encoding::ZlibCompress(zlib_context_t*, IBuffer& buf_in, IBuffer& buf_out)
+bool mod_encoding::ZlibCompress(zlib_context_t* p_context, IBuffer& buf_in, IBuffer& buf_out)
 {
-  buf_out = buf_in;
+  unsigned char* p_out;
+  unsigned char* p_in;
+  unsigned int sz_in;
+  unsigned int sz_out;
+  z_stream strm;
+  int ret;
+
+  cout << "entering compress" << endl;
+
+  sz_out = sz_in = buf_in.Length();
+  if (sz_in == 0)
+    {
+      buf_out.Clear();
+      return false;
+    }
+
+  p_in = (unsigned char*)buf_in.Str();
+  p_out = new unsigned char[sz_out];
+
+  strm.zalloc = Z_NULL;
+  strm.zfree = Z_NULL;
+  strm.opaque = Z_NULL;
+  ret = deflateInit(&strm, Z_DEFAULT_COMPRESSION);
+  if (ret != Z_OK)
+    {
+      cout << "error: deflateInit" << endl;
+      return false;
+    }
+
+  strm.avail_in = sz_in;
+  strm.next_in = p_in;
+  strm.avail_out = sz_out;
+  strm.next_out = p_out;
+
+  ret = deflate(&strm, Z_FINISH);
+  if (ret == Z_OK)
+    cout << "deflate returned ok" << endl;
+  else if (ret == Z_STREAM_END)
+    cout << "deflate returned end" << endl;
+  else if (ret == Z_BUF_ERROR)
+    cout << "deflate returned BUF_ERROR" << endl;
+  else
+    cout << "error: deflate" << endl;
+  deflateEnd(&strm);
+
+  cout << "reset done" << endl;
+
+  buf_out.Clear();
+  buf_out.Append((const char*)p_out, sz_out - strm.avail_out);
+  delete[] p_out;
+
+  cout << "exiting compress: " << sz_out - strm.avail_out << endl;
+
   return true;
 }

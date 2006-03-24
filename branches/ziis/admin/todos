@@ -2,15 +2,14 @@ todos
 
 
 
+we are leaking, compressor module?
+
+
+set the context in the iinput constructor
+
 -------------------> content encoding!
 
 remove the http_helper file from resource module
-
-
-[current]
-	=> decompress
-	-> handle the last chunk (0 in the size)
-	-> export chunk generation to output
 
 
 in the getinput interface method

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:54:28 2006 texane
-// Last update Thu Mar 23 11:04:27 2006 texane
+// Last update Fri Mar 24 00:46:07 2006 texane
 //
 
 
@@ -45,8 +45,7 @@ private:
   // Zlib compression
   typedef struct
   {
-    z_stream strm_inflate;
-    z_stream strm_deflate;
+    z_stream strm_encoding;
   } zlib_context_t;
   bool ZlibGetNewContext(zlib_context_t*&);
   bool ZlibDestroyContext(zlib_context_t*);
