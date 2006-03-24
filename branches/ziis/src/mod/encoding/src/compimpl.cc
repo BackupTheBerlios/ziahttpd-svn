@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:58:21 2006 texane
-// Last update Fri Mar 24 13:15:49 2006 texane
+// Last update Fri Mar 24 14:08:35 2006 texane
 //
 
 
@@ -80,9 +80,9 @@ bool mod_encoding::Decompress(void* p_context, IBuffer& buf_in, IBuffer& buf_out
 
 static const char* _encodings[] =
   {
-//     "gzip",
-//     "deflate",
-//     "compress",
+    "gzip",
+    "deflate",
+    "compress",
     0
   };
 

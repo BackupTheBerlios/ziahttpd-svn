@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Fri Mar 24 14:07:09 2006 texane
+// Last update Fri Mar 24 14:35:38 2006 texane
 //
 
 
@@ -15,6 +15,10 @@
 #include <ziis_impl.hh>
 #include <ziafs_http.hh>
 #include <iostream>
+
+
+
+#define DEBUG_STEP
 
 
 using namespace std;
@@ -92,6 +96,13 @@ bool	ZfsOutput::SendHeader()
   int ln_buf;
 
   m_proto->stringify_header(header);
+
+#ifdef DEBUG_STEP
+  cout << "----------- header" << endl;
+  cout << header.tostring() << endl;
+  getchar();
+#endif // DEBUG_STEP
+
   p_buf = header.c_str();
   ln_buf = (int)strlen(p_buf);
   ln_buf = send_whole_buffer(p_buf, ln_buf);
@@ -120,6 +131,15 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
 //       ++i_curr;
 //     }
 
+#ifdef DEBUG_STEP
+  cout << "------- entering" << endl;
+  cout << "size is " << sz << endl;
+  cout << "ensz is " << buf_entity.size() << endl;
+  cout << buf_entity.tostring() << endl;
+  getchar();
+#endif // DEBUG_STEP
+
+
   // apply compressor
   if (m_session->m_comp_out_module)
     {
@@ -130,11 +150,6 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
 	}
     }
 
-//   cout << "size is " << sz << endl;
-//   cout << "ensz is " << buf_entity.size() << endl;
-//   cout << buf_entity.tostring() << endl;
-//   getchar();
-
   // chunk header generation
   te = GetOutput("transfer-encoding");
   if (te && !stricmp(te, "chunked"))
@@ -144,7 +159,11 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
       buf_entity += "\r\n";
     }
   
-//   cout << buf_entity.tostring() << endl;
+#ifdef DEBUG_STEP
+  cout << "-------- sending" << endl;
+  cout << buf_entity.tostring() << endl;
+  getchar();
+#endif // DEBUG_STEP
 
   // send the buffer
   return send_whole_buffer((const char*)buf_entity.bufptr(), (int)buf_entity.size());
