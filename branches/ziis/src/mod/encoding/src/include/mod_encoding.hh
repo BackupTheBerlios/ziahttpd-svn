@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:54:28 2006 texane
-// Last update Fri Mar 24 00:46:07 2006 texane
+// Last update Fri Mar 24 12:33:05 2006 texane
 //
 
 
@@ -15,10 +15,11 @@
 
 #include <iostream>
 #include <string>
-#include <cstring>
+#include <string.h>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
 #include "../lib/zlib-1.2.3/zlib.h"
+// #include "../lib/gzip124/gzip.h"
 
 
 class mod_encoding : public IModule, public ICompressor
@@ -52,7 +53,16 @@ private:
   bool ZlibDecompress(zlib_context_t*, IBuffer&, IBuffer&);
   bool ZlibCompress(zlib_context_t*, IBuffer&, IBuffer&);
 
-  // add new version here
+  // Gzip compression
+  typedef struct
+  {
+    unsigned int fake;
+  } gzip_context_t;
+  bool GzipGetNewContext(gzip_context_t*&);
+  bool GzipDestroyContext(gzip_context_t*);
+  bool GzipDecompress(gzip_context_t*, IBuffer&, IBuffer&);
+  bool GzipCompress(gzip_context_t*, IBuffer&, IBuffer&);
+
 
   // general context
   typedef struct
@@ -61,6 +71,7 @@ private:
     union
     {
       zlib_context_t* zlib_context;
+      gzip_context_t* gzip_context;
       void* context;
     } u;
   } context_t;
