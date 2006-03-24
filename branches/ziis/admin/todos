@@ -1,110 +1,28 @@
 todos
 
-
-
----> if resource content is dynamic, dont
-apply modifier or compressor to the the stream!
-
-
-
-----> last chunk not ok, too small
-	-> output size < input size
-
-we are leaking, compressor module?
-
-
-set the context in the iinput constructor
-
--------------------> content encoding!
-
-remove the http_helper file from resource module
-
-
-in the getinput interface method
-	-> bufferize
-	-> nr_size < uncompressed size, so buffer is too small
-	->
-
-
---->  handle error sending
---------> generation module is not ok // mimes
---------> migrate the handle postprocess_medata in the document generator module
---------> address this problem
---------> in document generator the content
-	encoding can be specified
-	if it's, cause of the compression algo,
-	then the document generator must not
-	try to guess the size of the document
-
---------> in decompression, problem:
-	-> buffer_out > buffer_in
-	-> if the size in content-length
-		is the one decompressed,
-		it's ok
-
---------> see why the mod sock get the conf in argument ctor
---------> handle thread system in connection mod: io_thr
-
-
-. pass the ifs @onload time
-. impleemnt the modifier list in sendVBuffer
-
-. remove the system thread -> io_thread
-. remove resource from the server core
-
-. get local name -> uri to local
-> resource creation + read  conf
-. chunk generation
-
-
-for the ReadPostEntity()
-	-> take care of reading from the mbuffer, to get the prefeteched data
-
-
-. handle prefetched datas...
-. resource creation factory
-
-
-. remove ioslot (?)
-	-> integrate it into the connection module
-
-. handle predata
-
-. think about prefetched buffer for resource
-. see their hook and where they are called
-. migrate the two function in the document generator
-
-. check the ibuffer class
-. implement hooks and instanciation @good times
-. pass session pointer to constructor
-. resource manager in GenerateDocument
-. implement the ReadPostEntity method
-. stream modifier module (+ prio)
-. compressor module
-. implement a timeouter in the connection module (array of io slot)
-
-
-. readpostentity method
-	-> internally take into account the body size
-. implement error page sending + http header
-
-
-config file should handle markers for modules
-	-> mime types...
-error when the module is not correctly loaded
-	-> is in the list, but ... (invalid path)
-
-
-1) implement module manager
-	. think about involvures -> should be reloadable
-	. should have a data aera for the module (void*)
-	. implement the reload method according to conf file
-
+-> perl
+-> ssl
+-> checks error
+-> SendError
+-> stream_modifer
+-> gzip
+-> zlib
+-> compress
+-> port unix
+-> mmaped buffer
+-> clean
+-> decompression input
+-> reload
+-> handle connection status (timeout, connection-closed, keep alive...)
+-> handle http1.0
+-> implement ifs
+-> implement post + cgi + put + environ
+-> config -> conf path by module
+-> check input sizes (limit on metadata)
 
 toremember
 -> the module may be plugged in another server
 -> the server should be reloadable
-
 
 todos
 -> ensure limit on network input sizes
