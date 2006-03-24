@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Thu Mar 23 19:35:53 2006 texane
+// Last update Fri Mar 24 17:07:08 2006 texane
 //
 
 
@@ -73,7 +73,8 @@ bool mod::manager::get_compressor_module(ICompressor*& p_mod, const string& acce
   const char** arr_encodings;
   unsigned int i_encoding;
 
-  curr_encoding = "deflate";
+//   curr_encoding = "deflate";
+  curr_encoding = "gzip";
   it_curr = m_modlist.begin();
   it_last = m_modlist.end();
   while (it_curr != it_last)
