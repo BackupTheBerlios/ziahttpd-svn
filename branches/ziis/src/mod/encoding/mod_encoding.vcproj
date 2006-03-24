@@ -124,6 +124,9 @@
 				RelativePath=".\src\compimpl.cc">
 			</File>
 			<File
+				RelativePath=".\src\compimpl_gzip.cc">
+			</File>
+			<File
 				RelativePath=".\src\compimpl_zlib.cc">
 			</File>
 			<File

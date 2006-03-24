@@ -16,3 +16,9 @@ bool		net::generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chunk)
   data = oss.str() + "\r\n";
   return true;
 }
+
+bool	net::split_accept_encoding(std::string& str, std::vector<std::string>& vec)
+{
+	stringmanager::split(str, ",", vec);
+	return true;
+}

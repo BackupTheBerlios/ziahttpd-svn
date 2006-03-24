@@ -10,4 +10,5 @@ namespace net
 		CHUNK_LAST
 	} chunk_pos_t;
 	bool generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chunk);
+	bool split_accept_encoding(std::string&, std::vector<std::string>&);
 }

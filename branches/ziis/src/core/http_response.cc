@@ -108,6 +108,7 @@ bool			net::http::create_header(buffer& data, size_t sz, chunk_pos_t chunk)
 	if (chunk == CHUNK_FIRST)
 	{
 		response["Server"] = "Zfs.";
+
 		response["Content-type"] = "text/html";
 		generate_header_date();
 		if (response.is_chunk == false)
@@ -374,6 +375,7 @@ bool			net::http::stringify_header(buffer& data)
 
 	stringify_status_line(ln);
 	data += ln;
+
 	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
 	{
 		data += (*iter).first + ": " + iter->second + "\r\n";
