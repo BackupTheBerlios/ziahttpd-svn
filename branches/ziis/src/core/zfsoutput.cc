@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Fri Mar 24 16:04:40 2006 texane
+// Last update Fri Mar 24 17:10:03 2006 texane
 //
 
 
@@ -142,11 +142,11 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
   // apply compressor
   if (m_session->m_comp_out_module)
     {
-      if (m_session->m_comp_out_module->Compress(m_session->m_comp_out_context, buf_entity, buf_out))
-	{
-	  buf_entity = buf_out;
-	  sz = (int)buf_entity.size();
-	}
+//       if (m_session->m_comp_out_module->Compress(m_session->m_comp_out_context, buf_entity, buf_out))
+// 	{
+// 	  buf_entity = buf_out;
+// 	  sz = (int)buf_entity.size();
+// 	}
     }
 
   // chunk header generation
