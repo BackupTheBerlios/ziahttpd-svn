@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 10:24:08 2006 texane
-// Last update Fri Mar 24 02:45:55 2006 texane
+// Last update Fri Mar 24 13:06:00 2006 texane
 //
 
 
@@ -43,16 +43,16 @@ bool mod_encoding::ZlibCompress(zlib_context_t* p_context, IBuffer& buf_in, IBuf
   unsigned int sz_in;
   unsigned int sz_out;
   z_stream strm;
-  int ret;
+  int st_deflate;
+  int nr_ret;
+  bool is_done;
 
-  cout << "entering compress" << endl;
+  cout << "entering ZLIB: " << buf_in.Length() << endl;
 
+  buf_out.Clear();
   sz_out = sz_in = buf_in.Length();
   if (sz_in == 0)
-    {
-      buf_out.Clear();
-      return false;
-    }
+    goto end_of_compress;
 
   p_in = (unsigned char*)buf_in.Str();
   p_out = new unsigned char[sz_out];
@@ -60,36 +60,38 @@ bool mod_encoding::ZlibCompress(zlib_context_t* p_context, IBuffer& buf_in, IBuf
   strm.zalloc = Z_NULL;
   strm.zfree = Z_NULL;
   strm.opaque = Z_NULL;
-  ret = deflateInit(&strm, Z_DEFAULT_COMPRESSION);
-  if (ret != Z_OK)
-    {
-      cout << "error: deflateInit" << endl;
-      return false;
-    }
+  nr_ret = deflateInit(&strm, Z_DEFAULT_COMPRESSION);
+  if (nr_ret != Z_OK)
+    return false;
 
   strm.avail_in = sz_in;
   strm.next_in = p_in;
-  strm.avail_out = sz_out;
-  strm.next_out = p_out;
 
-  ret = deflate(&strm, Z_FINISH);
-  if (ret == Z_OK)
-    cout << "deflate returned ok" << endl;
-  else if (ret == Z_STREAM_END)
-    cout << "deflate returned end" << endl;
-  else if (ret == Z_BUF_ERROR)
-    cout << "deflate returned BUF_ERROR" << endl;
-  else
-    cout << "error: deflate" << endl;
+  is_done = false;
+  st_deflate = Z_FINISH;
+  while (is_done == false)
+    {
+      strm.avail_out = sz_out;
+      strm.next_out = p_out;
+
+      nr_ret = deflate(&strm, st_deflate);
+      if (nr_ret == Z_STREAM_END)
+	{
+	  is_done = true;
+	}
+      else if (nr_ret != Z_OK)
+	{
+	  cout << "error: ZLIB" << endl;
+	  is_done = true;
+	}
+      buf_out.Append((const char*)p_out, sz_out - strm.avail_out);
+
+    }
   deflateEnd(&strm);
-
-  cout << "reset done" << endl;
-
-  buf_out.Clear();
-  buf_out.Append((const char*)p_out, sz_out - strm.avail_out);
   delete[] p_out;
 
-  cout << "exiting compress: " << sz_out - strm.avail_out << endl;
+  cout << "exiting ZLIB: " << buf_out.Length() << endl;
 
+ end_of_compress:
   return true;
 }

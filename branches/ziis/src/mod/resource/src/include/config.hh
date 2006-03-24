@@ -3,9 +3,8 @@
 
 #include <list>
 #include <vector>
-//#include <ziafs_status.hh>
 #include <config/tinyxml.hh>
-#include <zia_stringmanager.hh>
+#include "string_manager.hh"
 
 namespace net
 {
@@ -53,7 +52,6 @@ namespace net
 		config();
 		~config();
 		config(char **);
-//		status::error		dump(buffer &buf);
 		bool						reset();
 //		bool						generate_config(server*, config&);
 		bool						get_server(std::list<server*>::iterator&);

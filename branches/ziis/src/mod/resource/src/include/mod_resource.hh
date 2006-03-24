@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:40:22 2006 texane
-// Last update Wed Mar 22 16:41:49 2006 texane
+// Last update Fri Mar 24 13:57:08 2006 texane
 //
 
 
@@ -13,14 +13,17 @@
 # define MOD_RESOURCE_HH
 
 
+#include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include <sstream>
-#include <string.h>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
 #include "include/buffer.hh"
 #include "include/resource.hh"
 #include "include/constants.hh"
+#include "include/config.hh"
+
 
 
 class mod_resource : public IModule, public IDocumentGenerator

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Fri Mar 24 02:22:02 2006 texane
+// Last update Fri Mar 24 13:27:23 2006 texane
 //
 
 
@@ -68,9 +68,12 @@ buffer::buffer(const unsigned char* buf, size_t sz)
 {
   buf_ = 0;
   reset();
-  buf_ = new unsigned char[sz];
-  bufcpy(buf_, buf, sz);
-  sz_ = sz;
+  if (buf && sz)
+    {
+      buf_ = new unsigned char[sz];
+      bufcpy(buf_, buf, sz);
+      sz_ = sz;
+    }
 }
 
 
@@ -426,7 +429,7 @@ IBuffer& buffer::operator=(IBuffer& buf)
   unsigned int i_buf;
   unsigned int ln_buf;
 
-  clear();
+  Clear();
   ln_buf = (unsigned int)buf.Length();
   if (ln_buf)
     {

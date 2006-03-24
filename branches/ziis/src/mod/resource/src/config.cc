@@ -1,13 +1,9 @@
-#include <ziafs_config.hh>
-#include <iostream>
-#include <ziafs_debug.hh>
-#include <sstream>
+#include "include/mod_resource.hh"
 
 net::config::config(const std::string &config_file)
 {
 	if (!m_xmldoc.LoadFile(config_file.c_str(), TIXML_DEFAULT_ENCODING))
 	{
-		ziafs_debug_msg("File not found :%s\n", config_file.c_str());
 		load_default();
 		return ;
 	}
@@ -15,7 +11,6 @@ net::config::config(const std::string &config_file)
 	buffer t;
 	//dump(t);
 //	std::cout << t.c_str();
-	//ziafs_debug_msg("%s", t.c_str());
 }
 
 net::config::config(char **av)

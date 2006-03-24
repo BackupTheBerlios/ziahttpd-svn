@@ -2,6 +2,9 @@ todos
 
 
 
+----> last chunk not ok, too small
+	-> output size < input size
+
 we are leaking, compressor module?
 
 

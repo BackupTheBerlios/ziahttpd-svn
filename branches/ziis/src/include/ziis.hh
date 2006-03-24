@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 10:34:58 2006 texane
-// Last update Tue Mar 21 20:05:06 2006 texane
+// Last update Fri Mar 24 12:52:39 2006 texane
 //
 
 
@@ -30,6 +30,8 @@ public:
   virtual IBuffer& operator=(IBuffer&) = 0;
   virtual IBuffer& operator+=(IBuffer&) = 0;
   virtual char& operator[](unsigned int) = 0;
+
+  virtual ~IBuffer() {};
 };
 
 

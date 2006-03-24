@@ -1,5 +1,4 @@
-#include <zia_stringmanager.hh>
-#include <iostream>
+#include "include/mod_resource.hh"
 
 bool	stringmanager::split(const std::string &source, const std::string& delimitor, std::vector<std::string>& dest, const std::string& putdel)
 {

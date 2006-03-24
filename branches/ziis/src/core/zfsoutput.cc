@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Fri Mar 24 02:54:04 2006 texane
+// Last update Fri Mar 24 14:07:09 2006 texane
 //
 
 
@@ -80,7 +80,7 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
 	}
     }
 
-		if (is_error == true)
+  if (is_error == true)
     return false;
   return true;  
 }
@@ -124,21 +124,27 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
   if (m_session->m_comp_out_module)
     {
       if (m_session->m_comp_out_module->Compress(m_session->m_comp_out_context, buf_entity, buf_out))
-	buf_entity = buf_out;
+	{
+	  buf_entity = buf_out;
+	  sz = (int)buf_entity.size();
+	}
     }
+
+//   cout << "size is " << sz << endl;
+//   cout << "ensz is " << buf_entity.size() << endl;
+//   cout << buf_entity.tostring() << endl;
+//   getchar();
 
   // chunk header generation
   te = GetOutput("transfer-encoding");
   if (te && !stricmp(te, "chunked"))
     {
-      // last chunk
-      if (sz == 0)
-	net::generate_chunk_header(buf_header, sz, net::CHUNK_LAST);
-      else
-	net::generate_chunk_header(buf_header, sz, net::CHUNK_MIDDLE);
+      net::generate_chunk_header(buf_header, sz, net::CHUNK_FIRST);
       buf_entity = buf_header + buf_entity;
       buf_entity += "\r\n";
     }
+  
+//   cout << buf_entity.tostring() << endl;
 
   // send the buffer
   return send_whole_buffer((const char*)buf_entity.bufptr(), (int)buf_entity.size());

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Thu Mar 23 19:36:26 2006 texane
+// Last update Fri Mar 24 14:03:53 2006 texane
 //
 
 
@@ -45,6 +45,8 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   const char* te;
   int nr_input;
   bool is_done;
+
+  cout << "[generatedocument]: " << path << endl;
 
   // resource creation
   p_resource = http_helper::create_resource(in, path, out, conf);
