@@ -70,8 +70,10 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;MOD_ENCODING_EXPORTS"
+				AdditionalIncludeDirectories="../../include/;../../include/sys/;../../lib/src/tinyxml"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;MOD_ENCODING_EXPORTS;TIXML_USE_STL"
 				RuntimeLibrary="0"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -80,7 +82,8 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/mod_encoding.dll"
+				AdditionalOptions="-defaultlib:Ws2_32.lib  mswsock.lib"
+				OutputFile="$(OutDir)/../mod_encoding.lo"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"

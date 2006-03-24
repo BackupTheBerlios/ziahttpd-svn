@@ -58,12 +58,27 @@
   <image></image>
 </mime>
 
+<mime extension="jpg">
+  <is_cgi>0</is_cgi>
+  <type>image/jpg</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
 <mime extension="exe">
   <is_cgi>1</is_cgi>
   <type>text/html</type>
   <cgi></cgi>
   <image></image>
 </mime>
+
+<mime extension="zip">
+  <is_cgi>0</is_cgi>
+  <type>application/zip</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
 
 <mime extension="php">
   <is_cgi>0</is_cgi>

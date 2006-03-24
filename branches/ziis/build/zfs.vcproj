@@ -74,6 +74,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../src/include/;../src/include/sys/;../src/lib/src/tinyxml"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;TIXML_USE_STL"
+				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"

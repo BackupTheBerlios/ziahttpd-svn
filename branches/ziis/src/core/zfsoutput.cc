@@ -80,7 +80,7 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
 	}
     }
 
-  if (is_error == true)
+		if (is_error == true)
     return false;
   return true;  
 }
