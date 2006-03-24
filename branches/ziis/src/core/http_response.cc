@@ -378,7 +378,8 @@ bool			net::http::stringify_header(buffer& data)
 
 	for(iter = response.m_hdrlines.begin(); iter != response.m_hdrlines.end(); iter++)
 	{
-		data += (*iter).first + ": " + iter->second + "\r\n";
+		if (!iter->second.empty())
+			data += (*iter).first + ": " + iter->second + "\r\n";
 	}
 	data += "\r\n";
 	return true;
