@@ -27,6 +27,7 @@
   <directory_index>index.html index.htm</directory_index>
   <modulename>mod_ssl</modulename>
   <modulename>mod_resource</modulename>
+  <modulename>mod_encoding</modulename>
 </server>
 
 
