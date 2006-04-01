@@ -5,98 +5,27 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Sat Apr 01 10:30:01 2006 texane
+// Last update Sat Apr 01 16:58:31 2006 texane
 //
 
 
 #include "include/modimpl.hh"
 
 
+// @read this
+// http://www.linuxjournal.com/article/4822
+
+
 using namespace std;
 
 
-// instanciate the module
-
-IModule* GetNewInstance()
-{
-  cout << "[modssl] GetNewInstance()" << endl;
-  return new mod_ssl;
-}
-
-
-// implement IModule
-
-bool mod_ssl::ReadConfig(const char* nm_conf)
-{
-  return false;
-}
-
-const char* mod_ssl::GetModuleName()
-{
-  return "mod_ssl";
-}
-
-const char* mod_ssl::GetModuleVersion()
-{
-  return "1.0";
-}
-
-void mod_ssl::OnLoad(IFS*)
-{
-}
-
-
-
-// implement IConnection
-
-short mod_ssl::GetPort()
-{
-  return m_port;
-}
-
-const char* mod_ssl::GetHost()
-{
-  return m_host.c_str();
-}
-
-void* mod_ssl::Accept(SOCKET)
-{
-  cout << "[module] module->Accept()" << endl;
-  return 0;
-}
-
-int mod_ssl::Recv(SOCKET h_sock, void* p_data, char* p_buf, int ln_buf)
-{
-  sysapi::error::handle_t h_err;
-  unsigned int nr_recv;
-
-  cout << "[module] module->Recv()" << endl;
-  h_err = sysapi::insock::recv(h_sock, (unsigned char*)p_buf, ln_buf, nr_recv);
-  if (h_err != sysapi::error::SUCCESS)
-    return -1;
-  return (int)nr_recv;
-}
-
-int mod_ssl::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
-{
-  sysapi::error::handle_t h_err;
-  unsigned int nr_sent;
-
-  cout << "[module] module->Send()" << endl;
-  h_err = sysapi::insock::send(h_sock, (unsigned char*)p_buf, ln_buf, nr_sent);
-  if (h_err != sysapi::error::SUCCESS)
-    return -1;
-  return nr_sent;
-}
-
-void mod_ssl::Close(SOCKET, void*)
-{
-  cout << "[module] module->Close()" << endl;
-}
-
-
-
 // internal management
+
+static void print_ssl_error()
+{
+  cout << ERR_error_string(ERR_get_error(), NULL) << endl;
+}
+
 
 void mod_ssl::reset()
 {
@@ -118,8 +47,51 @@ bool mod_ssl::reload(const string& nm_conf)
 mod_ssl::mod_ssl(const string& nm_conf)
 {
   reload(nm_conf);
+
+  // reset
+  m_ssl_method = 0;
+  m_ssl_context = 0;
+
+  // load ssl error strings
+  SSL_library_init();
+  SSL_load_error_strings();
+  ERR_load_BIO_strings();
+  OpenSSL_add_all_algorithms();
+
+  // init ssl context
+  m_ssl_method = SSLv23_method();
+  if (m_ssl_method == 0)
+    {
+      print_ssl_error();
+      return ;
+    }
+
+  m_ssl_context = SSL_CTX_new(m_ssl_method);
+  if (m_ssl_context == 0)
+    {
+      print_ssl_error();
+      return ;
+    }
+
+  cout << m_ssl_context << endl;
+
+  if (SSL_CTX_use_certificate_chain_file(m_ssl_context, "C:\\home\\texane\\ziafs\\branches\\ziis\\conf\\ssl_certs\\cacert.pem") != 1)
+    {
+      cout << "error using certif" << endl;
+    }
+  if (SSL_CTX_use_RSAPrivateKey_file(m_ssl_context, "C:\\home\\texane\\ziafs\\branches\\ziis\\conf\\ssl_certs\\privkey.pem", SSL_FILETYPE_PEM) != 1)
+    {
+      cout << "error using key" << endl;
+    }
+
+  cout << "ssl context got" << endl;
 }
 
 mod_ssl::~mod_ssl()
 {
+  ERR_free_strings();
+  EVP_cleanup();
+  SSL_CTX_free(m_ssl_context);
+
+  cout << "deletingopensll" << endl;
 }

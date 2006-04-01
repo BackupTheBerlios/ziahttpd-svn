@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Sat Apr 01 10:55:26 2006 texane
+## Last update Sat Apr 01 13:02:04 2006 texane
 ##
 
 # ! Always include this file
@@ -15,7 +15,8 @@
 # Give your own variables here
 name	= mod_ssl.lo
 srcs	= src$(SLASH)main.cc \
-	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)insock.cc \
+	  src$(SLASH)conimpl.cc \
+	  src$(SLASH)modimpl.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)error.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
