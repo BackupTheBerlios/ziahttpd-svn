@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sat Apr 01 18:22:00 2006 texane
+// Last update Sat Apr 01 18:36:50 2006 texane
 //
 
 
@@ -241,6 +241,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     {
       sess_reset_request(sess);
       sess_read_metadata(sess);
+      cout << "endof metadata" << endl;
       sess_handle_document(&sess);
       sess_release_request(sess);
     }

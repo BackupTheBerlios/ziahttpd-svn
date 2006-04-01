@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Sat Apr 01 18:24:36 2006 texane
+// Last update Sat Apr 01 19:39:59 2006 texane
 //
 
 
@@ -130,15 +130,19 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
   buffer buf_header;
   buffer buf_entity((unsigned char*)buf, (unsigned int)sz);
   buffer buf_out;
+  buffer buf_remain;
 
   // apply stream modifiers
-//   i_curr = m_session->m_modifiers.begin();
-//   i_last = m_session->m_modifiers.end();
-//   while (i_curr != i_last)
-//     {
-//       // (*i_curr)->Transform();
-//       ++i_curr;
-//     }
+  i_curr = m_session->m_modifiers.begin();
+  i_last = m_session->m_modifiers.end();
+  while (i_curr != i_last)
+    {
+      buf_out.Clear();
+      buf_remain.Clear();
+      (*i_curr)->Transform(buf_entity, buf_out, buf_remain);
+      buf_entity = buf_out + buf_remain;
+      ++i_curr;
+    }
 
 #ifdef DEBUG_STEP
   cout << "------- entering" << endl;

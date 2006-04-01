@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:10:34 2006 texane
-// Last update Fri Mar 24 20:51:31 2006 texane
+// Last update Sat Apr 01 19:33:38 2006 texane
 //
 
 
@@ -54,7 +54,7 @@ namespace mod
     bool get_connection_module(IConnection*&);
     bool get_compressor_module(ICompressor*&, std::vector<std::string>&, std::string&);
     bool get_generator_module(IDocumentGenerator*&, const std::string&);
-    bool get_modifier_list(std::list<IStreamModifier*>&, std::list<std::string>&);
+    bool get_modifier_list(std::list<IStreamModifier*>&, const std::string&);
 
   private:
     std::list<modinfo*> m_modlist;

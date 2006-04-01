@@ -19,6 +19,10 @@
 <file>src/mod/encoding/mod_encoding.lo</file>
 </module>
 
+<module nmae="mod_invcase">
+<file>src/mod/invcase/mod_invcase.lo</file>
+</module>
+
 
 <server>
   <id>1</id>
@@ -28,6 +32,7 @@
   <modulename>mod_ssl</modulename>
   <modulename>mod_resource</modulename>
   <modulename>mod_encoding</modulename>
+  <modulename>mod_invcase</modulename>
 </server>
 
 

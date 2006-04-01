@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Fri Mar 24 20:57:15 2006 texane
+// Last update Sat Apr 01 19:35:18 2006 texane
 //
 
 
@@ -134,13 +134,12 @@ bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string
 }
 
 
-bool mod::manager::get_modifier_list(list<IStreamModifier*>& lst_modifiers, list<string>& lst_mimes)
+bool mod::manager::get_modifier_list(list<IStreamModifier*>& lst_modifiers, const string& mimetype)
 {
   // match the content type + order by priority
 
   list<modinfo*>::iterator i_curr;
   list<modinfo*>::iterator i_last;
-  list<string>::iterator i_mime;
   list<IStreamModifier*>::iterator i_node;
   IStreamModifier* p_mod;
   const char** arr_type;
@@ -155,14 +154,11 @@ bool mod::manager::get_modifier_list(list<IStreamModifier*>& lst_modifiers, list
 	  arr_type = p_mod->GetSupportedContentType();
 	  for (i_type = 0; arr_type && arr_type[i_type]; ++i_type)
 	    {
-	      for (i_mime = lst_mimes.begin(); i_mime != lst_mimes.end(); ++i_mime)
+	      if (!stricmp(arr_type[i_type], mimetype.c_str()))
 		{
-		  if (!stricmp(arr_type[i_type], i_mime->c_str()))
-		    {
-		      for (i_node = lst_modifiers.begin(); i_node != lst_modifiers.end() && (*i_node)->GetPriority() < p_mod->GetPriority(); ++i_node)
-			;
-		      lst_modifiers.insert(i_node, p_mod);
-		    }
+		  for (i_node = lst_modifiers.begin(); i_node != lst_modifiers.end() && (*i_node)->GetPriority() < p_mod->GetPriority(); ++i_node)
+		    ;
+		  lst_modifiers.insert(i_node, p_mod);
 		}
 	    }
 	}

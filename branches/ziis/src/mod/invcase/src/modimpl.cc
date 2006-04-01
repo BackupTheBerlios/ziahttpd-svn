@@ -5,11 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 11:13:09 2006 texane
-// Last update Sat Apr 01 19:09:52 2006 texane
+// Last update Sat Apr 01 19:10:46 2006 texane
 //
 
 
-#include "include/modimpl.hh"
+#include "include/mod_invcase.hh"
 
 
 using namespace std;
@@ -23,28 +23,30 @@ using namespace std;
 
 IModule* GetNewInstance()
 {
-  return new mod_ssl;
+  cout << "new instance of mod_invcase" << endl;
+  return new mod_invcase;
 }
 
 
 // implement IModule
 
-bool mod_ssl::ReadConfig(const char* nm_conf)
+bool mod_invcase::ReadConfig(const char* nm_conf)
 {
   return false;
 }
 
-const char* mod_ssl::GetModuleName()
+const char* mod_invcase::GetModuleName()
 {
-  return "mod_ssl";
+  return "mod_invcase";
 }
 
-const char* mod_ssl::GetModuleVersion()
+const char* mod_invcase::GetModuleVersion()
 {
   return "1.0";
 }
 
-void mod_ssl::OnLoad(IFS*)
+void mod_invcase::OnLoad(IFS*)
 {
   // initialize the sslmodule, global wide setting
+  cout <<  "loading mod_invase" << endl;
 }
