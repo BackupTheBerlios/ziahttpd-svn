@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Sat Apr 01 17:29:36 2006 texane
+// Last update Sat Apr 01 17:58:50 2006 texane
 //
 
 
@@ -18,14 +18,7 @@
 
 using namespace std;
 
-
-// internal management
-
-static void print_ssl_error()
-{
-  cout << ERR_error_string(ERR_get_error(), NULL) << endl;
-}
-
+extern void print_ssl_error();
 
 void mod_ssl::reset()
 {
@@ -44,6 +37,9 @@ bool mod_ssl::reload(const string& nm_conf)
   return true;
 }
 
+#define SSL_CERT	"conf\\ssl_certs\\cacert.pem"
+#define SSL_PRIVKEY	"conf\\ssl_certs\\privkey.pem"
+
 mod_ssl::mod_ssl(const string& nm_conf)
 {
   int nr_ret;
@@ -61,7 +57,7 @@ mod_ssl::mod_ssl(const string& nm_conf)
   OpenSSL_add_all_algorithms();
 
   // init ssl context
-  m_ssl_method = SSLv23_method();
+  m_ssl_method = SSLv23_server_method();
   if (m_ssl_method == 0)
     {
       print_ssl_error();
@@ -75,9 +71,10 @@ mod_ssl::mod_ssl(const string& nm_conf)
       return ;
     }
 
-  nr_ret = SSL_CTX_use_certificate_chain_file(m_ssl_context, "C:\\home\\texane\\ziafs\\branches\\ziis\\conf\\ssl_certs\\cacert.pem");
+  SSL_CTX_set_mode(m_ssl_context, SSL_MODE_AUTO_RETRY);
+  nr_ret = SSL_CTX_use_certificate_chain_file(m_ssl_context, SSL_CERT);
   if (nr_ret == 1)
-    nr_ret = SSL_CTX_use_RSAPrivateKey_file(m_ssl_context, "C:\\home\\texane\\ziafs\\branches\\ziis\\conf\\ssl_certs\\privkey.pem", SSL_FILETYPE_PEM);
+    nr_ret = SSL_CTX_use_RSAPrivateKey_file(m_ssl_context, SSL_PRIVKEY, SSL_FILETYPE_PEM);
 
   if (nr_ret <= 0)
     print_ssl_error();
@@ -88,6 +85,4 @@ mod_ssl::~mod_ssl()
   ERR_free_strings();
   EVP_cleanup();
   SSL_CTX_free(m_ssl_context);
-
-  cout << "deletingopensll" << endl;
 }

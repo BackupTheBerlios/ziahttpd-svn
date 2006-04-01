@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 11:13:09 2006 texane
-// Last update Sat Apr 01 13:11:34 2006 texane
+// Last update Sat Apr 01 17:55:19 2006 texane
 //
 
 
@@ -23,7 +23,6 @@ using namespace std;
 
 IModule* GetNewInstance()
 {
-  cout << "[modssl] GetNewInstance()" << endl;
   return new mod_ssl;
 }
 
@@ -49,4 +48,3 @@ void mod_ssl::OnLoad(IFS*)
 {
   // initialize the sslmodule, global wide setting
 }
-

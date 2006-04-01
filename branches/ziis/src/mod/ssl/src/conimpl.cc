@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 11:14:10 2006 texane
-// Last update Sat Apr 01 17:13:22 2006 texane
+// Last update Sat Apr 01 17:58:19 2006 texane
 //
 
 
@@ -15,15 +15,15 @@
 using namespace std;
 
 
-static void print_ssl_error()
-{
-  cout << ERR_error_string(ERR_get_error(), NULL) << endl;
-}
-
 static void reset_ssl_data(mod_ssl::_ssl_data_t* p_ssl_data)
 {
   p_ssl_data->m_bio = 0;
   p_ssl_data->m_ssl = 0;
+}
+
+void print_ssl_error()
+{
+  cout << ERR_error_string(ERR_get_error(), NULL) << endl;
 }
 
 
@@ -44,31 +44,22 @@ void* mod_ssl::Accept(SOCKET id_socket)
   mod_ssl::_ssl_data_t* p_ssl_data;
   int val_accept;
 
-  cout << GetCurrentThreadId() << ": [module] module->Accept()" << "on socket " << id_socket << endl;
+  cout << GetCurrentThreadId() << ": [module] module->Accept()" << "on socket " << (int)id_socket << endl;
 
   // checks
   if (m_ssl_context == 0)
-    {
-      cout << "ssl_context isnull" << endl;
-      return 0;
-    }
+    return 0;
 
   p_ssl_data = new mod_ssl::_ssl_data_t;
   reset_ssl_data(p_ssl_data);
   p_ssl_data->m_bio = BIO_new_socket((int)id_socket, BIO_NOCLOSE);
   if (p_ssl_data->m_bio == 0)
-    {
-      cout << "error bio_new_socket" << endl;
-      return 0;
-    }
+    return 0;
 
   // create the ssession and set the bio
   p_ssl_data->m_ssl = SSL_new(m_ssl_context);
   if (p_ssl_data->m_ssl == 0)
-    {
-      cout << "cannot et ssl context" << endl;
-      return 0;
-    }
+    return 0;
   SSL_set_bio(p_ssl_data->m_ssl, p_ssl_data->m_bio, p_ssl_data->m_bio);
 
   // accept the connection(handshake)
@@ -79,8 +70,6 @@ void* mod_ssl::Accept(SOCKET id_socket)
       BIO_free_all(p_ssl_data->m_bio);
       return 0;
     }
-
-  cout << "accept done" << endl;
 
   return (void*)p_ssl_data;
 }
@@ -94,13 +83,14 @@ int mod_ssl::Recv(SOCKET h_sock, void* p_data, char* p_buf, int ln_buf)
   if (p_ssl_data == 0)
     return -1;
 
+//   SSL_set_accept_state(p_ssl_data->m_ssl);
+
  bio_read_again:
   nr_read = SSL_read(p_ssl_data->m_ssl, p_buf, ln_buf);
   if (nr_read <= 0)
     {
       if (BIO_should_retry(p_ssl_data->m_bio))
 	goto bio_read_again;
-      cout << "error reading" << endl;
       return -1;
     }
   
@@ -115,13 +105,14 @@ int mod_ssl::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
   if (p_data == 0)
     return -1;
 
+//   SSL_set_accept_state(p_ssl_data->m_ssl);
+
  bio_send_again:
   nr_sent = SSL_write(p_ssl_data->m_ssl, p_buf, ln_buf);
   if (nr_sent <= 0)
     {
       if (BIO_should_retry(p_ssl_data->m_bio))
 	goto bio_send_again;
-      cout << "error sending" << endl;
       return -1;
     }
   
@@ -145,10 +136,6 @@ void mod_ssl::Close(SOCKET id_socket, void* p_data)
       shutdown(id_socket, 1);
       val_shutdown =  SSL_shutdown(p_ssl_data->m_ssl);
     }
-
-  // error closing the connection
-  if (val_shutdown <= 0)
-    cout << "shutdown failed" << endl;
 
   // release internals
   if (p_ssl_data->m_bio)

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sat Apr 01 17:25:18 2006 texane
+// Last update Sat Apr 01 17:37:04 2006 texane
 //
 
 
@@ -154,10 +154,6 @@ bool thr::pool::sess_read_metadata(session_t& sess)
 	  sess.done = true;
 	  return false;
 	}
-
-      cout << "consuming:" << endl;
-      cout << buffer(buf, nr_recv).tostring() << endl;
-
       is_valid = sess.proto.consume(buf, nr_recv, end_of_metadata);
       if (is_valid == false)
 	{
@@ -251,10 +247,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
   sess_release(sess);
 
   if (sess.ret_in_cache == false)
-    {
-      cout << "return in cache" << endl;
-      goto serve_another;
-    }
+    goto serve_another;
 
   return 0;
 }
