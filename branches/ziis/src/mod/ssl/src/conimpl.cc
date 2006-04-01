@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 11:14:10 2006 texane
-// Last update Sat Apr 01 16:53:49 2006 texane
+// Last update Sat Apr 01 17:13:22 2006 texane
 //
 
 
@@ -62,14 +62,16 @@ void* mod_ssl::Accept(SOCKET id_socket)
       return 0;
     }
 
+  // create the ssession and set the bio
   p_ssl_data->m_ssl = SSL_new(m_ssl_context);
   if (p_ssl_data->m_ssl == 0)
     {
       cout << "cannot et ssl context" << endl;
       return 0;
     }
-
   SSL_set_bio(p_ssl_data->m_ssl, p_ssl_data->m_bio, p_ssl_data->m_bio);
+
+  // accept the connection(handshake)
   val_accept = SSL_accept(p_ssl_data->m_ssl);
   if (val_accept <= 0)
     {

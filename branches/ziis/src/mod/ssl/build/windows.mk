@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Sat Apr 01 11:03:41 2006 texane
+## Last update Sat Apr 01 17:04:55 2006 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -27,7 +27,7 @@ CCPATHS	=	-I"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/
 		-I"$(PROJ_ROOT)/src/include/sys" \
 		-I"$(PROJ_ROOT)/src/include/config" \
 		-I"src/include"
-CCDEFS	=	-D "_WIN32" -D "_CONSOLE" -D "_MBCS" -D "_MT" -D "_SYSAPI"=2 -MT -DTIXML_USE_STL
+CCDEFS	=	-D "_WIN32" -D "_CONSOLE" -D "_MBCS" -D "_MT" -D "_SYSAPI"=2 -MD -DTIXML_USE_STL
 CCGEN	=	-O2 -Wp64 -GX -GR
 CCWARNS	=	-W3
 CCOUT	=	-c

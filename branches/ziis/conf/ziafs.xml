@@ -7,8 +7,8 @@
 </system>
 
 
-<module name="mod_sock">
-<file>src/mod/sock/mod_sock.lo</file>
+<module name="mod_ssl">
+<file>src/mod/ssl/mod_ssl.lo</file>
 </module>
 
 <module name="mod_resource">
@@ -25,9 +25,8 @@
   <cgi_id>1</cgi_id>
   <port>40000</port>
   <directory_index>index.html index.htm</directory_index>
-  <modulename>mod_sock</modulename>
+  <modulename>mod_ssl</modulename>
   <modulename>mod_resource</modulename>
-  <modulename>mod_encoding</modulename>
 </server>
 
 

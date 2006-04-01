@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Wed Mar 23 16:33:48 2005 texane
+// Last update Sat Apr 01 15:01:40 2006 texane
 //
 
 
@@ -126,9 +126,10 @@ int mod_sock::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
   return nr_sent;
 }
 
-void mod_sock::Close(SOCKET, void*)
+void mod_sock::Close(SOCKET id_socket, void*)
 {
   cout << "[module] module->Close()" << endl;
+  sysapi::insock::close(id_socket);
 }
 
 

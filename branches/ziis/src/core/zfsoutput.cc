@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Fri Mar 24 21:30:43 2006 texane
+// Last update Sat Apr 01 15:34:09 2006 texane
 //
 
 
@@ -80,7 +80,7 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
   while (ln_buf > 0 && is_error == false)
     {
       // finally send the buffer
-      nr_sent = m_session->m_conn_module->Send(m_session->cli_sock, NULL, ptr, ln_buf);
+      nr_sent = m_session->m_conn_module->Send(m_session->cli_sock, m_session->m_conn_data, ptr, ln_buf);
       if (nr_sent == -1)
 	{
 	  is_error = true;

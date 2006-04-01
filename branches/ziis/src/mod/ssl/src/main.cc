@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Sat Apr 01 16:58:31 2006 texane
+// Last update Sat Apr 01 17:29:36 2006 texane
 //
 
 
@@ -46,6 +46,8 @@ bool mod_ssl::reload(const string& nm_conf)
 
 mod_ssl::mod_ssl(const string& nm_conf)
 {
+  int nr_ret;
+
   reload(nm_conf);
 
   // reset
@@ -73,18 +75,12 @@ mod_ssl::mod_ssl(const string& nm_conf)
       return ;
     }
 
-  cout << m_ssl_context << endl;
+  nr_ret = SSL_CTX_use_certificate_chain_file(m_ssl_context, "C:\\home\\texane\\ziafs\\branches\\ziis\\conf\\ssl_certs\\cacert.pem");
+  if (nr_ret == 1)
+    nr_ret = SSL_CTX_use_RSAPrivateKey_file(m_ssl_context, "C:\\home\\texane\\ziafs\\branches\\ziis\\conf\\ssl_certs\\privkey.pem", SSL_FILETYPE_PEM);
 
-  if (SSL_CTX_use_certificate_chain_file(m_ssl_context, "C:\\home\\texane\\ziafs\\branches\\ziis\\conf\\ssl_certs\\cacert.pem") != 1)
-    {
-      cout << "error using certif" << endl;
-    }
-  if (SSL_CTX_use_RSAPrivateKey_file(m_ssl_context, "C:\\home\\texane\\ziafs\\branches\\ziis\\conf\\ssl_certs\\privkey.pem", SSL_FILETYPE_PEM) != 1)
-    {
-      cout << "error using key" << endl;
-    }
-
-  cout << "ssl context got" << endl;
+  if (nr_ret <= 0)
+    print_ssl_error();
 }
 
 mod_ssl::~mod_ssl()

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:50:30 2006 texane
-// Last update Tue Mar 21 20:51:07 2006 texane
+// Last update Sat Apr 01 17:19:51 2006 texane
 //
 
 
@@ -15,8 +15,10 @@
 #include <ziafs_net.hh>
 #include <ziafs_config.hh>
 #include <sys/sysapi.hh>
+#include <iostream>
 
 
+using namespace std;
 using std::list;
 using namespace sysapi;
 
@@ -44,7 +46,7 @@ bool net::server::reload_config(config* config)
   port = (*curr_srv)->port;
   insock::n_to_inaddr(srv_addr, INADDR_ANY, port);
 
-  // build the module pipeline
+  // build the module list
   m_modman.reload(config);
 
   return true;

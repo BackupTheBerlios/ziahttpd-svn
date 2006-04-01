@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Fri Mar 24 20:56:07 2006 texane
+// Last update Sat Apr 01 17:25:18 2006 texane
 //
 
 
@@ -84,6 +84,8 @@ void thr::pool::sess_reset(session_t& sess)
   sess.srv = 0;
   sess.thr_slot = 0;
   sess.ret_in_cache = true;
+//   sess.m_conn_data = 0;
+//   sess.m_conn_module = 0;
   sess_reset_request(sess);
 }
 
@@ -93,8 +95,11 @@ void thr::pool::sess_release(session_t& sess)
 
   core = sess.srv->core;
   sess_release_request(sess);
-  sess.m_conn_module->Close(sess.cli_sock, sess.m_conn_data);
-  insock::close(sess.cli_sock);
+  if (sess.m_conn_module)
+    {
+      sess.m_conn_module->Close(sess.cli_sock, sess.m_conn_data);
+      sess.m_conn_data = 0;
+    }
 }
 
 
@@ -121,13 +126,12 @@ bool thr::pool::sess_accept_connection(session_t& sess)
 
   // Accept a new connection, delegate accept
   herr = insock::accept(sess.cli_sock, sess.cli_addr, sess.srv->srv_sock);
+  if (herr == error::SUCCESS && sess.m_conn_module)
+    sess.m_conn_data = sess.m_conn_module->Accept(sess.cli_sock);
   if (sess.thr_slot->pool->assign_task(server_entry, (void*)sess.srv) == false)
     sess.ret_in_cache = false;
   if (herr == error::SUCCESS)
-    {
-      sess.m_conn_data = sess.m_conn_module->Accept(sess.cli_sock);
-      return true;
-    }
+    return true;
   return false;
 }
 
@@ -138,8 +142,6 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
   int nr_recv;
 
-  cout << "------------------>" << endl;
-
   if (sess.done == true)
     return false;
 
@@ -149,20 +151,21 @@ bool thr::pool::sess_read_metadata(session_t& sess)
       nr_recv = sess.m_conn_module->Recv(sess.cli_sock, sess.m_conn_data, (char*)buf, sizeof(buf));
       if (nr_recv == -1)
 	{
-	  cout << "-------->close connection" << endl;
 	  sess.done = true;
 	  return false;
 	}
+
+      cout << "consuming:" << endl;
+      cout << buffer(buf, nr_recv).tostring() << endl;
+
       is_valid = sess.proto.consume(buf, nr_recv, end_of_metadata);
       if (is_valid == false)
 	{
-	  cout << "-------->is_valid" << endl;
 	  end_of_metadata = true;
 	  sess.done = true;
 	}
       else if (end_of_metadata == true)
 	{
-	  cout << "-------->end of metadata" << endl;
 	}
     }
 
@@ -249,6 +252,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   if (sess.ret_in_cache == false)
     {
+      cout << "return in cache" << endl;
       goto serve_another;
     }
 

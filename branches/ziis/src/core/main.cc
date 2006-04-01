@@ -5,15 +5,16 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 01:04:58 2006 texane
-// Last update Wed Mar 22 23:08:29 2006 texane
+// Last update Sat Apr 01 14:15:58 2006 texane
 //
 
 
 #include <list>
 #include <ziafs.hh>
+#include <iostream>
 
 
-using std::list;
+using namespace std;
 
 
 int main(int, char**)
