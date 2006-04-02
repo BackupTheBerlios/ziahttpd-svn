@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Thu Mar 23 18:55:35 2006 texane
+// Last update Sun Apr 02 19:51:22 2006 texane
 //
 
 
@@ -24,7 +24,7 @@ class ZfsInput : public IInput
 {
 public:
   ZfsInput(thr::pool::session_t&);
-	ZfsInput(thr::pool::session_t*);
+  ZfsInput(thr::pool::session_t*);
   ~ZfsInput();
 
   const char* GetInput(const char*);
@@ -37,10 +37,10 @@ public:
   bool GetNextHeader(char**, char**);
 
 private:
-	bool genete_type_mimes(net::config& conf, std::string& extension, std::string& type);
-	net::http* m_proto;
+  bool genete_type_mimes(net::config& conf, std::string& extension, std::string& type);
+  net::http* m_proto;
   thr::pool::session_t* m_session;
-  int										m_ip_client;
+  int m_ip_client;
 
 };
 

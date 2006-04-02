@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Sat Apr 01 15:01:40 2006 texane
+// Last update Sun Apr 02 17:53:36 2006 texane
 //
 
 
@@ -107,7 +107,7 @@ int mod_sock::Recv(SOCKET h_sock, void* p_data, char* p_buf, int ln_buf)
   sysapi::error::handle_t h_err;
   unsigned int nr_recv;
 
-  cout << "[module] module->Recv()" << endl;
+//   cout << "[module] module->Recv()" << endl;
   h_err = sysapi::insock::recv(h_sock, (unsigned char*)p_buf, ln_buf, nr_recv);
   if (h_err != sysapi::error::SUCCESS)
     return -1;

@@ -201,6 +201,8 @@ status::error					net::http::dump(buffer& buf)
 	buf = stream.str();
 	ziafs_return_status(status::SUCCESS);
 }
+
+
 status::error					net::http::handle_metadata()
 {
 	if (request.m_data_enco)

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Sat Apr 01 16:31:51 2006 texane
+// Last update Sun Apr 02 22:05:33 2006 texane
 //
 
 
@@ -45,8 +45,6 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
   int nr_input;
   bool is_done;
 
-  cout << GetCurrentThreadId() << ": [generatedocument]: " << path << endl;
-
   // resource creation
   p_resource = http_helper::create_resource(in, path, out, conf);
   if (p_resource == 0)
@@ -77,6 +75,17 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
       out.SetOutput("content-length", oss.str().c_str());
     }
 
+  // debug resource
+//   {
+//     cout << GetCurrentThreadId() << ": [generatedocument]: " << path << endl;
+//     cout << "te: chunked ==  " << is_transfer_chunked << endl;
+//     cout << "resource input size == " << p_resource->input_size() << endl;
+//     if (in.GetInput("content-length"))
+//       cout << "input hash value == " << in.GetInput("content-length") << endl;
+//     else
+//       cout << "input hash value == " << 0 << endl;
+//   }
+
   // send response header
   if (out.SendHeader() == false)
     is_done = true;
@@ -89,9 +98,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	{
 	  nr_input = in.ReadPostEntity(buf_input, sizeof(buf_input));
 	  if (nr_input > 0)
-	    {
-	      p_resource->flush_input( buffer((unsigned char*)buf_input, (unsigned int)nr_input) );
-	    }
+	    p_resource->flush_input( buffer((unsigned char*)buf_input, (unsigned int)nr_input) );
 	}
 
       // generate the resource

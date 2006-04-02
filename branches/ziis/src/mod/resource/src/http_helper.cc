@@ -174,9 +174,13 @@ bool				http_helper::create_resource(resource::handle*& hld,
 	resource::e_error error = resource::E_SUCCESS;
 	resouce_type_t r_type = IS_NONE;
 	int status_code = 0;
+	  unsigned int sz_input;
 
 	pre_create_resource(conf, r_type, status_code, inp, out, localname);
 	get_type_of_resource(conf, r_type, inp, out, localname, status_code);
+	  sz_input = 0;
+	  if (inp.GetInput("content-length"))
+	    sz_input = atoi(inp.GetInput("Content-length"));
 
 	if (r_type == IS_FILE)
 	{
@@ -191,7 +195,7 @@ bool				http_helper::create_resource(resource::handle*& hld,
 		// This line has been modified by texane
 		// buffer is a buffer to prefecth the input.
 		// content of the mline.buf will be removed
-	  error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env);
+	  error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env, sz_input);
 	}
 	else if (r_type == EXEC_BY_CGI)
 	{
@@ -254,8 +258,8 @@ bool				http_helper::create_resource(resource::handle*& hld,
 		error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
 
 	}
-	//else if (r_type == IS_PUT) ;
-	//		error = manager.factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, m_uri.localname(), &m_line.m_buf, body_size());
+	else if (r_type == IS_PUT)
+		error = resource::manager::factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, localname, sz_input);
 	else if (r_type == IS_FLY)
 		error = resource::manager::factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, status_code);
 	else if (r_type == IS_FAKE)

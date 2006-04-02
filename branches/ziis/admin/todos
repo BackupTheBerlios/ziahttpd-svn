@@ -1,5 +1,7 @@
 todos
 
+-> bug: temporar moved bugged under mozilla
+-> cgi_echo is residing when the connection is closed
 -> perl
 -> ssl
 -> checks error
@@ -18,11 +20,7 @@ todos
 -> implement ifs
 -> implement post + cgi + put + environ
 -> config -> conf path by module
--> check input sizes (limit on metadata)
 
 toremember
 -> the module may be plugged in another server
 -> the server should be reloadable
-
-todos
--> ensure limit on network input sizes

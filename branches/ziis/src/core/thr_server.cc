@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sat Apr 01 18:36:50 2006 texane
+// Last update Sun Apr 02 20:21:25 2006 texane
 //
 
 
@@ -141,19 +141,32 @@ bool thr::pool::sess_read_metadata(session_t& sess)
   bool end_of_metadata;
   unsigned char buf[ZIAFS_STATIC_BUFSZ];
   int nr_recv;
+  int nr_total;
 
   if (sess.done == true)
     return false;
 
+  nr_total = 0;
   end_of_metadata = false;
   while (end_of_metadata == false)
     {
       nr_recv = sess.m_conn_module->Recv(sess.cli_sock, sess.m_conn_data, (char*)buf, sizeof(buf));
       if (nr_recv == -1)
 	{
+	  cout << "has closed connection" << endl;
 	  sess.done = true;
 	  return false;
 	}
+
+      nr_total += nr_recv;
+      if (nr_total > ZIAFS_MAX_METADATA)
+	{
+	  cout << "[!] error metadata overflow" << endl;
+	  end_of_metadata = true;
+	  sess.done = true;
+	  return false;
+	}
+
       is_valid = sess.proto.consume(buf, nr_recv, end_of_metadata);
       if (is_valid == false)
 	{
@@ -241,7 +254,6 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
     {
       sess_reset_request(sess);
       sess_read_metadata(sess);
-      cout << "endof metadata" << endl;
       sess_handle_document(&sess);
       sess_release_request(sess);
     }

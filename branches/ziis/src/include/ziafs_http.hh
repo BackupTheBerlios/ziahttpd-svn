@@ -60,6 +60,7 @@ namespace net
     status::error					produce(buffer&);
     status::error					dump(buffer&);
     std::string						method() { return m_method; };
+    utils::line& line() { return m_line; };
 		std::string						query() { return m_query; };
 		bool									reset();
 		bool									request_header_validation();

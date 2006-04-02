@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:45:04 2006 texane
-// Last update Thu Mar 23 20:07:48 2006 texane
+// Last update Sun Apr 02 22:04:11 2006 texane
 //
 
 
@@ -89,31 +89,15 @@ resource::e_error resource::process::flush_environ()
 
 resource::e_error resource::process::flush_input(buffer& buf)
 {
-  bool done;
   unsigned int nsent;
   sysapi::error::handle_t sys_err;
 
-  done = false;
-  while (done == false)
-    {
-      if (buf.size() == 0)
-	{
-	  done = true;
-	}
-      else
-	{
-	  sys_err = sysapi::file::write(read_handle, buf.bufptr(), (unsigned int)buf.size(), nsent);
-	  if (sys_err != sysapi::error::SUCCESS)
-	    {
-	      done = true;
-	    }
-	  else
-	    {
-	      in_size -= nsent;
-	      buf.remove_front(nsent);
-	    }
-	}
-    }
+  sys_err = sysapi::file::write(read_handle, buf.bufptr(), (unsigned int)buf.size(), nsent);
+  if (buf.size() > in_size)
+    in_size = 0;
+  else
+    in_size -= (int)buf.size();
+  buf.clear();
   return E_SUCCESS;
 }
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:40:22 2006 texane
-// Last update Fri Mar 24 13:57:08 2006 texane
+// Last update Sun Apr 02 19:25:31 2006 texane
 //
 
 
@@ -42,7 +42,7 @@ public:
   void GenerateDocument(IInput&, const char*, IOutput&);
   const char** GetSupportedMime();
 private:
-	net::config *conf;
+  net::config *conf;
 };
 
 

@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Wed Feb 22 11:57:18 2006 texane
+## Last update Sun Apr 02 21:26:34 2006 texane
 ##
 
 # ! Always include this file
@@ -13,9 +13,9 @@
 # include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
-name	= cgi_echo.exe
+name	= cgi_echo_1000.exe
 # dir_listing.exe
-srcs	= main_echo.cc
+srcs	= main.cc
 # main_dirlist.cc
 objs	= $(srcs:.cc=.o)
 trash	= $(srcs:.cc=.cc~) \
