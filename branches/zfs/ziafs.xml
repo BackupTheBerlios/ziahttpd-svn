@@ -15,7 +15,7 @@
 
 <directory id=1>
   <servername>*</servername>
-  <docroot>C:\WINDOWS\system32</docroot>
+  <docroot>./</docroot>
 </directory>
 
 <mime extension="html">
