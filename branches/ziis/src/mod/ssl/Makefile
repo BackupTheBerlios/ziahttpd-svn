@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Mon Apr  3 14:29:33 2006 
+## Last update Mon Apr  3 18:34:04 2006 
 ##
 
 # ! Always include this file
 # !include "build/$(PROJ_ENV).mk" #windows
-include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+include build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= mod_ssl.lo

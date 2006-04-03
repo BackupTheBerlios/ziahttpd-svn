@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Mon Apr  3 16:56:49 2006 
+// Last update Mon Apr  3 19:07:49 2006 
 //
 
 
@@ -198,6 +198,8 @@ bool mod::manager::reload(net::config* p_config)
 
 // module wrapper class
 
+#include <dlfcn.h>
+
 mod::modinfo::modinfo(const string& path)
 {
   IModule* (*fptr)();
@@ -215,6 +217,10 @@ mod::modinfo::modinfo(const string& path)
 	  cout << "cannot resolve module::NewInstance" << endl;
 	  sysapi::module::unload(m_handle);
 	}
+    }
+  else
+    {
+      cout << "[mod_load_failure]: " << path << dlerror() << endl;
     }
 }
 

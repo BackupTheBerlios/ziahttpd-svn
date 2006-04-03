@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Sat Apr 01 17:58:50 2006 texane
+// Last update Mon Apr  3 20:07:41 2006 
 //
 
 
@@ -37,8 +37,13 @@ bool mod_ssl::reload(const string& nm_conf)
   return true;
 }
 
-#define SSL_CERT	"conf\\ssl_certs\\cacert.pem"
-#define SSL_PRIVKEY	"conf\\ssl_certs\\privkey.pem"
+#ifdef _WIN32
+# define SSL_CERT	"conf\\ssl_certs\\cacert.pem"
+# define SSL_PRIVKEY	"conf\\ssl_certs\\privkey.pem"
+#else
+# define SSL_CERT	"conf/ssl_certs/cacert.pem"
+# define SSL_PRIVKEY	"conf/ssl_certs/privkey.pem"
+#endif // _WIN32
 
 mod_ssl::mod_ssl(const string& nm_conf)
 {
@@ -53,6 +58,7 @@ mod_ssl::mod_ssl(const string& nm_conf)
   // load ssl error strings
   SSL_library_init();
   SSL_load_error_strings();
+
   ERR_load_BIO_strings();
   OpenSSL_add_all_algorithms();
 

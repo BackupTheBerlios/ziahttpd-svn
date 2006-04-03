@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 11:13:09 2006 texane
-// Last update Sat Apr 01 19:09:52 2006 texane
+// Last update Mon Apr  3 18:43:26 2006 
 //
 
 
@@ -23,6 +23,7 @@ using namespace std;
 
 IModule* GetNewInstance()
 {
+  cout << "new instance of ssl" << endl;
   return new mod_ssl;
 }
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Mon Apr  3 18:14:47 2006 
+// Last update Mon Apr  3 20:11:51 2006 
 //
 
 
@@ -153,7 +153,6 @@ bool thr::pool::sess_read_metadata(session_t& sess)
       nr_recv = sess.m_conn_module->Recv(sess.cli_sock, sess.m_conn_data, (char*)buf, sizeof(buf));
       if (nr_recv == -1)
 	{
-	  cout << "has closed connection" << endl;
 	  sess.done = true;
 	  return false;
 	}
@@ -245,15 +244,10 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   // get the connection module
   if (sess.srv->m_modman.get_connection_module(sess.m_conn_module) == false)
-    {
-      cout << "cannot get the connecntion module" << endl;
-      return 0;
-    }
+    return 0;
 
   // session pipeline
-  cout << "binding server" << endl;
   sess_bind_server(sess);
-  cout << "accepting new connection" << endl;
   sess_accept_connection(sess);
 
   while (sess.done == false)
