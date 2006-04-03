@@ -260,7 +260,7 @@ bool				http_helper::create_resource(resource::handle*& hld,
 
 	}
 	else if (r_type == IS_PUT)
-		error = resource::manager::factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, localname, sz_input);
+	  error = resource::manager::factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, localname, sz_input);
 	else if (r_type == IS_FLY)
 		error = resource::manager::factory_create(hld, resource::ID_BYFLY, resource::O_INPUT, status_code);
 	else if (r_type == IS_FAKE)

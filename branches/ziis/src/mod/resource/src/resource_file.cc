@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Fri Mar 24 20:23:36 2006 texane
+// Last update Tue Apr 04 00:02:44 2006 texane
 //
 
 
@@ -39,9 +39,11 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
     {
       sysapi::error::handle_t sys_err;
       unsigned int nr_written;
+      unsigned int nr_todel;
       bool done;
 
       done = false;
+      nr_todel = 0;
       while (done == false)
 	{
 	  if (data.size() == 0)
@@ -54,10 +56,19 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
 	      if (sys_err != sysapi::error::SUCCESS)
 		done = true;
 	      else
-		data.remove_front(nr_written);
+		{
+		  data.remove_front(nr_written);
+		  nr_todel += nr_written;
+		}
 	    }
 	}
+      if (nr_todel > in_size)
+	in_size = 0;
+      else
+	in_size -= nr_todel;
       e_err = E_CONTINUE;
+      if (in_size == 0)
+	e_err = E_ALREADY_GEN;
     }
   // send on the wire
   else if (omode == O_INPUT)

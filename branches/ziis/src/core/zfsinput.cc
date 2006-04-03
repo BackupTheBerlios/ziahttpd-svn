@@ -106,7 +106,6 @@ int ZfsInput::ReadPostEntity(char* p_buf, int nr_size)
 {
   int nr_read;
   int nr_total;
-//   bool is_done;
   buffer buf_remain;
 
   // first read from the buffer
@@ -118,32 +117,6 @@ int ZfsInput::ReadPostEntity(char* p_buf, int nr_size)
     }
   nr_read = m_session->m_conn_module->Recv(m_session->cli_sock, m_session->m_conn_data, p_buf, nr_size);
   return nr_read;
-
-//   is_done = false;
-//   nr_read = 0;
-//   nr_total = 0;
-//   while (is_done == false)
-//     {
-//       if (nr_size <= 0)
-// 	{
-// 	  is_done = true;
-// 	}
-//       else
-// 	{
-// 	  nr_read = m_session->m_conn_module->Recv(m_session->cli_sock, m_session->m_conn_data, p_buf, nr_size);
-// 	  if (nr_read < 0)
-// 	    {
-// 	      nr_read = -1;
-// 	      is_done = true;
-// 	    }
-// 	  else
-// 	    {
-// 	      nr_total += nr_read;
-// 	      nr_size -= nr_read;
-// 	      p_buf += nr_read;
-// 	    }
-// 	}
-//     }
 
   // here pass thru the decompress module
 //   if (m_session->m_comp_in_module)

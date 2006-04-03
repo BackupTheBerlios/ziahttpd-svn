@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Mon Apr 03 19:39:39 2006 texane
+// Last update Mon Apr 03 23:38:29 2006 texane
 //
 
 
@@ -102,16 +102,23 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
 bool	ZfsOutput::SendHeader()
 {
   buffer header;
-  const char *p_buf;
+  string str_expect;
+  buffer buf_expected;
+  const char* p_buf;
   int ln_buf;
 
-  m_proto->stringify_header(header);
+  str_expect = m_proto->request["expect"];
+  if (str_expect.empty() == false)
+    {
+      size_t i = m_proto->request["expect"].find("-", 0);
+      string st_code;
+      if (i != std::string::npos)
+	st_code = m_proto->request["expect"].substr(0, i);
+      buf_expected = m_proto->request.m_version + " " + st_code + "\r\n\r\n";
+    }
 
-#ifdef DEBUG_STEP
-  cout << "----------- header" << endl;
-  cout << header.tostring() << endl;
-  getchar();
-#endif // DEBUG_STEP
+  m_proto->stringify_header(header);
+  header = buf_expected + header;
 
   p_buf = header.c_str();
   ln_buf = (int)strlen(p_buf);
