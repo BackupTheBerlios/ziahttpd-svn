@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../src/include/;../src/include/sys/;../src/lib/src/tinyxml"
+				AdditionalIncludeDirectories="../src/include/;../src/include/sys/;../src/lib/src/tinyxml;../src/lib/src/CORE"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;TIXML_USE_STL;ZIAFS_DEBUG_MSG"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"

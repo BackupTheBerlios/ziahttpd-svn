@@ -62,13 +62,14 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 		if (ln.empty() && (m_state != STUSLINES))
 		{
 //			process_stage_fn = http::second_stage;
-			ziafs_debug_msg("end of header, go to second stage ;)%s\n", "");
+			ziafs_debug_msg("end of header, check if metadata is correct%s\n", "");
 			if (method_can_have_body())
 				handle_metadata();
 			m_state = BODYDATA;
 //		End of metadata
-			request_header_validation();
 			finished = true;
+			if (!request_header_validation())
+				return false;
 			return true;
 		}
 

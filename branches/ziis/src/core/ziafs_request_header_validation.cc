@@ -53,11 +53,21 @@ bool	net::http::valid_uri()
 
 bool	net::http::valid_version()
 {
+	if (stricmp("http/1.1", request.m_version.c_str()) && stricmp("http/1.0", request.m_version.c_str()))
+	{
+		m_uri.status_code() = 505;
+		return false;
+	}
 	return true;
 }
 
 bool	net::http::valid_host()
 {
+	if ((!stricmp("http/1.1", request.m_version.c_str())) && (request["host"].empty()))
+	{
+		m_uri.status_code() = 400;
+		return false;
+	}
 	return true;
 }
 
@@ -80,7 +90,10 @@ bool	net::http::valid_root()
 	}
 	i--;
 	if (i < 0)
+	{
 		m_uri.status_code() = 403;
+		return false;
+	}
 	return true;
 }
 
