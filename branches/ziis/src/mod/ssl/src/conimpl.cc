@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 11:14:10 2006 texane
-// Last update Mon Apr  3 19:59:57 2006 
+// Last update Mon Apr 03 19:05:43 2006 texane
 //
 
 
@@ -43,8 +43,6 @@ void* mod_ssl::Accept(SOCKET id_socket)
 {
   mod_ssl::_ssl_data_t* p_ssl_data;
   int val_accept;
-
-  cout << pthread_self() << ": [module] module->Accept()" << "on socket " << (int)id_socket << endl;
 
   // checks
   if (m_ssl_context == 0)
@@ -122,8 +120,6 @@ int mod_ssl::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
 void mod_ssl::Close(SOCKET id_socket, void* p_data)
 {
   int val_shutdown;
-
-  cout << pthread_self() << ": [ssl_mod]->Close()" << endl;
 
   _ssl_data_t* p_ssl_data = (_ssl_data_t*)p_data;
   if (p_data == 0)
