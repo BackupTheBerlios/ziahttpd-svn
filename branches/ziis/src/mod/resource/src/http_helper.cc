@@ -115,11 +115,17 @@ bool				http_helper::pre_create_resource(net::config& conf,
 		}
 	}
 
-	if (!file::is_path_valid(localname) && !status_code)
-		status_code = 404;
-	if (!file::is_readable(localname) && !status_code)
-		status_code = 403;
-	return true;
+	std::string method_str;
+	method_str = inp.GetInputMethod();
+	stringmanager::normalize(method_str);
+	if (method_str != "put")
+	{
+		if (!file::is_path_valid(localname) && !status_code)
+			status_code = 404;
+		if (!file::is_readable(localname) && !status_code)
+			status_code = 403;
+	}
+		return true;
 }
 
 bool			http_helper::get_cgi_path(net::config& conf, std::string& path, std::string& localname)

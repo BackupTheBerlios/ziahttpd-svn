@@ -70,6 +70,7 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 			finished = true;
 			if (!request_header_validation())
 				return false;
+			std::cout << method();
 			return true;
 		}
 

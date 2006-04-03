@@ -24,7 +24,10 @@ ZfsInput::ZfsInput(thr::pool::session_t* s)
 	
 	m_session = s;
 	m_proto = &m_session->proto;
+	//std::cout<< "->" << m_proto->method();
+	//std::cout << "-->" << GetInputMethod();
 	m_proto->get_uri().extension(extension);
+
 	genete_type_mimes(*(s->srv->srv_config), extension, type);
 	s->srv->m_modman.get_generator_module(s->m_gen_module, type);
 	// get stream modifier list

@@ -15,7 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod_encoding", "..\src\mod\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod_psp", "..\src\mod\psp\mod_psp.vcproj", "{747D915C-475D-4E6E-ABAD-8F9CC917CA5A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod_ssl", "..\src\mod\ssl\build\mod_ssl.vcproj", "{70F15B31-497A-42A3-BBA7-38E2389D5F59}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod_psp", "..\src\mod\psp\build\mod_psp.vcproj", "{747D915C-475D-4E6E-ABAD-8F9CC917CA5A}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -41,6 +45,10 @@ Global
 		{FA1F298B-04DC-4BCE-B802-6DCD54847625}.Debug.Build.0 = Debug|Win32
 		{FA1F298B-04DC-4BCE-B802-6DCD54847625}.Release.ActiveCfg = Release|Win32
 		{FA1F298B-04DC-4BCE-B802-6DCD54847625}.Release.Build.0 = Release|Win32
+		{70F15B31-497A-42A3-BBA7-38E2389D5F59}.Debug.ActiveCfg = Debug|Win32
+		{70F15B31-497A-42A3-BBA7-38E2389D5F59}.Debug.Build.0 = Debug|Win32
+		{70F15B31-497A-42A3-BBA7-38E2389D5F59}.Release.ActiveCfg = Release|Win32
+		{70F15B31-497A-42A3-BBA7-38E2389D5F59}.Release.Build.0 = Release|Win32
 		{747D915C-475D-4E6E-ABAD-8F9CC917CA5A}.Debug.ActiveCfg = Debug|Win32
 		{747D915C-475D-4E6E-ABAD-8F9CC917CA5A}.Debug.Build.0 = Debug|Win32
 		{747D915C-475D-4E6E-ABAD-8F9CC917CA5A}.Release.ActiveCfg = Release|Win32

@@ -59,9 +59,9 @@ namespace net
 		bool									consume_body(buffer& dest, buffer* source);
     status::error					produce(buffer&);
     status::error					dump(buffer&);
-    std::string						method() { return m_method; };
+    std::string&					method() { return m_method; };
     utils::line& line() { return m_line; };
-		std::string						query() { return m_query; };
+		std::string&					query() { return m_query; };
 		bool									reset();
 		bool									request_header_validation();
 		unsigned int					body_size();
