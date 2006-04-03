@@ -5,15 +5,21 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 10:28:21 2006 texane
-// Last update Sat Apr 01 16:59:15 2006 texane
+// Last update Mon Apr  3 14:50:15 2006 
 //
 
 
 #ifndef MODIMPL_HH
 # define MODIMPL_HH
 
-#include "openssl/ssl.h"
-#include "openssl/err.h"
+#ifdef _WIN32
+# include "openssl/ssl.h"
+# include "openssl/err.h"
+#else
+# include <openssl/ssl.h>
+# include <openssl/err.h>
+#endif // _WIN32
+
 #include <iostream>
 #include <sstream>
 #include <string>

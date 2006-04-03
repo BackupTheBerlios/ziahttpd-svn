@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Sun Apr 02 22:05:33 2006 texane
+// Last update Mon Apr  3 15:10:45 2006 
 //
 
 
@@ -14,6 +14,35 @@
 
 using namespace std;
 using namespace resource;
+
+
+#ifndef _WIN32
+static int cicmp(char a, char b)
+{
+  // normalize
+  if (a >= 'A' && a <= 'Z')
+    a += 'a' - 'A';
+  if (b >= 'A' && b <= 'Z')
+    b += 'a' - 'A';
+
+  if (a == b)
+    return 0;
+  return b - a;
+}
+
+int stricmp(const char* s1, const char* s2)
+{
+  while (cicmp(*s1, *s2) == 0)
+    {
+      if (*s1 == 0)
+	return 0;
+      ++s1;
+      ++s2;
+    }
+  return *s2 - *s1;
+}
+#endif // !_WIN32
+
 
 
 // module management
@@ -98,7 +127,10 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	{
 	  nr_input = in.ReadPostEntity(buf_input, sizeof(buf_input));
 	  if (nr_input > 0)
-	    p_resource->flush_input( buffer((unsigned char*)buf_input, (unsigned int)nr_input) );
+	    {
+	      buffer buf_toflush((unsigned char*)buf_input, (unsigned int)nr_input);
+	      p_resource->flush_input( buf_toflush );
+	    }
 	}
 
       // generate the resource

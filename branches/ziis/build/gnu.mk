@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Fri Feb 24 00:23:49 2006 
+## Last update Mon Apr  3 15:38:19 2006 
 ##
 
 
@@ -57,6 +57,8 @@ SLASH	:=	/
 
 %.o	:	%.cc
 		$(CC) $(CCFLAGS) $(CCOUT) -o $@ $<
+%.o	:	%.c
+		gcc $(CCFLAGS) $(CCOUT) -o $@ $<
 %.lib	:	%.o
 %lo	:	%.o
 %.x	:	%.o

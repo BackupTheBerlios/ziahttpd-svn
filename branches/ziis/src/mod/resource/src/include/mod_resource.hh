@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:40:22 2006 texane
-// Last update Sun Apr 02 19:25:31 2006 texane
+// Last update Mon Apr  3 14:59:13 2006 
 //
 
 
@@ -19,11 +19,17 @@
 #include <sstream>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
-#include "include/buffer.hh"
-#include "include/resource.hh"
-#include "include/constants.hh"
-#include "include/config.hh"
+#include "buffer.hh"
 
+#ifdef _WIN32
+# include "include/resource.hh"
+# include "include/constants.hh"
+# include "include/config.hh"
+#else
+# include "resource.hh"
+# include "constants.hh"
+# include "config.hh"
+#endif // _WIN32
 
 
 class mod_resource : public IModule, public IDocumentGenerator

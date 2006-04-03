@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 10:34:58 2006 texane
-// Last update Fri Mar 24 12:52:39 2006 texane
+// Last update Mon Apr  3 14:44:15 2006 
 //
 
 
@@ -44,6 +44,8 @@ public:
   virtual void IFSClose(int) = 0;
   virtual long long IFSGetSize(int) = 0;
   virtual bool IFSRemove(const char*) = 0;
+
+  virtual ~IFS() {};
 };
 
 
@@ -54,6 +56,8 @@ public:
   virtual const char* GetModuleName() = 0;
   virtual const char* GetModuleVersion() = 0;
   virtual void OnLoad(IFS*) = 0;
+
+  virtual ~IModule() {};
 };
 
 
@@ -66,6 +70,8 @@ public:
   virtual int Recv(SOCKET, void*, char*, int) = 0;
   virtual int Send(SOCKET, void*, const char*, int) = 0;
   virtual void Close(SOCKET, void*) = 0;
+
+  virtual ~IConnection() {};
 };
 
 
@@ -80,6 +86,8 @@ public:
   virtual int GetClientIp() = 0;
   virtual int ReadPostEntity(char*, int) = 0;
   virtual bool GetNextHeader(char**, char**) = 0;
+
+  virtual ~IInput() {};
 };
 
 
@@ -92,6 +100,8 @@ public:
   virtual int SendError(int) = 0;
   virtual int SendBuffer(const char*, int) = 0;
   virtual void SetStatusCode(int) = 0;
+
+  virtual ~IOutput() {};
 };
 
 
@@ -103,6 +113,8 @@ public:
   virtual bool Compress(void*, IBuffer&, IBuffer&) = 0;
   virtual bool Decompress(void*, IBuffer&, IBuffer&) = 0;
   virtual const char** GetSupportedEncoding() = 0;
+
+  virtual ~ICompressor() {};
 };
 
 
@@ -111,6 +123,8 @@ class IDocumentGenerator
 public:
   virtual void GenerateDocument(IInput&, const char*, IOutput&) = 0;
   virtual const char** GetSupportedMime() = 0;
+
+  virtual ~IDocumentGenerator() {};
 };
 
 
@@ -120,6 +134,8 @@ public:
   virtual int GetPriority() = 0;
   virtual const char** GetSupportedContentType() = 0;
   virtual void Transform(IBuffer&, IBuffer&, IBuffer&, bool = false) = 0;
+
+  virtual ~IStreamModifier() {};
 };
 
 

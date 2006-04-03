@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Sat Apr 01 19:35:18 2006 texane
+// Last update Mon Apr  3 15:50:58 2006 
 //
 
 
@@ -20,6 +20,9 @@
 
 
 using namespace std;
+
+
+extern int stricmp(const char*, const char*);
 
 
 // one manager instance by server

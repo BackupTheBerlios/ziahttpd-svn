@@ -252,9 +252,6 @@ bool				http_helper::create_resource(resource::handle*& hld,
 		//char **av;
 		//int ac;
 
-		const char *tab[] = { conf.get_system()->directory_listing.c_str() , localname.c_str(), 0};
-		//const char *env[] = {0};
-
 		error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
 
 	}

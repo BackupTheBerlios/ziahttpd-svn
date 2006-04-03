@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:58:21 2006 texane
-// Last update Fri Mar 24 19:25:29 2006 texane
+// Last update Mon Apr  3 15:34:58 2006 
 //
 
 
@@ -13,6 +13,34 @@
 
 
 using namespace std;
+
+
+#ifndef _WIN32
+static int cicmp(char a, char b)
+{
+  // normalize
+  if (a >= 'A' && a <= 'Z')
+    a += 'a' - 'A';
+  if (b >= 'A' && b <= 'Z')
+    b += 'a' - 'A';
+
+  if (a == b)
+    return 0;
+  return b - a;
+}
+
+int stricmp(const char* s1, const char* s2)
+{
+  while (cicmp(*s1, *s2) == 0)
+    {
+      if (*s1 == 0)
+	return 0;
+      ++s1;
+      ++s2;
+    }
+  return *s2 - *s1;
+}
+#endif // !_WIN32
 
 
 // implement ICompressor interface
@@ -44,7 +72,7 @@ void mod_encoding::DestroyContext(void* p_context)
   else if (((context_t*)p_context)->encoding == "compress")
     GzipDestroyContext(((context_t*)p_context)->u.gzip_context);
   
-  delete p_context;
+  delete (context_t*)p_context;
 }
 
 bool mod_encoding::Compress(void* p_context, IBuffer& buf_in, IBuffer& buf_out)

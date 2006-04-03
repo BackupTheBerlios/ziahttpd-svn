@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Sun Apr 02 18:11:44 2006 texane
+// Last update Mon Apr  3 15:50:34 2006 
 //
 
 
@@ -17,11 +17,11 @@
 #include <iostream>
 
 
-
 // #define DEBUG_STEP
 
 using namespace std;
 
+extern int stricmp(const char*, const char*);
 
 ZfsOutput::ZfsOutput(net::http& proto)
 {

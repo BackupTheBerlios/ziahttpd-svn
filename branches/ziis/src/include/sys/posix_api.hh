@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:01:21 2006 texane
-// Last update Fri Mar 24 18:45:10 2006 texane
+// Last update Mon Apr  3 15:15:09 2006 
 //
 
 
@@ -25,6 +25,10 @@ namespace sys
     {
       typedef struct
       {
+	int id_file;
+	int id_mapping;
+	unsigned long long sz_mmapping;
+	unsigned char* p_mmapping;
       } handle_t;
     }
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:25:56 2006 texane
-// Last update Sun Apr 02 21:00:24 2006 texane
+// Last update Mon Apr  3 14:59:59 2006 
 //
 
 
@@ -18,9 +18,16 @@
 #include <string>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
-#include "include/http_helper.hh"
-#include "include/buffer.hh"
-#include "include/string_manager.hh"
+
+#ifdef _WIN32
+# include "include/http_helper.hh"
+# include "include/buffer.hh"
+# include "include/string_manager.hh"
+#else
+# include "http_helper.hh"
+# include "buffer.hh"
+# include "string_manager.hh"
+#endif // _WIN32
 
 
 namespace resource

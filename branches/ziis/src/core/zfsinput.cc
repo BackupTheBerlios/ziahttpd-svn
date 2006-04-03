@@ -14,7 +14,7 @@ ZfsInput::ZfsInput(thr::pool::session_t& s)
 	extension = "." + extension;
 	s.srv->m_modman.get_generator_module(s.m_gen_module, extension);
 	s.srv->m_modman.get_modifier_list(s.m_modifiers, extension);
-	m_ip_client = s.cli_addr.sin_addr.S_un.S_addr;
+	m_ip_client = s.cli_addr.sin_addr.s_addr;
 }
 
 ZfsInput::ZfsInput(thr::pool::session_t* s)
@@ -33,8 +33,7 @@ ZfsInput::ZfsInput(thr::pool::session_t* s)
 
 	// get stream modifier list
 	s->srv->m_modman.get_modifier_list(s->m_modifiers, type);
-
-	m_ip_client = s->cli_addr.sin_addr.S_un.S_addr;
+	m_ip_client = s->cli_addr.sin_addr.s_addr;
 }
 
 ZfsInput::~ZfsInput()

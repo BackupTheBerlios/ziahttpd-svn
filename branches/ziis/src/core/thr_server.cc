@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Sun Apr 02 20:21:25 2006 texane
+// Last update Mon Apr  3 15:43:48 2006 
 //
 
 
@@ -204,7 +204,8 @@ bool thr::pool::sess_handle_document(session_t* sess)
   accepted_encoding = sess->m_input->GetInput("accept-encoding");
   if (accepted_encoding)
     {
-      net::split_accept_encoding(string(accepted_encoding), arr_encodings);
+      string str_encodings(accepted_encoding);
+      net::split_accept_encoding(str_encodings, arr_encodings);
       if (sess->srv->m_modman.get_compressor_module(sess->m_comp_out_module, arr_encodings, chosen_encoding) == true)
 	{
 	  sess->m_output->SetOutput("transfer-encoding", "chunked");
