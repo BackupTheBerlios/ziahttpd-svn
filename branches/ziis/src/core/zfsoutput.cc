@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Mon Apr  3 15:50:34 2006 
+// Last update Mon Apr 03 19:39:39 2006 texane
 //
 
 
@@ -21,7 +21,9 @@
 
 using namespace std;
 
+#ifndef _WIN32
 extern int stricmp(const char*, const char*);
+#endif // ! _WIN32
 
 ZfsOutput::ZfsOutput(net::http& proto)
 {

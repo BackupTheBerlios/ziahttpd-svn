@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Mon Apr 03 19:02:37 2006 texane
+// Last update Mon Apr 03 19:38:36 2006 texane
 //
 
 
@@ -190,7 +190,7 @@ bool mod::manager::reload(net::config* p_config)
   p_config->get_modules(curr_mod);
   while (p_config->end_modules(curr_mod) == false)
     {
-      load_module((*curr_mod)->file, "conf/ziafs.xml");
+      load_module((*curr_mod)->file, (*curr_mod)->configfile);
       ++curr_mod;
     }
   return true;

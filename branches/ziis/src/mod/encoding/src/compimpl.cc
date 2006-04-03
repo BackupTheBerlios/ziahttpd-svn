@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 09:58:21 2006 texane
-// Last update Mon Apr  3 15:34:58 2006 
+// Last update Mon Apr 03 19:25:52 2006 texane
 //
 
 
@@ -23,9 +23,6 @@ static int cicmp(char a, char b)
     a += 'a' - 'A';
   if (b >= 'A' && b <= 'Z')
     b += 'a' - 'A';
-
-  if (a == b)
-    return 0;
   return b - a;
 }
 
@@ -108,9 +105,9 @@ bool mod_encoding::Decompress(void* p_context, IBuffer& buf_in, IBuffer& buf_out
 
 static const char* _encodings[] =
   {
-    "gzip",
     "deflate",
-    "compress",
+//     "gzip",
+//     "compress",
     0
   };
 

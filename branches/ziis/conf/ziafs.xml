@@ -17,6 +17,7 @@
 
 <module name="mod_resource">
 <file>src/mod/resource/mod_resource.lo</file>
+<configfile>conf/ziafs.xml</configfile>
 </module>
 
 <module name="mod_encoding">
