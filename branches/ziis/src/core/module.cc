@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Mon Apr  3 15:50:58 2006 
+// Last update Mon Apr  3 16:56:49 2006 
 //
 
 
@@ -56,9 +56,7 @@ bool mod::manager::get_connection_module(IConnection*& p_mod)
   while (it_curr != it_last)
     {
       if ((p_mod = dynamic_cast<IConnection*>((*it_curr)->m_instance)))
-	{
-	  return true;
-	}
+	return true;
       ++it_curr;
     }
 
@@ -214,7 +212,7 @@ mod::modinfo::modinfo(const string& path)
 	}
       else
 	{
-	  cout << "resolv failed" << endl;
+	  cout << "cannot resolve module::NewInstance" << endl;
 	  sysapi::module::unload(m_handle);
 	}
     }

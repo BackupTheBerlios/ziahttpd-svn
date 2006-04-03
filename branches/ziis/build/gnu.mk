@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Mon Apr  3 15:38:19 2006 
+## Last update Mon Apr  3 18:22:16 2006 
 ##
 
 
@@ -20,7 +20,7 @@ __GNU_MK	=	1
 
 
 # .compiler
-CC	:=	g++
+CC	:=	g++  -rdynamic
 CCPATHS	:=	-I$(PROJ_ROOT)/src/include/
 CCDEFS	:=	-D_SYSAPI=1 -D_REENTRANT
 CCGEN	:=	-O2 -ggdb
@@ -30,7 +30,7 @@ CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS) -DTIXML_USE_STL
 
 # .linker
 osname	:=	$(shell uname -s)
-LD	:=	g++
+LD	:=	g++ --export-dynamic -rdynamic
 LDPATHS	:=
 LDLIBS	:=	-lpthread -L/usr/pkg/lib # -lefence
 ifeq ($(osname), Linux)
@@ -62,7 +62,7 @@ SLASH	:=	/
 %.lib	:	%.o
 %lo	:	%.o
 %.x	:	%.o
-		$(CC) $(LDFLAGS) $(LDOUT) $@ $?
+		$(CC) $(LDFLAGS) $(LDOUT)  $@ $?
 
 .PHONY	:	all clean fclean re force
 

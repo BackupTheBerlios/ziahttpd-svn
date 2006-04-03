@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Mon Apr  3 15:43:48 2006 
+// Last update Mon Apr  3 18:14:47 2006 
 //
 
 
@@ -245,10 +245,15 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
   // get the connection module
   if (sess.srv->m_modman.get_connection_module(sess.m_conn_module) == false)
-    return 0;
+    {
+      cout << "cannot get the connecntion module" << endl;
+      return 0;
+    }
 
   // session pipeline
+  cout << "binding server" << endl;
   sess_bind_server(sess);
+  cout << "accepting new connection" << endl;
   sess_accept_connection(sess);
 
   while (sess.done == false)

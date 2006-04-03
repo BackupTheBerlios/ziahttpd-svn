@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Mon Apr  3 15:49:57 2006 
+## Last update Mon Apr  3 16:22:06 2006 
 ##
 
 # ! Always include this file
@@ -62,6 +62,7 @@ all	: $(name)
 $(name)	: $(objs)
 	$(LD) $(LDFLAGS) $(LDOUT)$(name) $(objs)
 	$(CP) $(name) $(PROJ_ROOT)$(SLASH)zfs.exe
+	$(CP) $(name) $(PROJ_ROOT)$(SLASH)zfs.x
 clean	: force
 	$(ECHO) deleting $(objs)
 	$(RM) $(objs)
