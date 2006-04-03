@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Fri Mar 24 19:11:37 2006 texane
+// Last update Mon Apr 03 20:07:41 2006 texane
 //
 
 
@@ -80,8 +80,6 @@ resource::e_error resource::file::generate(unsigned int& nbytes)
 	  // mmapping related
 	  nbytes = (unsigned int)h_mmap.sz_mmapping;
 	  seek_mmap = h_mmap.p_mmapping;
-	  cout << "has generated: " << nbytes << endl;
-	  getchar();
 
 	  // file size reached
 	  file_size -= nbytes;

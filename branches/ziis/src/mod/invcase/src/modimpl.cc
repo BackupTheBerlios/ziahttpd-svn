@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 11:13:09 2006 texane
-// Last update Sat Apr 01 19:10:46 2006 texane
+// Last update Mon Apr 03 20:05:57 2006 texane
 //
 
 
@@ -23,7 +23,6 @@ using namespace std;
 
 IModule* GetNewInstance()
 {
-  cout << "new instance of mod_invcase" << endl;
   return new mod_invcase;
 }
 
@@ -48,5 +47,4 @@ const char* mod_invcase::GetModuleVersion()
 void mod_invcase::OnLoad(IFS*)
 {
   // initialize the sslmodule, global wide setting
-  cout <<  "loading mod_invase" << endl;
 }

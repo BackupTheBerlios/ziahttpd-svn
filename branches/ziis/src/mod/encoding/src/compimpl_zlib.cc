@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 10:24:08 2006 texane
-// Last update Fri Mar 24 19:26:50 2006 texane
+// Last update Mon Apr 03 20:04:04 2006 texane
 //
 
 
@@ -58,8 +58,6 @@ bool mod_encoding::ZlibCompress(zlib_context_t* p_context, IBuffer& buf_in, IBuf
   unsigned char* p_next;
   bool is_done;
 
-  cout << "entering ZLIB: " << buf_in.Length() << endl;
-
   // return false on error
   if (p_context->nr_return != Z_OK)
     return false;
@@ -97,7 +95,5 @@ bool mod_encoding::ZlibCompress(zlib_context_t* p_context, IBuffer& buf_in, IBuf
       buf_out.Append((const char*)p_next, nr_avail - p_context->strm_encoding.avail_out);
       nr_avail = p_context->strm_encoding.avail_out;
     }
-
-  cout << "exiting ZLIB: " << buf_out.Length() << endl;
   return true;
 }

@@ -36,6 +36,7 @@
   <directory_index>index.html index.htm</directory_index>
   <modulename>mod_ssl</modulename>
   <modulename>mod_resource</modulename>
+  <modulename>mod_encoding</modulename>
 </server>
 
 
@@ -87,10 +88,16 @@
   <image></image>
 </mime>
 
-
 <mime extension="php">
   <is_cgi>0</is_cgi>
   <type>text/html</type>
   <cgi>./php/php-cgi.exe</cgi>
+  <image></image>
+</mime>
+
+<mime extension="pdf">
+  <is_cgi>0</is_cgi>
+  <type>application/pdf</type>
+  <cgi></cgi>
   <image></image>
 </mime>

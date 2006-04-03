@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Wed Mar 23 17:23:33 2005 texane
+// Last update Mon Apr 03 20:05:27 2006 texane
 //
 
 
@@ -17,6 +17,5 @@ using namespace std;
 
 IModule* GetNewInstance()
 {
-  cout << "[mod_encoding] GetNewInstance()" << endl;
   return new mod_encoding;
 }

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Mon Apr  3 20:11:51 2006 
+// Last update Mon Apr 03 20:10:08 2006 texane
 //
 
 
@@ -160,7 +160,6 @@ bool thr::pool::sess_read_metadata(session_t& sess)
       nr_total += nr_recv;
       if (nr_total > ZIAFS_MAX_METADATA)
 	{
-	  cout << "[!] error metadata overflow" << endl;
 	  end_of_metadata = true;
 	  sess.done = true;
 	  return false;
@@ -221,8 +220,6 @@ bool thr::pool::sess_handle_document(session_t* sess)
   localname = sess->proto.get_uri().localname(*sess->srv->srv_config, hostname);
   if (sess->m_gen_module)
     sess->m_gen_module->GenerateDocument(*sess->m_input, localname.c_str(), *sess->m_output);
-  else
-    cout << "no generation module found" << endl;
   return true;
 }
 

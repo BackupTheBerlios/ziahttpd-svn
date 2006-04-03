@@ -107,9 +107,7 @@ bool				http_helper::pre_create_resource(net::config& conf,
 		{
 			std::string tmp;
 
-			tmp = "http://";
-			tmp += inp.GetInput("host");
-			tmp += inp.GetInputLocation();
+			tmp = inp.GetInputLocation();
 			tmp += "/";
 			out.SetOutput("Location", tmp.c_str());
 			status_code = 301;
