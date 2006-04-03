@@ -277,9 +277,9 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 ///		error = manager.factory_create(hld, resource::ID_FILE, resource::O_INPUT, m_uri.localname());
 	else if (r_type == IS_CGI)
 	{
-		int ac = 1;
-		const char *tab[] = { m_uri.localname().c_str(), 0};
-		const char *env[] = {0};
+// 		int ac = 1;
+// 		const char *tab[] = { m_uri.localname().c_str(), 0};
+// 		const char *env[] = {0};
 		  // This line has been modified by texane
 		  // buffer is a buffer to prefecth the input.
 		  // content of the mline.buf will be removed
@@ -289,7 +289,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	{
 		std::string cgi_path;
 		char **av;
-		const char *env[] = {"SERVER_PORT=80", 0};
+// 		const char *env[] = {"SERVER_PORT=80", 0};
 		int ac;
 		std::vector<std::string> vec;
 		std::vector<std::string>::iterator iter;
@@ -318,7 +318,7 @@ bool				net::http::create_resource(resource::handle*& hld, resource::manager& ma
 	{
 		std::string cgi_path;
 		char **av;
-		const char *env[] = {"SERVER_PORT=80", 0};
+// 		const char *env[] = {"SERVER_PORT=80", 0};
 		int ac;
 		std::vector<std::string> vec;
 		std::vector<std::string>::iterator iter;
