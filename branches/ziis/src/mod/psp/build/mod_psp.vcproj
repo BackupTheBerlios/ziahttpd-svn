@@ -20,23 +20,23 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../../include/;../../../include/sys/;../../../lib/src/tinyxml;../src/include/perl/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;MOD_PSP_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;MOD_PSP_EXPORTS;;_WIN32"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="-defaultlib:Ws2_32.lib  mswsock.lib  perl58.lib"
+				AdditionalOptions="-defaultlib:Ws2_32.lib  mswsock.lib  perl58.lib  -defaultlib:pthreadVSE1.lib"
 				OutputFile="$(OutDir)/../../mod_psp.lo"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../lib/"
+				AdditionalLibraryDirectories="../lib/; ../../../lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/mod_psp.pdb"
 				SubSystem="2"
@@ -136,6 +136,13 @@
 			<File
 				RelativePath="..\src\string_manager.cc">
 			</File>
+			<Filter
+				Name="sys"
+				Filter="">
+				<File
+					RelativePath="..\..\..\sys\win32\file.cc">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"

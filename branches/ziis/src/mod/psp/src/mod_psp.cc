@@ -1,9 +1,19 @@
+#include <fstream>
+#include <sstream>
 #include "include/mod_psp.hh"
 #include <vector>
-#include "include/string_manager.hh"
+//#include "include/string_manager.hh"
+
+#ifdef _WIN32
+# include <windows.h>
+# include <sys/pthread.h>
+#else
+# include <pthread.h>
+#endif
 #include <perl.h>
-#include <iostream>
-#include <stdio.h>
+#include <sys/sysapi.hh>
+//#include <semaphore.h>
+//#include <scheduler.h>
 
 IModule* GetNewInstance()
 {
@@ -54,81 +64,154 @@ void	mod_psp::GeneratePerl(buffer& out, buffer& in)
 	PerlInterpreter *my_perl;
 	char *script;
 	char *embedding[] = { "", "-e", "0" };
+	std::string	pre_script;
 	SV* SV_ret;
-	STRLEN n_a;
-	
+
 	script = in.c_str();
 	my_perl = perl_alloc();
 	perl_construct( my_perl );
-	
 	perl_parse(my_perl, NULL, 3, embedding, NULL);
 	perl_run(my_perl);
 	SV_ret = eval_pv((const char *)script, TRUE);
-	out = SvPV(get_sv("__bufret", FALSE), n_a);
 	perl_destruct(my_perl);
 	perl_free(my_perl);
 	delete script;
+	std::ostringstream filename;
+
+	filename << "psp_";
+	filename  << (unsigned int)pthread_self().p;
+	std::ifstream			iff(filename.str().c_str());
+	std::ostringstream	off;
+
+	off << iff.rdbuf();
+	out = off.str();
 }
+
+//void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
+//{
+//	std::vector<buffer>						block;
+//	std::vector<buffer>::iterator	it;
+//	std::string										buf;
+//	char													mbuf[4096];
+//	buffer												bout;
+//	int														state = 0;
+//	int														fd;
+//
+//	//////////////////////////////////////////////////////////////////////////
+//	//have to check is file exist
+//	//////////////////////////////////////////////////////////////////////////
+//
+//	if ((fd = _open(localname, _O_RDONLY)) == NULL)
+//	{
+//		//////////////////////////////////////////////////////////////////////////
+//		// senderror
+//		// return 
+//		//////////////////////////////////////////////////////////////////////////
+//		
+//	}
+//	while (int i = _read(fd, mbuf, 4095))
+//	{
+//		mbuf[i] = '\0';
+//		buf += mbuf;
+//	}
+//	_close(fd);
+//	buffer b;
+//	b = "<% sub zfs_print { $__bufret .= $_[0]; } %> ";
+//	b += buf.c_str();
+//	split_token(b, block, true);
+//	bout += "\r\n$__bufret = '";
+//	for (it = block.begin(); it != block.end(); it++)
+//	{
+//		buffer*	tmp = &(*it);
+//		const	char *str = tmp->c_str(); 
+//		if ((str[0] == '<') && (str[1] == '%'))
+//		{
+//			bout += "';\r\n";
+//			state = 1;
+//		}
+//
+//		else if ((str[0] == '%') && (str[1] == '>'))
+//		{
+//			bout += "\r\n$__bufret .='";
+//			state = 0;
+//		}
+//		else
+//		{
+//			bout += (*it);
+//		}
+//	}
+//	if (!state)
+//		bout += "';\r\n";
+//
+//	buffer bin;
+//	GeneratePerl(bin, bout);
+//	//
+//	//////////////////////////////////////////////////////////////////////////
+//	
+//	char size[20];
+//	sprintf(size, "%i", bin.size());
+//	out.SetOutput("Content-Length", (const char *)size);
+//	out.SetStatusCode(200);
+//	out.SendHeader();
+//	char *send_buf = bin.c_str();
+//	out.SendBuffer(send_buf, (int)bin.size());
+//	delete send_buf;
+//}
+
 
 void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 {
-	std::vector<buffer>						block;
-	std::vector<buffer>::iterator	it;
-	std::string										buf;
-	char													mbuf[4096];
-	buffer												bout;
-	int														state = 0;
-	int														fd;
+		std::vector<buffer>						block;
+		std::vector<buffer>::iterator	it;
+		std::ifstream			iff(localname);
+		std::ostringstream	off;
+		std::ostringstream	pre_script;
 
-	//////////////////////////////////////////////////////////////////////////
-	//have to check is file exist
-	//////////////////////////////////////////////////////////////////////////
+		if (!sysapi::file::is_path_valid(localname))
+		{
+			out.SetStatusCode(404);
+			//send error
+			return ;
+		}
+		if (!sysapi::file::is_readable(localname))
+		{
+			out.SetStatusCode(403);
+			//send error
+			return ;
+		}
+		off << "<% open(FOO, \">psp_" << (unsigned int)pthread_self().p <<  "\") || die; $handle = select(FOO); %>" << iff.rdbuf() ;
+		buffer b((const unsigned char*)off.str().c_str(), off.str().size());
+		b += " <% select ($handle); close (FOO); %>";
+		buffer bout;
+		int state = 0;
+
+		split_token(b, block, true);
+		bout += "\r\nprint <<endmarker;\r\n";
+		for (it = block.begin(); it != block.end(); it++)
+		{
+			buffer*	tmp = &(*it);
+			const	char *str = tmp->c_str(); 
+			if ((str[0] == '<') && (str[1] == '%'))
+			{
+				bout += "\r\nendmarker\r\n";
+				state = 1;
+			}
 	
-	if ((fd = _open(localname, _O_RDONLY)) == NULL)
-	{
-		//////////////////////////////////////////////////////////////////////////
-		// senderror
-		// return 
-	}
-	while (int i = _read(fd, mbuf, 4095))
-	{
-		mbuf[i] = '\0';
-		buf += mbuf;
-	}
-	_close(fd);
-	buffer b;
-	b = "<% sub zfs_print { $__bufret .= $_[0]; } %> ";
-	b += buf.c_str();
-	split_token(b, block, true);
-	bout += "\r\n$__bufret = '";
-	for (it = block.begin(); it != block.end(); it++)
-	{
-		buffer*	tmp = &(*it);
-		const	char *str = tmp->c_str(); 
-		if ((str[0] == '<') && (str[1] == '%'))
-		{
-			bout += "';\r\n";
-			state = 1;
+			else if ((str[0] == '%') && (str[1] == '>'))
+			{
+				bout += "\r\nprint <<endmarker;\r\n";
+				state = 0;
+			}
+			else
+			{
+				bout += (*it);
+			}
 		}
-
-		else if ((str[0] == '%') && (str[1] == '>'))
-		{
-			bout += "\r\n$__bufret .='";
-			state = 0;
-		}
-		else
-		{
-			bout += (*it);
-		}
-	}
-	if (!state)
-		bout += "';\r\n";
+		if (!state)
+			bout += "\r\nendmarker\r\n";
 
 	buffer bin;
 	GeneratePerl(bin, bout);
-	//
-	//////////////////////////////////////////////////////////////////////////
-	
 	char size[20];
 	sprintf(size, "%i", bin.size());
 	out.SetOutput("Content-Length", (const char *)size);
@@ -138,50 +221,6 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 	out.SendBuffer(send_buf, (int)bin.size());
 	delete send_buf;
 }
-
-//
-//void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
-//{
-//		std::vector<buffer>						block;
-//		std::vector<buffer>::iterator	it;
-//		const char toto[] = "<html> <% print \"fd\"; %> </html> <% $t = '$variable' %>";
-//		buffer b((const unsigned char*)toto, strlen(toto));
-//		buffer bout;
-//		int state = 0;
-//
-//		split_token(b, block, true);
-//		bout += "\r\nprint <<endmarker;\r\n";
-//		for (it = block.begin(); it != block.end(); it++)
-//		{
-//			buffer*	tmp = &(*it);
-//			const	char *str = tmp->c_str(); 
-//			std::cout << str << std::endl;
-//			//unsigned char b1 = tmp->operator[](0);
-//			//unsigned char b2 = tmp->operator[](1);
-//			if ((str[0] == '<') && (str[1] == '%'))
-//			{
-//				bout += "\r\nendmarker\r\n";
-//				state = 1;
-//			}
-//	
-//			else if ((str[0] == '%') && (str[1] == '>'))
-//			{
-//				bout += "\r\nprint <<endmarker;\r\n";
-//				state = 0;
-//			}
-//			else
-//			{
-//				bout += (*it);
-//			}
-//		}
-//		if (!state)
-//			bout += "\r\nendmarker\r\n";
-//		std::cout << bout.c_str();
-//	
-//	buffer bin;
-//	GeneratePerl(bin, bout);
-//	std::cout << bin.c_str();
-//}
 
 /*print <<endmarker;
 line1
