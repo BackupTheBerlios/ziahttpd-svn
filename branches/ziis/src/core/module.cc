@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Mon Apr 03 19:38:36 2006 texane
+// Last update Tue Apr 04 19:15:37 2006 texane
 //
 
 
@@ -122,7 +122,7 @@ bool mod::manager::get_generator_module(IDocumentGenerator*& p_mod, const string
 	  arr_mime = p_mod->GetSupportedMime();
 	  for (i_mime = 0; arr_mime && arr_mime[i_mime]; ++i_mime)
 	    {
-// 	      if (!stricmp(arr_mime[i_mime], mimetype.c_str()))
+	      if (!stricmp(arr_mime[i_mime], mimetype.c_str()))
 		{
 		  return true;
 		}
