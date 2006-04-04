@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 18:49:56 2006 texane
-// Last update Sun Apr 02 19:51:22 2006 texane
+// Last update Tue Apr 04 15:03:52 2006 texane
 //
 
 
@@ -66,6 +66,19 @@ private:
 
   int send_whole_buffer(const char*, int);
 };
+
+
+class ZfsIfs : public IFS
+{
+public:
+  int IFSOpen(const char*, const char*);
+  int IFSRead(int, long long, char*, int);
+  int IFSWrite(int, const char*, int);
+  void IFSClose(int);
+  long long IFSGetSize(int);
+  bool IFSRemove(const char*);
+};
+
 
 
 #endif // ! ZIIS_IMPL_HH

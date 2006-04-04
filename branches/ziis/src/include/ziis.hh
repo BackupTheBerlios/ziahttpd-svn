@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 10:34:58 2006 texane
-// Last update Mon Apr  3 14:44:15 2006 
+// Last update Tue Apr 04 15:03:47 2006 texane
 //
 
 
@@ -38,7 +38,7 @@ public:
 class IFS
 {
 public:
-  virtual int IFSOpen(const char*, const char) = 0;
+  virtual int IFSOpen(const char*, const char*) = 0;
   virtual int IFSRead(int, long long, char*, int) = 0;
   virtual int IFSWrite(int, const char*, int) = 0;
   virtual void IFSClose(int) = 0;
