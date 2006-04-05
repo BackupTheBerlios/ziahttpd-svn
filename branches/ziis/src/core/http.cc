@@ -73,7 +73,6 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 				request.m_version = "HTTP/1.1";
 				return false;
 			}
-			std::cout << method();
 			return true;
 		}
 
