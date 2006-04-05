@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Wed Apr 05 21:01:47 2006 texane
+// Last update Wed Apr 05 21:07:40 2006 texane
 //
 
 
@@ -193,7 +193,7 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
   return send_whole_buffer((const char*)buf_entity.bufptr(), (int)buf_entity.size());
 }
 
-#define ERROR_PAGE "<html><body> ERROR PAGE </body></html>"
+#define ERROR_PAGE "<html><body> Request Error</body></html>"
 int ZfsOutput::SendError(int err_no)
 {
   ostringstream oss;
