@@ -1,23 +1,14 @@
 todos
 
--> pass the ifs
--> implement file removal + pass the ifs to module (currently null)
--> checks error
--> SendError
--> stream_modifer
 -> gzip
 -> zlib
 -> compress
--> port unix
--> mmaped buffer
+-> port unix(perl)
 -> clean
 -> decompression input
 -> reload
 -> handle connection status (timeout, connection-closed, keep alive...)
 -> handle http1.0
--> implement ifs
--> implement post + cgi + put + environ
--> config -> conf path by module
 
 toremember
 -> the module may be plugged in another server
