@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Apr 05 22:43:15 2006 texane
+// Last update Wed Apr 05 22:57:32 2006 texane
 //
 
 
@@ -258,9 +258,7 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
 
 //       cout << "cnonnection: " << sess.proto.request["connection"] << endl;
       if (sess.proto.request["connection"] == "close")
-	{
-	  sess.done = true;
-	}
+	sess.done = true;
 
       sess_release_request(sess);
     }

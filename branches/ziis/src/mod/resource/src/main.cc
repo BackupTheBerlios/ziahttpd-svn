@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Apr 05 22:20:56 2006 texane
+// Last update Wed Apr 05 22:58:25 2006 texane
 //
 
 
@@ -101,7 +101,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
     {
       p_resource->size(nr_size);
       oss << nr_size;
-      out.SetOutput("content-lenght", oss.str().c_str());
+      out.SetOutput("content-length", oss.str().c_str());
     }
 
   // debug resource
