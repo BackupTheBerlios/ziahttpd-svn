@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:10:39 2006 texane
-// Last update Thu Feb 23 15:31:46 2006 texane
+// Last update Wed Apr 05 14:27:16 2006 texane
 //
 
 
@@ -60,6 +60,17 @@ sysapi::error::handle_t sysapi::file::close(handle_t& hfile)
 {
   CloseHandle(hfile);
 // +  reset_handle(hfile);
+  return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::file::remove(const string& nm_file)
+{
+  BOOL is_success;
+
+  is_success = DeleteFile(nm_file.c_str());
+  if (is_success == FALSE)
+    return error::DELETE_FAILED;
   return error::SUCCESS;
 }
 

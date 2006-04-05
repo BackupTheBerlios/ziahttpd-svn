@@ -1,9 +1,7 @@
 todos
 
--> bug: temporar moved bugged under mozilla
--> cgi_echo is residing when the connection is closed
--> perl
--> ssl
+-> pass the ifs
+-> implement file removal + pass the ifs to module (currently null)
 -> checks error
 -> SendError
 -> stream_modifer

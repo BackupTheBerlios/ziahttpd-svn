@@ -2,7 +2,6 @@
 #include <sstream>
 #include "include/mod_psp.hh"
 #include <vector>
-//#include "include/string_manager.hh"
 
 #ifdef _WIN32
 # include <windows.h>
@@ -179,7 +178,11 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 			//send error
 			return ;
 		}
+#ifdef _WIN32
 		off << "<% open(FOO, \">psp_" << (unsigned int)pthread_self().p <<  "\") || die; $handle = select(FOO); %>" << iff.rdbuf() ;
+#else
+		off << "<% open(FOO, \">psp_" << (unsigned int)pthread_self() <<  "\") || die; $handle = select(FOO); %>" << iff.rdbuf() ;
+#endif // _WIN32
 		buffer b((const unsigned char*)off.str().c_str(), off.str().size());
 		b += " <% select ($handle); close (FOO); %>";
 		buffer bout;
@@ -211,7 +214,17 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 			bout += "\r\nendmarker\r\n";
 
 	buffer bin;
+	std::ostringstream oss;
 	GeneratePerl(bin, bout);
+	
+	// remove our temporary file
+#ifdef _WIN32
+	oss << "psp_" << (unsigned int)pthread_self().p;
+#else
+	oss << "psp_" << (unsigned int)pthread_self();
+#endif //_WIN32
+	sysapi::file::remove(oss.str());
+
 	char size[20];
 	sprintf(size, "%i", bin.size());
 	out.SetOutput("Content-Length", (const char *)size);

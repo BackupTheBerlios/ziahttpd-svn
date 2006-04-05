@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Wed Apr 05 14:32:17 2006 texane
+## Last update Wed Apr 05 14:48:26 2006 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -25,7 +25,8 @@ CCPATHS	=	-I"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/
 		-I"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Include/" \
 		-I"$(PROJ_ROOT)/src/include/" \
 		-I"$(PROJ_ROOT)/src/include/sys" \
-		-I"$(PROJ_ROOT)/src/include/config"
+		-I"src/include/perl" \
+		-I"src/include"
 CCDEFS	=	-D "_WIN32" -D "_CONSOLE" -D "_MBCS" -D "_MT" -D "_SYSAPI"=2 -MD -DTIXML_USE_STL
 CCGEN	=	-O2 -GX -GR
 CCWARNS	=	-W3
@@ -36,9 +37,10 @@ CCFLAGS	=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS)
 LD	=	link -nologo
 LDPATHS	=	-libpath:"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/Lib/" \
 		-libpath:"d:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Lib/" \
-		-libpath:"$(PROJ_ROOT)/src/lib"
-LDLIBS	=	-defaultlib:Ws2_32.lib	\
-		-defaultlib:Mswsock.lib	\
+		-libpath:"$(PROJ_ROOT)/src/lib" \
+		-libpath:"lib"
+LDLIBS	=	-defaultlib:Perl58.lib \
+		-defaultlib:PerlEz.lib \
 		-defaultlib:pthreadVSE1.lib
 LDGEN	=	-machine:x86 -subsystem:console -opt:noref
 LIBOUT	=	-lib

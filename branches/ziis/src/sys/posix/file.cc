@@ -5,7 +5,7 @@
 // Login   <texane@epita.fr>
 // 
 // Started on  Sat Feb 11 17:01:40 2006 
-// Last update Thu Feb 23 02:20:55 2006 texane
+// Last update Wed Apr 05 14:27:28 2006 texane
 //
 
 #include <string>
@@ -55,6 +55,17 @@ sysapi::error::handle_t sysapi::file::open(handle_t& hfile, const std::string& p
 sysapi::error::handle_t sysapi::file::close(handle_t& hfile)
 {
   ::close(hfile);
+  return error::SUCCESS;
+}
+
+
+sysapi::error::handle_t sysapi::file::remove(const string& nm_file)
+{
+  int err_no;
+
+  err_no = unlink(nm_file.c_str());
+  if (err_no == -1)
+    return error::DELETE_FAILED;
   return error::SUCCESS;
 }
 

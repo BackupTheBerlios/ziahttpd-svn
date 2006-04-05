@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 14:07:22 2006 texane
-// Last update Fri Mar 24 18:48:39 2006 texane
+// Last update Wed Apr 05 14:26:53 2006 texane
 //
 
 
@@ -35,6 +35,7 @@ namespace sys
 	  CLOSE_FAILED,
 	  READ_FAILED,
 	  WRITE_FAILED,
+	  DELETE_FAILED,
 	  RESOLV_FAILED,
 	  INVALID_NAME,
 	  INVALID_DESCRIPTOR,
@@ -70,6 +71,7 @@ namespace sys
       bool handle_isset(handle_t&);
       error::handle_t open(handle_t&, const std::string&, omode_t = O_BOTH);
       error::handle_t close(handle_t&);
+      error::handle_t remove(const std::string&);
       error::handle_t read(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t read_nonblock(handle_t&, unsigned char*, unsigned int, unsigned int&);
       error::handle_t write(handle_t&, unsigned char*, unsigned int, unsigned int&);
