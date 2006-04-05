@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Apr 04 14:58:50 2006 texane
-// Last update Wed Apr 05 14:33:07 2006 texane
+// Last update Wed Apr 05 15:06:32 2006 texane
 //
 
 
@@ -32,10 +32,12 @@ int ZfsIfs::IFSOpen(const char* str_filename, const char* str_omode)
     }
   else if (strcmp(str_omode, "w") == 0)
     {
+      IFSRemove(str_filename);
       m_omode = sysapi::file::O_WRITE;
     }
   else if (strcmp(str_omode, "w+") == 0)
     {
+      IFSRemove(str_filename);
       m_omode = sysapi::file::O_READ | sysapi::file::O_WRITE;
     }
   else if (strcmp(str_omode, "a") == 0)

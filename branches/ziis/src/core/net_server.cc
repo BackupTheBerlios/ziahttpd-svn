@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:50:30 2006 texane
-// Last update Mon Apr  3 18:16:48 2006 
+// Last update Wed Apr 05 15:03:12 2006 texane
 //
 
 
@@ -47,7 +47,7 @@ bool net::server::reload_config(config* config)
   insock::n_to_inaddr(srv_addr, INADDR_ANY, port);
 
   // build the module list
-  m_modman.reload(config);
+  m_modman.reload(config, &m_ifs);
 
   return true;
 }

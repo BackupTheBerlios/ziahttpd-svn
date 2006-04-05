@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:10:34 2006 texane
-// Last update Mon Apr 03 19:36:14 2006 texane
+// Last update Wed Apr 05 14:59:38 2006 texane
 //
 
 
@@ -22,6 +22,7 @@
 
 namespace net { class config; }
 namespace mod { class manager; }
+class IFS;
 
 
 namespace mod
@@ -50,7 +51,7 @@ namespace mod
     manager();
     ~manager();
 
-    bool reload(net::config*);
+    bool reload(net::config*, IFS* = 0);
     bool get_connection_module(IConnection*&);
     bool get_compressor_module(ICompressor*&, std::vector<std::string>&, std::string&);
     bool get_generator_module(IDocumentGenerator*&, const std::string&);
@@ -60,7 +61,7 @@ namespace mod
     std::list<modinfo*> m_modlist;
 
     // internal management
-    bool load_module(const std::string&, const std::string&);
+    bool load_module(const std::string&, const std::string&, IFS* = 0);
   };
 }
 

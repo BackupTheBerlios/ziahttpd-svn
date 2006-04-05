@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Tue Apr 04 19:15:37 2006 texane
+// Last update Wed Apr 05 14:59:26 2006 texane
 //
 
 
@@ -169,28 +169,28 @@ bool mod::manager::get_modifier_list(list<IStreamModifier*>& lst_modifiers, cons
   return true;
 }
 
-bool mod::manager::load_module(const string& path, const string& conf)
+bool mod::manager::load_module(const string& path, const string& conf, IFS* p_ifs)
 {
   modinfo* p_info;
 
   p_info = new modinfo(path);
   if (p_info->m_instance)
     {
-      p_info->m_instance->OnLoad(0);
+      p_info->m_instance->OnLoad(p_ifs);
       p_info->m_instance->ReadConfig(conf.c_str());
     }
   m_modlist.push_front(p_info);
   return true;
 }
 
-bool mod::manager::reload(net::config* p_config)
+bool mod::manager::reload(net::config* p_config, IFS* p_ifs)
 {
   list<net::config::module*>::iterator curr_mod;
 
   p_config->get_modules(curr_mod);
   while (p_config->end_modules(curr_mod) == false)
     {
-      load_module((*curr_mod)->file, (*curr_mod)->configfile);
+      load_module((*curr_mod)->file, (*curr_mod)->configfile, p_ifs);
       ++curr_mod;
     }
   return true;

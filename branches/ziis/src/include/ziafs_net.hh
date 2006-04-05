@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 16:47:08 2006 texane
-// Last update Tue Mar 21 23:23:00 2006 texane
+// Last update Wed Apr 05 15:02:55 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 
 #include <sys/sysapi.hh>
 #include <ziafs_mod.hh>
+#include <ziis_impl.hh>
 
 
 // forward declarations
@@ -46,6 +47,9 @@ namespace net
     struct sockaddr_in srv_addr;
     net::config* srv_config;
     unsigned int nr_bklog;
+
+    // file related
+    ZfsIfs m_ifs;
 
     // Http related
 
