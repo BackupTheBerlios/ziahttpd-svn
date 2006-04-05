@@ -69,7 +69,10 @@ bool	net::http::consume(unsigned char *data, unsigned int nbytes, bool &finished
 //		End of metadata
 			finished = true;
 			if (!request_header_validation())
+			{
+				request.m_version = "HTTP/1.1";
 				return false;
+			}
 			std::cout << method();
 			return true;
 		}
