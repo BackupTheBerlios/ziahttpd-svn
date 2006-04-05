@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 10:47:48 2006 texane
-// Last update Sat Feb 18 23:42:19 2006 texane
+// Last update Wed Apr 05 21:57:52 2006 texane
 //
 
 
@@ -149,11 +149,37 @@ sysapi::error::handle_t sysapi::process::create_outredir_and_loadexec(handle_t& 
 }
 
 
+static void* _build_environ(char** p_environ)
+{
+  char* p_result;
+  char* p_wrk;
+  unsigned int i_environ;
+  unsigned int ln_environ;
+
+  ln_environ = 0;
+  for (i_environ = 0; p_environ[i_environ]; ++i_environ)
+    ln_environ += strlen(p_environ[i_environ]) + 1;
+  p_result = (char*)malloc((ln_environ + 10) * sizeof(char));
+  if (p_result)
+    {
+      ZeroMemory(p_result, (ln_environ + 10) * sizeof(char));
+      p_wrk = p_result;
+      for (i_environ = 0; p_environ[i_environ]; ++i_environ)
+	{
+	  strcpy(p_wrk, p_environ[i_environ]);
+	  p_wrk += strlen(p_environ[i_environ]) + 1;
+	}
+    }
+  return p_result;
+}
+
+
 sysapi::error::handle_t sysapi::process::create_inoutredir_and_loadexec(handle_t& child_hdl, sysapi::file::handle_t& hread, sysapi::file::handle_t& hwrite, int ac, const char** av, const char** env)
 {
   SECURITY_ATTRIBUTES sa;
   PROCESS_INFORMATION psinfo;
   STARTUPINFO startinfo;
+  LPVOID p_environ;
   HANDLE hwrite_pipe;
   HANDLE hread_pipe;
   HANDLE hstdout;
@@ -186,7 +212,6 @@ sysapi::error::handle_t sysapi::process::create_inoutredir_and_loadexec(handle_t
     return error::OPEN_FAILED;
   SetHandleInformation(hread, HANDLE_FLAG_INHERIT, 0);
 
-
   // Create the pipe child will write to
   if (CreatePipe(&hread_pipe, &hwrite, &sa, 0) == FALSE)
     return error::OPEN_FAILED;
@@ -204,16 +229,23 @@ sysapi::error::handle_t sysapi::process::create_inoutredir_and_loadexec(handle_t
   startinfo.hStdOutput = hwrite_pipe;
   startinfo.hStdInput = hread_pipe;
   startinfo.dwFlags |= STARTF_USESTDHANDLES;
+  p_environ = (LPVOID)_build_environ((char**)env);
   if (CreateProcess(NULL, cmdline,
 		    NULL, NULL,
 		    TRUE,
 		    CREATE_NO_WINDOW,
-		    (LPVOID)env,
+		    p_environ,
 		    NULL,
 		    &startinfo,
 		    &psinfo) == FALSE)
-    return error::OPEN_FAILED;
+    {
+      if (p_environ)
+	free(p_environ);
+      return error::OPEN_FAILED;
+    }
 
+  if (p_environ)
+    free(p_environ);
   delete[] cmdline;
 
   // Get the child handle
