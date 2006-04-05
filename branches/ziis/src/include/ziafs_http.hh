@@ -35,7 +35,9 @@ namespace net
     int&									status_code() { return m_status_code; };
 		bool									reset();
 
+
   private:
+		bool				is_cgi_extension(net::config& conf, std::string &ext);
     std::string	m_wwwname;
     std::string	m_localname;
     int					m_status_code;

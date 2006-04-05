@@ -25,21 +25,52 @@ net::uri::uri()
 	reset();
 }
 
+bool				net::uri::is_cgi_extension(net::config& conf, std::string &ext)
+{
+	std::list<net::config::mime*>::iterator	imimes;
+
+	conf.get_mimes(imimes);
+	for (; !conf.end_mimes(imimes); imimes ++)
+	{
+		if (((*imimes)->extension == ext) && ((*imimes)->is_cgi == 1))
+			return true;
+	}
+	return false;
+}
+
 std::string&	net::uri::localname(net::config& conf, std::string& host)
 {
 	std::list<net::config::directory*>::iterator	dir;
 	std::list<net::config::server*>::iterator			serv;
 	std::vector<std::string>::iterator						dir_index;
 	std::string																		doc_root;
+	std::string																		ext;
 
 	conf.get_directory(dir);
-	while (!conf.end_directory(dir))
+	extension(ext);
+
+
+	if (!is_cgi_extension(conf, ext))
 	{
-		if ((*dir)->servername == "*")
-			doc_root = (*dir)->docroot + "/";
-		if ((*dir)->servername == host)
-			doc_root = (*dir)->docroot + "/";
-		dir ++;
+		while (!conf.end_directory(dir))
+		{
+			if (((*dir)->servername == "*")  && ((*dir)->id == 1))
+				doc_root = (*dir)->docroot + "/";
+			if (((*dir)->servername == host) && ((*dir)->id == 1))
+				doc_root = (*dir)->docroot + "/";
+			dir ++;
+		}
+	}
+	else
+	{
+		while (!conf.end_directory(dir))
+		{
+			if (((*dir)->servername == "*") && ((*dir)->id == 2))
+				doc_root = (*dir)->docroot + "/";
+			if (((*dir)->servername == host) && ((*dir)->id == 2))
+				doc_root = (*dir)->docroot + "/";
+			dir ++;
+		}
 	}
 
 	if (m_wwwname[m_wwwname.size() - 1] == '/')

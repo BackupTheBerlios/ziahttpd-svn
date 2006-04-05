@@ -341,6 +341,7 @@ status::error	net::config::dump(buffer &buf)
 bool						net::config::generate_config(config::server* s, config& conf)
 {
 	std::list<int>::iterator				iserid;
+	std::list<int>::iterator				icgiid;
 	std::list<directory*>::iterator idirectory;
 	std::list<mime*>::iterator			imime;
 	std::list<module*>::iterator		imodules;
@@ -357,6 +358,17 @@ bool						net::config::generate_config(config::server* s, config& conf)
 				m_ldirectory.push_back((*idirectory));
 		}
 	}
+	for(icgiid = s->cgi_id.begin(); icgiid != s->cgi_id.end(); ++icgiid)
+	{
+		conf.get_directory(idirectory);
+		for (; !conf.end_directory(idirectory); idirectory++)
+		{
+			if ((*idirectory)->id == (*icgiid))
+				m_ldirectory.push_back((*idirectory));
+		}
+	}
+
+
 	conf.get_mimes(imime);
 	for (; !conf.end_mimes(imime); imime++)
 		m_lmimes.push_back((*imime));

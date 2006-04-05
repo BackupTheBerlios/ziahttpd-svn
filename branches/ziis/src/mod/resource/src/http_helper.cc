@@ -45,13 +45,6 @@ bool			http_helper::get_type_of_resource(net::config& conf,
 		type_r = IS_FLY;
 		return true;
 	}
-	//Listing directory 
-	if (localname[localname.size() - 1] == '/')
-	{
-		type_r = EXEC_DIRECTORY_LISTING;
-//		response.is_chunk = true;
-		return true;
-	}
 
 	if (method_str == "head")
 	{
@@ -64,6 +57,16 @@ bool			http_helper::get_type_of_resource(net::config& conf,
 		type_r = IS_PUT;
 		return true;
 	}
+
+	//Listing directory 
+	if (localname[localname.size() - 1] == '/')
+	{
+		type_r = EXEC_DIRECTORY_LISTING;
+//		response.is_chunk = true;
+		return true;
+	}
+
+
 
 
 	conf.get_mimes(it);

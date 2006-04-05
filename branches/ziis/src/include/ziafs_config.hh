@@ -82,7 +82,7 @@ namespace net
 		TiXmlDocument		m_xmldoc;
 		TiXmlNode*			m_xmlnode;
 
-		std::list<server*>	m_lserver;
+		std::list<server*>		m_lserver;
 		std::list<directory*>	m_ldirectory;
 		std::list<mime*>			m_lmimes;
 		std::list<module*>		m_lmodules;
