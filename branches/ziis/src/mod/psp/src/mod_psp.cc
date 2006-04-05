@@ -67,7 +67,11 @@ void	mod_psp::GeneratePerl(buffer& out, buffer& in)
 	SV* SV_ret;
 
 	script = in.c_str();
-	my_perl = perl_alloc();
+	if ((my_perl = perl_alloc()) == NULL)
+	{
+		out = "Perl Alloc error";
+		return ;
+	}
 	perl_construct( my_perl );
 	perl_parse(my_perl, NULL, 3, embedding, NULL);
 	perl_run(my_perl);
@@ -169,13 +173,13 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 		if (!sysapi::file::is_path_valid(localname))
 		{
 			out.SetStatusCode(404);
-			//send error
+			out.SendError(404);
 			return ;
 		}
 		if (!sysapi::file::is_readable(localname))
 		{
 			out.SetStatusCode(403);
-			//send error
+			out.SendError(403);
 			return ;
 		}
 #ifdef _WIN32
