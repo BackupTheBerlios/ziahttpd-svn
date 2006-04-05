@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Tue Apr 04 00:02:44 2006 texane
+// Last update Wed Apr 05 20:20:40 2006 texane
 //
 
 
@@ -171,11 +171,6 @@ resource::file::file(const string& path, e_omode omode)
     {
       opened = true;
       sysapi::file::size(file_handle, file_size);
-    }
-  else
-    {
-      printf("error opening the file: %s\n", path.c_str());
-      fflush(stdout);
     }
 }
 

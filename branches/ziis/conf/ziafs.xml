@@ -1,5 +1,5 @@
 <system>
-  <nb_thread>10</nb_thread>
+  <nb_thread>1</nb_thread>
   <poll_delay>500000</poll_delay>
   <expiration_delay>5</expiration_delay>
   <nr_bklog>100</nr_bklog>
@@ -24,8 +24,12 @@
 <file>src/mod/encoding/mod_encoding.lo</file>
 </module>
 
-<module nmae="mod_invcase">
+<module name="mod_invcase">
 <file>src/mod/invcase/mod_invcase.lo</file>
+</module>
+
+<module name="mod_psp">
+<file>src/mod/psp/mod_psp.lo</file>
 </module>
 
 
@@ -36,6 +40,7 @@
   <directory_index>index.html index.htm</directory_index>
   <modulename>mod_sock</modulename>
   <modulename>mod_resource</modulename>
+  <modulename>mod_psp</modulename>
 </server>
 
 
@@ -80,13 +85,6 @@
   <image></image>
 </mime>
 
-<mime extension="zip">
-  <is_cgi>0</is_cgi>
-  <type>application/zip</type>
-  <cgi></cgi>
-  <image></image>
-</mime>
-
 <mime extension="php">
   <is_cgi>0</is_cgi>
   <type>text/html</type>
@@ -97,6 +95,13 @@
 <mime extension="pdf">
   <is_cgi>0</is_cgi>
   <type>application/pdf</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
+<mime extension="psp">
+  <is_cgi>0</is_cgi>
+  <type>text/psp</type>
   <cgi></cgi>
   <image></image>
 </mime>

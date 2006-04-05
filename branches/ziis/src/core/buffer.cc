@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sun Jan 22 01:03:32 2006 texane
-// Last update Fri Mar 24 13:27:23 2006 texane
+// Last update Wed Apr 05 20:12:45 2006 texane
 //
 
 
@@ -151,10 +151,7 @@ buffer& buffer::operator+=(const buffer& b)
   unsigned char* wrk;
 
   if (buf_ == 0 && sz_)
-    {
-      printf("!!!!buffer.cc buf is false with a true size\n"); fflush(stdout);
-      exit(-1);
-    }
+    return *this;
 
   // Copy
   wrk = new unsigned char[sz_ + b.sz_];

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Mon Apr 03 20:10:08 2006 texane
+// Last update Wed Apr 05 21:06:08 2006 texane
 //
 
 
@@ -189,14 +189,17 @@ bool thr::pool::sess_handle_document(session_t* sess)
   string localname;
   string hostname;
 
-  if (sess->done == true)
-    return true;
-
   // instanciate ZfsInput
   sess->m_input = new ZfsInput(sess);
 
   // according to metadata, instanciate the output
   sess->m_output = new ZfsOutput(sess);
+
+  if (sess->done == true)
+    {
+      sess->m_output->SendError(sess->proto.get_uri().status_code());
+      return false;
+    }
 
   // post process meta data
   accepted_encoding = sess->m_input->GetInput("accept-encoding");

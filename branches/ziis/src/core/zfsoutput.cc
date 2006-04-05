@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Mon Apr 03 23:38:29 2006 texane
+// Last update Wed Apr 05 21:01:47 2006 texane
 //
 
 
@@ -15,6 +15,7 @@
 #include <ziis_impl.hh>
 #include <ziafs_http.hh>
 #include <iostream>
+#include <sstream>
 
 
 // #define DEBUG_STEP
@@ -192,8 +193,19 @@ int ZfsOutput::SendBuffer(const char* buf, int sz)
   return send_whole_buffer((const char*)buf_entity.bufptr(), (int)buf_entity.size());
 }
 
-int ZfsOutput::SendError(int)
-{
 #define ERROR_PAGE "<html><body> ERROR PAGE </body></html>"
-  return send_whole_buffer(ERROR_PAGE, sizeof(ERROR_PAGE) - 1);
+int ZfsOutput::SendError(int err_no)
+{
+  ostringstream oss;
+  buffer buf_error((unsigned char*)ERROR_PAGE, sizeof(ERROR_PAGE) - 1);
+  char* p_buf;
+
+  SetStatusCode(err_no);
+  oss << sizeof(ERROR_PAGE) - 1;
+  SetOutput("content-length", oss.str().c_str());
+  SendHeader();
+  p_buf = (char*)buf_error.c_str();
+  SendBuffer(p_buf, buf_error.size());
+  delete[] p_buf;
+  return buf_error.size();
 }
