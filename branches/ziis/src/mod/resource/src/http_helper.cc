@@ -195,7 +195,7 @@ bool				http_helper::create_resource(resource::handle*& hld,
 	{
 		int ac = 1;
 		const char *tab[] = { localname.c_str(), 0};
-		const char *env[] = {"SERVERPOUR=80", 0};
+		const char *env[] = {"SERVERPOUR=80", "TOTO=tatra", 0};
 		// This line has been modified by texane
 		// buffer is a buffer to prefecth the input.
 		// content of the mline.buf will be removed
