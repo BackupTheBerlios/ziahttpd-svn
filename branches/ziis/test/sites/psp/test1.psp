@@ -1,0 +1,10 @@
+<html>
+  <% print "fddd--"; %>
+  <% 
+  for ($i = 0; $i < 10; ++$i) {
+  %>
+  lala<br>
+  <%
+  }
+  %>
+</html>
