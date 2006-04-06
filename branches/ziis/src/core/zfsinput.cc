@@ -82,6 +82,8 @@ const char*	ZfsInput::GetInputHttpVersion()
 
 const	char*	ZfsInput::GetInputQueryString()
 {
+	if (m_proto->query().empty())
+		return NULL;
 	return m_proto->query().c_str();
 }
 

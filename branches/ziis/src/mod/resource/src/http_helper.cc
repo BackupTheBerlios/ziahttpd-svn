@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <map>
 
 using namespace std;
 using namespace sysapi;
@@ -173,6 +174,116 @@ bool				http_helper::genete_type_mimes(net::config& conf, IOutput& out, std::str
 	return false;
 }
 
+bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string localname, int sz_input, char ***env)
+{
+	ostringstream	oss;
+	std::map<std::string, std::string> m_env_header;
+	std::map<std::string, std::string>::iterator it;
+	char **ret;
+
+//	env[0] = strdup("AUTH_TYPE=");
+
+	if (sz_input)
+	{
+		oss << sz_input;
+		m_env_header["CONTENT_LENGTH"] = oss.str();
+		oss.str("");
+	}
+	
+	oss << out.GetOutput("content-type");
+	m_env_header["CONTENT_TYPE"] = oss.str();
+	oss.str("");
+
+////	m_env_header["GATEWAY_INTERFACE"] = "CGI/1.1";
+
+	oss << inp.GetInputLocation();
+	m_env_header["PATH_INFO"] = oss.str();
+	oss.str("");
+
+	oss << localname;
+	m_env_header["PATH_TRANSLATED"] = oss.str();
+	oss.str("");
+
+	if (inp.GetInputQueryString())
+	{
+		oss << inp.GetInputQueryString();
+		m_env_header["QUERY_STRING"] = oss.str();
+	}
+	else
+		m_env_header["QUERY_STRING"] = "";
+	oss.str("");
+
+	char *tmp;
+	int ip;
+	ip = inp.GetClientIp();
+	tmp = (char *)&ip;
+	for (int i = 0; i < 4; i++)
+	{
+		int o = (int)*tmp;
+		oss << o;
+		if (i != 3)
+			oss << ".";
+		tmp++;
+	}
+	m_env_header["REMOTE_ADDR"] = oss.str();
+	oss.str("");
+	m_env_header["REMOTE_HOST"] = "";
+
+//	env[9] = strdup("REMOTE_IDENT=");
+	
+//	env[10] = strdup("REMOTE_USER=");
+	
+	////oss << inp.GetInputMethod();
+	////m_env_header["REQUEST_METHOD"] = oss.str();
+	////oss.str("");
+
+	char *script = (char *)inp.GetInputLocation();
+	script += strlen (script) - 1;
+	while (*script != '/')
+		script --;
+	script ++;
+	oss << script;
+	m_env_header["SCRIPT_NAME"] = oss.str();
+	oss.str("");
+
+	//m_env_header["SERVER_NAME"] = "Zfs.";
+	
+//	env[14] = strdup("SERVER_PORT=");
+	
+	oss << inp.GetInputHttpVersion();
+	m_env_header["SERVER_PROTOCOL"] = oss.str();
+	oss.str("");
+
+//	env[16] = strdup("SERVER_SOFTWARE=");
+	
+	ret = new char*[m_env_header.size()];
+	int y = 0;
+	for (it = m_env_header.begin(); it != m_env_header.end(); it++)
+	{
+		string stmp;
+
+		if (!it->second.empty())
+		{
+			stmp = it->first + "=" + it->second;
+			ret[y] = strdup(stmp.c_str());
+			y++;
+		}
+	}
+	ret[y] = 0;
+	*env = ret;
+	return true;
+
+}
+bool				http_helper::free_cgi_environ(char **env)
+{
+	int i;
+
+	for (i = 0; env[i]; i++)
+		free(env[i]);
+	delete [] env;
+	return true;
+}
+
 bool				http_helper::create_resource(resource::handle*& hld, 
 																				 net::config& conf, IInput& inp, 
 																				 IOutput& out, 
@@ -198,17 +309,20 @@ bool				http_helper::create_resource(resource::handle*& hld,
 	{
 		int ac = 1;
 		const char *tab[] = { localname.c_str(), 0};
-		const char *env[] = {"SERVERPOUR=80", "TOTO=tatra", 0};
 		// This line has been modified by texane
 		// buffer is a buffer to prefecth the input.
 		// content of the mline.buf will be removed
+		char **env;
+		generate_cgi_eviron(inp, out, localname, sz_input,&env);
 	  error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)tab, (char**)env, sz_input);
+		free_cgi_environ(env);
 	}
 	else if (r_type == EXEC_BY_CGI)
 	{
 		std::string cgi_path;
 		char **av;
-		const char *env[] = {"SERVER_PORT=80", 0};
+		char **env;
+		//char *env[] = {"SERVER_PORT=80", 0};
 		int ac;
 		std::vector<std::string> vec;
 		std::vector<std::string>::iterator iter;
@@ -227,17 +341,16 @@ bool				http_helper::create_resource(resource::handle*& hld,
 		av[i++] = (char *)localname.c_str();
 		av[i] = '\0';
 
+		generate_cgi_eviron(inp, out, localname, sz_input, &env);
 		error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
-		// free env + av
-		//		for (i = 0; av[i]; i++)
-		//			delete av[i];
+		free_cgi_environ(env);
 		delete [] av;
 	}
 	else if (r_type == EXEC_DIRECTORY_LISTING)
 	{
 		std::string cgi_path;
 		char **av;
-		const char *env[] = {"SERVER_PORT=80", 0};
+		char **env;
 		int ac;
 		std::vector<std::string> vec;
 		std::vector<std::string>::iterator iter;
@@ -255,12 +368,10 @@ bool				http_helper::create_resource(resource::handle*& hld,
 		}
 		av[i++] = (char *)localname.c_str();
 		av[i] = '\0';
-		//std::string cgi_path;
-		//char **av;
-		//int ac;
 
+		generate_cgi_eviron(inp, out, localname, sz_input, &env);
 		error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
-
+		free_cgi_environ((char **)env);
 	}
 	else if (r_type == IS_PUT)
 	  error = resource::manager::factory_create(hld, resource::ID_FILE, resource::O_OUTPUT, localname, sz_input);

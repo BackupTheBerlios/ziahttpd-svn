@@ -60,6 +60,9 @@ namespace http_helper
 												std::string localname);
 	bool get_cgi_path(net::config& conf, std::string& path, std::string& localname);
 	bool genete_type_mimes(net::config& conf, IOutput& out, std::string& localname);
+	bool	generate_cgi_eviron(IInput& inp, IOutput& out,
+														std::string localname, int sz_input, char ***env);
+	bool	free_cgi_environ(char **env);
 }
 
 
