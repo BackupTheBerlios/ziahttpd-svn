@@ -15,11 +15,6 @@
 <file>src/mod/ssl/mod_ssl.lo</file>
 </module>
 
-<module name="mod_resource">
-<file>src/mod/resource/mod_resource.lo</file>
-<configfile>conf/ziafs.xml</configfile>
-</module>
-
 <module name="mod_encoding">
 <file>src/mod/encoding/mod_encoding.lo</file>
 </module>
@@ -33,22 +28,39 @@
 </module>
 
 
+<module name="mod_resource">
+<file>src/mod/resource/mod_resource.lo</file>
+<configfile>conf/ziafs.xml</configfile>
+</module>
+
+
 <server>
   <id>1</id>
-  <cgi_id>1</cgi_id>
+  <cgi_id>2</cgi_id>
   <port>40000</port>
   <directory_index>index.html index.htm</directory_index>
-  <modulename>mod_sock</modulename>
   <modulename>mod_resource</modulename>
+  <modulename>mod_sock</modulename>
   <modulename>mod_psp</modulename>
 </server>
 
 
-
 <directory id=1>
   <servername>*</servername>
-  <docroot>./</docroot>
+  <docroot>.</docroot>
 </directory>
+
+<directory id=2>
+  <servername>*</servername>
+  <docroot>./web/web</docroot>
+</directory>
+
+<directory id=3>
+  <servername>*</servername>
+  <docroot>./web/web/root</docroot>
+</directory>
+
+
 
 <mime extension="html">
   <is_cgi>0</is_cgi>
@@ -85,6 +97,13 @@
   <image></image>
 </mime>
 
+<mime extension="cgi">
+  <is_cgi>1</is_cgi>
+  <type>text/html</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
 <mime extension="php">
   <is_cgi>0</is_cgi>
   <type>text/html</type>
@@ -102,6 +121,13 @@
 <mime extension="psp">
   <is_cgi>0</is_cgi>
   <type>text/psp</type>
+  <cgi></cgi>
+  <image></image>
+</mime>
+
+<mime extension="zip">
+  <is_cgi>0</is_cgi>
+  <type>application/zip</type>
   <cgi></cgi>
   <image></image>
 </mime>

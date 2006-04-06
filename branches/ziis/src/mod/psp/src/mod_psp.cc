@@ -50,13 +50,17 @@ bool	split_token(buffer& source, std::vector<buffer>& dest, bool putdel)
 				dest.push_back(btmp);
 			}
 			tmp +=2;
-			prev = tmp;
+			prev = tmp + 1;
 		}
 	}
 	buffer	btmp((const unsigned char*)prev, strlen(prev));
 	dest.push_back(btmp);
 	return (true);
 }
+
+#include <iostream>
+
+using namespace std;
 
 void	mod_psp::GeneratePerl(buffer& out, buffer& in)
 {
@@ -72,13 +76,14 @@ void	mod_psp::GeneratePerl(buffer& out, buffer& in)
 		out = "Perl Alloc error";
 		return ;
 	}
+
 	perl_construct( my_perl );
 	perl_parse(my_perl, NULL, 3, embedding, NULL);
 	perl_run(my_perl);
 	SV_ret = eval_pv((const char *)script, TRUE);
 	perl_destruct(my_perl);
 	perl_free(my_perl);
-	delete script;
+	delete[] script;
 	std::ostringstream filename;
 
 	filename << "psp_";
@@ -186,6 +191,7 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 			out.SendError(403);
 			return ;
 		}
+
 #ifdef _WIN32
 		off << "<% open(FOO, \">psp_" << (unsigned int)pthread_self().p <<  "\") || die; $handle = select(FOO); %>" << iff.rdbuf() ;
 #else
@@ -197,7 +203,7 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 		int state = 0;
 
 		split_token(b, block, true);
-		bout += "\r\nprint <<endmarker;\r\n";
+		bout = "\r\nprint <<endmarker;\r\n";
 		for (it = block.begin(); it != block.end(); it++)
 		{
 			buffer*	tmp = &(*it);
@@ -217,9 +223,10 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 			{
 				bout += (*it);
 			}
+			delete[] str;
 		}
 		if (!state)
-			bout += "\r\nendmarker\r\n";
+		  bout += "\r\nendmarker\r\n";
 
 	buffer bin;
 	std::ostringstream oss;
