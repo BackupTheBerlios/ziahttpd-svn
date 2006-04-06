@@ -181,6 +181,9 @@
 					RelativePath=".\remove_me.cpp">
 				</File>
 				<File
+					RelativePath="..\src\core\str_utils.cc">
+				</File>
+				<File
 					RelativePath="..\src\core\thr_pool.cc">
 				</File>
 				<File

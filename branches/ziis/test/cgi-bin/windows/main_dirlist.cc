@@ -31,6 +31,7 @@ public:
 cgi::cgi()
 {
   len_ = 0;
+  cout << "" << endl; 
   cout << "<html><body>" << endl;
   cout << "<table border=0 cellpadding=0 cellspacing=0>" << endl;
 }

@@ -296,9 +296,9 @@ bool				http_helper::create_resource(resource::handle*& hld,
 
 	pre_create_resource(conf, r_type, status_code, inp, out, localname);
 	get_type_of_resource(conf, r_type, inp, out, localname, status_code);
-	  sz_input = 0;
-	  if (inp.GetInput("content-length"))
-	    sz_input = atoi(inp.GetInput("Content-length"));
+	sz_input = 0;
+	if (inp.GetInput("content-length"))
+	  sz_input = atoi(inp.GetInput("Content-length"));
 
 	if (r_type == IS_FILE)
 	{
@@ -342,7 +342,7 @@ bool				http_helper::create_resource(resource::handle*& hld,
 		av[i] = '\0';
 
 		generate_cgi_eviron(inp, out, localname, sz_input, &env);
-		error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
+		error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env, sz_input);
 		free_cgi_environ(env);
 		delete [] av;
 	}
