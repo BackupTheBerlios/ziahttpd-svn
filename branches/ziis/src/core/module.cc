@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 15:17:50 2006 texane
-// Last update Wed Apr 05 20:01:03 2006 texane
+// Last update Fri Apr  7 01:42:00 2006 
 //
 
 
@@ -198,6 +198,7 @@ bool mod::manager::reload(net::config* p_config, IFS* p_ifs)
 
 
 // module wrapper class
+
 
 mod::modinfo::modinfo(const string& path)
 {

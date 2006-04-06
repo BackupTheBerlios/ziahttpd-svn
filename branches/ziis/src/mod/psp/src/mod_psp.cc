@@ -1,66 +1,68 @@
-#include <fstream>
-#include <sstream>
 #include "include/mod_psp.hh"
-#include <vector>
+#include <iostream>
 
-#ifdef _WIN32
-# include <windows.h>
-# include <sys/pthread.h>
-#else
-# include <pthread.h>
-#endif
-#include <perl.h>
-#include <sys/sysapi.hh>
-//#include <semaphore.h>
-//#include <scheduler.h>
+using namespace std;
 
 IModule* GetNewInstance()
 {
-	return new mod_psp;
+  return new mod_psp;
 }
 
 
 bool	split_token(buffer& source, std::vector<buffer>& dest, bool putdel)
 {
-	char* buf = source.c_str();
-	char* tmp = (char*)buf;
-	char*	prev = tmp;
+  char* buf = source.c_str();
+  char* tmp = (char*)buf;
+  char*	prev = tmp;
+  char* p_delete;
 
-	int state = 0;
+  p_delete = tmp;
 
-	for (int i = 0; i < (int)source.size(); i++, tmp++)
+  for (int i = 0; i < (int)source.size() - 1; i++, tmp++)
+    {
+      if ((!strncmp(tmp, "<%", 2)) || (!strncmp(tmp, "%>", 2)))
 	{
-		if ((!strncmp(tmp, "<%", 2)) || (!strncmp(tmp, "%>", 2)))
-		{
-			char t = *tmp;
+	  char t = *tmp;
 
-			*tmp = '\0';
-			buffer	btmp((const unsigned char*)prev, strlen(prev));
-			dest.push_back(btmp);
-			*tmp = t;
-			if (putdel)
-			{
-				btmp.clear();
-				char f[3];
+	  *tmp = '\0';
 
-				f[0] = *tmp;
-				f[1] = *(tmp + 1);
-				f[2] = '\0';
-				btmp = f;
-				dest.push_back(btmp);
-			}
-			tmp +=2;
-			prev = tmp + 1;
-		}
+	  cout << "hehe" << endl;
+	  cout << "entering: (" << strlen(prev) << ")" << endl;
+	  cout << "passed" << endl;
+
+	  buffer btmp((const unsigned char*)prev, strlen(prev));
+
+	  cout << "entering with :: " << prev << endl;
+	  cout << "length is     :: " << strlen(prev) << endl;
+	  cout << "tostring      :: " << btmp.tostring() << endl;
+
+	  cout << "after buffer" << endl;
+
+	  dest.push_back(btmp);
+
+	  cout << "after push_back" << endl;
+
+	  *tmp = t;
+	  if (putdel)
+	    {
+	      btmp.clear();
+	      char f[3];
+
+	      f[0] = *tmp;
+	      f[1] = *(tmp + 1);
+	      f[2] = '\0';
+// 	      btmp = f;
+// 	      dest.push_back(btmp);
+	    }
+	  tmp += 2;
+	  prev = tmp + 1;
 	}
-	buffer	btmp((const unsigned char*)prev, strlen(prev));
-	dest.push_back(btmp);
-	return (true);
+    }
+  buffer	btmp((const unsigned char*)prev, strlen(prev));
+  dest.push_back(btmp);
+  delete[] p_delete;
+  return (true);
 }
-
-#include <iostream>
-
-using namespace std;
 
 void	mod_psp::GeneratePerl(buffer& out, buffer& in)
 {
@@ -87,7 +89,11 @@ void	mod_psp::GeneratePerl(buffer& out, buffer& in)
 	std::ostringstream filename;
 
 	filename << "psp_";
+#ifdef _WIN32
 	filename  << (unsigned int)pthread_self().p;
+#else
+	filename  << (unsigned int)pthread_self();
+#endif
 	std::ifstream			iff(filename.str().c_str());
 	std::ostringstream	off;
 
@@ -166,11 +172,6 @@ void	mod_psp::GeneratePerl(buffer& out, buffer& in)
 //	delete send_buf;
 //}
 
-
-#include <iostream>
-
-using namespace std;
-
 void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 {
 		std::vector<buffer>						block;
@@ -178,6 +179,8 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 		std::ifstream			iff(localname);
 		std::ostringstream	off;
 		std::ostringstream	pre_script;
+
+		cout << "entering generate document" << endl;
 
 		if (!sysapi::file::is_path_valid(localname))
 		{
@@ -192,17 +195,26 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 			return ;
 		}
 
+		cout << "open the dotpsp file" << endl;
+
 #ifdef _WIN32
 		off << "<% open(FOO, \">psp_" << (unsigned int)pthread_self().p <<  "\") || die; $handle = select(FOO); %>" << iff.rdbuf() ;
 #else
 		off << "<% open(FOO, \">psp_" << (unsigned int)pthread_self() <<  "\") || die; $handle = select(FOO); %>" << iff.rdbuf() ;
 #endif // _WIN32
+
 		buffer b((const unsigned char*)off.str().c_str(), off.str().size());
 		b += " <% select ($handle); close (FOO); %>";
 		buffer bout;
 		int state = 0;
 
+		cout << "splitting token" << endl;
+
 		split_token(b, block, true);
+
+		cout << "walkming token" << endl;
+
+
 		bout = "\r\nprint <<endmarker;\r\n";
 		for (it = block.begin(); it != block.end(); it++)
 		{
@@ -230,7 +242,12 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 
 	buffer bin;
 	std::ostringstream oss;
+
+	cout << "generate perl" << endl;
+
 	GeneratePerl(bin, bout);
+
+	cout << "generate perl done" << endl;
 	
 	// remove our temporary file
 #ifdef _WIN32
@@ -239,6 +256,8 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 	oss << "psp_" << (unsigned int)pthread_self();
 #endif //_WIN32
 	sysapi::file::remove(oss.str());
+
+	cout << "exiting generate document" << endl;
 
 	char size[20];
 	sprintf(size, "%i", bin.size());
@@ -249,10 +268,3 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 	out.SendBuffer(send_buf, (int)bin.size());
 	delete[] send_buf;
 }
-
-/*print <<endmarker;
-line1
-line2
-line3
-etc.
-endmarker*/

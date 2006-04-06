@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Apr 04 14:58:50 2006 texane
-// Last update Wed Apr 05 15:06:32 2006 texane
+// Last update Thu Apr  6 22:30:03 2006 
 //
 
 
@@ -21,6 +21,7 @@ int ZfsIfs::IFSOpen(const char* str_filename, const char* str_omode)
   int m_omode;
 
   h_err = sysapi::error::OPEN_FAILED;
+  m_omode = (int)sysapi::file::O_READ;
 
   if (strcmp(str_omode, "r") == 0)
     {

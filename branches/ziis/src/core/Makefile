@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Tue Feb 14 01:04:44 2006 texane
-## Last update Thu Apr 06 19:12:24 2006 texane
+## Last update Thu Apr  6 22:26:38 2006 
 ##
 
 # ! Always include this file
-!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+# !include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= zfs.x

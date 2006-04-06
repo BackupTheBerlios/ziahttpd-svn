@@ -3,6 +3,9 @@
 #include <zia_stringmanager.hh>
 #include <sstream>
 
+
+extern int stricmp(const char*, const char*);
+
 bool	net::http::valid_method()
 {
 	std::string valid_method[] = {"get", "post", "head", ""};

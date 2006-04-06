@@ -1,5 +1,4 @@
 #include "include/string_manager.hh"
-#include <iostream>
 
 bool	stringmanager::split(const std::string &source, const std::string& delimitor, std::vector<std::string>& dest, const std::string& putdel)
 {

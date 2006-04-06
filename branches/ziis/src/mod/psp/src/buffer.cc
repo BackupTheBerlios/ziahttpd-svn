@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:32:24 2006 texane
-// Last update Wed Mar 22 10:33:08 2006 texane
+// Last update Fri Apr  7 03:24:35 2006 
 //
 
 
@@ -14,6 +14,13 @@
 #include <sstream>
 #include <cstring>
 #include "include/buffer.hh"
+
+
+#include <iostream>
+
+
+using namespace std;
+
 
 
 using std::setfill;
@@ -194,7 +201,6 @@ buffer& buffer::operator=(const buffer& b)
   sz_ = b.sz_;
   buf_ = new unsigned char[sz_];
   bufcpy(buf_, b.buf_, sz_);
-  
   return *this;
 }
 
@@ -202,6 +208,8 @@ buffer& buffer::operator=(const buffer& b)
 buffer& buffer::operator=(const string& s)
 {
   reset();
+
+  cout << "aksjdkljfasdlkfjaslkf" << endl;
 
   if ((sz_ = strlen(s.c_str())))
     {

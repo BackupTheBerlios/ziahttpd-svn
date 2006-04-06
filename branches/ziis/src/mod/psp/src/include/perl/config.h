@@ -36,31 +36,26 @@
  *	This symbol is defined if the bcmp() routine is available to
  *	compare blocks of memory.
  */
-/*#define HAS_BCMP	/**/
 
 /* HAS_BCOPY:
  *	This symbol is defined if the bcopy() routine is available to
  *	copy blocks of memory.
  */
-/*#define HAS_BCOPY	/**/
 
 /* HAS_BZERO:
  *	This symbol is defined if the bzero() routine is available to
  *	set a memory block to 0.
  */
-/*#define HAS_BZERO	/**/
 
 /* HAS_CHOWN:
  *	This symbol, if defined, indicates that the chown routine is
  *	available.
  */
-/*#define HAS_CHOWN		/**/
 
 /* HAS_CHROOT:
  *	This symbol, if defined, indicates that the chroot routine is
  *	available.
  */
-/*#define HAS_CHROOT		/**/
 
 /* HAS_CHSIZE:
  *	This symbol, if defined, indicates that the chsize routine is available
@@ -83,7 +78,6 @@
  *	This symbol, if defined, indicates that the cuserid routine is
  *	available to get character login names.
  */
-/*#define HAS_CUSERID		/**/
 
 /* HAS_DBL_DIG:
  *	This symbol, if defined, indicates that this system's <float.h>
@@ -116,19 +110,16 @@
  *	This symbol, if defined, indicates that the fchmod routine is available
  *	to change mode of opened files.  If unavailable, use chmod().
  */
-/*#define HAS_FCHMOD		/**/
 
 /* HAS_FCHOWN:
  *	This symbol, if defined, indicates that the fchown routine is available
  *	to change ownership of opened files.  If unavailable, use chown().
  */
-/*#define HAS_FCHOWN		/**/
 
 /* HAS_FCNTL:
  *	This symbol, if defined, indicates to the C program that
  *	the fcntl() function exists.
  */
-/*#define HAS_FCNTL		/**/
 
 /* HAS_FGETPOS:
  *	This symbol, if defined, indicates that the fgetpos routine is
@@ -146,7 +137,6 @@
  *	This symbol, if defined, indicates that the fork routine is
  *	available.
  */
-/*#define HAS_FORK		/**/
 
 /* HAS_FSETPOS:
  *	This symbol, if defined, indicates that the fsetpos routine is
@@ -170,7 +160,6 @@
  *	available to get the list of process groups.  If unavailable, multiple
  *	groups are probably not supported.
  */
-/*#define HAS_GETGROUPS		/**/
 
 /* HAS_GETLOGIN:
  *	This symbol, if defined, indicates that the getlogin routine is
@@ -183,39 +172,33 @@
  *	the getpgid(pid) function is available to get the
  *	process group id.
  */
-/*#define HAS_GETPGID		/**/
 
 /* HAS_GETPGRP2:
  *	This symbol, if defined, indicates that the getpgrp2() (as in DG/UX)
  *	routine is available to get the current process group.
  */
-/*#define HAS_GETPGRP2		/**/
 
 /* HAS_GETPPID:
  *	This symbol, if defined, indicates that the getppid routine is
  *	available to get the parent process ID.
  */
-/*#define HAS_GETPPID		/**/
 
 /* HAS_GETPRIORITY:
  *	This symbol, if defined, indicates that the getpriority routine is
  *	available to get a process's priority.
  */
-/*#define HAS_GETPRIORITY		/**/
 
 /* HAS_INET_ATON:
  *	This symbol, if defined, indicates to the C program that the
  *	inet_aton() function is available to parse IP address "dotted-quad"
  *	strings.
  */
-/*#define HAS_INET_ATON		/**/
 
 /* HAS_KILLPG:
  *	This symbol, if defined, indicates that the killpg routine is available
  *	to kill process groups.  If unavailable, you probably should use kill
  *	with a negative process number.
  */
-/*#define HAS_KILLPG	/**/
 
 /* HAS_LINK:
  *	This symbol, if defined, indicates that the link routine is
@@ -233,13 +216,12 @@
  *	This symbol, if defined, indicates that the lockf routine is
  *	available to do file locking.
  */
-/*#define HAS_LOCKF		/**/
 
 /* HAS_LSTAT:
  *	This symbol, if defined, indicates that the lstat routine is
  *	available to do file stats on symbolic links.
  */
-/*#define HAS_LSTAT		/**/
+
 
 /* HAS_MBLEN:
  *	This symbol, if defined, indicates that the mblen routine is available
@@ -298,7 +280,6 @@
  *	do it for you. However, if mkfifo is there, mknod might require
  *	super-user privileges which mkfifo will not.
  */
-/*#define HAS_MKFIFO		/**/
 
 /* HAS_MKTIME:
  *	This symbol, if defined, indicates that the mktime routine is

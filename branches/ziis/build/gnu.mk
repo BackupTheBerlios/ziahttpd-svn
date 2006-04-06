@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Mon Apr  3 18:22:16 2006 
+## Last update Fri Apr  7 03:08:05 2006 
 ##
 
 
@@ -30,7 +30,7 @@ CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS) -DTIXML_USE_STL
 
 # .linker
 osname	:=	$(shell uname -s)
-LD	:=	g++ --export-dynamic -rdynamic
+LD	:=	g++ -rdynamic
 LDPATHS	:=
 LDLIBS	:=	-lpthread -L/usr/pkg/lib # -lefence
 ifeq ($(osname), Linux)
