@@ -5,13 +5,11 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:28:42 2006 texane
-// Last update Thu Apr 06 19:09:22 2006 texane
+// Last update Thu Apr 06 17:41:36 2006 texane
 //
 
 
-#include <string>
-#include <ziafs_static.hh>
-#include <ziafs_utils.hh>
+#include "include/mod_resource.hh"
 
 
 using std::string;
@@ -141,6 +139,10 @@ utils::line::~line()
 {}
 
 
+#include <iostream>
+using namespace std;
+
+
 bool utils::line::from_buffer(string& ln, buffer& buf, bool& too_long)
 {
   bool ret = false;
@@ -160,12 +162,11 @@ bool utils::line::from_buffer(string& ln, buffer& buf, bool& too_long)
       m_line.clear();
       ret = true;
     }
-  else if (m_line.size() >= ZIAFS_STATIC_LINESZ)
+  else if (m_line.size() >= constants::LINE_SIZE)
     {
       too_long = true;
       ret = false;
     }
-
   return ret;
 }
 

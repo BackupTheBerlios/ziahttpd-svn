@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:44:14 2006 texane
-// Last update Thu Mar 23 20:08:38 2006 texane
+// Last update Thu Apr 06 16:05:56 2006 texane
 //
 
 
@@ -15,9 +15,9 @@
 using namespace sysapi;
 
 
-resource::e_error resource::fake::generate(unsigned int& size)
+resource::e_error resource::fake::generate(unsigned int& nbytes, IOutput& p_out)
 {
-  size = 0;
+  nbytes = 0;
   if (generated == true)
     return E_ALREADY_GEN;
   generated = true;
@@ -66,6 +66,13 @@ bool resource::fake::is_content_dynamic() const
 {
   return false;
 }
+
+
+bool resource::fake::is_header_dynamic() const
+{
+  return false;
+}
+
 
 
 // Construction/destruction

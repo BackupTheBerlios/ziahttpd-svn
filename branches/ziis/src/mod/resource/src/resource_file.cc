@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Wed Apr 05 20:20:40 2006 texane
+// Last update Thu Apr 06 16:06:18 2006 texane
 //
 
 
@@ -22,13 +22,18 @@ using namespace sysapi;
 using namespace std;
 
 
+bool resource::file::is_header_dynamic() const
+{
+  return false;
+}
+
 bool resource::file::is_content_dynamic() const
 {
   return false;
 }
 
 
-resource::e_error resource::file::generate(unsigned int& nbytes)
+resource::e_error resource::file::generate(unsigned int& nbytes, IOutput& p_out)
 {
   resource::e_error e_err;
 

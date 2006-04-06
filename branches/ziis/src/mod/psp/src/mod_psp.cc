@@ -162,6 +162,10 @@ void	mod_psp::GeneratePerl(buffer& out, buffer& in)
 //}
 
 
+#include <iostream>
+
+using namespace std;
+
 void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 {
 		std::vector<buffer>						block;
@@ -236,7 +240,7 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 	out.SendHeader();
 	char *send_buf = bin.c_str();
 	out.SendBuffer(send_buf, (int)bin.size());
-	delete send_buf;
+	delete[] send_buf;
 }
 
 /*print <<endmarker;

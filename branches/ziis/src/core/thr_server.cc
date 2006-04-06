@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Feb 14 15:22:37 2006 texane
-// Last update Wed Apr 05 22:57:32 2006 texane
+// Last update Thu Apr 06 19:26:00 2006 texane
 //
 
 
@@ -84,8 +84,8 @@ void thr::pool::sess_reset(session_t& sess)
   sess.srv = 0;
   sess.thr_slot = 0;
   sess.ret_in_cache = true;
-//   sess.m_conn_data = 0;
-//   sess.m_conn_module = 0;
+  sess.m_conn_data = 0;
+  sess.m_conn_module = 0;
   sess_reset_request(sess);
 }
 
@@ -256,7 +256,6 @@ void* thr::pool::server_entry(thr::pool::slot_t* thr_slot)
       sess_read_metadata(sess);
       sess_handle_document(&sess);
 
-//       cout << "cnonnection: " << sess.proto.request["connection"] << endl;
       if (sess.proto.request["connection"] == "close")
 	sess.done = true;
 

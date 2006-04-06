@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:40:22 2006 texane
-// Last update Mon Apr  3 14:59:13 2006 
+// Last update Thu Apr 06 16:18:14 2006 texane
 //
 
 
@@ -20,6 +20,7 @@
 #include <sys/sysapi.hh>
 #include <ziis.hh>
 #include "buffer.hh"
+#include "utils.hh"
 
 #ifdef _WIN32
 # include "include/resource.hh"

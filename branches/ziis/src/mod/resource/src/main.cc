@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 11:02:05 2006 texane
-// Last update Wed Apr 05 22:58:25 2006 texane
+// Last update Thu Apr 06 18:48:01 2006 texane
 //
 
 
@@ -104,20 +104,12 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
       out.SetOutput("content-length", oss.str().c_str());
     }
 
-  // debug resource
-//   {
-//     cout << GetCurrentThreadId() << ": [generatedocument]: " << path << endl;
-//     cout << "te: chunked ==  " << is_transfer_chunked << endl;
-//     cout << "resource input size == " << p_resource->input_size() << endl;
-//     if (in.GetInput("content-length"))
-//       cout << "input hash value == " << in.GetInput("content-length") << endl;
-//     else
-//       cout << "input hash value == " << 0 << endl;
-//   }
-
-  // send response header
-  if (out.SendHeader() == false)
-    is_done = true;
+  // send response header, if not generated
+  if (p_resource->is_header_dynamic() == false)
+    {
+      if (out.SendHeader() == false)
+	is_done = true;
+    }
 
   // generate the resource
   while (is_done == false)
@@ -134,7 +126,7 @@ void mod_resource::GenerateDocument(IInput& in, const char* path, IOutput& out)
 	}
 
       // generate the resource
-      e_err = p_resource->generate(nr_size);
+      e_err = p_resource->generate(nr_size, out);
       if (e_err == resource::E_SUCCESS)
 	{
 	  if (p_resource->flush_network(out) != resource::E_SUCCESS)

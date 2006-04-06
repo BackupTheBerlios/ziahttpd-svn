@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Mon Apr 03 19:04:11 2006 texane
+## Last update Thu Apr 06 16:16:46 2006 texane
 ##
 
 # ! Always include this file
@@ -26,6 +26,7 @@ srcs	= src$(SLASH)main.cc \
 	  src$(SLASH)resource_fake.cc \
 	  src$(SLASH)resource_process.cc \
 	  src$(SLASH)config.cc \
+	  src$(SLASH)utils_line.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinystr.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxml.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)lib$(SLASH)src$(SLASH)tinyxml$(SLASH)tinyxmlerror.cc \

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:45:06 2006 texane
-// Last update Sun Apr 02 18:08:31 2006 texane
+// Last update Thu Apr 06 16:03:25 2006 texane
 //
 
 
@@ -34,7 +34,7 @@ static void inline mk_status_msg(unsigned int err_code, unsigned char* buf, unsi
 
 // resource interface implementation
 
-resource::e_error resource::byfly::generate(unsigned int& nbytes)
+resource::e_error resource::byfly::generate(unsigned int& nbytes, IOutput& p_out)
 {
   if (generated == true)
     return E_ALREADY_GEN;
@@ -81,6 +81,11 @@ resource::e_error resource::byfly::size(unsigned int& nbytes)
 bool resource::byfly::is_content_dynamic() const
 {
   return true;
+}
+
+bool resource::byfly::is_header_dynamic() const
+{
+  return false;
 }
 
 

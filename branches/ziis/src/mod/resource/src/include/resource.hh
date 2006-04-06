@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:25:56 2006 texane
-// Last update Mon Apr  3 14:59:59 2006 
+// Last update Thu Apr 06 16:31:55 2006 texane
 //
 
 
@@ -23,10 +23,12 @@
 # include "include/http_helper.hh"
 # include "include/buffer.hh"
 # include "include/string_manager.hh"
+# include "include/utils.hh"
 #else
 # include "http_helper.hh"
 # include "buffer.hh"
 # include "string_manager.hh"
+# include "utils.hh"
 #endif // _WIN32
 
 
@@ -81,9 +83,10 @@ namespace resource
     virtual e_error flush_disk(sysapi::file::handle_t&) = 0;
     virtual e_error flush_environ() = 0;
     virtual e_error flush_input(buffer&) = 0;
-    virtual e_error generate(unsigned int&) = 0;
+    virtual e_error generate(unsigned int&, IOutput&) = 0;
     virtual e_error size(unsigned int&) = 0;
     virtual bool is_content_dynamic() const = 0;
+    virtual bool is_header_dynamic() const = 0;
 
     // Chunk/data modifications
     e_error prepend_header(buffer&);
@@ -126,9 +129,10 @@ namespace resource
     e_error flush_disk(sysapi::file::handle_t&);
     e_error flush_environ();
     e_error flush_input(buffer&);
-    e_error generate(unsigned int&);
+    e_error generate(unsigned int&, IOutput&);
     e_error size(unsigned int&);
     bool is_content_dynamic() const;
+    bool is_header_dynamic() const;
 
   private:
     bool generated;
@@ -151,9 +155,10 @@ namespace resource
     e_error flush_disk(sysapi::file::handle_t&);
     e_error flush_environ();
     e_error flush_input(buffer&);
-    e_error generate(unsigned int&);
+    e_error generate(unsigned int&, IOutput&);
     e_error size(unsigned int&);
     bool is_content_dynamic() const;
+    bool is_header_dynamic() const;
 
   private:
     bool opened;
@@ -184,15 +189,18 @@ namespace resource
     e_error flush_disk(sysapi::file::handle_t&);
     e_error flush_environ();
     e_error flush_input(buffer&);
-    e_error generate(unsigned int&);
+    e_error generate(unsigned int&, IOutput&);
     e_error size(unsigned int&);
     bool is_content_dynamic() const;
+    bool is_header_dynamic() const;
 
   private:
     sysapi::process::handle_t proc_handle;
     sysapi::file::handle_t read_handle;
     sysapi::file::handle_t write_handle;
     bool generated;
+    utils::line m_line;
+    bool is_header_inprogress;
 
   };
 }
@@ -212,9 +220,10 @@ namespace resource
     e_error flush_disk(sysapi::file::handle_t&);
     e_error flush_environ();
     e_error flush_input(buffer&);
-    e_error generate(unsigned int&);
+    e_error generate(unsigned int&, IOutput&);
     e_error size(unsigned int&);
     bool is_content_dynamic() const;
+    bool is_header_dynamic() const;
 
   private:
     bool generated;

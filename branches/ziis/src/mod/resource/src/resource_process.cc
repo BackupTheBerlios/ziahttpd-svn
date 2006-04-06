@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:45:04 2006 texane
-// Last update Sun Apr 02 22:04:11 2006 texane
+// Last update Thu Apr 06 18:33:10 2006 texane
 //
 
 
@@ -18,11 +18,14 @@ using namespace sysapi;
 
 // resource api implementation
 
-resource::e_error resource::process::generate(unsigned int& nbytes)
+resource::e_error resource::process::generate(unsigned int& nbytes, IOutput& p_out)
 {
   e_error e_err;
   sysapi::process::state_t proc_st;
   sysapi::error::handle_t sys_err;
+  string str_line;
+  bool is_line;
+  bool is_toolong;
   unsigned char buf[constants::BUFFER_SIZE];
 
   if (generated == true)
@@ -58,7 +61,44 @@ resource::e_error resource::process::generate(unsigned int& nbytes)
     {
       // success
       data = buffer(buf, nbytes);
+      if (is_header_inprogress == true)
+	{
+	  e_err = resource::E_CONTINUE;
+	  is_line = true;
+	  while (is_line == true)
+	    {
+	      is_line = m_line.from_buffer(str_line, data, is_toolong);
+	      data.clear();
+	      if (is_line == true)
+		{
+		  if (str_line == "transfer_encoding" ||
+		      str_line == "content-encoding" ||
+		      str_line == "content-length"
+		      )
+		    {
+		      // skip those ones
+		    }
+		  else if (str_line == "")
+		    {
+		      p_out.SendHeader();
+		      is_header_inprogress = false;
+		      is_line = false;
+		      m_line.get_bytes(data, nbytes);
+		      if (data.size() == 0)
+			e_err = resource::E_CONTINUE;
+		      else
+			e_err = resource::E_SUCCESS;
+		    }
+		  else
+		    {
+		      // parse the field
+		      p_out.SetOutput("content-type", "text/xml");
+		    }
+		}
+	    }
+	}
     }
+
   return e_err;
 }
 
@@ -115,12 +155,19 @@ bool resource::process::is_content_dynamic() const
 }
 
 
+bool resource::process::is_header_dynamic() const
+{
+  return true;
+}
+
+
 // construction/destruction
 
 resource::process::process(int ac, char** av, char** env, e_omode omode)
 {
   sysapi::error::handle_t sys_err;
 
+  is_header_inprogress = true;
   generated = false;
   sys_err = sysapi::process::create_inoutredir_and_loadexec(proc_handle, write_handle, read_handle, ac, (const char**)av, (const char**)env);
   if (sys_err != sysapi::error::SUCCESS)
