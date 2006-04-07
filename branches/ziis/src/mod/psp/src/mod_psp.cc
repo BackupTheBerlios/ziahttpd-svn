@@ -162,4 +162,5 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
   out.SetStatusCode(200);
   out.SendHeader();
   out.SendBuffer(bin.c_str(), (int)bin.size());
+	out.SendBuffer("", 0);
 }
