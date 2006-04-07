@@ -90,7 +90,7 @@ bool	stringmanager::convert_hexa(std::string &str)
 bool	stringmanager::unconvert_hexa(std::string &str)
 {
 	std::string ret;
-	for (int i = 0; i < str.size(); i++)
+	for (int i = 0; i < (int)str.size(); i++)
 	{
 		if (str[i] == '%')
 		{

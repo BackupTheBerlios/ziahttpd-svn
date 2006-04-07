@@ -4,7 +4,9 @@
 #include <sstream>
 
 
+#ifndef _WIN32
 extern int stricmp(const char*, const char*);
+#endif // ! _WIN32
 
 bool	net::http::valid_method()
 {
