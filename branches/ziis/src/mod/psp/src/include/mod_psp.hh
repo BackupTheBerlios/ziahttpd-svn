@@ -9,6 +9,8 @@
 #include <string.h>
 #include <vector>
 
+#include <sys/sysapi.hh>
+
 #ifdef _WIN32
 # include <windows.h>
 # include <sys/pthread.h>
@@ -20,7 +22,6 @@
 #endif // _WIN32
 
 #include <ziis.hh>
-#include <sys/sysapi.hh>
 
 
 

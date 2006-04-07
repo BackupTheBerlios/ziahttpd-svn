@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Fri Apr  7 00:48:45 2006 
+## Last update Fri Apr 07 12:13:45 2006 texane
 ##
 
 # ! Always include this file
-# !include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
-include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
+!include "$(PROJ_ROOT)/build/$(PROJ_ENV).mk" #windows
+# include $(PROJ_ROOT)/build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= mod_encoding.lo
