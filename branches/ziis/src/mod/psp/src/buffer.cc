@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:32:24 2006 texane
-// Last update Fri Apr  7 03:24:35 2006 
+// Last update Fri Apr  7 12:28:08 2006 
 //
 
 
@@ -149,7 +149,6 @@ buffer& buffer::operator+=(const buffer& b)
   if (buf_ == 0 && sz_)
     {
       printf("!!!!buffer.cc buf is false with a true size\n"); fflush(stdout);
-      exit (-1);
     }
 
   // Copy
@@ -209,14 +208,11 @@ buffer& buffer::operator=(const string& s)
 {
   reset();
 
-  cout << "aksjdkljfasdlkfjaslkf" << endl;
-
   if ((sz_ = strlen(s.c_str())))
     {
       buf_ = new unsigned char[sz_];
       bufcpy(buf_, reinterpret_cast<const unsigned char*>(s.c_str()), (size_t)strlen(s.c_str()));
     }
-
   return *this;
 }
 

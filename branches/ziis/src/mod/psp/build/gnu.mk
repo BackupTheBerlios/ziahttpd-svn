@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:03:55 2005 texane
-## Last update Fri Apr  7 01:52:07 2006 
+## Last update Fri Apr  7 12:05:38 2006 
 ##
 
 
@@ -26,7 +26,7 @@ CCPATHS	:=	-I$(PROJ_ROOT)/src/include/	\
 		-I/usr/pkg/lib/perl5/5.8.0/i386-netbsd-thread-multi/CORE/ \
 		-Isrc/include
 CCDEFS	:=	-D_SYSAPI=1 -D_REENTRANT
-CCGEN	:=	-O2 -ggdb
+CCGEN	:=	-O2 -ggdb -fPIC
 CCWARNS	:=	-Wall
 CCOUT	:=	-c
 CCFLAGS	:=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS) -DTIXML_USE_STL

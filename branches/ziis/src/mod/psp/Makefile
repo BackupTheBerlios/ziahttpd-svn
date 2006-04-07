@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Fri Apr  7 03:04:01 2006 
+## Last update Fri Apr  7 13:01:48 2006 
 ##
 
 # ! Always include this file
@@ -14,8 +14,7 @@ include build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= mod_psp.lo
-srcs	= src$(SLASH)buffer.cc \
-	  src$(SLASH)string_manager.cc \
+srcs	= src$(SLASH)string_manager.cc \
 	  src$(SLASH)modimpl.cc \
 	  src$(SLASH)mod_psp.cc \
 	  $(PROJ_ROOT)$(SLASH)src$(SLASH)sys$(SLASH)$(PROJ_SYSAPI)$(SLASH)file.cc
