@@ -36,7 +36,7 @@ static bool split_token(string& str_input, std::vector<string>& dest, bool putde
 	      dest.push_back(btmp);
 	    }
 	  tmp += 2;
-	  prev = tmp + 1;
+	  prev = tmp;
 	}
     }
   dest.push_back(string(prev, strlen(prev)));
