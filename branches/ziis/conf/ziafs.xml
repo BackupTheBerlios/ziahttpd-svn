@@ -1,5 +1,5 @@
 <system>
-  <nb_thread>4000</nb_thread>
+  <nb_thread>100</nb_thread>
   <poll_delay>500000</poll_delay>
   <expiration_delay>5</expiration_delay>
   <nr_bklog>10</nr_bklog>
