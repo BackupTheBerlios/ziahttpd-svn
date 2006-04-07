@@ -148,9 +148,9 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
 #endif //_WIN32
   sysapi::file::remove(oss.str());
 
-  char size[20];
-  sprintf(size, "%i", bin.size());
-  out.SetOutput("Content-Length", (const char *)size);
+  //char size[20];
+  //sprintf(size, "%i", bin.size());
+  //out.SetOutput("Content-Length", (const char *)size);
   out.SetStatusCode(200);
   out.SendHeader();
   out.SendBuffer(bin.c_str(), (int)bin.size());
