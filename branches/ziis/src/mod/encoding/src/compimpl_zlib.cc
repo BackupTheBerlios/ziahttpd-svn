@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Thu Mar 23 10:24:08 2006 texane
-// Last update Fri Apr 07 15:44:42 2006 texane
+// Last update Fri Apr 07 17:22:15 2006 texane
 //
 
 
@@ -63,8 +63,6 @@ bool mod_encoding::ZlibCompress(zlib_context_t* p_context, IBuffer& buf_in, IBuf
   // big, so that the compression
   // ratio is better.
 
-//   cout << "[zlib]: bufin.size()  == " << buf_in.Length() << endl;
-
   // reset
   buf_out.Clear();
 
@@ -96,8 +94,6 @@ bool mod_encoding::ZlibCompress(zlib_context_t* p_context, IBuffer& buf_in, IBuf
       buf_out.Append((const char*)p_next, nr_avail - p_context->strm_encoding.avail_out);
       nr_avail = p_context->strm_encoding.avail_out;
     }
-
-//   cout << "[zlib]: bufout.size() == " << buf_out.Length() << endl;
 
   delete[] p_context->p_out;
   p_context->p_out = 0;
