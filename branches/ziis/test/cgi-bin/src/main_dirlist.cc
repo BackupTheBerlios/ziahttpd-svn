@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Feb 18 14:51:00 2006 texane
-// Last update Wed Feb 22 00:47:47 2006 
+// Last update Fri Apr  7 13:36:22 2006 
 //
 
 
@@ -35,6 +35,7 @@ public:
 cgi::cgi()
 {
   len_ = 0;
+  cout << "\r\n" << endl;
   cout << "<html><body>" << endl;
   cout << "<table border=0 cellpadding=0 cellspacing=0>" << endl;
 }
