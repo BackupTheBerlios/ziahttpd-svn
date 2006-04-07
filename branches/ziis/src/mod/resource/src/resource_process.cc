@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:45:04 2006 texane
-// Last update Fri Apr  7 13:51:36 2006 
+// Last update Fri Apr 07 13:25:29 2006 texane
 //
 
 
@@ -71,9 +71,16 @@ resource::e_error resource::process::generate(unsigned int& nbytes, IOutput& p_o
 	      data.clear();
 	      if (is_line == true)
 		{
-		  if (str_line == "transfer_encoding" ||
-		      str_line == "content-encoding" ||
-		      str_line == "content-length"
+		  string str_key;
+		  string str_val;
+		  bool is_keyval;
+
+		  // parse the header line
+		  is_keyval = http_helper::parse_cgi_header(str_line, str_key, str_val);
+
+		  if (str_key == "transfer_encoding" ||
+		      str_key == "content-encoding" ||
+		      str_key == "content-length"
 		      )
 		    {
 		      // skip those ones
@@ -89,10 +96,10 @@ resource::e_error resource::process::generate(unsigned int& nbytes, IOutput& p_o
 		      else
 			e_err = resource::E_SUCCESS;
 		    }
-		  else
+		  else if (is_keyval == true)
 		    {
 		      // parse the field
-		      p_out.SetOutput("content-type", "text/xml");
+		      p_out.SetOutput(str_key.c_str(), str_val.c_str());
 		    }
 		}
 	    }

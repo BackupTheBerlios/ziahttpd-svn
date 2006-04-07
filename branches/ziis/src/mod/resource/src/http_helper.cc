@@ -134,8 +134,9 @@ bool				http_helper::pre_create_resource(net::config& conf,
 
 bool			http_helper::parse_cgi_header(std::string& source, std::string& key, std::string& val)
 {
-	int i;
+ size_t i;
 
+	i = source.find(':', 0);
 	if (i != std::string::npos)
 	{
 		key = source.substr(0, i);
