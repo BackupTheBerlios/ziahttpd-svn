@@ -203,6 +203,7 @@ bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string 
 	char **ret;
 
 //	env[0] = strdup("AUTH_TYPE=");
+	m_env_header["AUTH_TYPE"] = "";
 
 	if (sz_input)
 	{
@@ -214,8 +215,8 @@ bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string 
 	oss << out.GetOutput("content-type");
 	m_env_header["CONTENT_TYPE"] = oss.str();
 	oss.str("");
-
-////	m_env_header["GATEWAY_INTERFACE"] = "CGI/1.1";
+	m_env_header["CONTENT_TYPE"] = "application/x-www-form-urlencoded";
+	m_env_header["GATEWAY_INTERFACE"] = "CGI/1.1";
 
 	oss << inp.GetInputLocation();
 	m_env_header["PATH_INFO"] = oss.str();
@@ -231,7 +232,7 @@ bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string 
 		m_env_header["QUERY_STRING"] = oss.str();
 	}
 	else
-		m_env_header["QUERY_STRING"] = "";
+		m_env_header["QUERY_STRING"] = "\"\"";
 	oss.str("");
 
 	char *tmp;
@@ -250,13 +251,16 @@ bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string 
 	oss.str("");
 	m_env_header["REMOTE_HOST"] = "";
 
+	m_env_header["REMOTE_IDENT"] = "";
 //	env[9] = strdup("REMOTE_IDENT=");
 	
 //	env[10] = strdup("REMOTE_USER=");
-	
-	////oss << inp.GetInputMethod();
-	////m_env_header["REQUEST_METHOD"] = oss.str();
-	////oss.str("");
+	m_env_header["REMOTE_USER"] = "";
+
+	oss << inp.GetInputMethod();
+	m_env_header["REQUEST_METHOD"] = oss.str();
+	oss.str("");
+	m_env_header["REDIRECT_STATUS"] = "200";
 
 	char *script = (char *)inp.GetInputLocation();
 	script += strlen (script) - 1;
@@ -267,16 +271,21 @@ bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string 
 	m_env_header["SCRIPT_NAME"] = oss.str();
 	oss.str("");
 
-	//m_env_header["SERVER_NAME"] = "Zfs.";
+	m_env_header["SERVER_NAME"] = "Zfs.";
 	
 //	env[14] = strdup("SERVER_PORT=");
-	
+	m_env_header["SERVER_PORT"] = "80";
+
 	oss << inp.GetInputHttpVersion();
 	m_env_header["SERVER_PROTOCOL"] = oss.str();
 	oss.str("");
 
 //	env[16] = strdup("SERVER_SOFTWARE=");
-	
+	m_env_header["SERVER_SOFTWARE"] = "";
+
+	//m_env_header["OS"] = "Windows_NT";
+	//m_env_header["PATHEXT"] = "COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.RB;.RBW";
+	//m_env_header["HTTP_ACCEPT"] = "	text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
 	ret = new char*[m_env_header.size()];
 	int y = 0;
 	for (it = m_env_header.begin(); it != m_env_header.end(); it++)
