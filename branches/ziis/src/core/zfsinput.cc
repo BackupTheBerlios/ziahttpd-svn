@@ -24,12 +24,14 @@ ZfsInput::ZfsInput(thr::pool::session_t* s)
 	
 	m_session = s;
 	m_proto = &m_session->proto;
-	//std::cout<< "->" << m_proto->method();
-	//std::cout << "-->" << GetInputMethod();
 	m_proto->get_uri().extension(extension);
 
 	genete_type_mimes(*(s->srv->srv_config), extension, type);
-	s->srv->m_modman.get_generator_module(s->m_gen_module, type);
+	if (s->srv->m_modman.get_generator_module(s->m_gen_module, type) == false)
+	  {
+	    s->proto.get_uri().status_code() = 501;
+	    s->done = true;
+	  }
 	// get stream modifier list
 	s->srv->m_modman.get_modifier_list(s->m_modifiers, type);
 	m_ip_client = s->cli_addr.sin_addr.s_addr;
