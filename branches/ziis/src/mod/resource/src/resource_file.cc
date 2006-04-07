@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Fri Apr 07 15:42:44 2006 texane
+// Last update Fri Apr 07 16:40:58 2006 texane
 //
 
 
@@ -110,7 +110,7 @@ resource::e_error resource::file::flush_network(IOutput& out)
   p_buf = p_read;
   nr_filesz = nr_read;
   is_done = true;
-  if (nr_filesz)
+  if (nr_filesz || generated == false)
     is_done = false;
 
   if (omode == O_INPUT)
@@ -118,7 +118,6 @@ resource::e_error resource::file::flush_network(IOutput& out)
       // this is the last chunk request?
       if (generated == true && file_size == 0)
 	{
-	  cout << "last CHUNKED" << endl;
 	  out.SendBuffer((char*)"", 0);
 	  is_done = true;
 	}
@@ -130,7 +129,7 @@ resource::e_error resource::file::flush_network(IOutput& out)
 	  if (nr_filesz < nr_tosend)
 	    nr_tosend = nr_filesz;
 	  nr_sent = out.SendBuffer((const char*)p_buf, nr_tosend);
-	  if (nr_sent > 0)
+	  if (nr_sent >= 0)
 	    {
 	      // affect, compression module change
 	      // returned the size, and we cannot
@@ -146,13 +145,6 @@ resource::e_error resource::file::flush_network(IOutput& out)
 		  file_size = 0;
 		  generated = true;
 		}
-
-#ifdef DEBUG_STEP
-	      cout << "nr_sent   == " << nr_sent << endl;
-	      cout << "nr_filesz == " << nr_filesz << endl;
-	      getchar();
-#endif // DEBUG_STEP
-
 	    }
 	  else if (nr_sent < 0)
 	    {
