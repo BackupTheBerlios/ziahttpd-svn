@@ -162,6 +162,7 @@ static const char* _my_mimes[] =
     "image/jpg",
     "image/jpeg",
     "application/pdf",
+		"application/zip",
     0
   };
 
