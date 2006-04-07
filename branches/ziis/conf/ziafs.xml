@@ -3,7 +3,7 @@
   <poll_delay>500000</poll_delay>
   <expiration_delay>5</expiration_delay>
   <nr_bklog>10</nr_bklog>
-  <directory_listing>./test/cgi-bin/netbsd/dir_list.exe</directory_listing>
+  <directory_listing>./test/cgi-bin/windows/dir_list.exe</directory_listing>
 </system>
 
 
@@ -46,17 +46,17 @@
 
 <directory id=1>
   <servername>*</servername>
-  <docroot>.</docroot>
+  <docroot>c:/web/web/root</docroot>
 </directory>
 
 <directory id=2>
   <servername>*</servername>
-  <docroot>.</docroot>
+  <docroot>c:/web/web</docroot>
 </directory>
 
 <directory id=3>
   <servername>*</servername>
-  <docroot>./web/web/root</docroot>
+  <docroot>c:/web/web/root</docroot>
 </directory>
 
 

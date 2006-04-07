@@ -33,17 +33,35 @@ bool	net::http::valid_uri()
 	std::string wwwname(m_uri.wwwname());
 	std::string tmp;
 
-	if (wwwname[0] != '/')
+	if (!strncmp("http://", wwwname.c_str(), 7))
 	{
-		host = "http://" + request["host"] + "/";
-		if (strncmp(wwwname.c_str(), host.c_str(), host.size()))
+		tmp = wwwname.substr(7, wwwname.length());
+
+		size_t i = tmp.find("/", 0);
+		if (i != std::string::npos)
 		{
-			m_uri.status_code() = 400;
-			return false;
+			std::string tmmp;
+
+			tmmp = tmp.substr(i, tmp.length() - i);
+			tmp = tmmp;
 		}
-		tmp = wwwname.substr(host.length() - 1, wwwname.length() - host.length() + 1);
+		else
+		{
+			tmp = "/";
+		}
 		m_uri.wwwname() = tmp;
 	}
+	//if (wwwname[0] != '/')
+	//{
+//		host = "http://";
+		//if (strncmp(wwwname.c_str(), host.c_str(), host.size()))
+		//{
+		//	m_uri.status_code() = 400;
+		//	return false;
+		//}
+		
+		
+	//}
 
 	char *str;
 
