@@ -157,7 +157,8 @@ status::error					net::http::parse_status_line(std::string& ln)
 	stringmanager::unconvert_hexa(m_uri.wwwname());
 	stringmanager::unconvert_hexa(m_query);
 	if (vec.size() == 2)
-		request.m_version = "HTTP/1.1";
+		//request.m_version = "HTTP/1.1";
+		request.m_version = "";
 	else
 		request.m_version = vec[2];
 

@@ -71,14 +71,28 @@ bool	net::http::valid_uri()
 	while ((str[0] == '/') && (str[1] == '/'))
 		str++;
 	m_uri.wwwname() = str;
+	if (m_uri.wwwname().empty() || (m_uri.wwwname()[0] != '/'))
+	{
+		m_uri.status_code() = 400;
+		return false;
+	}
 	return true;
 }
 
 bool	net::http::valid_version()
 {
-	if (stricmp("http/1.1", request.m_version.c_str()) && stricmp("http/1.0", request.m_version.c_str()))
+	
+	if (!strnicmp("http/", request.m_version.c_str(), 5))
 	{
-		m_uri.status_code() = 505;
+		if (stricmp("http/1.1", request.m_version.c_str()) && stricmp("http/1.0", request.m_version.c_str()))
+		{
+			m_uri.status_code() = 505;
+			return false;
+		}
+	}
+	else
+	{
+		m_uri.status_code() = 501;
 		return false;
 	}
 	return true;
