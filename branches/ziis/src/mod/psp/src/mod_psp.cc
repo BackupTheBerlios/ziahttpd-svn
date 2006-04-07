@@ -151,6 +151,14 @@ void mod_psp::GenerateDocument(IInput& inp, const char* localname, IOutput& out)
   //char size[20];
   //sprintf(size, "%i", bin.size());
   //out.SetOutput("Content-Length", (const char *)size);
+
+	//const char* te;
+
+	//te = out.GetOutput("transfer-encoding");
+	out.SetOutput("content-length", "");
+	out.SetOutput("content-encoding", "");
+	out.SetOutput("transfer-encoding", "chunked");
+
   out.SetStatusCode(200);
   out.SendHeader();
   out.SendBuffer(bin.c_str(), (int)bin.size());
