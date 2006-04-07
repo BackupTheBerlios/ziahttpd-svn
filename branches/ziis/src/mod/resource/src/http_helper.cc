@@ -132,6 +132,26 @@ bool				http_helper::pre_create_resource(net::config& conf,
 		return true;
 }
 
+bool			http_helper::parse_cgi_header(std::string& source, std::string& key, std::string& val)
+{
+	int i;
+
+	if (i != std::string::npos)
+	{
+		key = source.substr(0, i);
+		val = source.substr(i + 1, source.length() - i - 1);
+		stringmanager::remove_space(val);
+		stringmanager::normalize(key);
+		if (key.empty())
+			return false;
+	}
+	else
+	{
+		return false;
+	}
+	return true;
+}
+
 bool			http_helper::get_cgi_path(net::config& conf, std::string& path, std::string& localname)
 {
 	//Need config file 

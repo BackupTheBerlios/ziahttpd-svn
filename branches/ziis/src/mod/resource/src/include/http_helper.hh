@@ -63,6 +63,7 @@ namespace http_helper
 	bool	generate_cgi_eviron(IInput& inp, IOutput& out,
 														std::string localname, int sz_input, char ***env);
 	bool	free_cgi_environ(char **env);
+	bool	parse_cgi_header(std::string&, std::string&, std::string&);
 }
 
 

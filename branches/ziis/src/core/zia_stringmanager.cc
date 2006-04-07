@@ -89,7 +89,8 @@ bool	stringmanager::convert_hexa(std::string &str)
 }
 bool	stringmanager::unconvert_hexa(std::string &str)
 {
-	for (int i = 0; i < str[i]; i++)
+	std::string ret;
+	for (int i = 0; i < str.size(); i++)
 	{
 		if (str[i] == '%')
 		{
@@ -100,10 +101,17 @@ bool	stringmanager::unconvert_hexa(std::string &str)
 			if (!hex_to_char(strr, c[0]))
 				return (false);
 			c[1] = '\0';
-			str.replace(i, 1, c);
-			str.erase(i+1, 2);
+			ret += c;
+			i += 2;
+			//str.replace(i, 1, c);
+			//str.erase(i+1, 2);
+		}
+		else
+		{
+			ret += str[i]; 
 		}
 	}
+	str = ret;
 	return (true);
 }
 

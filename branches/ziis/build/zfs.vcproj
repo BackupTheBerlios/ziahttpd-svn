@@ -247,6 +247,9 @@
 				<File
 					RelativePath="..\src\sys\win32\time.cc">
 				</File>
+				<File
+					RelativePath="..\src\include\zia_stringmanager.hh">
+				</File>
 			</Filter>
 			<Filter
 				Name="config"
@@ -271,9 +274,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\src\include\http_helper.hh">
-			</File>
-			<File
-				RelativePath="..\src\include\zia_stringmanager.hh">
 			</File>
 			<File
 				RelativePath="..\src\include\ziafs.hh">
