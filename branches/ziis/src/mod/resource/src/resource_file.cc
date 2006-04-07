@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 11:02:02 2006 texane
-// Last update Thu Apr 06 16:06:18 2006 texane
+// Last update Fri Apr 07 15:42:44 2006 texane
 //
 
 
@@ -88,11 +88,6 @@ resource::e_error resource::file::generate(unsigned int& nbytes, IOutput& p_out)
 	  // read the next one
 	  p_read = h_mmap.p_mmapping;
 	  nr_read = (unsigned int)h_mmap.sz_mmapping;
-
-	  // file size reached
-	  file_size -= (unsigned long long)nr_read;
-	  if (file_size == 0)
-	    generated = true;
 	}
     }
   else
@@ -106,18 +101,71 @@ resource::e_error resource::file::generate(unsigned int& nbytes, IOutput& p_out)
 
 resource::e_error resource::file::flush_network(IOutput& out)
 {
+  int nr_tosend;
   int nr_sent;
+  int nr_filesz;
+  bool is_done;
+  unsigned char* p_buf;
+
+  p_buf = p_read;
+  nr_filesz = nr_read;
+  is_done = true;
+  if (nr_filesz)
+    is_done = false;
 
   if (omode == O_INPUT)
     {
-      nr_sent = out.SendBuffer((const char*)p_read, (int)nr_read);
-      if (nr_sent < 0)
-	return E_OP_ERROR;
-      nr_read = 0;
-      return E_SUCCESS;
+      // this is the last chunk request?
+      if (generated == true && file_size == 0)
+	{
+	  cout << "last CHUNKED" << endl;
+	  out.SendBuffer((char*)"", 0);
+	  is_done = true;
+	}
+
+      // send the whole resource
+      while (is_done == false)
+	{
+	  nr_tosend = constants::FBLOCK_SIZE;
+	  if (nr_filesz < nr_tosend)
+	    nr_tosend = nr_filesz;
+	  nr_sent = out.SendBuffer((const char*)p_buf, nr_tosend);
+	  if (nr_sent > 0)
+	    {
+	      // affect, compression module change
+	      // returned the size, and we cannot
+	      // guess the eof
+	      nr_sent = nr_tosend;
+	      if (nr_sent > nr_filesz)
+		nr_sent = nr_filesz;
+	      nr_filesz -= nr_sent;
+	      p_buf += nr_sent;
+	      if (nr_filesz == 0)
+		{
+		  is_done = true;
+		  file_size = 0;
+		  generated = true;
+		}
+
+#ifdef DEBUG_STEP
+	      cout << "nr_sent   == " << nr_sent << endl;
+	      cout << "nr_filesz == " << nr_filesz << endl;
+	      getchar();
+#endif // DEBUG_STEP
+
+	    }
+	  else if (nr_sent < 0)
+	    {
+	      return E_OP_ERROR;
+	    }
+	}
+    }
+  else
+    {
+      return E_NOT_SUPP;
     }
 
-  return E_NOT_SUPP;
+  return E_SUCCESS;
 }
 
 

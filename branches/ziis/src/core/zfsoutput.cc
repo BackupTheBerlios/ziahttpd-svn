@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 21:45:33 2006 texane
-// Last update Thu Apr 06 18:35:33 2006 texane
+// Last update Fri Apr 07 14:15:43 2006 texane
 //
 
 
@@ -77,8 +77,10 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
   bool is_error;
   const char* ptr;
   int nr_sent;
+  int nr_total;
 
   is_error = false;
+  nr_total = 0;
   ptr = p_buf;
   while (ln_buf > 0 && is_error == false)
     {
@@ -91,13 +93,14 @@ int ZfsOutput::send_whole_buffer(const char* p_buf, int ln_buf)
       else
 	{
 	  ln_buf -= nr_sent;
+	  nr_total += nr_sent;
 	  ptr += nr_sent;
 	}
     }
 
   if (is_error == true)
-    return false;
-  return true;  
+    return 0;
+  return nr_total;
 }
 
 bool	ZfsOutput::SendHeader()
