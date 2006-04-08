@@ -1,15 +1,21 @@
 <system>
-  <nb_thread>2000</nb_thread>
+  <nb_thread>5000</nb_thread>
   <poll_delay>500000</poll_delay>
   <expiration_delay>5</expiration_delay>
   <nr_bklog>100</nr_bklog>
-  <directory_listing>./test/cgi-bin/netbsd/dir_list.exe</directory_listing>
+  <directory_listing>./test/cgi-bin/windows/dir_list.exe</directory_listing>
 </system>
 
 
 <module name="mod_sock">
 <file>src/mod/sock/mod_sock.lo</file>
 </module>
+
+
+<certif>
+<pem_privkey>conf/ssl_certs/privkey.pem</pem_privkey>
+<pem_cacert>conf/ssl_certs/cacert.pem</pem_cacert>
+</certif>
 
 <module name="mod_ssl">
 <file>src/mod/ssl/mod_ssl.lo</file>
@@ -40,7 +46,9 @@
   <port>40000</port>
   <directory_index>index.html index.htm</directory_index>
   <modulename>mod_resource</modulename>
-  <modulename>mod_sock</modulename>
+  <modulename>mod_ssl</modulename>
+  <modulename>mod_psp</modulename>
+  <modulename>mod_encoding</modulename>
 </server>
 
 
