@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Sat Apr 08 20:50:53 2006 texane
+// Last update Sat Apr 08 22:46:56 2006 texane
 //
 
 
@@ -62,7 +62,7 @@ mod_ssl::mod_ssl(const string& nm_conf)
 
   // reload config file
   reset();
-  reload(nm_conf);
+  ReadConfig(nm_conf.c_str());
 
   // reset
   m_ssl_method = 0;

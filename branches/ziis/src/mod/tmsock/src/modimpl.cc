@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 08 14:30:38 2006 texane
-// Last update Sat Apr 08 16:43:28 2006 texane
+// Last update Sat Apr 08 22:15:47 2006 texane
 //
 
 
@@ -27,6 +27,8 @@ IModule* GetNewInstance()
 
 bool mod_tmsock::ReadConfig(const char* nm_conf)
 {
+  cout << "reading config: " << nm_conf << endl;
+  getchar();
   return false;
 }
 
