@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:28:42 2006 texane
-// Last update Thu Apr 06 19:09:22 2006 texane
+// Last update Sat Apr 08 13:23:25 2006 texane
 //
 
 
@@ -118,14 +118,16 @@ bool utils::line::get_from_normal_case()
   else
     {
       unsigned char* ptr = m_buf.bufptr() + n + 2;
+//--       bufsz = (unsigned int)m_buf.size();
+//--       m_buf.resize(i - 2);
+      bufsz = (unsigned int)m_buf.size() - 2;
       unsigned int i = 0;
-      bufsz = (unsigned int)m_buf.size();
       while (n < bufsz)
 	{
 	  m_buf[i++] = *ptr++;
 	  ++n;
 	}
-      m_buf.resize(i - 2);
+      m_buf.resize(i);
     }
 
   return ret;

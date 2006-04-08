@@ -5,7 +5,7 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Sat Oct 08 00:01:06 2005 texane
-## Last update Wed Apr 05 19:47:35 2006 texane
+## Last update Sat Apr 08 11:36:36 2006 texane
 ##
 
 !ifndef __WINDOWS_MK
@@ -27,7 +27,7 @@ CCPATHS	=	-I"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/PlatformSDK/
 		-I"$(PROJ_ROOT)/src/include/sys" \
 		-I"$(PROJ_ROOT)/src/include/config"
 CCDEFS	=	-D "_WIN32" -D "_CONSOLE" -D "_MBCS" -D "_MT" -D "_SYSAPI"=2 -MD -DTIXML_USE_STL
-CCGEN	=	-O2 -GX -GR
+CCGEN	=	-Zi -GX -GR
 CCWARNS	=	-W3
 CCOUT	=	-c
 CCFLAGS	=	$(CCPATHS) $(CCDEFS) $(CCGEN) $(CCWARNS)
@@ -40,7 +40,7 @@ LDPATHS	=	-libpath:"c:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/Platf
 LDLIBS	=	-defaultlib:Ws2_32.lib	\
 		-defaultlib:Mswsock.lib	\
 		-defaultlib:pthreadVSE1.lib
-LDGEN	=	-machine:x86 -subsystem:console -opt:noref
+LDGEN	=	-debug -machine:x86 -subsystem:console -opt:noref
 LIBOUT	=	-lib
 DLLOUT	=	-dll
 LDOUT	=	-out:
