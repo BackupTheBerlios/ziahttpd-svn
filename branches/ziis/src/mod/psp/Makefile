@@ -5,12 +5,12 @@
 ## Login   <texane@gmail.com>
 ## 
 ## Started on  Wed Oct 26 18:43:53 2005 texane
-## Last update Sat Apr  8 19:16:35 2006 
+## Last update Sat Apr 08 18:03:14 2006 texane
 ##
 
 # ! Always include this file
-# !include "build/$(PROJ_ENV).mk" #windows
-include build/$(PROJ_ENV).mk #unix
+!include "build/$(PROJ_ENV).mk" #windows
+# include build/$(PROJ_ENV).mk #unix
 
 # Give your own variables here
 name	= mod_psp.lo
