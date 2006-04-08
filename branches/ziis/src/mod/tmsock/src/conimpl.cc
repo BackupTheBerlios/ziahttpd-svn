@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 08 14:31:06 2006 texane
-// Last update Sat Apr 08 15:42:23 2006 texane
+// Last update Sat Apr 08 16:44:02 2006 texane
 //
 
 
@@ -37,7 +37,7 @@ int mod_tmsock::Recv(SOCKET h_sock, void* p_data, char* p_buf, int ln_buf)
   sysapi::error::handle_t h_err;
   unsigned int nr_recv;
 
-  enter(h_sock);
+  enter(h_sock, p_data);
   h_err = sysapi::insock::recv(h_sock, (unsigned char*)p_buf, ln_buf, nr_recv);
   leave();
 
@@ -57,9 +57,16 @@ int mod_tmsock::Send(SOCKET h_sock, void* p_data, const char* p_buf, int ln_buf)
   return nr_sent;
 }
 
-void mod_tmsock::Close(SOCKET id_socket, void*)
+void mod_tmsock::Close(SOCKET id_socket, void* p_data)
 {
-  sysapi::insock::close(id_socket);
+  try
+    {
+      sysapi::insock::close(id_socket);
+    }
+  catch(...)
+    {
+      cout << "bad close handled" << endl;
+    }
 }
 
 

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 08 14:29:08 2006 texane
-// Last update Sat Apr 08 15:42:13 2006 texane
+// Last update Sat Apr 08 16:45:13 2006 texane
 //
 
 
@@ -58,7 +58,7 @@ private:
   bool reload(const std::string&);
 
   // module accesses monitoring
-  bool enter(SOCKET);
+  bool enter(SOCKET, void*);
   bool leave();
   pthread_mutex_t lk_iodescs;
 
@@ -71,7 +71,7 @@ private:
     unsigned long id_thread;
   } _iodesc_t;
 
-  enum { nr_iodescs = 2 };
+  enum { nr_iodescs = 500 };
   _iodesc_t arr_iodescs[nr_iodescs];
 
   // timeouter thread related

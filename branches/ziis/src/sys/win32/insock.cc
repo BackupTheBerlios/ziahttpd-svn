@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 10:35:30 2006 texane
-// Last update Tue Feb 21 17:33:50 2006 texane
+// Last update Sat Apr 08 16:32:53 2006 texane
 //
 
 
@@ -278,7 +278,7 @@ sysapi::error::handle_t sysapi::insock::send_file(insock::handle_t& sock_handle,
 
 sysapi::error::handle_t sysapi::insock::close(handle_t& hsock)
 {
-  shutdown(hsock, 0);
+  shutdown(hsock, SD_BOTH);
   closesocket(hsock);
   return error::SUCCESS;
 }

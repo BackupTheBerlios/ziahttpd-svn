@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 08 14:30:38 2006 texane
-// Last update Sat Apr 08 15:47:14 2006 texane
+// Last update Sat Apr 08 16:43:28 2006 texane
 //
 
 
@@ -47,7 +47,7 @@ void mod_tmsock::OnLoad(IFS*)
 
 // implement access monitoring
 
-bool mod_tmsock::enter(SOCKET id_socket)
+bool mod_tmsock::enter(SOCKET id_socket, void* p_data)
 {
   unsigned long id_self;
   unsigned int i_iodesc;
@@ -82,7 +82,7 @@ bool mod_tmsock::enter(SOCKET id_socket)
     {
       p_iodesc = &arr_iodescs[i_oldest];
 //       cout << "[mod_tmsock, " << id_self << "]: @force " << p_iodesc << ", " << p_iodesc->id_thread << endl;
-      mod_tmsock::Close(p_iodesc->id_socket, 0);
+      mod_tmsock::Close(p_iodesc->id_socket, p_data);
     }
 
   // fill the slot
