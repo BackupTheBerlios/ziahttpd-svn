@@ -5,12 +5,13 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 10:28:21 2006 texane
-// Last update Mon Apr  3 20:03:15 2006 
+// Last update Sat Apr 08 20:28:19 2006 texane
 //
 
 
 #ifndef MODIMPL_HH
 # define MODIMPL_HH
+
 
 #ifdef _WIN32
 # include "openssl/ssl.h"
@@ -23,9 +24,16 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <list>
 #include <sys/sysapi.hh>
 #include <ziis.hh>
 
+# include "config.hh"
+# include "string_manager.hh"
+
+
+# define SSL_CERT	"conf/ssl_certs/cacert.pem"
+# define SSL_PRIVKEY	"conf/ssl_certs/privkey.pem"
 
 class mod_ssl : public IModule, public IConnection
 {
@@ -69,6 +77,11 @@ private:
   void reset();
   void release();
   bool reload(const std::string&);
+
+  // config
+  net::config* m_config;
+  std::string m_cert_file;
+  std::string m_privkey_file;
 };
 
 
