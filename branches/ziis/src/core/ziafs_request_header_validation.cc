@@ -6,6 +6,7 @@
 
 #ifndef _WIN32
 extern int stricmp(const char*, const char*);
+extern int strnicmp(const char*, const char*, int);
 #endif // ! _WIN32
 
 bool	net::http::valid_method()
