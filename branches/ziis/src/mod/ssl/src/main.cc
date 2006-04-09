@@ -1,11 +1,11 @@
 //
-// main.cc<2> for  in 
+// main.cc for  in /home/texane/texane/projects/ziahttpd/branches/ziis/src/mod/ssl
 // 
-// Made by texane
-// Login   <texane@gmail.com>
+// Made by 
+// Login   <texane@epita.fr>
 // 
-// Started on  Tue Mar 21 13:31:04 2006 texane
-// Last update Sat Apr 08 22:46:56 2006 texane
+// Started on  Sun Apr  9 03:17:26 2006 
+// Last update Sun Apr  9 04:08:41 2006 
 //
 
 
@@ -40,13 +40,13 @@ void mod_ssl::release()
 
 bool mod_ssl::reload(const string& nm_conf)
 {
-  list<net::config::certif*>::iterator it_certif;
+  list<utils::config::certif*>::iterator it_certif;
 
   release();
   reset();
 
   // get certificate
-  m_config = new net::config(nm_conf.c_str());
+  m_config = new utils::config(nm_conf.c_str());
   m_config->get_certif(it_certif);
   if (m_config->end_certif(it_certif) == false)
     {

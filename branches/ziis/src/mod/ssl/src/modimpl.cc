@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 11:13:09 2006 texane
-// Last update Sat Apr 08 22:46:46 2006 texane
+// Last update Sun Apr  9 01:26:33 2006 
 //
 
 
@@ -33,6 +33,7 @@ bool mod_ssl::ReadConfig(const char* nm_conf)
 {
   if (m_config == 0)
     return reload(nm_conf);
+  return true;
 }
 
 const char* mod_ssl::GetModuleName()

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Sat Apr 01 10:28:21 2006 texane
-// Last update Sat Apr 08 20:28:19 2006 texane
+// Last update Sun Apr  9 03:15:54 2006 
 //
 
 
@@ -79,7 +79,7 @@ private:
   bool reload(const std::string&);
 
   // config
-  net::config* m_config;
+  utils::config* m_config;
   std::string m_cert_file;
   std::string m_privkey_file;
 };

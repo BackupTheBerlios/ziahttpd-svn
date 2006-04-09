@@ -6,7 +6,7 @@
 #include <config/tinyxml.hh>
 #include "string_manager.hh"
 
-namespace net
+namespace utils
 {
 	class config
 	{
@@ -70,7 +70,7 @@ namespace net
 	  bool						end_certif(const std::list<certif*>::iterator&);
 		system*					get_system() { return &m_system; };
 	private:
-		typedef bool (net::config::*pFunc)();
+		typedef bool (utils::config::*pFunc)();
 		struct	key
 		{
 			std::string	keyword;

@@ -1,26 +1,26 @@
 #include "include/modimpl.hh"
 
-net::config::config(const std::string &config_file)
+utils::config::config(const std::string &config_file)
 {
-	if (!m_xmldoc.LoadFile(config_file.c_str(), TIXML_DEFAULT_ENCODING))
-	{
-		load_default();
-		return ;
-	}
-	parse();
+  if (!m_xmldoc.LoadFile(config_file.c_str(), TIXML_DEFAULT_ENCODING))
+    {
+      load_default();
+      return ;
+    }
+  parse();
 }
 
-net::config::config(char **av)
+utils::config::config(char **av)
 {
 
 }
 
-net::config::config()
+utils::config::config()
 {
 //	load_default();
 }
 
-net::config::~config()
+utils::config::~config()
 {
 	std::list<server*>::iterator it;
 
@@ -28,7 +28,7 @@ net::config::~config()
 		delete *it;
 }
 
-bool	net::config::load_default()
+bool	utils::config::load_default()
 {
 	//load default config
 	const char* def_conf =
@@ -48,7 +48,7 @@ bool	net::config::load_default()
 	return (true);
 }
 
-bool	net::config::reset()
+bool	utils::config::reset()
 {
 	m_ldirectory.clear();
 	m_lserver.clear();
@@ -56,15 +56,15 @@ bool	net::config::reset()
 	return (true);
 }
 
-bool	net::config::parse()
+bool	utils::config::parse()
 {
 	key	key_s[] = {"server", "directory", "mime", "module", "system", "certif", ""};
-	pFunc funcArray[] = {&net::config::parse_server,
-			     &net::config::parse_directory,
-			     &net::config::parse_mimes,
-			     &net::config::parse_modules,
-			     &net::config::parse_system,
-			     &net::config::parse_certif};
+	pFunc funcArray[] = {&utils::config::parse_server,
+			     &utils::config::parse_directory,
+			     &utils::config::parse_mimes,
+			     &utils::config::parse_modules,
+			     &utils::config::parse_system,
+			     &utils::config::parse_certif};
 	int	i;
 	for(m_xmlnode = m_xmldoc.FirstChild();
 		m_xmlnode;
@@ -79,7 +79,7 @@ bool	net::config::parse()
 	return (true);
 }
 
-bool	net::config::parse_system()
+bool	utils::config::parse_system()
 {
 	TiXmlElement*	xmltmp;
 
@@ -100,7 +100,7 @@ bool	net::config::parse_system()
 	return (true);
 }
 
-bool	net::config::parse_server()
+bool	utils::config::parse_server()
 {
 	server	*p = new server;
 	TiXmlElement*	xmltmp;
@@ -137,7 +137,7 @@ bool	net::config::parse_server()
 }
 
 
-bool	net::config::parse_certif()
+bool	utils::config::parse_certif()
 {
   certif *c = new certif;
   TiXmlElement*	xmltmp;
@@ -155,7 +155,7 @@ bool	net::config::parse_certif()
 }
 
 
-bool	net::config::parse_modules()
+bool	utils::config::parse_modules()
 {
   module* m = new module;
   TiXmlElement*	xmltmp;
@@ -173,7 +173,7 @@ bool	net::config::parse_modules()
 }
 
 
-bool	net::config::parse_directory()
+bool	utils::config::parse_directory()
 {
 	directory		*d = new directory;
 	TiXmlElement*	xmltmp;
@@ -212,7 +212,7 @@ bool	net::config::parse_directory()
 	return (true);
 }
 
-bool	net::config::parse_mimes()
+bool	utils::config::parse_mimes()
 {
 	mime			*m = new mime;
 	TiXmlElement*	xmltmp;
@@ -239,65 +239,65 @@ bool	net::config::parse_mimes()
 }
 
 
-bool net::config::get_certif(std::list<net::config::certif*>::iterator& it)
+bool utils::config::get_certif(std::list<utils::config::certif*>::iterator& it)
 {
-  it = m_lcertifs.begin();  
+  it = m_lcertifs.begin();
   return true;
 }
 
-bool net::config::end_certif(const std::list<net::config::certif*>::iterator& it)
+bool utils::config::end_certif(const std::list<utils::config::certif*>::iterator& it)
 {
   if (it == m_lcertifs.end())
     return true;
   return false;
 }
 
-bool	net::config::get_server(std::list<server*>::iterator &it)
+bool	utils::config::get_server(std::list<server*>::iterator &it)
 {
 	it = m_lserver.begin();
 	return (true);
 }
 
-bool	net::config::end_server(const std::list<server*>::iterator &it)
+bool	utils::config::end_server(const std::list<server*>::iterator &it)
 {
 	if (it != m_lserver.end())
 		return (false);
 	return (true);
 }
 
-bool	net::config::get_directory(std::list<directory*>::iterator &it)
+bool	utils::config::get_directory(std::list<directory*>::iterator &it)
 {
 	it = m_ldirectory.begin();
 	return (true);
 }
 
-bool	net::config::end_directory(const std::list<directory*>::iterator &it)
+bool	utils::config::end_directory(const std::list<directory*>::iterator &it)
 {
 	if (it != m_ldirectory.end())
 		return (false);
 	return (true);
 }
 
-bool	net::config::get_mimes(std::list<mime*>::iterator &it)
+bool	utils::config::get_mimes(std::list<mime*>::iterator &it)
 {
 	it = m_lmimes.begin();
 	return (true);
 }
 
-bool	net::config::end_mimes(const std::list<mime*>::iterator &it)
+bool	utils::config::end_mimes(const std::list<mime*>::iterator &it)
 {
 	if (it != m_lmimes.end())
 		return (false);
 	return (true);
 }
 
-bool	net::config::get_modules(std::list<module*>::iterator &it)
+bool	utils::config::get_modules(std::list<module*>::iterator &it)
 {
 	it = m_lmodules.begin();
 	return (true);
 }
 
-bool	net::config::end_modules(const std::list<module*>::iterator &it)
+bool	utils::config::end_modules(const std::list<module*>::iterator &it)
 {
 	if (it != m_lmodules.end())
 		return (false);
