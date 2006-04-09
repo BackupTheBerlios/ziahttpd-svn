@@ -2,8 +2,8 @@
   <nb_thread>2000</nb_thread>
   <poll_delay>500000</poll_delay>
   <expiration_delay>5</expiration_delay>
-  <nr_bklog>100</nr_bklog>
-  <directory_listing>./test/cgi-bin/netbsd/dir_list.exe</directory_listing>
+  <nr_bklog>20</nr_bklog>
+  <directory_listing>./test/cgi-bin/windows/dir_list.exe</directory_listing>
 </system>
 
 
@@ -48,7 +48,6 @@
   <modulename>mod_resource</modulename>
   <modulename>mod_ssl</modulename>
   <modulename>mod_encoding</modulename>
-  <modulename>mod_psp</modulename>
 </server>
 
 
