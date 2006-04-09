@@ -89,8 +89,8 @@
 				AdditionalLibraryDirectories="../lib/; ../../../lib"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
+				OptimizeReferences="0"
+				EnableCOMDATFolding="0"
 				ImportLibrary="$(OutDir)/mod_psp.lib"
 				TargetMachine="1"/>
 			<Tool
@@ -122,9 +122,6 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File
-				RelativePath="..\src\buffer.cc">
-			</File>
 			<File
 				RelativePath="..\src\mod_psp.cc">
 			</File>
