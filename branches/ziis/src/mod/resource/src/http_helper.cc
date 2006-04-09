@@ -286,7 +286,7 @@ bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string 
 	//m_env_header["OS"] = "Windows_NT";
 	//m_env_header["PATHEXT"] = "COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.RB;.RBW";
 	//m_env_header["HTTP_ACCEPT"] = "	text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
-	ret = new char*[m_env_header.size()];
+	ret = new char*[m_env_header.size() + 1];
 	int y = 0;
 	for (it = m_env_header.begin(); it != m_env_header.end(); it++)
 	{
@@ -310,7 +310,7 @@ bool				http_helper::free_cgi_environ(char **env)
 
 	for (i = 0; env[i]; i++)
 		free(env[i]);
-	delete [] env;
+	delete[] env;
 	return true;
 }
 
@@ -401,6 +401,7 @@ bool				http_helper::create_resource(resource::handle*& hld,
 
 		generate_cgi_eviron(inp, out, localname, sz_input, &env);
 		error = resource::manager::factory_create(hld, resource::ID_PROCESS, resource::O_BOTH, ac, (char**)av, (char**)env);
+		  delete[] av;
 		free_cgi_environ((char **)env);
 	}
 	else if (r_type == IS_PUT)

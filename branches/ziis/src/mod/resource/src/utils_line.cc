@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:28:42 2006 texane
-// Last update Sat Apr 08 13:23:06 2006 texane
+// Last update Mon Apr 10 01:53:30 2006 
 //
 
 
@@ -40,7 +40,7 @@ static bool inline is_endof_line(const unsigned char* ptr)
   return (*(ptr - 1) == '\r') && (*ptr == '\n');
 }
 
-bool utils::line::get_from_special_case()
+bool modutils::line::get_from_special_case()
 {
   unsigned char* ptr;
   unsigned char* src;
@@ -62,7 +62,11 @@ bool utils::line::get_from_special_case()
   return true;
 }
 
-bool utils::line::get_from_normal_case()
+#include <iostream>
+
+using namespace std;
+
+bool modutils::line::get_from_normal_case()
 {
   unsigned int n = 0;
   unsigned int len;
@@ -132,18 +136,14 @@ bool utils::line::get_from_normal_case()
 
 // Exported
 
-utils::line::line()
+modutils::line::line()
 {}
 
-utils::line::~line()
+modutils::line::~line()
 {}
 
 
-#include <iostream>
-using namespace std;
-
-
-bool utils::line::from_buffer(string& ln, buffer& buf, bool& too_long)
+bool modutils::line::from_buffer(string& ln, buffer& buf, bool& too_long)
 {
   bool ret = false;
   char* c_str;
@@ -171,13 +171,13 @@ bool utils::line::from_buffer(string& ln, buffer& buf, bool& too_long)
 }
 
 
-bool utils::line::get_bytes(buffer& buf)
+bool modutils::line::get_bytes(buffer& buf)
 {
   return get_bytes(buf, (unsigned int)m_buf.size());
 }
 
 
-bool utils::line::get_bytes(buffer& buf, unsigned int nbytes)
+bool modutils::line::get_bytes(buffer& buf, unsigned int nbytes)
 {
   unsigned int bufsz;
 
@@ -194,7 +194,7 @@ bool utils::line::get_bytes(buffer& buf, unsigned int nbytes)
 }
 
 
-bool utils::line::reset()
+bool modutils::line::reset()
 {
   m_line.reset();
   return true;

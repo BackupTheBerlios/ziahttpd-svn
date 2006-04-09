@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:32:24 2006 texane
-// Last update Wed Mar 22 10:33:08 2006 texane
+// Last update Mon Apr 10 01:49:33 2006 
 //
 
 
@@ -39,7 +39,7 @@ static void inline bufcpy(unsigned char* dst, const unsigned char* src, size_t s
 }
 
 // helper 
-void buffer::reset()
+void modutils::buffer::reset()
 {
   if (buf_)
     delete[] buf_;
@@ -49,14 +49,14 @@ void buffer::reset()
   mmaped_ = false;
 }
 
-buffer::buffer()
+modutils::buffer::buffer()
 {
   buf_ = 0;
   reset();
 }
 
 
-buffer::buffer(const unsigned char* buf, size_t sz)
+modutils::buffer::buffer(const unsigned char* buf, size_t sz)
 {
   buf_ =  0;
   reset();
@@ -66,7 +66,7 @@ buffer::buffer(const unsigned char* buf, size_t sz)
 }
 
 
-buffer::buffer(const buffer& b)
+modutils::buffer::buffer(const buffer& b)
 {
   buf_ =  0;
   reset();
@@ -74,26 +74,26 @@ buffer::buffer(const buffer& b)
 }
 
 
-buffer::~buffer()
+modutils::buffer::~buffer()
 {
   reset();
 }
 
 
-void	buffer::clear()
+void	modutils::buffer::clear()
 {
   // Clear the buffer, reset synonym
   return reset();
 }
 
 
-size_t	buffer::size() const
+size_t	modutils::buffer::size() const
 {
   return sz_;
 }
 
 
-char*	buffer::c_str() const
+char*	modutils::buffer::c_str() const
 {
   char* str;
   register char* buf;
@@ -110,13 +110,13 @@ char*	buffer::c_str() const
   return str;
 }
 
-unsigned char* buffer::bufptr()
+unsigned char* modutils::buffer::bufptr()
 {
   return buf_;
 }
 
 
-unsigned char* buffer::dup() const
+unsigned char* modutils::buffer::dup() const
 {
   unsigned char* res;
   
@@ -126,7 +126,7 @@ unsigned char* buffer::dup() const
 }
 
 
-buffer buffer::operator+(const buffer& b)
+buffer modutils::buffer::operator+(const buffer& b)
 {
   buffer res(buf_, sz_);
 
@@ -135,7 +135,7 @@ buffer buffer::operator+(const buffer& b)
 }
 
 
-buffer& buffer::operator+=(const buffer& b)
+buffer& modutils::buffer::operator+=(const buffer& b)
 {
   unsigned char* wrk;
 
@@ -163,7 +163,7 @@ buffer& buffer::operator+=(const buffer& b)
 }
 
 
-buffer&	buffer::operator+=(const string& s)
+buffer&	modutils::buffer::operator+=(const string& s)
 {
   unsigned char* wrk;
 
@@ -187,7 +187,7 @@ buffer&	buffer::operator+=(const string& s)
 }
 
 
-buffer& buffer::operator=(const buffer& b)
+buffer& modutils::buffer::operator=(const buffer& b)
 {
   reset();
 
@@ -199,7 +199,7 @@ buffer& buffer::operator=(const buffer& b)
 }
 
 
-buffer& buffer::operator=(const string& s)
+buffer& modutils::buffer::operator=(const string& s)
 {
   reset();
 
@@ -213,7 +213,7 @@ buffer& buffer::operator=(const string& s)
 }
 
 
-unsigned char& buffer::operator[](unsigned int i)
+unsigned char& modutils::buffer::operator[](unsigned int i)
 {
   if (!buf_ || (size_t)i < 0 || (size_t)i >= sz_)
     throw (int)0;
@@ -221,14 +221,14 @@ unsigned char& buffer::operator[](unsigned int i)
 }
 
 
-buffer::operator unsigned char*()
+modutils::buffer::operator unsigned char*()
 {
   return buf_;
 }
 
 
 // Mutators, to remove
-void	buffer::buf(unsigned char* buf, size_t sz)
+void	modutils::buffer::buf(unsigned char* buf, size_t sz)
 {
   reset();
   buf_ = new unsigned char[sz];
@@ -237,7 +237,7 @@ void	buffer::buf(unsigned char* buf, size_t sz)
 }
 
 
-void	buffer::affect(unsigned char* buf, size_t sz)
+void	modutils::buffer::affect(unsigned char* buf, size_t sz)
 {
   reset();
   buf_ = buf;
@@ -245,7 +245,7 @@ void	buffer::affect(unsigned char* buf, size_t sz)
 }
 
 
-void	buffer::resize(size_t sz)
+void	modutils::buffer::resize(size_t sz)
 {
   if (buf_)
     {
@@ -280,7 +280,7 @@ inline static unsigned char to_printable(unsigned char c)
 }
 
 
-string	buffer::tostring(unsigned int windent,
+string	modutils::buffer::tostring(unsigned int windent,
 			 unsigned int wborder,
 			 unsigned int wspace,
 			 unsigned int wstep) const
@@ -341,7 +341,7 @@ string	buffer::tostring(unsigned int windent,
 }
 
 
-bool buffer::remove_front(unsigned int nbytes)
+bool modutils::buffer::remove_front(unsigned int nbytes)
 {
   unsigned char* to;
   unsigned char* from;

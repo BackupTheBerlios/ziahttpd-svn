@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Jan 25 14:25:08 2006 texane
-// Last update Thu Apr 06 16:17:10 2006 texane
+// Last update Mon Apr 10 01:29:16 2006 
 //
 
 
@@ -17,7 +17,7 @@
 #include <string>
 
 
-namespace utils
+namespace modutils
 {
   class line
   {

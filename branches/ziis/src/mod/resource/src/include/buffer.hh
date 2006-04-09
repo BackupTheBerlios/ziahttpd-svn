@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:28:18 2006 texane
-// Last update Thu Apr 06 16:23:31 2006 texane
+// Last update Mon Apr 10 01:50:52 2006 
 //
 
 
@@ -17,49 +17,55 @@
 #include <cstdlib>
 
 
-class buffer
+namespace modutils
 {
-public:
-  buffer();
-  buffer(const unsigned char*, size_t);
-  buffer(const buffer&);
+  class buffer
+  {
+  public:
+    buffer();
+    buffer(const unsigned char*, size_t);
+    buffer(const buffer&);
 
-  ~buffer();
+    ~buffer();
 
-  void buf(unsigned char*, size_t);
-  void affect(unsigned char*, size_t);
+    void buf(unsigned char*, size_t);
+    void affect(unsigned char*, size_t);
 
-  void resize(size_t);
+    void resize(size_t);
 
-  size_t size() const;
-  char* c_str() const;
-  unsigned char* dup() const;
+    size_t size() const;
+    char* c_str() const;
+    unsigned char* dup() const;
 
-  void reset();
-  void clear();
+    void reset();
+    void clear();
 
-  bool remove_front(unsigned int);
+    bool remove_front(unsigned int);
 
-  buffer operator+(const buffer&);
-  buffer& operator+=(const buffer&);
-  buffer& operator+=(const std::string&);
-  buffer& operator=(const buffer&);
-  buffer& operator=(const std::string&);
-  unsigned char& operator[](unsigned int);
-  operator unsigned char*();
+    buffer operator+(const buffer&);
+    buffer& operator+=(const buffer&);
+    buffer& operator+=(const std::string&);
+    buffer& operator=(const buffer&);
+    buffer& operator=(const std::string&);
+    unsigned char& operator[](unsigned int);
+    operator unsigned char*();
 
-  std::string tostring(unsigned int = 0,
-		       unsigned int = 3,
-		       unsigned int = 1,
-		       unsigned int = 16) const;
-  unsigned char* bufptr();
+    std::string tostring(unsigned int = 0,
+			 unsigned int = 3,
+			 unsigned int = 1,
+			 unsigned int = 16) const;
+    unsigned char* bufptr();
 
-private:
+  private:
 
-  bool mmaped_;
-  unsigned char* buf_;
-  size_t sz_;
-};
+    bool mmaped_;
+    unsigned char* buf_;
+    size_t sz_;
+  };
+}
+
+
+using namespace modutils;
 
 
 

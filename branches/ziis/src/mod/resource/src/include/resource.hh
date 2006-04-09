@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 10:25:56 2006 texane
-// Last update Thu Apr 06 16:31:55 2006 texane
+// Last update Mon Apr 10 01:29:59 2006 
 //
 
 
@@ -199,7 +199,7 @@ namespace resource
     sysapi::file::handle_t read_handle;
     sysapi::file::handle_t write_handle;
     bool generated;
-    utils::line m_line;
+    modutils::line m_line;
     bool is_header_inprogress;
 
   };

@@ -5,7 +5,7 @@
 // Login   <texane@gmail.com>
 // 
 // Started on  Wed Mar 22 16:45:04 2006 texane
-// Last update Fri Apr 07 13:25:29 2006 texane
+// Last update Mon Apr 10 01:55:33 2006 
 //
 
 
@@ -84,6 +84,13 @@ resource::e_error resource::process::generate(unsigned int& nbytes, IOutput& p_o
 		      )
 		    {
 		      // skip those ones
+		    }
+		  else if (str_key == "status")
+		    {
+		      istringstream iss(str_val);
+		      int st_code;
+		      iss >> st_code;
+		      p_out.SetStatusCode(st_code);
 		    }
 		  else if (str_line == "")
 		    {
