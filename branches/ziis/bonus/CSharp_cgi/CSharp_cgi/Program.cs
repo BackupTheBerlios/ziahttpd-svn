@@ -23,7 +23,7 @@ namespace CSharp_cgi
             {
                 Console.WriteLine("Status : 404");
                 Console.WriteLine("");
-                Console.WriteLine("Inernal Error, check your config file");
+                Console.WriteLine("Internal Error, check your configuration file");
                 return;
             }
             filename = args[0];
