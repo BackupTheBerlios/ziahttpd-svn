@@ -4,10 +4,13 @@
 #include <sstream>
 #include <map>
 
-extern char **environ;
 
 using namespace std;
 using namespace sysapi;
+
+#ifndef _WIN32
+extern char **environ;
+#endif // !_WIN32
 
 bool http_helper::generate_chunk_header(buffer& data, size_t sz, chunk_pos_t chunk)
 {
