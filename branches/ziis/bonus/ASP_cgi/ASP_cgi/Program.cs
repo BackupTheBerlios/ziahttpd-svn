@@ -7,8 +7,7 @@ namespace ASP_cgi
 {
     class Program
     {
-        static MyHost m_host = null;
-
+        static MyHost m_host = null; 
         public  static void Main(String[] args)
         {
             string filename;
@@ -68,7 +67,8 @@ namespace ASP_cgi
 
             if (strFileExt != null && strFileExt.ToUpper().Equals("ASPX"))
             {
-                m_host.CreateHtmlPage(webPage, null);
+                string query = System.Environment.GetEnvironmentVariable("QUERY_STRING");
+                m_host.CreateHtmlPage(webPage, query);
             }
         }
     }
