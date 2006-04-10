@@ -23,7 +23,7 @@ namespace CSharp_cgi
             {
                 Console.WriteLine("Status : 404");
                 Console.WriteLine("");
-                Console.WriteLine("This application must take an arguement, check your configuration file");
+                Console.WriteLine("./cgi_csharp.exe <script file><br> check your configuration file");
                 return;
             }
             filename = args[0];
