@@ -11,16 +11,22 @@ namespace CSharp_cgi
 {
     class Program
     {
+
+        static void SendHeader(string type)
+        {
+            Console.WriteLine("Content-type : " + type);
+        }
         static void Main(string[] args)
         {
             string script;
             string filename;
+            string type;
 
-
-            Console.WriteLine("Content-type : text/html");
+            //Console.WriteLine("Content-type : text/html");
 
             if (args.Length == 0)
             {
+                SendHeader("text/html");
                 Console.WriteLine("Status : 404");
                 Console.WriteLine("");
                 Console.WriteLine("./cgi_csharp.exe <script file><br> check your configuration file");
@@ -30,12 +36,15 @@ namespace CSharp_cgi
             try
             {
                 StreamReader sr = new StreamReader(filename);
+                //Console.WriteLine("");
+                SendHeader("text/html");
                 Console.WriteLine("");
                 script = sr.ReadToEnd();
                 Eval(script);
             }
             catch (Exception)
             {
+                SendHeader("text/html");
                 Console.WriteLine("Status : 404");
                 Console.WriteLine("");
                 Console.WriteLine("File not found");
