@@ -4,6 +4,8 @@
 #include <sstream>
 #include <map>
 
+extern char **environ;
+
 using namespace std;
 using namespace sysapi;
 
@@ -201,6 +203,25 @@ bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string 
 	std::map<std::string, std::string> m_env_header;
 	std::map<std::string, std::string>::iterator it;
 	char **ret;
+	int i;
+
+
+
+//////////////////////////////////////////////////////////////////////////
+	for (i = 0; environ[i]; i++)
+	{
+		std::string ln;
+
+		ln = environ[i];
+		size_t i = ln.find("=", 0);
+		if (i != std::string::npos)
+		{
+
+			std::string key = ln.substr(0, i);
+			std::string val = ln.substr(i + 1, ln.length() - i - 1);
+			m_env_header[key] = val;
+		}
+	}
 
 //	env[0] = strdup("AUTH_TYPE=");
 	m_env_header["AUTH_TYPE"] = "";
@@ -263,16 +284,17 @@ bool				http_helper::generate_cgi_eviron(IInput& inp, IOutput& out, std::string 
 	m_env_header["REDIRECT_STATUS"] = "200";
 
 	char *script = (char *)inp.GetInputLocation();
-	script += strlen (script) - 1;
-	while (*script != '/')
-		script --;
-	script ++;
+	m_env_header["SCRIPT_FILENAME"] = localname;
+	//script += strlen (script) - 1;
+	//while (*script != '/')
+	//	script --;
+	//script ++;
 	oss << script;
 	m_env_header["SCRIPT_NAME"] = oss.str();
 	oss.str("");
 
-	m_env_header["SERVER_NAME"] = "Zfs.";
-	
+	m_env_header["SERVER_NAME"] = "localhost";
+
 //	env[14] = strdup("SERVER_PORT=");
 	m_env_header["SERVER_PORT"] = "80";
 
