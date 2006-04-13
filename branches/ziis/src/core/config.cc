@@ -8,8 +8,9 @@ net::config::config(const std::string &config_file)
 	if (!m_xmldoc.LoadFile(config_file.c_str(), TIXML_DEFAULT_ENCODING))
 	{
 		ziafs_debug_msg("File not found :%s\n", config_file.c_str());
-		load_default();
-		return ;
+//		load_default();
+		exit(0);
+//		return ;
 	}
 	parse();
 	buffer t;
